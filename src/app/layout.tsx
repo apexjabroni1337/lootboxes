@@ -1,0 +1,99 @@
+import type { Metadata } from "next";
+import "@/styles/globals.css";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+
+export const metadata: Metadata = {
+  title: {
+    default: "Lootboxes.com — Gaming Deals, Drop Rates & In-Game Value Analysis",
+    template: "%s | Lootboxes",
+  },
+  description:
+    "Find the best gaming deals across every store. Get data-driven loot box analysis, battle pass reviews, and drop rates for every major game.",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://lootboxes.com"
+  ),
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://lootboxes.com",
+    siteName: "Lootboxes.com",
+    title: "Lootboxes.com — Gaming Deals, Drop Rates & In-Game Value Analysis",
+    description:
+      "Find the best gaming deals across every store. Get data-driven loot box analysis, battle pass reviews, and drop rates for every major game.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Lootboxes.com",
+    description:
+      "Gaming deals, drop rates, and in-game value analysis. Save smarter. Spend wiser.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "https://lootboxes.com",
+  },
+  keywords: [
+    "game deals",
+    "gaming deals",
+    "video game prices",
+    "loot box",
+    "drop rates",
+    "battle pass review",
+    "game price comparison",
+    "steam deals",
+    "pc game deals",
+    "lootboxes score",
+  ],
+};
+
+// JSON-LD structured data for Google
+function JsonLd() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Lootboxes.com",
+    url: "https://lootboxes.com",
+    description:
+      "Compare game deals across 30+ stores. Transparent loot box analysis, drop rates, and monetization reviews.",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: "https://lootboxes.com/search?q={search_term_string}",
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+    />
+  );
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <head>
+        <JsonLd />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+      </head>
+      <body className="flex min-h-screen flex-col">
+        <Header />
+        <main className="flex-1">{children}</main>
+        <Footer />
+      </body>
+    </html>
+  );
+}
