@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
           );
 
           for (const deal of gamePrices) {
-            const storeKey = mapShopId(deal.shop.id);
+            const storeKey = mapShopId(deal.shop);
             const isHistoricLow = deal.flag === "H";
 
             // Upsert deal
@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
           // Snapshot best price per store for price_history
           const storesSeen = new Set<string>();
           for (const deal of sortedPrices) {
-            const storeKey = mapShopId(deal.shop.id);
+            const storeKey = mapShopId(deal.shop);
             if (storesSeen.has(storeKey)) continue;
             storesSeen.add(storeKey);
 

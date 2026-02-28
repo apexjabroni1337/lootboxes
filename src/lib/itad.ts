@@ -28,14 +28,16 @@ export interface ITADDeal {
   title: string;
   type: string | null;
   deal: {
-    shop: { id: string; name: string };
+    shop: { id: number; name: string };
     price: ITADPrice;
     regular: ITADPrice;
     cut: number;
     voucher: string | null;
-    flag: string | null;     // "H" = historic low
-    drm: { id: string; name: string }[];
-    platforms: { id: string; name: string }[];
+    storeLow?: ITADPrice;
+    historyLow?: ITADPrice;
+    flag: string | null;     // "H" = historic low, "S" = store low
+    drm: { id: number; name: string }[];
+    platforms: { id: number; name: string }[];
     timestamp: string;
     expiry: string | null;
     url: string;
@@ -128,7 +130,15 @@ export async function getPrices(
     next: { revalidate: 300 },
   } as any);
   if (!res.ok) throw new Error(`ITAD prices failed: ${res.status}`);
-  return res.json();
+
+  // ITAD v2 returns an array: [{id, deals: [...]}]
+  // Transform into a Record keyed by ITAD ID for easy lookup
+  const raw: { id: string; deals: ITADDeal["deal"][] }[] = await res.json();
+  const result: Record<string, ITADDeal["deal"][]> = {};
+  for (const entry of raw) {
+    result[entry.id] = entry.deals || [];
+  }
+  return result;
 }
 
 /**
@@ -185,30 +195,42 @@ export async function getDeals(opts: {
 // ---------- Store ID mapper ----------
 
 /**
- * Maps ITAD shop IDs to our internal store keys.
- * We use this to unify store naming across the app.
+ * Maps ITAD shop names (lowercased) to our internal store keys.
+ * The ITAD v2 API returns numeric shop IDs + string names,
+ * so we normalize by lowercasing the name for lookup.
  */
 const ITAD_SHOP_MAP: Record<string, string> = {
   steam: "steam",
   gog: "gog",
-  humblestore: "humble",
-  humblebundle: "humble",
-  epicgamesstore: "epic",
+  "humble store": "humble",
+  "humble bundle": "humble",
+  "epic game store": "epic",
   fanatical: "fanatical",
   greenmangaming: "gmg",
-  itchio: "itch",
+  "itch.io": "itch",
   wingamestore: "wingamestore",
   gamebillet: "gamebillet",
-  indiegala: "indiegala",
-  amazonus: "amazon",
+  "indiegala store": "indiegala",
+  "amazon us": "amazon",
   voidu: "voidu",
   direct2drive: "d2d",
   gamersgate: "gamersgate",
   nuuvem: "nuuvem",
   dlgamer: "dlgamer",
   allyouplay: "allyouplay",
+  "2game": "2game",
+  "gamesplanet us": "gamesplanet",
+  gamesload: "gamesload",
+  newegg: "newegg",
+  planetplay: "planetplay",
 };
 
-export function mapShopId(itadShopId: string): string {
-  return ITAD_SHOP_MAP[itadShopId] || itadShopId;
+/**
+ * Maps an ITAD shop identifier to our internal store key.
+ * Accepts either a shop name (string) or shop object with id/name.
+ */
+export function mapShopId(shop: string | { id: number; name: string }): string {
+  const name = typeof shop === "string" ? shop : shop.name;
+  const key = name.toLowerCase();
+  return ITAD_SHOP_MAP[key] || key.replace(/\s+/g, "");
 }
