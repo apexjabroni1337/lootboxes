@@ -79,4 +79,12 @@
   .score-poor {
     @apply score-badge bg-danger-500;
   }
+
+  .badge-new {
+    @apply badge bg-success-50 text-success-700;
+  }
+
+  .badge-featured {
+    @apply badge bg-amber-50 text-amber-700;
+  }
 }

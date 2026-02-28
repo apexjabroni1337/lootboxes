@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AnalyticsMeta } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
 import ScoreBadge from "./ScoreBadge";
+import GameAvatar from "@/components/ui/GameAvatar";
 
 interface AnalyticsCardProps {
   article: AnalyticsMeta;
@@ -18,7 +19,7 @@ export default function AnalyticsCard({ article }: AnalyticsCardProps) {
   return (
     <Link href={`/analytics/${article.slug}`} className="card group flex gap-4">
       {/* Thumbnail */}
-      <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100 sm:h-28 sm:w-28">
+      <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg sm:h-28 sm:w-28">
         {article.cover_image ? (
           <img
             src={article.cover_image}
@@ -27,9 +28,11 @@ export default function AnalyticsCard({ article }: AnalyticsCardProps) {
             loading="lazy"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-xs text-gray-400">
-            No Image
-          </div>
+          <GameAvatar
+            gameName={article.game?.title || article.title}
+            size="sm"
+            aspectRatio="square"
+          />
         )}
       </div>
 

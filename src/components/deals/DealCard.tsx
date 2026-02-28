@@ -2,6 +2,7 @@ import Link from "next/link";
 import { formatPrice, formatDiscount } from "@/lib/utils";
 import { Deal, STORES } from "@/lib/types";
 import { ExternalLink, TrendingDown } from "lucide-react";
+import GameAvatar from "@/components/ui/GameAvatar";
 
 interface DealCardProps {
   deal: Deal;
@@ -11,20 +12,25 @@ export default function DealCard({ deal }: DealCardProps) {
   const store = STORES[deal.store] || { name: deal.store, color: "#666" };
 
   return (
-    <div className="card group flex flex-col">
+    <div className="card group flex flex-col transition-shadow hover:shadow-lg">
       {/* Game cover */}
-      <div className="relative mb-3 aspect-[16/9] overflow-hidden rounded-lg bg-gray-100">
+      <div className="relative mb-3 overflow-hidden rounded-lg">
         {deal.game?.cover_image ? (
-          <img
-            src={deal.game.cover_image}
-            alt={deal.game.title}
-            className="h-full w-full object-cover transition-transform group-hover:scale-105"
-            loading="lazy"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center text-gray-400">
-            No Image
+          <div className="aspect-[16/9] overflow-hidden">
+            <img
+              src={deal.game.cover_image}
+              alt={deal.game.title}
+              className="h-full w-full object-cover transition-transform group-hover:scale-105"
+              loading="lazy"
+            />
           </div>
+        ) : (
+          <GameAvatar
+            gameName={deal.game?.title || "Unknown"}
+            size="md"
+            aspectRatio="video"
+            className="transition-transform group-hover:scale-[1.02]"
+          />
         )}
 
         {/* Discount badge */}

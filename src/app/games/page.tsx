@@ -2,6 +2,7 @@ import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
 import { STORES, getScoreClass } from "@/lib/types";
 import ScoreBadge from "@/components/analytics/ScoreBadge";
+import GameAvatar from "@/components/ui/GameAvatar";
 import { Monitor, Calendar, Search, SlidersHorizontal, Star } from "lucide-react";
 
 // TODO: Replace with Supabase queries + search params
@@ -77,7 +78,7 @@ export default function GamesPage() {
               className="card group flex gap-4 transition-shadow hover:shadow-md"
             >
               {/* Thumbnail */}
-              <div className="h-24 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
+              <div className="h-24 w-16 flex-shrink-0 overflow-hidden rounded-lg">
                 {game.cover_image ? (
                   <img
                     src={game.cover_image}
@@ -85,9 +86,12 @@ export default function GamesPage() {
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center text-lg font-bold text-gray-300">
-                    {game.title[0]}
-                  </div>
+                  <GameAvatar
+                    gameName={game.title}
+                    size="sm"
+                    aspectRatio="portrait"
+                    className="h-full w-full"
+                  />
                 )}
               </div>
 
