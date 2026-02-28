@@ -1,15 +1,15 @@
 import Link from "next/link";
 import { formatPrice, formatDiscount, formatDate } from "@/lib/utils";
-import { STORES, getScoreClass, getScoreLabel } from "@/lib/types";
+import { STORES } from "@/lib/types";
 import ScoreBadge from "@/components/analytics/ScoreBadge";
 import PriceChart from "@/components/games/PriceChart";
+import GameAvatar from "@/components/ui/GameAvatar";
 import {
   ExternalLink,
   TrendingDown,
   Calendar,
   Star,
   Monitor,
-  Tag,
   ArrowRight,
 } from "lucide-react";
 
@@ -18,21 +18,21 @@ const MOCK_GAME = {
   id: "1",
   title: "Elden Ring",
   slug: "elden-ring",
-  cover_image: null,
+  cover_image: null as string | null,
   platforms: ["PC", "PS5", "Xbox Series X"],
   genres: ["RPG", "Action", "Open World"],
   release_date: "2022-02-25",
   metacritic: 96,
-  lootboxes_score: null,
+  lootboxes_score: null as number | null,
 };
 
 const MOCK_DEALS = [
-  { id: "d1", store: "steam", price: 29.99, original: 59.99, discount: 50, historicLow: true, affiliate: "#", expires: null },
-  { id: "d2", store: "humble", price: 32.99, original: 59.99, discount: 45, historicLow: false, affiliate: "#", expires: null },
+  { id: "d1", store: "steam", price: 29.99, original: 59.99, discount: 50, historicLow: true, affiliate: "#", expires: null as string | null },
+  { id: "d2", store: "humble", price: 32.99, original: 59.99, discount: 45, historicLow: false, affiliate: "#", expires: null as string | null },
   { id: "d3", store: "fanatical", price: 33.49, original: 59.99, discount: 44, historicLow: false, affiliate: "#", expires: "2026-03-15" },
-  { id: "d4", store: "gmg", price: 35.99, original: 59.99, discount: 40, historicLow: false, affiliate: "#", expires: null },
-  { id: "d5", store: "gog", price: 39.99, original: 59.99, discount: 33, historicLow: false, affiliate: "#", expires: null },
-  { id: "d6", store: "epic", price: 44.99, original: 59.99, discount: 25, historicLow: false, affiliate: "#", expires: null },
+  { id: "d4", store: "gmg", price: 35.99, original: 59.99, discount: 40, historicLow: false, affiliate: "#", expires: null as string | null },
+  { id: "d5", store: "gog", price: 39.99, original: 59.99, discount: 33, historicLow: false, affiliate: "#", expires: null as string | null },
+  { id: "d6", store: "epic", price: 44.99, original: 59.99, discount: 25, historicLow: false, affiliate: "#", expires: null as string | null },
 ];
 
 const MOCK_PRICE_HISTORY = [
@@ -53,7 +53,6 @@ const MOCK_SIMILAR = [
 ];
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-  // TODO: Fetch game from Supabase
   return {
     title: `${MOCK_GAME.title} — Best Price, Deals & Analysis`,
     description: `Compare prices for ${MOCK_GAME.title} across Steam, Epic, GOG, Humble Bundle, and more. Find the cheapest deal and see the full price history.`,
@@ -65,27 +64,29 @@ export default function GamePage({ params }: { params: { slug: string } }) {
   const bestDeal = MOCK_DEALS[0];
 
   return (
-    <div className="py-8">
-      <div className="container-main">
-        {/* Breadcrumb */}
-        <nav className="mb-6 text-sm text-gray-400">
-          <Link href="/" className="hover:text-gray-600">Home</Link>
-          <span className="mx-2">/</span>
-          <Link href="/games" className="hover:text-gray-600">Games</Link>
-          <span className="mx-2">/</span>
-          <span className="text-gray-600">{game.title}</span>
-        </nav>
+    <div className="pb-12">
+      {/* Breadcrumb */}
+      <div className="border-b border-gray-100 bg-gray-50/50">
+        <div className="container-main py-3">
+          <nav className="text-sm text-gray-400">
+            <Link href="/" className="hover:text-gray-600">Home</Link>
+            <span className="mx-2">/</span>
+            <Link href="/games" className="hover:text-gray-600">Games</Link>
+            <span className="mx-2">/</span>
+            <span className="text-gray-600">{game.title}</span>
+          </nav>
+        </div>
+      </div>
 
+      <div className="container-main mt-8">
         {/* Game header */}
         <div className="flex flex-col gap-6 sm:flex-row">
           {/* Cover art */}
-          <div className="h-48 w-full flex-shrink-0 overflow-hidden rounded-xl bg-gray-100 sm:h-56 sm:w-44">
+          <div className="h-48 w-full flex-shrink-0 overflow-hidden rounded-xl sm:h-56 sm:w-44">
             {game.cover_image ? (
               <img src={game.cover_image} alt={game.title} className="h-full w-full object-cover" />
             ) : (
-              <div className="flex h-full items-center justify-center text-4xl font-bold text-gray-300">
-                {game.title[0]}
-              </div>
+              <GameAvatar gameName={game.title} size="lg" aspectRatio="portrait" />
             )}
           </div>
 
@@ -157,7 +158,7 @@ export default function GamePage({ params }: { params: { slug: string } }) {
             All current deals for {game.title} across every store.
           </p>
 
-          <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white">
+          <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
             <table className="w-full">
               <thead className="border-b border-gray-200 bg-gray-50">
                 <tr>
@@ -225,7 +226,7 @@ export default function GamePage({ params }: { params: { slug: string } }) {
         {game.lootboxes_score && (
           <section className="mt-10">
             <h2 className="text-xl font-bold text-gray-900">Monetization Analysis</h2>
-            <div className="mt-4 card bg-brand-50 border-brand-200">
+            <div className="mt-4 card border-brand-200 bg-brand-50">
               <div className="flex items-center gap-4">
                 <ScoreBadge score={game.lootboxes_score} size="lg" showLabel />
                 <div className="flex-1">
@@ -248,7 +249,9 @@ export default function GamePage({ params }: { params: { slug: string } }) {
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {MOCK_SIMILAR.map((g) => (
               <Link key={g.slug} href={`/games/${g.slug}`} className="card group flex items-center gap-3">
-                <div className="h-12 w-12 flex-shrink-0 rounded-lg bg-gray-100" />
+                <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg">
+                  <GameAvatar gameName={g.title} size="sm" aspectRatio="square" />
+                </div>
                 <div>
                   <h3 className="text-sm font-semibold text-gray-900 group-hover:text-brand-600">{g.title}</h3>
                   <p className="text-xs text-gray-500">From {formatPrice(g.bestPrice)}</p>

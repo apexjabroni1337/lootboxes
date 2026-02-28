@@ -2,7 +2,7 @@ import Link from "next/link";
 import AnalyticsCard from "@/components/analytics/AnalyticsCard";
 import ScoreBadge from "@/components/analytics/ScoreBadge";
 import { AnalyticsMeta, Game } from "@/lib/types";
-import { BarChart3 } from "lucide-react";
+import { BarChart3, Sparkles } from "lucide-react";
 
 // TODO: Replace with MDX content index + Supabase metadata
 const MOCK_GAMES: Record<string, Game> = {
@@ -35,10 +35,10 @@ export const metadata = {
 
 export default function AnalyticsPage() {
   return (
-    <div className="py-8">
-      <div className="container-main">
-        {/* Header */}
-        <div>
+    <div className="pb-12">
+      {/* Page hero */}
+      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 sm:py-10">
+        <div className="container-main">
           <div className="flex items-center gap-2">
             <BarChart3 className="h-6 w-6 text-brand-600" />
             <h1 className="text-3xl font-bold text-gray-900">Analytics</h1>
@@ -48,9 +48,11 @@ export default function AnalyticsPage() {
             economies. Rated with our proprietary Lootboxes Score.
           </p>
         </div>
+      </section>
 
+      <div className="container-main mt-6">
         {/* Type filter tabs */}
-        <div className="mt-6 flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2">
           {TYPES.map((type) => (
             <button
               key={type.value}
@@ -76,16 +78,19 @@ export default function AnalyticsPage() {
           {/* Sidebar */}
           <div className="space-y-4">
             {/* Methodology link */}
-            <div className="card bg-brand-50">
-              <h3 className="font-semibold text-brand-900">
-                How We Score Games
-              </h3>
+            <div className="card border-brand-200 bg-brand-50">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-brand-600" />
+                <h3 className="font-semibold text-brand-900">
+                  How We Score Games
+                </h3>
+              </div>
               <p className="mt-2 text-sm text-brand-700">
                 Our Lootboxes Score rates monetization on value, transparency,
                 fairness, and consumer practices.
               </p>
               <Link
-                href="/analytics/methodology"
+                href="/methodology"
                 className="mt-3 inline-block text-sm font-medium text-brand-600 hover:text-brand-700"
               >
                 Read our methodology →

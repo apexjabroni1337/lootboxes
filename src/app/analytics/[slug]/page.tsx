@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, Calendar, Share2, AlertTriangle, TrendingDown, DollarSign } from "lucide-react";
 import ScoreBadge from "@/components/analytics/ScoreBadge";
+import GameAvatar from "@/components/ui/GameAvatar";
 import { formatDate } from "@/lib/utils";
 
 // TODO: Replace with Supabase query + MDX content
@@ -26,8 +27,8 @@ export default function AnalyticsArticlePage({ params }: { params: { slug: strin
   const article = MOCK_ANALYSIS;
 
   return (
-    <div className="py-8">
-      <div className="container-main">
+    <div className="pb-12">
+      <div className="container-main pt-8">
         <div className="mx-auto max-w-3xl">
           {/* Back link */}
           <Link
@@ -67,9 +68,12 @@ export default function AnalyticsArticlePage({ params }: { params: { slug: strin
           <div className="mt-4">
             <Link
               href={`/games/${article.game.slug}`}
-              className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm text-gray-600 hover:border-brand-300 hover:text-brand-600"
+              className="inline-flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-600 hover:border-brand-300 hover:text-brand-600"
             >
-              🎮 View {article.game.title} deals & prices
+              <div className="h-8 w-8 overflow-hidden rounded-md">
+                <GameAvatar gameName={article.game.title} size="sm" aspectRatio="square" />
+              </div>
+              View {article.game.title} deals & prices
             </Link>
           </div>
 

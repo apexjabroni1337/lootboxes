@@ -7,15 +7,22 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="py-8">
-      <div className="container-main">
-        <div className="mx-auto max-w-3xl">
-          <h1 className="text-3xl font-bold text-gray-900">Terms of Service</h1>
-          <p className="mt-2 text-sm text-gray-500">
-            Last updated: February 28, 2026
-          </p>
+    <div className="pb-12">
+      {/* Hero */}
+      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8">
+        <div className="container-main">
+          <div className="mx-auto max-w-3xl">
+            <h1 className="text-3xl font-bold text-gray-900">Terms of Service</h1>
+            <p className="mt-2 text-sm text-gray-500">
+              Last updated: February 28, 2026
+            </p>
+          </div>
+        </div>
+      </section>
 
-          <article className="prose prose-gray mt-8 max-w-none prose-headings:text-gray-900">
+      <div className="container-main mt-8">
+        <div className="mx-auto max-w-3xl">
+          <article className="prose prose-gray max-w-none prose-headings:text-gray-900">
             <h2>Acceptance of Terms</h2>
             <p>
               By accessing and using Lootboxes.com, you agree to these terms of

@@ -1,6 +1,25 @@
 import Link from "next/link";
-import { Calendar, Clock, ArrowLeft, Share2, Tag } from "lucide-react";
+import { Calendar, Clock, ArrowLeft, Share2 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import NewsletterForm from "@/components/newsletter/NewsletterForm";
+
+// Deterministic gradient for blog post covers
+const POST_GRADIENTS = [
+  "from-brand-500 to-brand-700",
+  "from-purple-500 to-indigo-700",
+  "from-emerald-500 to-teal-700",
+  "from-amber-500 to-orange-700",
+  "from-rose-500 to-pink-700",
+  "from-cyan-500 to-blue-700",
+];
+
+function getPostGradient(title: string): string {
+  let hash = 0;
+  for (let i = 0; i < title.length; i++) {
+    hash = ((hash << 5) - hash + title.charCodeAt(i)) | 0;
+  }
+  return POST_GRADIENTS[Math.abs(hash) % POST_GRADIENTS.length];
+}
 
 // TODO: Replace with getPost("blog", slug) + MDXRemote rendering
 const MOCK_POST = {
@@ -54,26 +73,30 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
   const post = MOCK_POST;
 
   return (
-    <div className="py-8">
-      <div className="container-main">
-        <div className="mx-auto max-w-3xl">
-          {/* Back link */}
+    <div className="pb-12">
+      {/* Cover image gradient */}
+      <div className={`h-48 bg-gradient-to-br ${getPostGradient(post.title)} sm:h-64`}>
+        <div className="container-main flex h-full items-end pb-6">
           <Link
             href="/blog"
-            className="mb-6 inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600"
+            className="inline-flex items-center gap-1 rounded-full bg-white/20 px-3 py-1 text-sm text-white backdrop-blur-sm hover:bg-white/30"
           >
-            <ArrowLeft className="h-4 w-4" /> Back to Blog
+            <ArrowLeft className="h-3.5 w-3.5" /> Back to Blog
           </Link>
+        </div>
+      </div>
 
+      <div className="container-main">
+        <div className="mx-auto max-w-3xl">
           {/* Tags */}
-          <div className="flex flex-wrap gap-2">
+          <div className="-mt-4 flex flex-wrap gap-2">
             {post.tags.map((t) => (
-              <span key={t} className="badge-type">{t}</span>
+              <span key={t} className="badge-type border border-white bg-white shadow-sm">{t}</span>
             ))}
           </div>
 
           {/* Title */}
-          <h1 className="mt-4 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl">
+          <h1 className="mt-6 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl">
             {post.title}
           </h1>
 
@@ -88,13 +111,6 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
               <Clock className="h-3.5 w-3.5" />
               {post.readTime} min read
             </span>
-          </div>
-
-          {/* Cover image placeholder */}
-          <div className="mt-6 h-64 overflow-hidden rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700">
-            <div className="flex h-full items-center justify-center">
-              <span className="text-4xl font-bold text-white/20">Cover Image</span>
-            </div>
           </div>
 
           {/* Article body — TODO: replace with MDXRemote */}
@@ -130,14 +146,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
             <p className="mt-1 text-sm text-gray-500">
               Weekly curated deals, price drops, and analysis. No spam.
             </p>
-            <div className="mt-4 flex justify-center gap-2">
-              <input
-                type="email"
-                placeholder="you@email.com"
-                className="input w-64 text-sm"
-              />
-              <button className="btn-primary text-sm">Subscribe</button>
-            </div>
+            <NewsletterForm variant="inline" className="mx-auto mt-4 max-w-md" />
           </div>
         </div>
       </div>

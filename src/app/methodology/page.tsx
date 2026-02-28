@@ -11,26 +11,33 @@ export const metadata: Metadata = {
 
 export default function MethodologyPage() {
   return (
-    <div className="py-8">
-      <div className="container-main">
+    <div className="pb-12">
+      {/* Hero */}
+      <section className="border-b border-gray-100 bg-gradient-to-b from-brand-50 to-white py-8 sm:py-10">
+        <div className="container-main">
+          <div className="mx-auto max-w-3xl">
+            <Link
+              href="/analytics"
+              className="mb-4 inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600"
+            >
+              <ArrowLeft className="h-4 w-4" /> Back to Analytics
+            </Link>
+
+            <h1 className="text-3xl font-bold text-gray-900">
+              How the Lootboxes Score Works
+            </h1>
+            <p className="mt-3 text-lg text-gray-500">
+              Our mission is transparency. Here&apos;s exactly how we rate every
+              game&apos;s monetization system.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div className="container-main mt-8">
         <div className="mx-auto max-w-3xl">
-          <Link
-            href="/analytics"
-            className="mb-6 inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-600"
-          >
-            <ArrowLeft className="h-4 w-4" /> Back to Analytics
-          </Link>
-
-          <h1 className="text-3xl font-bold text-gray-900">
-            How the Lootboxes Score Works
-          </h1>
-          <p className="mt-3 text-lg text-gray-500">
-            Our mission is transparency. Here&apos;s exactly how we rate every
-            game&apos;s monetization system.
-          </p>
-
           {/* Score scale visual */}
-          <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-6">
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
             <h2 className="text-lg font-bold text-gray-900">The Score Scale</h2>
             <p className="mt-2 text-sm text-gray-500">
               The Lootboxes Score rates monetization fairness from 1 to 10.
@@ -45,7 +52,7 @@ export default function MethodologyPage() {
                 { range: "3-4", label: "Poor", desc: "Aggressive monetization, poor value, or manipulative design", color: "bg-orange-100 text-orange-800" },
                 { range: "1-2", label: "Predatory", desc: "Exploitative mechanics targeting vulnerable players, extreme pricing", color: "bg-red-100 text-red-800" },
               ].map((tier) => (
-                <div key={tier.range} className="flex items-start gap-4 rounded-lg p-3">
+                <div key={tier.range} className="flex items-start gap-4 rounded-lg p-3 transition-colors hover:bg-gray-50">
                   <span className={`inline-flex items-center justify-center rounded-lg px-3 py-1 text-sm font-bold ${tier.color}`}>
                     {tier.range}
                   </span>
@@ -59,13 +66,13 @@ export default function MethodologyPage() {
           </div>
 
           {/* Scoring criteria */}
-          <div className="mt-8">
+          <div className="mt-10">
             <h2 className="text-2xl font-bold text-gray-900">Scoring Criteria</h2>
             <p className="mt-2 text-gray-500">
               Each game is evaluated across five weighted dimensions.
             </p>
 
-            <div className="mt-6 space-y-6">
+            <div className="mt-6 space-y-4">
               {[
                 {
                   icon: Scale,
@@ -93,7 +100,7 @@ export default function MethodologyPage() {
                   desc: "Does the game use dark patterns like FOMO timers, artificial scarcity, or loss aversion mechanics to pressure spending?",
                 },
               ].map((criterion) => (
-                <div key={criterion.title} className="flex gap-4 rounded-xl border border-gray-200 bg-white p-5">
+                <div key={criterion.title} className="flex gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
                   <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-brand-100">
                     <criterion.icon className="h-5 w-5 text-brand-600" />
                   </div>
@@ -107,7 +114,7 @@ export default function MethodologyPage() {
           </div>
 
           {/* Process */}
-          <div className="mt-8">
+          <div className="mt-10">
             <h2 className="text-2xl font-bold text-gray-900">Our Process</h2>
             <article className="prose prose-gray mt-4 max-w-none prose-headings:text-gray-900">
               <p>
@@ -131,7 +138,7 @@ export default function MethodologyPage() {
           </div>
 
           {/* Example scores */}
-          <div className="mt-8 rounded-2xl border border-gray-200 bg-gray-50 p-6">
+          <div className="mt-10 rounded-2xl border border-gray-200 bg-gray-50 p-6">
             <h2 className="text-lg font-bold text-gray-900">Example Scores</h2>
             <div className="mt-4 space-y-3">
               {[
@@ -140,7 +147,7 @@ export default function MethodologyPage() {
                 { game: "Counter-Strike 2", score: 3.8, reason: "Opaque drop rates, skin gambling ecosystem, high-value rarity" },
                 { game: "FIFA 25", score: 2.1, reason: "Pay-to-win Ultimate Team, undisclosed pack weights, aggressive FOMO" },
               ].map((example) => (
-                <div key={example.game} className="flex items-center gap-4 rounded-lg bg-white p-3">
+                <div key={example.game} className="flex items-center gap-4 rounded-lg bg-white p-3 shadow-sm">
                   <ScoreBadge score={example.score} size="lg" />
                   <div>
                     <span className="text-sm font-semibold text-gray-900">{example.game}</span>
@@ -152,7 +159,7 @@ export default function MethodologyPage() {
           </div>
 
           {/* CTA */}
-          <div className="mt-8 text-center">
+          <div className="mt-10 text-center">
             <p className="text-sm text-gray-500">
               Disagree with a score? We welcome constructive feedback.
             </p>

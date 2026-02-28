@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Search, Filter, ChevronRight, AlertTriangle, CheckCircle, HelpCircle } from "lucide-react";
+import { Search, ChevronRight, AlertTriangle, CheckCircle, HelpCircle, Zap, Sparkles } from "lucide-react";
 import ScoreBadge from "@/components/analytics/ScoreBadge";
+import GameAvatar from "@/components/ui/GameAvatar";
 
 // TODO: Replace with Supabase queries
 const MOCK_GAMES_WITH_RATES = [
@@ -102,20 +103,25 @@ export const metadata = {
 
 export default function DropRatesPage() {
   return (
-    <div className="py-8">
-      <div className="container-main">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Drop Rate Database</h1>
+    <div className="pb-12">
+      {/* Page hero */}
+      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 sm:py-10">
+        <div className="container-main">
+          <div className="flex items-center gap-2">
+            <Zap className="h-6 w-6 text-brand-600" />
+            <h1 className="text-3xl font-bold text-gray-900">Drop Rate Database</h1>
+          </div>
           <p className="mt-2 max-w-2xl text-gray-500">
             Verified drop rates and loot box probabilities for every major game.
             Know your odds before you spend. All rates sourced from official disclosures,
             community research, and user reports.
           </p>
         </div>
+      </section>
 
+      <div className="container-main mt-6">
         {/* Search + Filter */}
-        <div className="mb-6 flex flex-col gap-3 sm:flex-row">
+        <div className="flex flex-col gap-3 sm:flex-row">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <input
@@ -141,7 +147,7 @@ export default function DropRatesPage() {
         </div>
 
         {/* Methodology callout */}
-        <div className="mb-8 rounded-xl border border-brand-200 bg-brand-50 p-4">
+        <div className="mt-6 rounded-xl border border-brand-200 bg-brand-50 p-4">
           <h3 className="text-sm font-semibold text-brand-800">How We Verify Drop Rates</h3>
           <p className="mt-1 text-sm text-brand-700">
             We rank data sources in three tiers: <strong>Official</strong> (disclosed by
@@ -153,12 +159,15 @@ export default function DropRatesPage() {
         </div>
 
         {/* Game sections */}
-        <div className="space-y-8">
+        <div className="mt-8 space-y-8">
           {MOCK_GAMES_WITH_RATES.map((game) => (
-            <section key={game.slug} className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+            <section key={game.slug} className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
               {/* Game header */}
               <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50 px-5 py-3">
                 <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 flex-shrink-0 overflow-hidden rounded-lg">
+                    <GameAvatar gameName={game.title} size="sm" aspectRatio="square" />
+                  </div>
                   <h2 className="text-lg font-bold text-gray-900">{game.title}</h2>
                   {game.lootboxes_score && (
                     <ScoreBadge score={game.lootboxes_score} size="sm" />
@@ -229,7 +238,8 @@ export default function DropRatesPage() {
 
         {/* CTA */}
         <div className="mt-10 rounded-xl border border-gray-200 bg-gray-50 p-6 text-center">
-          <h3 className="text-lg font-bold text-gray-900">Know drop rates we&apos;re missing?</h3>
+          <Sparkles className="mx-auto h-6 w-6 text-brand-600" />
+          <h3 className="mt-2 text-lg font-bold text-gray-900">Know drop rates we&apos;re missing?</h3>
           <p className="mt-1 text-sm text-gray-500">
             Help us build the most accurate database by submitting your data.
           </p>
