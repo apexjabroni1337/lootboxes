@@ -94,9 +94,13 @@ export async function getGameInfo(ids: string[]): Promise<ITADGameInfo[]> {
   if (!ids.length) return [];
   const url = new URL(`${ITAD_BASE}/games/info/v2`);
   url.searchParams.set("key", getKey());
-  url.searchParams.set("id", ids.join(","));
 
-  const res = await fetch(url.toString(), { next: { revalidate: 3600 } });
+  const res = await fetch(url.toString(), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(ids),
+    next: { revalidate: 3600 },
+  } as any);
   if (!res.ok) throw new Error(`ITAD game info failed: ${res.status}`);
   return res.json();
 }
@@ -113,12 +117,16 @@ export async function getPrices(
   if (!ids.length) return {};
   const url = new URL(`${ITAD_BASE}/games/prices/v2`);
   url.searchParams.set("key", getKey());
-  url.searchParams.set("id", ids.join(","));
   url.searchParams.set("country", country);
   if (shops?.length) url.searchParams.set("shops", shops.join(","));
   url.searchParams.set("nondeals", "true"); // Include base prices too
 
-  const res = await fetch(url.toString(), { next: { revalidate: 300 } }); // 5min cache
+  const res = await fetch(url.toString(), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(ids),
+    next: { revalidate: 300 },
+  } as any);
   if (!res.ok) throw new Error(`ITAD prices failed: ${res.status}`);
   return res.json();
 }
@@ -138,10 +146,14 @@ export async function getHistoricLow(
   if (!ids.length) return {};
   const url = new URL(`${ITAD_BASE}/games/historylow/v1`);
   url.searchParams.set("key", getKey());
-  url.searchParams.set("id", ids.join(","));
   url.searchParams.set("country", country);
 
-  const res = await fetch(url.toString(), { next: { revalidate: 3600 } });
+  const res = await fetch(url.toString(), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(ids),
+    next: { revalidate: 3600 },
+  } as any);
   if (!res.ok) throw new Error(`ITAD historic low failed: ${res.status}`);
   return res.json();
 }
