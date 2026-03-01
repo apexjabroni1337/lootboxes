@@ -2,14 +2,41 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-import { Search, Menu, X, ChevronDown } from "lucide-react";
+import {
+  Search,
+  Menu,
+  X,
+  ChevronDown,
+  Flame,
+  TrendingDown,
+  Tag,
+  Gamepad2,
+  Swords,
+  Globe,
+  Crosshair,
+  Car,
+  Puzzle,
+  Users,
+  Trophy,
+} from "lucide-react";
 import SearchDialog from "@/components/search/SearchDialog";
 
-const NAV_ITEMS = [
-  { label: "Hot Deals", href: "/deals" },
-  { label: "Games", href: "/games" },
-  { label: "Analytics", href: "/analytics" },
-  { label: "Drop Rates", href: "/drop-rates" },
+const GENRES = [
+  { label: "Action", href: "/deals?genre=action", icon: Swords },
+  { label: "RPG", href: "/deals?genre=rpg", icon: Gamepad2 },
+  { label: "FPS", href: "/deals?genre=fps", icon: Crosshair },
+  { label: "Open World", href: "/deals?genre=open-world", icon: Globe },
+  { label: "Racing", href: "/deals?genre=racing", icon: Car },
+  { label: "Strategy", href: "/deals?genre=strategy", icon: Puzzle },
+  { label: "Multiplayer", href: "/deals?genre=multiplayer", icon: Users },
+  { label: "Sports", href: "/deals?genre=sports", icon: Trophy },
+];
+
+const QUICK_LINKS = [
+  { label: "Under $10", href: "/deals?max=10", color: "bg-success-50 text-success-700" },
+  { label: "Under $20", href: "/deals?max=20", color: "bg-brand-50 text-brand-700" },
+  { label: "Historic Lows", href: "/deals?filter=historic", color: "bg-amber-50 text-amber-700" },
+  { label: "50%+ Off", href: "/deals?min_discount=50", color: "bg-red-50 text-red-700" },
 ];
 
 const TRENDING_SEARCHES = [
@@ -23,7 +50,9 @@ const TRENDING_SEARCHES = [
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const searchInputRef = useRef<HTMLInputElement>(null);
+  const [megaOpen, setMegaOpen] = useState(false);
+  const megaRef = useRef<HTMLDivElement>(null);
+  const megaTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Cmd+K / Ctrl+K shortcut to open search
   useEffect(() => {
@@ -36,6 +65,25 @@ export default function Header() {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, []);
+
+  // Close mega menu on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (megaRef.current && !megaRef.current.contains(e.target as Node)) {
+        setMegaOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const openMega = () => {
+    if (megaTimeout.current) clearTimeout(megaTimeout.current);
+    setMegaOpen(true);
+  };
+  const closeMega = () => {
+    megaTimeout.current = setTimeout(() => setMegaOpen(false), 150);
+  };
 
   return (
     <>
@@ -55,15 +103,133 @@ export default function Header() {
 
             {/* Desktop Nav */}
             <nav className="hidden items-center gap-1 lg:flex">
-              {NAV_ITEMS.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+              <Link
+                href="/deals"
+                className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+              >
+                <Flame className="h-3.5 w-3.5 text-orange-500" />
+                Hot Deals
+              </Link>
+
+              {/* Games mega menu trigger */}
+              <div
+                ref={megaRef}
+                className="relative"
+                onMouseEnter={openMega}
+                onMouseLeave={closeMega}
+              >
+                <button
+                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                  onClick={() => setMegaOpen(!megaOpen)}
                 >
-                  {item.label}
-                </Link>
-              ))}
+                  Games
+                  <ChevronDown
+                    className={`h-3.5 w-3.5 transition-transform ${megaOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {/* Mega menu dropdown */}
+                {megaOpen && (
+                  <div className="absolute left-0 top-full z-50 mt-1 w-[520px] rounded-xl border border-gray-200 bg-white p-5 shadow-xl">
+                    <div className="grid grid-cols-2 gap-6">
+                      {/* Genres column */}
+                      <div>
+                        <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                          Browse by Genre
+                        </h4>
+                        <div className="space-y-0.5">
+                          {GENRES.map((g) => (
+                            <Link
+                              key={g.label}
+                              href={g.href}
+                              onClick={() => setMegaOpen(false)}
+                              className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
+                            >
+                              <g.icon className="h-4 w-4 text-gray-400" />
+                              {g.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Quick links + featured */}
+                      <div>
+                        <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                          Quick Filters
+                        </h4>
+                        <div className="space-y-2">
+                          {QUICK_LINKS.map((q) => (
+                            <Link
+                              key={q.label}
+                              href={q.href}
+                              onClick={() => setMegaOpen(false)}
+                              className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:opacity-80 ${q.color}`}
+                            >
+                              {q.label}
+                            </Link>
+                          ))}
+                        </div>
+
+                        <div className="mt-5 rounded-lg border border-brand-100 bg-brand-50 p-3">
+                          <p className="text-xs font-semibold text-brand-700">
+                            Price Drop Alerts
+                          </p>
+                          <p className="mt-0.5 text-[11px] text-brand-600">
+                            Get notified when games hit their lowest price.
+                          </p>
+                          <Link
+                            href="/newsletter"
+                            onClick={() => setMegaOpen(false)}
+                            className="mt-2 inline-block text-xs font-semibold text-brand-700 hover:text-brand-800"
+                          >
+                            Sign up free →
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bottom bar */}
+                    <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
+                      <Link
+                        href="/games"
+                        onClick={() => setMegaOpen(false)}
+                        className="text-sm font-medium text-brand-600 hover:text-brand-700"
+                      >
+                        Browse all games →
+                      </Link>
+                      <div className="flex gap-2">
+                        <Link
+                          href="/deals?sort=newest"
+                          onClick={() => setMegaOpen(false)}
+                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                        >
+                          New Releases
+                        </Link>
+                        <Link
+                          href="/deals?sort=trending"
+                          onClick={() => setMegaOpen(false)}
+                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                        >
+                          Trending
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <Link
+                href="/analytics"
+                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+              >
+                Analytics
+              </Link>
+              <Link
+                href="/drop-rates"
+                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+              >
+                Drop Rates
+              </Link>
             </nav>
 
             {/* Prominent search bar (desktop) */}
@@ -133,20 +299,59 @@ export default function Header() {
           {mobileOpen && (
             <div className="border-t border-gray-100 py-4 lg:hidden">
               <nav className="flex flex-col gap-1">
-                {NAV_ITEMS.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+                <Link
+                  href="/deals"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <Flame className="h-4 w-4 text-orange-500" />
+                  Hot Deals
+                </Link>
+                <Link
+                  href="/games"
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  Games
+                </Link>
+                <Link
+                  href="/analytics"
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  Analytics
+                </Link>
+                <Link
+                  href="/drop-rates"
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  Drop Rates
+                </Link>
+
+                {/* Mobile quick filters */}
+                <div className="mt-2 border-t border-gray-100 pt-3">
+                  <p className="px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                    Quick Filters
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-2 px-3">
+                    {QUICK_LINKS.map((q) => (
+                      <Link
+                        key={q.label}
+                        href={q.href}
+                        onClick={() => setMobileOpen(false)}
+                        className={`rounded-full px-3 py-1.5 text-xs font-medium ${q.color}`}
+                      >
+                        {q.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
                 <Link
                   href="/newsletter"
                   onClick={() => setMobileOpen(false)}
-                  className="btn-primary mt-2 text-center"
+                  className="btn-primary mt-3 text-center"
                 >
                   Get Deal Alerts
                 </Link>
