@@ -49,12 +49,10 @@ export async function GET(request: NextRequest) {
   };
 
   try {
-    // Find games that need enrichment:
-    // - Missing cover_image (most important — means freshly imported)
-    // - OR missing screenshot_image
+    // Find games that need enrichment (missing BOTH images — already having one is fine)
     const { data: games, error: queryErr } = await supabase
       .from("games")
-      .select("id, title, cover_image, screenshot_image, genres")
+      .select("id, title, itad_id, cover_image, screenshot_image")
       .or("cover_image.is.null,screenshot_image.is.null")
       .order("created_at", { ascending: false })
       .limit(limit);
@@ -69,40 +67,42 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Process games with IGDB rate limiting (4 req/sec → 350ms between)
     for (const game of games) {
       stats.processed++;
 
       try {
-        const igdb = await searchGame(game.title);
-
-        if (!igdb) {
-          stats.notFound++;
-          continue;
-        }
-
         const updates: Record<string, any> = {};
 
-        // Cover image
-        if (!game.cover_image && igdb.cover?.image_id) {
-          updates.cover_image = igdbImageUrl(igdb.cover.image_id, "cover_big");
-          stats.enrichedCovers++;
+        // Try IGDB first
+        const igdb = await searchGame(game.title);
+
+        if (igdb) {
+          if (!game.cover_image && igdb.cover?.image_id) {
+            updates.cover_image = igdbImageUrl(igdb.cover.image_id, "cover_big");
+            stats.enrichedCovers++;
+          }
+          if (!game.screenshot_image && igdb.screenshots?.length) {
+            updates.screenshot_image = igdbImageUrl(
+              igdb.screenshots[0].image_id,
+              "screenshot_big"
+            );
+            stats.enrichedScreenshots++;
+          }
+        } else {
+          stats.notFound++;
         }
 
-        // Screenshot image
-        if (!game.screenshot_image && igdb.screenshots?.length) {
-          updates.screenshot_image = igdbImageUrl(
-            igdb.screenshots[0].image_id,
-            "screenshot_big"
-          );
-          stats.enrichedScreenshots++;
-        }
-
-        // Genres (if empty array)
-        if ((!game.genres || game.genres.length === 0) && igdb) {
-          // IGDB returns genre IDs — we need to query for names
-          // For now, skip genre enrichment (would require additional API call)
-          // The discover-games endpoint doesn't set genres, so we leave them for later
+        // Fallback: Try to get Steam images from the game's deal URLs
+        if (!updates.cover_image && !game.cover_image) {
+          const steamImages = await getSteamImagesForGame(supabase, game.id);
+          if (steamImages.cover) {
+            updates.cover_image = steamImages.cover;
+            stats.enrichedCovers++;
+          }
+          if (!updates.screenshot_image && !game.screenshot_image && steamImages.screenshot) {
+            updates.screenshot_image = steamImages.screenshot;
+            stats.enrichedScreenshots++;
+          }
         }
 
         if (Object.keys(updates).length > 0) {
@@ -134,4 +134,32 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+/**
+ * Look up a game's deals to find a Steam store URL, then construct
+ * Steam CDN image URLs from the app ID.
+ */
+async function getSteamImagesForGame(
+  supabase: ReturnType<typeof createServerClient>,
+  gameId: string
+): Promise<{ cover: string | null; screenshot: string | null }> {
+  const { data: deals } = await supabase
+    .from("deals")
+    .select("store_url")
+    .eq("game_id", gameId)
+    .eq("store", "steam")
+    .limit(1);
+
+  if (!deals?.length) return { cover: null, screenshot: null };
+
+  const url = deals[0].store_url || "";
+  const match = url.match(/store\.steampowered\.com\/app\/(\d+)/);
+  if (!match) return { cover: null, screenshot: null };
+
+  const appId = match[1];
+  return {
+    cover: `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/library_600x900.jpg`,
+    screenshot: `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/header.jpg`,
+  };
 }

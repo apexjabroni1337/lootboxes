@@ -106,25 +106,82 @@ export interface IGDBGame {
 // ─── Public API ───
 
 /**
+ * Clean a game title for better IGDB search matching.
+ * Strips edition names, DLC markers, platform tags, etc.
+ */
+function cleanTitle(title: string): string {
+  return title
+    // Remove common edition/bundle suffixes
+    .replace(/\s*[-–—:]\s*(deluxe|gold|premium|ultimate|complete|goty|game of the year|definitive|enhanced|remastered|special|collector'?s?|anniversary|legacy|standard|digital|limited)\s*(edition|version|pack|bundle)?/gi, "")
+    // Remove soundtrack/DLC markers
+    .replace(/\s*[-–—:]\s*(original\s+)?soundtrack$/gi, "")
+    .replace(/\s*[-–—:]\s*(season\s+pass|expansion\s+pass|dlc|upgrade|pack|bundle)$/gi, "")
+    // Remove platform tags
+    .replace(/\s*\((pc|mac|linux|windows|steam|epic)\)/gi, "")
+    // Remove trademark symbols
+    .replace(/[™®©]/g, "")
+    // Normalize whitespace
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
  * Search for a game by name and return its cover image info.
+ * Uses progressive search: exact title → cleaned title → shorter title.
  */
 export async function searchGame(title: string): Promise<IGDBGame | null> {
-  // Search by exact name first, then fuzzy
-  const results = await igdbQuery<IGDBGame>(
+  const escTitle = (t: string) => t.replace(/"/g, '\\"');
+
+  // Attempt 1: Search with exact title
+  let results = await igdbQuery<IGDBGame>(
     "games",
-    `search "${title.replace(/"/g, '\\"')}";
+    `search "${escTitle(title)}";
      fields name, cover.image_id, screenshots.image_id;
-     limit 5;`
+     limit 10;`
   );
+
+  // Attempt 2: Try cleaned title if no results
+  const cleaned = cleanTitle(title);
+  if (!results.length && cleaned !== title) {
+    results = await igdbQuery<IGDBGame>(
+      "games",
+      `search "${escTitle(cleaned)}";
+       fields name, cover.image_id, screenshots.image_id;
+       limit 10;`
+    );
+  }
+
+  // Attempt 3: Try just the first part before colon/dash (e.g. "Witcher 3" from "Witcher 3: Wild Hunt - Complete")
+  if (!results.length) {
+    const shortTitle = title.split(/\s*[-–—:]\s*/)[0].trim();
+    if (shortTitle.length >= 3 && shortTitle !== title && shortTitle !== cleaned) {
+      results = await igdbQuery<IGDBGame>(
+        "games",
+        `search "${escTitle(shortTitle)}";
+         fields name, cover.image_id, screenshots.image_id;
+         limit 10;`
+      );
+    }
+  }
 
   if (!results.length) return null;
 
-  // Try exact match (case-insensitive)
-  const exact = results.find(
-    (g) => g.name.toLowerCase() === title.toLowerCase()
-  );
+  // Prefer results that have cover images
+  const withCover = results.filter((g) => g.cover?.image_id);
 
-  return exact || results[0];
+  // Try exact match first (case-insensitive)
+  const pool = withCover.length ? withCover : results;
+  const titleLower = title.toLowerCase();
+  const cleanedLower = cleaned.toLowerCase();
+
+  const exact = pool.find((g) => g.name.toLowerCase() === titleLower);
+  if (exact) return exact;
+
+  const cleanedMatch = pool.find((g) => g.name.toLowerCase() === cleanedLower);
+  if (cleanedMatch) return cleanedMatch;
+
+  // Return first result with a cover, or just first result
+  return withCover[0] || results[0];
 }
 
 /**
