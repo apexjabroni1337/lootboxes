@@ -247,9 +247,12 @@ function extractPlatforms(deals: ITADDeal[]): string[] {
   return Array.from(platformSet);
 }
 
-const JUNK_PATTERN = /\b(bundle|soundtrack|ost|artbook|art\s+book|wallpaper|collection|season\s+pass|expansion\s+pass|dlc\s+pack|skin\s+pack|costume\s+pack|character\s+pack|weapon\s+pack|map\s+pack|bonus\s+content|digital\s+content|starter\s+pack|booster\s+pack|credits\s+pack|coin\s+pack|upgrade|upgrade-paket|donation|vault\s+edition)\b/i;
+const JUNK_PATTERN = /\b(bundle|soundtrack|ost|artbook|art\s+book|wallpaper|collection|season\s+pass|expansion\s+pass|dlc\s+pack|skin\s+pack|costume\s+pack|character\s+pack|weapon\s+pack|map\s+pack|bonus\s+content|digital\s+content|starter\s+pack|booster\s+pack|credits\s+pack|coin\s+pack|upgrade|upgrade-paket|donation|vault\s+edition|deluxe\s+edition|vault)\b/i;
 
 function isJunkTitle(title: string): boolean {
-  return JUNK_PATTERN.test(title);
+  if (JUNK_PATTERN.test(title)) return true;
+  // Catch ★-prefixed titles (e.g. "★ All Strategy ★")
+  if (title.includes('★')) return true;
+  return false;
 }
 
