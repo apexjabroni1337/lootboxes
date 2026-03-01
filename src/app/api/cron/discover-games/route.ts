@@ -5,27 +5,18 @@ import { getDeals, mapShopId, type ITADDeal } from "@/lib/itad";
 /**
  * Cron endpoint: Discover new games from the ITAD deals feed.
  *
- * Paginates through ITAD's global deals list, discovers games we don't
- * yet track, inserts them + their deals. Existing games are SKIPPED
- * (sync-deals handles those). This keeps runtime fast.
+ * Strategy: Scan ITAD deals pages → collect new games → ONE batch insert
+ * for games → ONE batch insert for deals. Minimizes DB round-trips.
  *
  * Runs every 6 hours via Vercel Cron.
- * After this runs, enrich-games fetches IGDB images.
- *
- * Auth: requires CRON_SECRET
- * Usage:
- *   Cron: Authorization: Bearer {CRON_SECRET}
- *   Manual: GET /api/cron/discover-games?secret={CRON_SECRET}
- *   Optional: &pages=5 (default 3, each page = 200 deals)
  */
 
-export const maxDuration = 60; // Allow up to 60s on Vercel Pro
+export const maxDuration = 60;
 
 const DEALS_PER_PAGE = 200;
-const DEFAULT_PAGES = 3; // 3 pages × 200 = 600 deals scanned per run
+const DEFAULT_PAGES = 3;
 
 export async function GET(request: NextRequest) {
-  // Auth
   const secret = request.nextUrl.searchParams.get("secret");
   const authHeader = request.headers.get("authorization");
   const cronSecret = process.env.CRON_SECRET;
@@ -50,7 +41,7 @@ export async function GET(request: NextRequest) {
   };
 
   try {
-    // Get all existing ITAD IDs so we can skip known games
+    // Step 1: Get all existing ITAD IDs
     const { data: existingGames, error: gamesErr } = await supabase
       .from("games")
       .select("itad_id");
@@ -61,99 +52,133 @@ export async function GET(request: NextRequest) {
       (existingGames || []).map((g) => g.itad_id).filter(Boolean)
     );
 
-    // Paginate through ITAD deals feed
+    // Step 2: Scan ITAD pages and collect new games + their deals
+    const newGamesMap = new Map<string, { title: string; slug: string; platforms: string[]; deals: ITADDeal[] }>();
+
     for (let page = 0; page < maxPages; page++) {
       try {
         const offset = page * DEALS_PER_PAGE;
-        const { list: deals, count } = await getDeals({
-          offset,
-          limit: DEALS_PER_PAGE,
-        });
+        const { list: deals, count } = await getDeals({ offset, limit: DEALS_PER_PAGE });
 
         stats.pagesScanned++;
         stats.dealsScanned += deals.length;
+        if (!deals.length) break;
 
-        if (!deals.length) break; // No more deals
-
-        // Group deals by game ITAD ID
-        const dealsByGame = new Map<string, ITADDeal[]>();
         for (const deal of deals) {
-          const gameId = deal.id;
-          if (!dealsByGame.has(gameId)) {
-            dealsByGame.set(gameId, []);
-          }
-          dealsByGame.get(gameId)!.push(deal);
-        }
+          const itadId = deal.id;
 
-        // Process each game — ONLY new games
-        for (const [itadId, gameDeals] of Array.from(dealsByGame.entries())) {
           if (existingItadIds.has(itadId)) {
-            stats.existingGamesSkipped++;
             continue; // sync-deals handles existing games
           }
 
-          const firstDeal = gameDeals[0];
-
-          try {
-            const slug = makeSlug(firstDeal.title);
-            const platforms = extractPlatforms(gameDeals);
-
-            const { data: newGame, error: insertErr } = await supabase
-              .from("games")
-              .insert({
-                title: firstDeal.title,
-                slug,
-                itad_id: itadId,
-                platforms,
-                genres: [],
-              })
-              .select("id")
-              .single();
-
-            if (insertErr) {
-              // Slug collision — try with suffix
-              if (insertErr.message.includes("duplicate") || insertErr.message.includes("unique")) {
-                const { data: retryGame, error: retryErr } = await supabase
-                  .from("games")
-                  .insert({
-                    title: firstDeal.title,
-                    slug: `${slug}-${itadId.slice(0, 6)}`,
-                    itad_id: itadId,
-                    platforms,
-                    genres: [],
-                  })
-                  .select("id")
-                  .single();
-
-                if (retryErr) {
-                  stats.errors.push(`Insert retry ${firstDeal.title}: ${retryErr.message}`);
-                  continue;
-                }
-
-                existingItadIds.add(itadId);
-                stats.newGamesDiscovered++;
-                await batchImportDeals(supabase, retryGame!.id, gameDeals, stats);
-              } else {
-                stats.errors.push(`Insert ${firstDeal.title}: ${insertErr.message}`);
-              }
-              continue;
-            }
-
-            existingItadIds.add(itadId);
-            stats.newGamesDiscovered++;
-            await batchImportDeals(supabase, newGame!.id, gameDeals, stats);
-          } catch (err: any) {
-            stats.errors.push(`Game ${firstDeal.title}: ${err.message}`);
+          if (newGamesMap.has(itadId)) {
+            newGamesMap.get(itadId)!.deals.push(deal);
+          } else {
+            newGamesMap.set(itadId, {
+              title: deal.title,
+              slug: makeSlug(deal.title),
+              platforms: extractPlatforms([deal]),
+              deals: [deal],
+            });
           }
         }
 
-        // Stop if we've seen all available deals
         if (offset + deals.length >= count) break;
-
-        // Polite delay between pages
-        await new Promise((r) => setTimeout(r, 300));
+        await new Promise((r) => setTimeout(r, 200));
       } catch (pageErr: any) {
         stats.errors.push(`Page ${page}: ${pageErr.message}`);
+      }
+    }
+
+    stats.existingGamesSkipped = stats.dealsScanned - Array.from(newGamesMap.values()).reduce((sum, g) => sum + g.deals.length, 0);
+
+    if (newGamesMap.size === 0) {
+      return NextResponse.json({ ok: true, ...stats, timestamp: new Date().toISOString() });
+    }
+
+    // Step 3: Deduplicate slugs and batch insert ALL new games at once
+    const slugCounts = new Map<string, number>();
+    const gameRows: { title: string; slug: string; itad_id: string; platforms: string[]; genres: never[] }[] = [];
+
+    for (const [itadId, game] of Array.from(newGamesMap.entries())) {
+      let slug = game.slug;
+      const count = slugCounts.get(slug) || 0;
+      if (count > 0) {
+        slug = `${slug}-${itadId.slice(0, 6)}`;
+      }
+      slugCounts.set(game.slug, count + 1);
+
+      gameRows.push({
+        title: game.title,
+        slug,
+        itad_id: itadId,
+        platforms: game.platforms,
+        genres: [],
+      });
+    }
+
+    // Insert games in chunks of 100 to avoid payload limits
+    const CHUNK_SIZE = 100;
+    const insertedGames: { id: string; itad_id: string }[] = [];
+
+    for (let i = 0; i < gameRows.length; i += CHUNK_SIZE) {
+      const chunk = gameRows.slice(i, i + CHUNK_SIZE);
+      const { data, error } = await supabase
+        .from("games")
+        .upsert(chunk, { onConflict: "itad_id", ignoreDuplicates: true })
+        .select("id, itad_id");
+
+      if (error) {
+        stats.errors.push(`Game batch insert chunk ${i}: ${error.message}`);
+      } else if (data) {
+        insertedGames.push(...data);
+      }
+    }
+
+    stats.newGamesDiscovered = insertedGames.length;
+
+    // Step 4: Build game_id lookup and batch insert ALL deals
+    const gameIdByItad = new Map<string, string>();
+    for (const g of insertedGames) {
+      gameIdByItad.set(g.itad_id, g.id);
+    }
+
+    const allDealRows: Record<string, any>[] = [];
+    const now = new Date().toISOString();
+
+    for (const [itadId, game] of Array.from(newGamesMap.entries())) {
+      const gameId = gameIdByItad.get(itadId);
+      if (!gameId) continue;
+
+      for (const deal of game.deals) {
+        const d = deal.deal;
+        allDealRows.push({
+          game_id: gameId,
+          store: mapShopId(d.shop),
+          store_url: d.url,
+          price: d.price.amount,
+          original_price: d.regular.amount,
+          discount_pct: d.cut,
+          currency: d.price.currency,
+          is_historic_low: d.flag === "H",
+          affiliate_url: d.url,
+          expires_at: d.expiry || null,
+          scraped_at: now,
+        });
+      }
+    }
+
+    // Insert deals in chunks
+    for (let i = 0; i < allDealRows.length; i += CHUNK_SIZE) {
+      const chunk = allDealRows.slice(i, i + CHUNK_SIZE);
+      const { error } = await supabase
+        .from("deals")
+        .upsert(chunk, { onConflict: "game_id,store,price", ignoreDuplicates: false });
+
+      if (error) {
+        stats.errors.push(`Deal batch chunk ${i}: ${error.message}`);
+      } else {
+        stats.dealsImported += chunk.length;
       }
     }
 
@@ -195,43 +220,4 @@ function extractPlatforms(deals: ITADDeal[]): string[] {
     }
   }
   return Array.from(platformSet);
-}
-
-/**
- * Batch upsert deals for a newly discovered game.
- * Uses a single Supabase upsert call instead of one per deal.
- */
-async function batchImportDeals(
-  supabase: ReturnType<typeof createServerClient>,
-  gameId: string,
-  deals: ITADDeal[],
-  stats: { dealsImported: number; errors: string[] }
-) {
-  const rows = deals.map((deal) => {
-    const d = deal.deal;
-    const storeKey = mapShopId(d.shop);
-    return {
-      game_id: gameId,
-      store: storeKey,
-      store_url: d.url,
-      price: d.price.amount,
-      original_price: d.regular.amount,
-      discount_pct: d.cut,
-      currency: d.price.currency,
-      is_historic_low: d.flag === "H",
-      affiliate_url: d.url,
-      expires_at: d.expiry || null,
-      scraped_at: new Date().toISOString(),
-    };
-  });
-
-  const { error } = await supabase
-    .from("deals")
-    .upsert(rows, { onConflict: "game_id,store,price", ignoreDuplicates: false });
-
-  if (error) {
-    stats.errors.push(`Batch deal upsert (${rows.length} deals): ${error.message}`);
-  } else {
-    stats.dealsImported += rows.length;
-  }
 }
