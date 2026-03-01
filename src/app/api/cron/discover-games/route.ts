@@ -96,18 +96,21 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ ok: true, ...stats, timestamp: new Date().toISOString() });
     }
 
-    // Step 3: Deduplicate slugs and batch insert ALL new games at once
-    const slugCounts = new Map<string, number>();
+    // Step 3: Build game rows with guaranteed-unique slugs
+    const { data: existingSlugs } = await supabase.from("games").select("slug");
+    const usedSlugs = new Set((existingSlugs || []).map((g) => g.slug));
     const gameRows: { title: string; slug: string; itad_id: string; platforms: string[]; genres: never[] }[] = [];
 
     for (const [itadId, game] of Array.from(newGamesMap.entries())) {
       let slug = game.slug;
-      const count = slugCounts.get(slug) || 0;
-      if (count > 0) {
-        // Always make duplicate slugs unique with itad_id prefix
-        slug = `${slug}-${itadId.slice(0, 8)}`;
+      // Keep appending suffix until slug is unique
+      if (usedSlugs.has(slug)) {
+        slug = `${game.slug}-${itadId.slice(0, 8)}`;
       }
-      slugCounts.set(game.slug, count + 1);
+      if (usedSlugs.has(slug)) {
+        slug = `${game.slug}-${itadId}`;
+      }
+      usedSlugs.add(slug);
 
       gameRows.push({
         title: game.title,
@@ -118,19 +121,8 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Also check for slug conflicts with existing DB games
-    const { data: existingSlugs } = await supabase
-      .from("games")
-      .select("slug");
-    const existingSlugSet = new Set((existingSlugs || []).map((g) => g.slug));
-    for (const row of gameRows) {
-      if (existingSlugSet.has(row.slug)) {
-        row.slug = `${row.slug}-${row.itad_id.slice(0, 8)}`;
-      }
-    }
-
-    // Insert games in chunks of 100 to avoid payload limits
-    const CHUNK_SIZE = 100;
+    // Insert games in chunks — fall back to individual inserts on error
+    const CHUNK_SIZE = 50;
     const insertedGames: { id: string; itad_id: string }[] = [];
 
     for (let i = 0; i < gameRows.length; i += CHUNK_SIZE) {
@@ -141,7 +133,19 @@ export async function GET(request: NextRequest) {
         .select("id, itad_id");
 
       if (error) {
-        stats.errors.push(`Game batch insert chunk ${i}: ${error.message}`);
+        // Batch failed — try individual inserts so one bad row doesn't kill the rest
+        for (const row of chunk) {
+          const { data: single, error: singleErr } = await supabase
+            .from("games")
+            .upsert(row, { onConflict: "itad_id", ignoreDuplicates: false })
+            .select("id, itad_id")
+            .single();
+          if (singleErr) {
+            stats.errors.push(`Insert ${row.title}: ${singleErr.message}`);
+          } else if (single) {
+            insertedGames.push(single);
+          }
+        }
       } else if (data) {
         insertedGames.push(...data);
       }
