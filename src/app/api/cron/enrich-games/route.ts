@@ -9,11 +9,16 @@ import { searchGame, igdbImageUrl } from "@/lib/igdb";
  *   1. Try IGDB search (best quality covers + screenshots)
  *   2. Fallback: Steam store search → Steam CDN images
  *
+ * Uses parallel processing (3 concurrent) to maximize throughput
+ * within Vercel's 60s timeout. Processes ~80-100 games per run.
+ *
  * Runs every 6 hours via Vercel Cron (30 min after discover-games).
  */
 
 export const maxDuration = 60;
-const DEFAULT_LIMIT = 30;
+const DEFAULT_LIMIT = 80;
+const CONCURRENCY = 3;
+const SAFETY_TIMEOUT_MS = 55_000; // Stop 5s before Vercel kills us
 
 export async function GET(request: NextRequest) {
   const secret = request.nextUrl.searchParams.get("secret");
@@ -57,72 +62,51 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ ok: true, message: "All games enriched", ...stats });
     }
 
-    for (const game of games) {
-      stats.processed++;
+    // Process games in parallel batches of CONCURRENCY
+    const startTime = Date.now();
 
-      try {
-        const updates: Record<string, any> = {};
-        let found = false;
+    for (let i = 0; i < games.length; i += CONCURRENCY) {
+      // Safety: bail before Vercel timeout
+      if (Date.now() - startTime > SAFETY_TIMEOUT_MS) {
+        stats.errors.push(`Stopped early at ${stats.processed} games (timeout safety)`);
+        break;
+      }
 
-        // ── Strategy 1: IGDB ──
-        try {
-          const igdb = await searchGame(game.title);
-          if (igdb) {
-            if (!game.cover_image && igdb.cover?.image_id) {
-              updates.cover_image = igdbImageUrl(igdb.cover.image_id, "cover_big");
-              stats.enrichedCovers++;
-            }
-            if (!game.screenshot_image && igdb.screenshots?.length) {
-              updates.screenshot_image = igdbImageUrl(igdb.screenshots[0].image_id, "screenshot_big");
-              stats.enrichedScreenshots++;
-            }
-            if (Object.keys(updates).length > 0) {
-              stats.igdbHits++;
-              found = true;
+      const batch = games.slice(i, i + CONCURRENCY);
+
+      const results = await Promise.allSettled(
+        batch.map((game) => enrichGame(game))
+      );
+
+      for (const result of results) {
+        stats.processed++;
+        if (result.status === "fulfilled") {
+          const r = result.value;
+          if (r.igdbHit) stats.igdbHits++;
+          if (r.steamHit) stats.steamHits++;
+          if (r.coversAdded) stats.enrichedCovers++;
+          if (r.screenshotsAdded) stats.enrichedScreenshots++;
+          if (!r.found) stats.notFound++;
+          if (r.error) stats.errors.push(r.error);
+
+          // Write updates to DB
+          if (Object.keys(r.updates).length > 0) {
+            const { error: updateErr } = await supabase
+              .from("games")
+              .update(r.updates)
+              .eq("id", r.gameId);
+            if (updateErr) {
+              stats.errors.push(`Update ${r.gameId}: ${updateErr.message}`);
             }
           }
-        } catch (igdbErr: any) {
-          // IGDB failure (rate limit, etc) — continue to Steam fallback
+        } else {
+          stats.errors.push(`Batch error: ${result.reason?.message || "unknown"}`);
         }
+      }
 
-        // ── Strategy 2: Steam store search ──
-        if (!found && !game.cover_image) {
-          try {
-            const steamAppId = await searchSteamAppId(game.title);
-            if (steamAppId) {
-              if (!updates.cover_image && !game.cover_image) {
-                updates.cover_image = `https://cdn.akamai.steamstatic.com/steam/apps/${steamAppId}/library_600x900.jpg`;
-                stats.enrichedCovers++;
-              }
-              if (!updates.screenshot_image && !game.screenshot_image) {
-                updates.screenshot_image = `https://cdn.akamai.steamstatic.com/steam/apps/${steamAppId}/header.jpg`;
-                stats.enrichedScreenshots++;
-              }
-              stats.steamHits++;
-              found = true;
-            }
-          } catch {
-            // Steam search failed — skip
-          }
-        }
-
-        if (!found) stats.notFound++;
-
-        if (Object.keys(updates).length > 0) {
-          const { error: updateErr } = await supabase
-            .from("games")
-            .update(updates)
-            .eq("id", game.id);
-
-          if (updateErr) {
-            stats.errors.push(`Update ${game.title}: ${updateErr.message}`);
-          }
-        }
-
-        // Rate limit between requests (IGDB is the bottleneck)
-        await new Promise((r) => setTimeout(r, 400));
-      } catch (err: any) {
-        stats.errors.push(`${game.title}: ${err.message}`);
+      // Small delay between batches to respect rate limits
+      if (i + CONCURRENCY < games.length) {
+        await new Promise((r) => setTimeout(r, 350));
       }
     }
 
@@ -132,9 +116,86 @@ export async function GET(request: NextRequest) {
   }
 }
 
+// ── Per-game enrichment (pure, no DB writes) ──
+
+interface EnrichResult {
+  gameId: string;
+  updates: Record<string, any>;
+  found: boolean;
+  igdbHit: boolean;
+  steamHit: boolean;
+  coversAdded: boolean;
+  screenshotsAdded: boolean;
+  error?: string;
+}
+
+async function enrichGame(game: {
+  id: string;
+  title: string;
+  cover_image: string | null;
+  screenshot_image: string | null;
+}): Promise<EnrichResult> {
+  const result: EnrichResult = {
+    gameId: game.id,
+    updates: {},
+    found: false,
+    igdbHit: false,
+    steamHit: false,
+    coversAdded: false,
+    screenshotsAdded: false,
+  };
+
+  try {
+    // ── Strategy 1: IGDB ──
+    try {
+      const igdb = await searchGame(game.title);
+      if (igdb) {
+        if (!game.cover_image && igdb.cover?.image_id) {
+          result.updates.cover_image = igdbImageUrl(igdb.cover.image_id, "cover_big");
+          result.coversAdded = true;
+        }
+        if (!game.screenshot_image && igdb.screenshots?.length) {
+          result.updates.screenshot_image = igdbImageUrl(igdb.screenshots[0].image_id, "screenshot_big");
+          result.screenshotsAdded = true;
+        }
+        if (Object.keys(result.updates).length > 0) {
+          result.igdbHit = true;
+          result.found = true;
+        }
+      }
+    } catch {
+      // IGDB failure — continue to Steam fallback
+    }
+
+    // ── Strategy 2: Steam store search ──
+    if (!result.found && !game.cover_image) {
+      try {
+        const steamAppId = await searchSteamAppId(game.title);
+        if (steamAppId) {
+          if (!result.updates.cover_image && !game.cover_image) {
+            result.updates.cover_image = `https://cdn.akamai.steamstatic.com/steam/apps/${steamAppId}/library_600x900.jpg`;
+            result.coversAdded = true;
+          }
+          if (!result.updates.screenshot_image && !game.screenshot_image) {
+            result.updates.screenshot_image = `https://cdn.akamai.steamstatic.com/steam/apps/${steamAppId}/header.jpg`;
+            result.screenshotsAdded = true;
+          }
+          result.steamHit = true;
+          result.found = true;
+        }
+      } catch {
+        // Steam search failed — skip
+      }
+    }
+  } catch (err: any) {
+    result.error = `${game.title}: ${err.message}`;
+  }
+
+  return result;
+}
+
 /**
  * Search Steam's store API by game title and return the first matching app ID.
- * Uses Steam's storefront search endpoint (no API key needed).
  */
 async function searchSteamAppId(title: string): Promise<string | null> {
   const url = `https://store.steampowered.com/api/storesearch/?term=${encodeURIComponent(title)}&l=english&cc=US`;
@@ -148,7 +209,6 @@ async function searchSteamAppId(title: string): Promise<string | null> {
   const data = await res.json();
   if (!data?.items?.length) return null;
 
-  // Try exact match first
   const titleLower = title.toLowerCase();
   const exact = data.items.find(
     (item: any) => item.name?.toLowerCase() === titleLower
