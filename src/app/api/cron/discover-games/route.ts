@@ -5,21 +5,24 @@ import { getDeals, mapShopId, type ITADDeal } from "@/lib/itad";
 /**
  * Cron endpoint: Discover new games from the ITAD deals feed.
  *
- * Paginates through ITAD's global deals list (all games across all stores),
- * discovers games we don't yet track, inserts them, and imports their deals.
+ * Paginates through ITAD's global deals list, discovers games we don't
+ * yet track, inserts them + their deals. Existing games are SKIPPED
+ * (sync-deals handles those). This keeps runtime fast.
  *
  * Runs every 6 hours via Vercel Cron.
- * After this runs, enrich-games should run to fetch IGDB images.
+ * After this runs, enrich-games fetches IGDB images.
  *
  * Auth: requires CRON_SECRET
  * Usage:
  *   Cron: Authorization: Bearer {CRON_SECRET}
  *   Manual: GET /api/cron/discover-games?secret={CRON_SECRET}
- *   Optional: &pages=8 (default 4, each page = 500 deals)
+ *   Optional: &pages=5 (default 3, each page = 200 deals)
  */
 
+export const maxDuration = 60; // Allow up to 60s on Vercel Pro
+
 const DEALS_PER_PAGE = 200;
-const DEFAULT_PAGES = 10; // 10 pages × 200 = 2000 deals scanned per run
+const DEFAULT_PAGES = 3; // 3 pages × 200 = 600 deals scanned per run
 
 export async function GET(request: NextRequest) {
   // Auth
@@ -40,13 +43,14 @@ export async function GET(request: NextRequest) {
   const stats = {
     pagesScanned: 0,
     dealsScanned: 0,
+    existingGamesSkipped: 0,
     newGamesDiscovered: 0,
     dealsImported: 0,
     errors: [] as string[],
   };
 
   try {
-    // Get all existing ITAD IDs so we can detect new games
+    // Get all existing ITAD IDs so we can skip known games
     const { data: existingGames, error: gamesErr } = await supabase
       .from("games")
       .select("itad_id");
@@ -81,18 +85,15 @@ export async function GET(request: NextRequest) {
           dealsByGame.get(gameId)!.push(deal);
         }
 
-        // Process each game
+        // Process each game — ONLY new games
         for (const [itadId, gameDeals] of Array.from(dealsByGame.entries())) {
-          const firstDeal = gameDeals[0];
-
-          // Skip if we already track this game
           if (existingItadIds.has(itadId)) {
-            // Still import the deals though
-            await importDeals(supabase, itadId, gameDeals, stats);
-            continue;
+            stats.existingGamesSkipped++;
+            continue; // sync-deals handles existing games
           }
 
-          // New game! Create it
+          const firstDeal = gameDeals[0];
+
           try {
             const slug = makeSlug(firstDeal.title);
             const platforms = extractPlatforms(gameDeals);
@@ -104,13 +105,13 @@ export async function GET(request: NextRequest) {
                 slug,
                 itad_id: itadId,
                 platforms,
-                genres: [], // Will be filled by enrich-games
+                genres: [],
               })
               .select("id")
               .single();
 
             if (insertErr) {
-              // Might be a slug collision — try with a suffix
+              // Slug collision — try with suffix
               if (insertErr.message.includes("duplicate") || insertErr.message.includes("unique")) {
                 const { data: retryGame, error: retryErr } = await supabase
                   .from("games")
@@ -131,7 +132,7 @@ export async function GET(request: NextRequest) {
 
                 existingItadIds.add(itadId);
                 stats.newGamesDiscovered++;
-                await importDealsForNewGame(supabase, retryGame!.id, gameDeals, stats);
+                await batchImportDeals(supabase, retryGame!.id, gameDeals, stats);
               } else {
                 stats.errors.push(`Insert ${firstDeal.title}: ${insertErr.message}`);
               }
@@ -140,9 +141,7 @@ export async function GET(request: NextRequest) {
 
             existingItadIds.add(itadId);
             stats.newGamesDiscovered++;
-
-            // Import deals for the new game
-            await importDealsForNewGame(supabase, newGame!.id, gameDeals, stats);
+            await batchImportDeals(supabase, newGame!.id, gameDeals, stats);
           } catch (err: any) {
             stats.errors.push(`Game ${firstDeal.title}: ${err.message}`);
           }
@@ -152,20 +151,9 @@ export async function GET(request: NextRequest) {
         if (offset + deals.length >= count) break;
 
         // Polite delay between pages
-        await new Promise((r) => setTimeout(r, 500));
+        await new Promise((r) => setTimeout(r, 300));
       } catch (pageErr: any) {
         stats.errors.push(`Page ${page}: ${pageErr.message}`);
-      }
-    }
-
-    // After discovering games, trigger enrichment inline (for new games only)
-    // This is limited to avoid timeout — the enrich-games cron handles the rest
-    if (stats.newGamesDiscovered > 0) {
-      try {
-        const enrichCount = await enrichNewGames(supabase, 20); // Enrich up to 20 games
-        stats.errors.push(`Enriched ${enrichCount} new games with IGDB data`);
-      } catch (enrichErr: any) {
-        stats.errors.push(`Enrichment: ${enrichErr.message}`);
       }
     }
 
@@ -198,7 +186,6 @@ function extractPlatforms(deals: ITADDeal[]): string[] {
   for (const deal of deals) {
     if (deal.deal?.platforms) {
       for (const p of deal.deal.platforms) {
-        // Normalize platform names
         const name = p.name.toLowerCase();
         if (name.includes("windows") || name.includes("pc")) platformSet.add("PC");
         else if (name.includes("mac")) platformSet.add("Mac");
@@ -211,110 +198,40 @@ function extractPlatforms(deals: ITADDeal[]): string[] {
 }
 
 /**
- * Import deals for a game that already exists (we know the itad_id → game_id mapping)
+ * Batch upsert deals for a newly discovered game.
+ * Uses a single Supabase upsert call instead of one per deal.
  */
-async function importDeals(
-  supabase: ReturnType<typeof createServerClient>,
-  itadId: string,
-  deals: ITADDeal[],
-  stats: { dealsImported: number; errors: string[] }
-) {
-  // Look up the game_id
-  const { data: game } = await supabase
-    .from("games")
-    .select("id")
-    .eq("itad_id", itadId)
-    .single();
-
-  if (!game) return;
-
-  await importDealsForNewGame(supabase, game.id, deals, stats);
-}
-
-/**
- * Import deal records for a given game_id
- */
-async function importDealsForNewGame(
+async function batchImportDeals(
   supabase: ReturnType<typeof createServerClient>,
   gameId: string,
   deals: ITADDeal[],
   stats: { dealsImported: number; errors: string[] }
 ) {
-  for (const deal of deals) {
+  const rows = deals.map((deal) => {
     const d = deal.deal;
     const storeKey = mapShopId(d.shop);
+    return {
+      game_id: gameId,
+      store: storeKey,
+      store_url: d.url,
+      price: d.price.amount,
+      original_price: d.regular.amount,
+      discount_pct: d.cut,
+      currency: d.price.currency,
+      is_historic_low: d.flag === "H",
+      affiliate_url: d.url,
+      expires_at: d.expiry || null,
+      scraped_at: new Date().toISOString(),
+    };
+  });
 
-    const { error } = await supabase.from("deals").upsert(
-      {
-        game_id: gameId,
-        store: storeKey,
-        store_url: d.url,
-        price: d.price.amount,
-        original_price: d.regular.amount,
-        discount_pct: d.cut,
-        currency: d.price.currency,
-        is_historic_low: d.flag === "H",
-        affiliate_url: d.url,
-        expires_at: d.expiry || null,
-        scraped_at: new Date().toISOString(),
-      },
-      { onConflict: "game_id,store,price", ignoreDuplicates: false }
-    );
+  const { error } = await supabase
+    .from("deals")
+    .upsert(rows, { onConflict: "game_id,store,price", ignoreDuplicates: false });
 
-    if (error) {
-      stats.errors.push(`Deal upsert ${deal.title}/${storeKey}: ${error.message}`);
-    } else {
-      stats.dealsImported++;
-    }
+  if (error) {
+    stats.errors.push(`Batch deal upsert (${rows.length} deals): ${error.message}`);
+  } else {
+    stats.dealsImported += rows.length;
   }
-}
-
-/**
- * Quick enrichment pass for newly discovered games (runs inline).
- * Fetches IGDB covers + screenshots for games missing images.
- */
-async function enrichNewGames(
-  supabase: ReturnType<typeof createServerClient>,
-  limit: number
-): Promise<number> {
-  // Dynamic import to avoid loading IGDB module unless needed
-  const { searchGame, igdbImageUrl } = await import("@/lib/igdb");
-
-  const { data: unenriched } = await supabase
-    .from("games")
-    .select("id, title")
-    .is("cover_image", null)
-    .order("created_at", { ascending: false })
-    .limit(limit);
-
-  if (!unenriched?.length) return 0;
-
-  let enriched = 0;
-  for (const game of unenriched) {
-    try {
-      const igdb = await searchGame(game.title);
-      if (!igdb) continue;
-
-      const updates: Record<string, any> = {};
-
-      if (igdb.cover?.image_id) {
-        updates.cover_image = igdbImageUrl(igdb.cover.image_id, "cover_big");
-      }
-      if (igdb.screenshots?.length) {
-        updates.screenshot_image = igdbImageUrl(igdb.screenshots[0].image_id, "screenshot_big");
-      }
-
-      if (Object.keys(updates).length > 0) {
-        await supabase.from("games").update(updates).eq("id", game.id);
-        enriched++;
-      }
-
-      // IGDB rate limit: 4 req/sec
-      await new Promise((r) => setTimeout(r, 350));
-    } catch {
-      // Skip failures silently — enrich-games cron will retry
-    }
-  }
-
-  return enriched;
 }
