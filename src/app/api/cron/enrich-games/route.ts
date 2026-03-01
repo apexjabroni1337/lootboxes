@@ -3,25 +3,19 @@ import { createServerClient } from "@/lib/supabase";
 import { searchGame, igdbImageUrl } from "@/lib/igdb";
 
 /**
- * Cron endpoint: Enrich games with IGDB metadata.
+ * Cron endpoint: Enrich games with images.
  *
- * Finds games missing cover images, screenshots, or genres,
- * then queries IGDB to fill in the gaps.
+ * Strategy (per game):
+ *   1. Try IGDB search (best quality covers + screenshots)
+ *   2. Fallback: Steam store search → Steam CDN images
  *
- * Can be run standalone or chained after discover-games.
- *
- * Auth: requires CRON_SECRET
- * Usage:
- *   Cron: Authorization: Bearer {CRON_SECRET}
- *   Manual: GET /api/cron/enrich-games?secret={CRON_SECRET}
- *   Optional: &limit=50 (default 50, max games to process per run)
+ * Runs every 6 hours via Vercel Cron (30 min after discover-games).
  */
 
 export const maxDuration = 60;
 const DEFAULT_LIMIT = 30;
 
 export async function GET(request: NextRequest) {
-  // Auth
   const secret = request.nextUrl.searchParams.get("secret");
   const authHeader = request.headers.get("authorization");
   const cronSecret = process.env.CRON_SECRET;
@@ -43,16 +37,16 @@ export async function GET(request: NextRequest) {
     processed: 0,
     enrichedCovers: 0,
     enrichedScreenshots: 0,
-    enrichedGenres: 0,
+    igdbHits: 0,
+    steamHits: 0,
     notFound: 0,
     errors: [] as string[],
   };
 
   try {
-    // Find games that need enrichment (missing BOTH images — already having one is fine)
     const { data: games, error: queryErr } = await supabase
       .from("games")
-      .select("id, title, itad_id, cover_image, screenshot_image")
+      .select("id, title, cover_image, screenshot_image")
       .or("cover_image.is.null,screenshot_image.is.null")
       .order("created_at", { ascending: false })
       .limit(limit);
@@ -60,11 +54,7 @@ export async function GET(request: NextRequest) {
     if (queryErr) throw new Error(`Query failed: ${queryErr.message}`);
 
     if (!games?.length) {
-      return NextResponse.json({
-        ok: true,
-        message: "All games are fully enriched",
-        ...stats,
-      });
+      return NextResponse.json({ ok: true, message: "All games enriched", ...stats });
     }
 
     for (const game of games) {
@@ -72,38 +62,51 @@ export async function GET(request: NextRequest) {
 
       try {
         const updates: Record<string, any> = {};
+        let found = false;
 
-        // Try IGDB first
-        const igdb = await searchGame(game.title);
-
-        if (igdb) {
-          if (!game.cover_image && igdb.cover?.image_id) {
-            updates.cover_image = igdbImageUrl(igdb.cover.image_id, "cover_big");
-            stats.enrichedCovers++;
+        // ── Strategy 1: IGDB ──
+        try {
+          const igdb = await searchGame(game.title);
+          if (igdb) {
+            if (!game.cover_image && igdb.cover?.image_id) {
+              updates.cover_image = igdbImageUrl(igdb.cover.image_id, "cover_big");
+              stats.enrichedCovers++;
+            }
+            if (!game.screenshot_image && igdb.screenshots?.length) {
+              updates.screenshot_image = igdbImageUrl(igdb.screenshots[0].image_id, "screenshot_big");
+              stats.enrichedScreenshots++;
+            }
+            if (Object.keys(updates).length > 0) {
+              stats.igdbHits++;
+              found = true;
+            }
           }
-          if (!game.screenshot_image && igdb.screenshots?.length) {
-            updates.screenshot_image = igdbImageUrl(
-              igdb.screenshots[0].image_id,
-              "screenshot_big"
-            );
-            stats.enrichedScreenshots++;
-          }
-        } else {
-          stats.notFound++;
+        } catch (igdbErr: any) {
+          // IGDB failure (rate limit, etc) — continue to Steam fallback
         }
 
-        // Fallback: Try to get Steam images from the game's deal URLs
-        if (!updates.cover_image && !game.cover_image) {
-          const steamImages = await getSteamImagesForGame(supabase, game.id);
-          if (steamImages.cover) {
-            updates.cover_image = steamImages.cover;
-            stats.enrichedCovers++;
-          }
-          if (!updates.screenshot_image && !game.screenshot_image && steamImages.screenshot) {
-            updates.screenshot_image = steamImages.screenshot;
-            stats.enrichedScreenshots++;
+        // ── Strategy 2: Steam store search ──
+        if (!found && !game.cover_image) {
+          try {
+            const steamAppId = await searchSteamAppId(game.title);
+            if (steamAppId) {
+              if (!updates.cover_image && !game.cover_image) {
+                updates.cover_image = `https://cdn.akamai.steamstatic.com/steam/apps/${steamAppId}/library_600x900.jpg`;
+                stats.enrichedCovers++;
+              }
+              if (!updates.screenshot_image && !game.screenshot_image) {
+                updates.screenshot_image = `https://cdn.akamai.steamstatic.com/steam/apps/${steamAppId}/header.jpg`;
+                stats.enrichedScreenshots++;
+              }
+              stats.steamHits++;
+              found = true;
+            }
+          } catch {
+            // Steam search failed — skip
           }
         }
+
+        if (!found) stats.notFound++;
 
         if (Object.keys(updates).length > 0) {
           const { error: updateErr } = await supabase
@@ -116,50 +119,41 @@ export async function GET(request: NextRequest) {
           }
         }
 
-        // Respect IGDB rate limit (4 req/sec, use 500ms for safety)
-        await new Promise((r) => setTimeout(r, 500));
+        // Rate limit between requests (IGDB is the bottleneck)
+        await new Promise((r) => setTimeout(r, 400));
       } catch (err: any) {
         stats.errors.push(`${game.title}: ${err.message}`);
       }
     }
 
-    return NextResponse.json({
-      ok: true,
-      ...stats,
-      timestamp: new Date().toISOString(),
-    });
+    return NextResponse.json({ ok: true, ...stats, timestamp: new Date().toISOString() });
   } catch (err: any) {
-    return NextResponse.json(
-      { ok: false, error: err.message, ...stats },
-      { status: 500 }
-    );
+    return NextResponse.json({ ok: false, error: err.message, ...stats }, { status: 500 });
   }
 }
 
 /**
- * Look up a game's deals to find a Steam store URL, then construct
- * Steam CDN image URLs from the app ID.
+ * Search Steam's store API by game title and return the first matching app ID.
+ * Uses Steam's storefront search endpoint (no API key needed).
  */
-async function getSteamImagesForGame(
-  supabase: ReturnType<typeof createServerClient>,
-  gameId: string
-): Promise<{ cover: string | null; screenshot: string | null }> {
-  const { data: deals } = await supabase
-    .from("deals")
-    .select("store_url")
-    .eq("game_id", gameId)
-    .eq("store", "steam")
-    .limit(1);
+async function searchSteamAppId(title: string): Promise<string | null> {
+  const url = `https://store.steampowered.com/api/storesearch/?term=${encodeURIComponent(title)}&l=english&cc=US`;
 
-  if (!deals?.length) return { cover: null, screenshot: null };
+  const res = await fetch(url, {
+    headers: { "User-Agent": "LootBoxes/1.0" },
+  });
 
-  const url = deals[0].store_url || "";
-  const match = url.match(/store\.steampowered\.com\/app\/(\d+)/);
-  if (!match) return { cover: null, screenshot: null };
+  if (!res.ok) return null;
 
-  const appId = match[1];
-  return {
-    cover: `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/library_600x900.jpg`,
-    screenshot: `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/header.jpg`,
-  };
+  const data = await res.json();
+  if (!data?.items?.length) return null;
+
+  // Try exact match first
+  const titleLower = title.toLowerCase();
+  const exact = data.items.find(
+    (item: any) => item.name?.toLowerCase() === titleLower
+  );
+
+  const match = exact || data.items[0];
+  return match?.id ? String(match.id) : null;
 }

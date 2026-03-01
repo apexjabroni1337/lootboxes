@@ -101,10 +101,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ ok: true, ...stats, timestamp: new Date().toISOString() });
     }
 
-    // Step 3: Build game rows with guaranteed-unique slugs + Steam cover images
+    // Step 3: Build game rows with guaranteed-unique slugs
     const { data: existingSlugs } = await supabase.from("games").select("slug");
     const usedSlugs = new Set((existingSlugs || []).map((g) => g.slug));
-    const gameRows: { title: string; slug: string; itad_id: string; platforms: string[]; genres: never[]; cover_image?: string; screenshot_image?: string }[] = [];
+    const gameRows: { title: string; slug: string; itad_id: string; platforms: string[]; genres: never[] }[] = [];
 
     for (const [itadId, game] of Array.from(newGamesMap.entries())) {
       let slug = game.slug;
@@ -116,17 +116,12 @@ export async function GET(request: NextRequest) {
       }
       usedSlugs.add(slug);
 
-      // Try to extract Steam app ID from deal URLs for cover images
-      const steamImages = extractSteamImages(game.deals);
-
       gameRows.push({
         title: game.title,
         slug,
         itad_id: itadId,
         platforms: game.platforms,
         genres: [],
-        ...(steamImages.cover ? { cover_image: steamImages.cover } : {}),
-        ...(steamImages.screenshot ? { screenshot_image: steamImages.screenshot } : {}),
       });
     }
 
@@ -247,28 +242,3 @@ function extractPlatforms(deals: ITADDeal[]): string[] {
   return Array.from(platformSet);
 }
 
-/**
- * Extract Steam app ID from deal URLs and construct cover/header image URLs.
- * Steam CDN provides reliable, high-quality game artwork.
- *
- * Steam image patterns:
- *   Header (460x215):  https://cdn.akamai.steamstatic.com/steam/apps/{appId}/header.jpg
- *   Capsule (231x87):  https://cdn.akamai.steamstatic.com/steam/apps/{appId}/capsule_231x87.jpg
- *   Hero (1920x620):   https://cdn.akamai.steamstatic.com/steam/apps/{appId}/library_hero.jpg
- *   Portrait (600x900): https://cdn.akamai.steamstatic.com/steam/apps/{appId}/library_600x900.jpg
- */
-function extractSteamImages(deals: ITADDeal[]): { cover: string | null; screenshot: string | null } {
-  for (const deal of deals) {
-    const url = deal.deal?.url || "";
-    // Match Steam store URLs: store.steampowered.com/app/12345/...
-    const match = url.match(/store\.steampowered\.com\/app\/(\d+)/);
-    if (match) {
-      const appId = match[1];
-      return {
-        cover: `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/library_600x900.jpg`,
-        screenshot: `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/header.jpg`,
-      };
-    }
-  }
-  return { cover: null, screenshot: null };
-}
