@@ -5,6 +5,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'cdn.cloudflare.steamstatic.com' },
       { protocol: 'https', hostname: 'cdn.akamai.steamstatic.com' },
       { protocol: 'https', hostname: 'store.steampowered.com' },
+      { protocol: 'https', hostname: 'images.igdb.com' },
     ],
   },
 };
