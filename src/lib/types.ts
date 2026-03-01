@@ -7,6 +7,7 @@ export interface Game {
   title: string;
   slug: string;
   cover_image: string | null;
+  screenshot_image?: string | null;
   platforms: string[];
   genres: string[];
   release_date: string | null;

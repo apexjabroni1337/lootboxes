@@ -5,15 +5,13 @@ import ScoreBadge from "@/components/analytics/ScoreBadge";
 import NewsletterForm from "@/components/newsletter/NewsletterForm";
 import HowItWorks from "@/components/home/HowItWorks";
 import TrustSignals from "@/components/home/TrustSignals";
-import HeroSearch from "@/components/search/HeroSearch";
+import HeroCarousel from "@/components/home/HeroCarousel";
+import PromoBanners from "@/components/home/PromoBanners";
 import {
-  TrendingDown,
-  BarChart3,
-  Zap,
   ArrowRight,
   Sparkles,
 } from "lucide-react";
-import { Deal, AnalyticsMeta, Game } from "@/lib/types";
+import { Deal, AnalyticsMeta } from "@/lib/types";
 import { createServerClient } from "@/lib/supabase";
 
 export const revalidate = 300; // Revalidate every 5 minutes
@@ -41,7 +39,8 @@ async function getTopDeals(): Promise<Deal[]> {
         id,
         title,
         slug,
-        cover_image
+        cover_image,
+        screenshot_image
       )
     `)
     .gt("discount_pct", 0)
@@ -60,7 +59,7 @@ async function getTopDeals(): Promise<Deal[]> {
       ...d,
       game: d.games,
     });
-    if (topDeals.length >= 8) break;
+    if (topDeals.length >= 12) break; // Get more so we can split carousel vs grid
   }
 
   return topDeals;
@@ -89,72 +88,44 @@ const SCORE_LEADERBOARD = {
 export default async function HomePage() {
   const topDeals = await getTopDeals();
 
+  // Split deals: first 5 for carousel, rest for grid
+  const carouselDeals = topDeals.slice(0, 5).map((deal) => ({
+    id: deal.id,
+    store: deal.store,
+    price: deal.price,
+    original_price: deal.original_price,
+    discount_pct: deal.discount_pct,
+    game: {
+      title: deal.game?.title || "Unknown Game",
+      slug: deal.game?.slug || "",
+      cover_image: deal.game?.cover_image || null,
+      screenshot_image: (deal.game as any)?.screenshot_image || null,
+    },
+  }));
+
+  const gridDeals = topDeals.slice(0, 8);
+
   return (
     <>
-      {/* ─── Hero ─── */}
-      <section className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900 py-16 sm:py-20">
-        {/* Decorative mesh */}
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -left-40 -top-40 h-80 w-80 rounded-full bg-brand-400/20 blur-3xl" />
-          <div className="absolute -bottom-20 right-0 h-96 w-96 rounded-full bg-accent-500/10 blur-3xl" />
-          <div className="absolute left-1/2 top-1/3 h-64 w-64 -translate-x-1/2 rounded-full bg-white/5 blur-3xl" />
-        </div>
+      {/* ─── Hero Carousel ─── */}
+      <HeroCarousel deals={carouselDeals} />
 
-        <div className="container-main relative text-center">
-          {/* Badge */}
-          <div className="mb-6 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white/90 backdrop-blur-sm">
-            <Sparkles className="h-3 w-3" />
-            Comparing prices across 15+ stores
-          </div>
-
-          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Save smarter.{" "}
-            <span className="bg-gradient-to-r from-amber-300 to-amber-400 bg-clip-text text-transparent">
-              Spend wiser.
-            </span>
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-base text-brand-100 sm:text-lg">
-            The best gaming deals across every store, plus data-driven loot box
-            analysis so you know what&apos;s actually worth your money.
-          </p>
-
-          {/* Search bar */}
-          <HeroSearch />
-
-          {/* Quick filter chips */}
-          <div className="mt-6 flex flex-wrap justify-center gap-2">
-            <Link
-              href="/deals"
-              className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/20"
-            >
-              <TrendingDown className="h-3 w-3" />
-              Today&apos;s Best Deals
-            </Link>
-            <Link
-              href="/analytics?type=battlepass"
-              className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/20"
-            >
-              <BarChart3 className="h-3 w-3" />
-              Battle Pass Reviews
-            </Link>
-            <Link
-              href="/drop-rates"
-              className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/20"
-            >
-              <Zap className="h-3 w-3" />
-              Drop Rate Database
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* ─── Promotional Banners ─── */}
+      <PromoBanners />
 
       {/* ─── Today's Top Deals ─── */}
       <section className="py-12 sm:py-14">
         <div className="container-main">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">
-              Today&apos;s Top Deals
-            </h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-2xl font-bold text-gray-900">
+                Today&apos;s Top Deals
+              </h2>
+              <span className="badge-featured text-[10px]">
+                <Sparkles className="mr-1 h-3 w-3" />
+                Updated live
+              </span>
+            </div>
             <Link
               href="/deals"
               className="flex items-center gap-1 text-sm font-medium text-brand-600 hover:text-brand-700"
@@ -164,9 +135,9 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          {topDeals.length > 0 ? (
+          {gridDeals.length > 0 ? (
             <div className="mt-6 grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {topDeals.map((deal) => (
+              {gridDeals.map((deal) => (
                 <DealCard key={deal.id} deal={deal} />
               ))}
             </div>
