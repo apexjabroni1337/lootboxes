@@ -17,7 +17,8 @@ import { searchGame, igdbImageUrl } from "@/lib/igdb";
  *   Optional: &limit=50 (default 50, max games to process per run)
  */
 
-const DEFAULT_LIMIT = 50;
+export const maxDuration = 60;
+const DEFAULT_LIMIT = 30;
 
 export async function GET(request: NextRequest) {
   // Auth
@@ -115,8 +116,8 @@ export async function GET(request: NextRequest) {
           }
         }
 
-        // Respect IGDB rate limit
-        await new Promise((r) => setTimeout(r, 350));
+        // Respect IGDB rate limit (4 req/sec, use 500ms for safety)
+        await new Promise((r) => setTimeout(r, 500));
       } catch (err: any) {
         stats.errors.push(`${game.title}: ${err.message}`);
       }
