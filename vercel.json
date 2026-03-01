@@ -3,6 +3,14 @@
     {
       "path": "/api/cron/sync-deals",
       "schedule": "*/30 * * * *"
+    },
+    {
+      "path": "/api/cron/discover-games",
+      "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/cron/enrich-games",
+      "schedule": "30 */6 * * *"
     }
   ]
 }

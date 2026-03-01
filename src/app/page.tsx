@@ -26,7 +26,17 @@ export const revalidate = 300; // Revalidate every 5 minutes
 async function getAllDeals(): Promise<Deal[]> {
   const supabase = createServerClient();
 
-  const { data: deals, error } = await supabase
+  // First, get top games ranked by hot_score (our composite ranking)
+  const { data: topGames } = await supabase
+    .from("games")
+    .select("id")
+    .order("hot_score", { ascending: false, nullsFirst: false })
+    .limit(30);
+
+  const topGameIds = (topGames || []).map((g) => g.id);
+
+  // Fetch deals for these games (or fall back to discount-based ordering)
+  const query = supabase
     .from("deals")
     .select(`
       id,
@@ -46,16 +56,23 @@ async function getAllDeals(): Promise<Deal[]> {
         title,
         slug,
         cover_image,
-        screenshot_image
+        screenshot_image,
+        hot_score
       )
     `)
     .gt("discount_pct", 0)
     .order("discount_pct", { ascending: false })
-    .limit(60);
+    .limit(80);
 
+  // If we have hot_score-ranked games, filter to them
+  if (topGameIds.length > 0) {
+    query.in("game_id", topGameIds);
+  }
+
+  const { data: deals, error } = await query;
   if (error || !deals) return [];
 
-  // Deduplicate: one deal per game (best discount)
+  // Deduplicate: one deal per game (best discount), then sort by hot_score
   const seenGames = new Set<string>();
   const topDeals: Deal[] = [];
   for (const d of deals as any[]) {
@@ -67,6 +84,14 @@ async function getAllDeals(): Promise<Deal[]> {
     });
     if (topDeals.length >= 20) break;
   }
+
+  // Sort by hot_score (highest first), falling back to discount_pct
+  topDeals.sort((a, b) => {
+    const scoreA = (a.game as any)?.hot_score || 0;
+    const scoreB = (b.game as any)?.hot_score || 0;
+    if (scoreA !== scoreB) return scoreB - scoreA;
+    return b.discount_pct - a.discount_pct;
+  });
 
   return topDeals;
 }

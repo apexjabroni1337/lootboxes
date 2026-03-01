@@ -119,6 +119,62 @@ export async function GET(request: NextRequest) {
 
     if (cleanErr) stats.errors.push(`Cleanup: ${cleanErr.message}`);
 
+    // ---- Step 3: Compute hot_score for all tracked games ----
+    try {
+      const now = new Date();
+      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
+      const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+
+      for (const game of games || []) {
+        try {
+          // Get best deal stats for this game
+          const { data: gameDeals } = await supabase
+            .from("deals")
+            .select("discount_pct, is_historic_low, scraped_at")
+            .eq("game_id", game.id);
+
+          if (!gameDeals?.length) continue;
+
+          const maxDiscount = Math.max(...gameDeals.map((d) => d.discount_pct || 0));
+          const hasHistoricLow = gameDeals.some((d) => d.is_historic_low);
+          const isRecent = gameDeals.some((d) => d.scraped_at > dayAgo);
+
+          // Count clicks in last 7 days
+          const { count: clickCount } = await supabase
+            .from("clicks")
+            .select("id", { count: "exact", head: true })
+            .in(
+              "deal_id",
+              gameDeals.map((d: any) => d.id).filter(Boolean)
+            );
+
+          // Get metacritic from games table
+          const { data: gameInfo } = await supabase
+            .from("games")
+            .select("metacritic")
+            .eq("id", game.id)
+            .single();
+
+          // Compute hot_score
+          const hotScore =
+            maxDiscount +
+            (hasHistoricLow ? 15 : 0) +
+            (isRecent ? 10 : 0) +
+            ((clickCount || 0) * 0.5) +
+            ((gameInfo?.metacritic || 0) / 10);
+
+          await supabase
+            .from("games")
+            .update({ hot_score: Math.round(hotScore * 10) / 10 })
+            .eq("id", game.id);
+        } catch {
+          // Skip individual game score errors silently
+        }
+      }
+    } catch (scoreErr: any) {
+      stats.errors.push(`Hot score computation: ${scoreErr.message}`);
+    }
+
     return NextResponse.json({
       ok: true,
       ...stats,
