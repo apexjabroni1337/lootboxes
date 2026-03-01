@@ -14,32 +14,63 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Deal, AnalyticsMeta, Game } from "@/lib/types";
+import { createServerClient } from "@/lib/supabase";
 
-// TODO: Replace with real data from Supabase
-const MOCK_GAMES: Game[] = [
-  { id: "1", title: "Elden Ring", slug: "elden-ring", cover_image: null, platforms: ["PC", "PS5", "Xbox"], genres: ["RPG", "Action"], release_date: "2022-02-25", metacritic: 96, lootboxes_score: null, created_at: "", updated_at: "" },
-  { id: "2", title: "Baldur's Gate 3", slug: "baldurs-gate-3", cover_image: null, platforms: ["PC", "PS5"], genres: ["RPG"], release_date: "2023-08-03", metacritic: 96, lootboxes_score: null, created_at: "", updated_at: "" },
-  { id: "3", title: "Fortnite", slug: "fortnite", cover_image: null, platforms: ["PC", "PS5", "Xbox", "Switch"], genres: ["Battle Royale"], release_date: "2017-07-21", metacritic: null, lootboxes_score: 7.2, created_at: "", updated_at: "" },
-  { id: "4", title: "Genshin Impact", slug: "genshin-impact", cover_image: null, platforms: ["PC", "PS5", "Mobile"], genres: ["Action RPG", "Gacha"], release_date: "2020-09-28", metacritic: 84, lootboxes_score: 4.8, created_at: "", updated_at: "" },
-  { id: "5", title: "Cyberpunk 2077", slug: "cyberpunk-2077", cover_image: null, platforms: ["PC", "PS5", "Xbox"], genres: ["RPG", "Action"], release_date: "2020-12-10", metacritic: 86, lootboxes_score: null, created_at: "", updated_at: "" },
-  { id: "6", title: "Valorant", slug: "valorant", cover_image: null, platforms: ["PC"], genres: ["FPS"], release_date: "2020-06-02", metacritic: 80, lootboxes_score: 5.5, created_at: "", updated_at: "" },
-  { id: "7", title: "Hades II", slug: "hades-ii", cover_image: null, platforms: ["PC"], genres: ["Roguelike", "Action"], release_date: "2024-05-06", metacritic: 92, lootboxes_score: null, created_at: "", updated_at: "" },
-  { id: "8", title: "Monster Hunter Wilds", slug: "monster-hunter-wilds", cover_image: null, platforms: ["PC", "PS5", "Xbox"], genres: ["Action RPG"], release_date: "2025-02-28", metacritic: 90, lootboxes_score: null, created_at: "", updated_at: "" },
-];
+export const revalidate = 300; // Revalidate every 5 minutes
 
-const MOCK_DEALS: Deal[] = [
-  { id: "d1", game_id: "1", store: "steam", store_url: "", price: 29.99, original_price: 59.99, discount_pct: 50, currency: "USD", is_historic_low: true, expires_at: null, affiliate_url: null, scraped_at: new Date().toISOString(), game: MOCK_GAMES[0] },
-  { id: "d2", game_id: "2", store: "gog", store_url: "", price: 35.99, original_price: 59.99, discount_pct: 40, currency: "USD", is_historic_low: false, expires_at: null, affiliate_url: null, scraped_at: new Date().toISOString(), game: MOCK_GAMES[1] },
-  { id: "d3", game_id: "5", store: "epic", store_url: "", price: 19.99, original_price: 59.99, discount_pct: 67, currency: "USD", is_historic_low: true, expires_at: null, affiliate_url: null, scraped_at: new Date().toISOString(), game: MOCK_GAMES[4] },
-  { id: "d4", game_id: "7", store: "steam", store_url: "", price: 22.49, original_price: 29.99, discount_pct: 25, currency: "USD", is_historic_low: true, expires_at: null, affiliate_url: null, scraped_at: new Date().toISOString(), game: MOCK_GAMES[6] },
-  { id: "d5", game_id: "8", store: "fanatical", store_url: "", price: 44.99, original_price: 69.99, discount_pct: 36, currency: "USD", is_historic_low: false, expires_at: null, affiliate_url: null, scraped_at: new Date().toISOString(), game: MOCK_GAMES[7] },
-  { id: "d6", game_id: "5", store: "humble", store_url: "", price: 22.49, original_price: 59.99, discount_pct: 63, currency: "USD", is_historic_low: false, expires_at: null, affiliate_url: null, scraped_at: new Date().toISOString(), game: MOCK_GAMES[4] },
-];
+async function getTopDeals(): Promise<Deal[]> {
+  const supabase = createServerClient();
 
+  // Get the best deals (highest discount, one per game)
+  const { data: deals, error } = await supabase
+    .from("deals")
+    .select(`
+      id,
+      game_id,
+      store,
+      store_url,
+      price,
+      original_price,
+      discount_pct,
+      currency,
+      is_historic_low,
+      expires_at,
+      affiliate_url,
+      scraped_at,
+      games!inner (
+        id,
+        title,
+        slug,
+        cover_image
+      )
+    `)
+    .gt("discount_pct", 0)
+    .order("discount_pct", { ascending: false })
+    .limit(30);
+
+  if (error || !deals) return [];
+
+  // Deduplicate: one deal per game (best discount)
+  const seenGames = new Set<string>();
+  const topDeals: Deal[] = [];
+  for (const d of deals as any[]) {
+    if (seenGames.has(d.game_id)) continue;
+    seenGames.add(d.game_id);
+    topDeals.push({
+      ...d,
+      game: d.games,
+    });
+    if (topDeals.length >= 6) break;
+  }
+
+  return topDeals;
+}
+
+// Analytics section mock data (will be replaced when analytics content is added)
 const MOCK_ANALYTICS: AnalyticsMeta[] = [
-  { id: "a1", game_id: "3", slug: "fortnite-chapter-6-season-1-battle-pass", title: "Fortnite Chapter 6 Season 1 Battle Pass — Is It Worth It?", excerpt: "We break down every tier, calculate the V-Buck value, and compare it to direct cosmetic purchases.", type: "battlepass", lootboxes_score: 7.2, cover_image: null, published_at: "2026-02-20", updated_at: "2026-02-20", game: MOCK_GAMES[2] },
-  { id: "a2", game_id: "4", slug: "genshin-impact-gacha-analysis-2026", title: "Genshin Impact Gacha System — Complete Drop Rate Analysis", excerpt: "Official drop rates, pity system breakdown, and expected spending to pull featured characters.", type: "lootbox", lootboxes_score: 4.8, cover_image: null, published_at: "2026-02-18", updated_at: "2026-02-18", game: MOCK_GAMES[3] },
-  { id: "a3", game_id: "6", slug: "valorant-battle-pass-episode-10", title: "Valorant Episode 10 Battle Pass Review", excerpt: "New skins, gun buddies, and sprays — here's whether this pass delivers enough value for 1000 VP.", type: "battlepass", lootboxes_score: 5.5, cover_image: null, published_at: "2026-02-15", updated_at: "2026-02-15", game: MOCK_GAMES[5] },
+  { id: "a1", game_id: "3", slug: "fortnite-chapter-6-season-1-battle-pass", title: "Fortnite Chapter 6 Season 1 Battle Pass — Is It Worth It?", excerpt: "We break down every tier, calculate the V-Buck value, and compare it to direct cosmetic purchases.", type: "battlepass", lootboxes_score: 7.2, cover_image: null, published_at: "2026-02-20", updated_at: "2026-02-20" },
+  { id: "a2", game_id: "4", slug: "genshin-impact-gacha-analysis-2026", title: "Genshin Impact Gacha System — Complete Drop Rate Analysis", excerpt: "Official drop rates, pity system breakdown, and expected spending to pull featured characters.", type: "lootbox", lootboxes_score: 4.8, cover_image: null, published_at: "2026-02-18", updated_at: "2026-02-18" },
+  { id: "a3", game_id: "6", slug: "valorant-battle-pass-episode-10", title: "Valorant Episode 10 Battle Pass Review", excerpt: "New skins, gun buddies, and sprays — here's whether this pass delivers enough value for 1000 VP.", type: "battlepass", lootboxes_score: 5.5, cover_image: null, published_at: "2026-02-15", updated_at: "2026-02-15" },
 ];
 
 const SCORE_LEADERBOARD = {
@@ -55,7 +86,9 @@ const SCORE_LEADERBOARD = {
   ],
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const topDeals = await getTopDeals();
+
   return (
     <>
       {/* ─── Hero ─── */}
@@ -71,7 +104,7 @@ export default function HomePage() {
           {/* Badge */}
           <div className="mb-6 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white/90 backdrop-blur-sm">
             <Sparkles className="h-3 w-3" />
-            Comparing prices across 8+ stores
+            Comparing prices across 15+ stores
           </div>
 
           <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
@@ -141,11 +174,17 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {MOCK_DEALS.slice(0, 6).map((deal) => (
-              <DealCard key={deal.id} deal={deal} />
-            ))}
-          </div>
+          {topDeals.length > 0 ? (
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {topDeals.map((deal) => (
+                <DealCard key={deal.id} deal={deal} />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-6 rounded-xl border border-gray-200 bg-white p-12 text-center">
+              <p className="text-gray-500">Deals are being synced. Check back soon!</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -254,7 +293,7 @@ export default function HomePage() {
             </p>
 
             <div className="mx-auto mt-4 flex flex-wrap justify-center gap-x-6 gap-y-1 text-xs text-brand-200">
-              <span>✓ Best deals across 8+ stores</span>
+              <span>✓ Best deals across 15+ stores</span>
               <span>✓ Monetization fairness scores</span>
               <span>✓ Unsubscribe anytime</span>
             </div>

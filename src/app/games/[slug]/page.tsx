@@ -1,9 +1,11 @@
 import Link from "next/link";
-import { formatPrice, formatDiscount, formatDate } from "@/lib/utils";
+import { notFound } from "next/navigation";
+import { formatPrice, formatDiscount, formatDate, timeAgo } from "@/lib/utils";
 import { STORES } from "@/lib/types";
 import ScoreBadge from "@/components/analytics/ScoreBadge";
 import PriceChart from "@/components/games/PriceChart";
 import GameAvatar from "@/components/ui/GameAvatar";
+import { createServerClient } from "@/lib/supabase";
 import {
   ExternalLink,
   TrendingDown,
@@ -11,57 +13,118 @@ import {
   Star,
   Monitor,
   ArrowRight,
+  Clock,
 } from "lucide-react";
 
-// TODO: Replace with Supabase queries
-const MOCK_GAME = {
-  id: "1",
-  title: "Elden Ring",
-  slug: "elden-ring",
-  cover_image: null as string | null,
-  platforms: ["PC", "PS5", "Xbox Series X"],
-  genres: ["RPG", "Action", "Open World"],
-  release_date: "2022-02-25",
-  metacritic: 96,
-  lootboxes_score: null as number | null,
-};
+export const revalidate = 300;
 
-const MOCK_DEALS = [
-  { id: "d1", store: "steam", price: 29.99, original: 59.99, discount: 50, historicLow: true, affiliate: "#", expires: null as string | null },
-  { id: "d2", store: "humble", price: 32.99, original: 59.99, discount: 45, historicLow: false, affiliate: "#", expires: null as string | null },
-  { id: "d3", store: "fanatical", price: 33.49, original: 59.99, discount: 44, historicLow: false, affiliate: "#", expires: "2026-03-15" },
-  { id: "d4", store: "gmg", price: 35.99, original: 59.99, discount: 40, historicLow: false, affiliate: "#", expires: null as string | null },
-  { id: "d5", store: "gog", price: 39.99, original: 59.99, discount: 33, historicLow: false, affiliate: "#", expires: null as string | null },
-  { id: "d6", store: "epic", price: 44.99, original: 59.99, discount: 25, historicLow: false, affiliate: "#", expires: null as string | null },
-];
+async function getGame(slug: string) {
+  const supabase = createServerClient();
 
-const MOCK_PRICE_HISTORY = [
-  { date: "2025-08-01", steam: 59.99, humble: 59.99, gog: 59.99 },
-  { date: "2025-09-01", steam: 47.99, humble: 49.99, gog: 53.99 },
-  { date: "2025-10-01", steam: 39.99, humble: 41.99, gog: 44.99 },
-  { date: "2025-11-01", steam: 29.99, humble: 34.99, gog: 39.99 },
-  { date: "2025-12-01", steam: 35.99, humble: 39.99, gog: 44.99 },
-  { date: "2026-01-01", steam: 44.99, humble: 47.99, gog: 49.99 },
-  { date: "2026-02-01", steam: 29.99, humble: 32.99, gog: 39.99 },
-];
+  const { data: game, error } = await supabase
+    .from("games")
+    .select("*")
+    .eq("slug", slug)
+    .single();
 
-const MOCK_SIMILAR = [
-  { title: "Dark Souls III", slug: "dark-souls-3", bestPrice: 14.99 },
-  { title: "Sekiro", slug: "sekiro", bestPrice: 24.99 },
-  { title: "Baldur's Gate 3", slug: "baldurs-gate-3", bestPrice: 35.99 },
-  { title: "Lies of P", slug: "lies-of-p", bestPrice: 29.99 },
-];
+  if (error || !game) return null;
+  return game;
+}
+
+async function getDealsForGame(gameId: string) {
+  const supabase = createServerClient();
+
+  const { data: deals } = await supabase
+    .from("deals")
+    .select("*")
+    .eq("game_id", gameId)
+    .order("price", { ascending: true });
+
+  return deals || [];
+}
+
+async function getPriceHistory(gameId: string) {
+  const supabase = createServerClient();
+
+  const { data: history } = await supabase
+    .from("price_history")
+    .select("*")
+    .eq("game_id", gameId)
+    .order("recorded_at", { ascending: true })
+    .limit(200);
+
+  if (!history || history.length === 0) return [];
+
+  // Group by date (day) and pivot by store for the chart
+  const byDate = new Map<string, Record<string, number | string>>();
+  for (const h of history) {
+    const date = new Date(h.recorded_at).toISOString().slice(0, 10);
+    if (!byDate.has(date)) byDate.set(date, { date });
+    const entry = byDate.get(date)!;
+    // Keep lowest price per store per day
+    const existing = entry[h.store];
+    if (!existing || (typeof existing === "number" && h.price < existing)) {
+      entry[h.store] = h.price;
+    }
+  }
+
+  return Array.from(byDate.values()) as { date: string; [store: string]: number | string }[];
+}
+
+async function getSimilarGames(gameId: string) {
+  const supabase = createServerClient();
+
+  // Get games that have deals, excluding current game
+  const { data: games } = await supabase
+    .from("games")
+    .select("id, title, slug")
+    .neq("id", gameId)
+    .limit(4);
+
+  if (!games || games.length === 0) return [];
+
+  // Get best price for each similar game
+  const result = [];
+  for (const g of games) {
+    const { data: bestDeal } = await supabase
+      .from("deals")
+      .select("price")
+      .eq("game_id", g.id)
+      .order("price", { ascending: true })
+      .limit(1);
+
+    result.push({
+      ...g,
+      bestPrice: bestDeal?.[0]?.price || null,
+    });
+  }
+
+  return result.filter((g) => g.bestPrice !== null);
+}
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const game = await getGame(params.slug);
+  if (!game) return { title: "Game Not Found" };
+
   return {
-    title: `${MOCK_GAME.title} — Best Price, Deals & Analysis`,
-    description: `Compare prices for ${MOCK_GAME.title} across Steam, Epic, GOG, Humble Bundle, and more. Find the cheapest deal and see the full price history.`,
+    title: `${game.title} — Best Price, Deals & Analysis`,
+    description: `Compare prices for ${game.title} across Steam, Epic, GOG, Humble Bundle, and more. Find the cheapest deal and see the full price history.`,
   };
 }
 
-export default function GamePage({ params }: { params: { slug: string } }) {
-  const game = MOCK_GAME;
-  const bestDeal = MOCK_DEALS[0];
+export default async function GamePage({ params }: { params: { slug: string } }) {
+  const game = await getGame(params.slug);
+  if (!game) notFound();
+
+  const [deals, priceHistory, similarGames] = await Promise.all([
+    getDealsForGame(game.id),
+    getPriceHistory(game.id),
+    getSimilarGames(game.id),
+  ]);
+
+  const bestDeal = deals[0] || null;
+  const platforms = game.platforms || [];
+  const genres = game.genres || [];
 
   return (
     <div className="pb-12">
@@ -71,7 +134,7 @@ export default function GamePage({ params }: { params: { slug: string } }) {
           <nav className="text-sm text-gray-400">
             <Link href="/" className="hover:text-gray-600">Home</Link>
             <span className="mx-2">/</span>
-            <Link href="/games" className="hover:text-gray-600">Games</Link>
+            <Link href="/deals" className="hover:text-gray-600">Deals</Link>
             <span className="mx-2">/</span>
             <span className="text-gray-600">{game.title}</span>
           </nav>
@@ -107,17 +170,21 @@ export default function GamePage({ params }: { params: { slug: string } }) {
                   Metacritic: {game.metacritic}
                 </span>
               )}
-              <span className="flex items-center gap-1">
-                <Monitor className="h-4 w-4" />
-                {game.platforms.join(", ")}
-              </span>
+              {platforms.length > 0 && (
+                <span className="flex items-center gap-1">
+                  <Monitor className="h-4 w-4" />
+                  {platforms.join(", ")}
+                </span>
+              )}
             </div>
 
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {game.genres.map((g) => (
-                <span key={g} className="badge-type">{g}</span>
-              ))}
-            </div>
+            {genres.length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {genres.map((g: string) => (
+                  <span key={g} className="badge-type">{g}</span>
+                ))}
+              </div>
+            )}
 
             {game.lootboxes_score && (
               <div className="mt-4">
@@ -126,101 +193,128 @@ export default function GamePage({ params }: { params: { slug: string } }) {
             )}
 
             {/* Best price callout */}
-            <div className="mt-4 inline-flex items-center gap-4 rounded-xl border border-success-500/30 bg-success-50 px-5 py-3">
-              <div>
-                <div className="text-xs font-medium text-success-700">Best Price Right Now</div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-gray-900">{formatPrice(bestDeal.price)}</span>
-                  <span className="text-sm text-gray-400 line-through">{formatPrice(bestDeal.original)}</span>
-                  <span className="badge-discount">{formatDiscount(bestDeal.discount)}</span>
+            {bestDeal && (
+              <div className="mt-4 inline-flex items-center gap-4 rounded-xl border border-success-500/30 bg-success-50 px-5 py-3">
+                <div>
+                  <div className="text-xs font-medium text-success-700">Best Price Right Now</div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-2xl font-bold text-gray-900">{formatPrice(bestDeal.price, bestDeal.currency)}</span>
+                    {bestDeal.discount_pct > 0 && (
+                      <>
+                        <span className="text-sm text-gray-400 line-through">{formatPrice(bestDeal.original_price, bestDeal.currency)}</span>
+                        <span className="badge-discount">{formatDiscount(bestDeal.discount_pct)}</span>
+                      </>
+                    )}
+                  </div>
+                  <div className="mt-0.5 text-xs text-gray-500">
+                    on {STORES[bestDeal.store]?.name || bestDeal.store}
+                    {bestDeal.is_historic_low && (
+                      <span className="ml-2 font-medium text-brand-600">
+                        <TrendingDown className="mr-0.5 inline h-3 w-3" />
+                        All-time low!
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <div className="mt-0.5 text-xs text-gray-500">
-                  on {STORES[bestDeal.store]?.name}
-                  {bestDeal.historicLow && (
-                    <span className="ml-2 font-medium text-brand-600">
-                      <TrendingDown className="mr-0.5 inline h-3 w-3" />
-                      All-time low!
-                    </span>
-                  )}
-                </div>
+                <a
+                  href={bestDeal.affiliate_url || bestDeal.store_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary flex items-center gap-1"
+                >
+                  Get Deal <ExternalLink className="h-4 w-4" />
+                </a>
               </div>
-              <a href={`/go/${bestDeal.id}`} className="btn-primary flex items-center gap-1">
-                Get Deal <ExternalLink className="h-4 w-4" />
-              </a>
-            </div>
+            )}
           </div>
         </div>
 
         {/* Price comparison table */}
-        <section className="mt-10">
-          <h2 className="text-xl font-bold text-gray-900">Price Comparison</h2>
-          <p className="mt-1 text-sm text-gray-500">
-            All current deals for {game.title} across every store.
-          </p>
+        {deals.length > 0 && (
+          <section className="mt-10">
+            <h2 className="text-xl font-bold text-gray-900">Price Comparison</h2>
+            <p className="mt-1 text-sm text-gray-500">
+              {deals.length} current deals for {game.title} across every store.
+            </p>
 
-          <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-            <table className="w-full">
-              <thead className="border-b border-gray-200 bg-gray-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">Store</th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase text-gray-500">Price</th>
-                  <th className="hidden px-4 py-3 text-right text-xs font-semibold uppercase text-gray-500 sm:table-cell">Discount</th>
-                  <th className="hidden px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500 sm:table-cell">Notes</th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase text-gray-500">&nbsp;</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {MOCK_DEALS.map((deal, i) => {
-                  const store = STORES[deal.store] || { name: deal.store, color: "#666" };
-                  return (
-                    <tr key={deal.id} className={`transition-colors hover:bg-gray-50 ${i === 0 ? "bg-success-50/50" : ""}`}>
-                      <td className="px-4 py-3">
-                        <span className="badge text-xs text-white" style={{ backgroundColor: store.color }}>
-                          {store.name}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <span className="text-sm font-bold text-gray-900">{formatPrice(deal.price)}</span>
-                      </td>
-                      <td className="hidden px-4 py-3 text-right sm:table-cell">
-                        <span className="badge-discount">{formatDiscount(deal.discount)}</span>
-                      </td>
-                      <td className="hidden px-4 py-3 sm:table-cell">
-                        <div className="flex items-center gap-2 text-xs text-gray-500">
-                          {deal.historicLow && (
-                            <span className="badge-historic-low flex items-center gap-1">
-                              <TrendingDown className="h-3 w-3" /> Historic Low
-                            </span>
+            <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+              <table className="w-full">
+                <thead className="border-b border-gray-200 bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">Store</th>
+                    <th className="px-4 py-3 text-right text-xs font-semibold uppercase text-gray-500">Price</th>
+                    <th className="hidden px-4 py-3 text-right text-xs font-semibold uppercase text-gray-500 sm:table-cell">Discount</th>
+                    <th className="hidden px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500 sm:table-cell">Notes</th>
+                    <th className="px-4 py-3 text-right text-xs font-semibold uppercase text-gray-500">&nbsp;</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {deals.map((deal: any, i: number) => {
+                    const store = STORES[deal.store] || { name: deal.store, color: "#666" };
+                    return (
+                      <tr key={deal.id} className={`transition-colors hover:bg-gray-50 ${i === 0 ? "bg-success-50/50" : ""}`}>
+                        <td className="px-4 py-3">
+                          <span className="badge text-xs text-white" style={{ backgroundColor: store.color }}>
+                            {store.name}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <span className="text-sm font-bold text-gray-900">{formatPrice(deal.price, deal.currency)}</span>
+                        </td>
+                        <td className="hidden px-4 py-3 text-right sm:table-cell">
+                          {deal.discount_pct > 0 ? (
+                            <span className="badge-discount">{formatDiscount(deal.discount_pct)}</span>
+                          ) : (
+                            <span className="text-xs text-gray-400">—</span>
                           )}
-                          {deal.expires && (
-                            <span>Expires {formatDate(deal.expires)}</span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <a href={`/go/${deal.id}`} className={`btn inline-flex items-center gap-1 py-1.5 text-xs ${i === 0 ? "bg-success-600 text-white hover:bg-success-700" : "btn-secondary"}`}>
-                          {i === 0 ? "Best Deal" : "Get Deal"}
-                          <ExternalLink className="h-3 w-3" />
-                        </a>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </section>
+                        </td>
+                        <td className="hidden px-4 py-3 sm:table-cell">
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                            {deal.is_historic_low && (
+                              <span className="badge-historic-low flex items-center gap-1">
+                                <TrendingDown className="h-3 w-3" /> Historic Low
+                              </span>
+                            )}
+                            {deal.expires_at && (
+                              <span className="flex items-center gap-1">
+                                <Clock className="h-3 w-3" />
+                                Expires {timeAgo(deal.expires_at)}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <a
+                            href={deal.affiliate_url || deal.store_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`btn inline-flex items-center gap-1 py-1.5 text-xs ${i === 0 ? "bg-success-600 text-white hover:bg-success-700" : "btn-secondary"}`}
+                          >
+                            {i === 0 ? "Best Deal" : "Get Deal"}
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
 
         {/* Price History Chart */}
-        <section className="mt-10">
-          <h2 className="text-xl font-bold text-gray-900">Price History</h2>
-          <p className="mt-1 text-sm text-gray-500">
-            Track how the price has changed over time across stores.
-          </p>
-          <div className="mt-4 rounded-xl border border-gray-200 bg-white p-4">
-            <PriceChart data={MOCK_PRICE_HISTORY} />
-          </div>
-        </section>
+        {priceHistory.length > 0 && (
+          <section className="mt-10">
+            <h2 className="text-xl font-bold text-gray-900">Price History</h2>
+            <p className="mt-1 text-sm text-gray-500">
+              Track how the price has changed over time across stores.
+            </p>
+            <div className="mt-4 rounded-xl border border-gray-200 bg-white p-4">
+              <PriceChart data={priceHistory} />
+            </div>
+          </section>
+        )}
 
         {/* Analytics section (if available) */}
         {game.lootboxes_score && (
@@ -244,22 +338,24 @@ export default function GamePage({ params }: { params: { slug: string } }) {
         )}
 
         {/* Similar Games */}
-        <section className="mt-10">
-          <h2 className="text-xl font-bold text-gray-900">Similar Games</h2>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {MOCK_SIMILAR.map((g) => (
-              <Link key={g.slug} href={`/games/${g.slug}`} className="card group flex items-center gap-3">
-                <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg">
-                  <GameAvatar gameName={g.title} size="sm" aspectRatio="square" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-900 group-hover:text-brand-600">{g.title}</h3>
-                  <p className="text-xs text-gray-500">From {formatPrice(g.bestPrice)}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
+        {similarGames.length > 0 && (
+          <section className="mt-10">
+            <h2 className="text-xl font-bold text-gray-900">More Games</h2>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {similarGames.map((g: any) => (
+                <Link key={g.slug} href={`/games/${g.slug}`} className="card group flex items-center gap-3">
+                  <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg">
+                    <GameAvatar gameName={g.title} size="sm" aspectRatio="square" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-900 group-hover:text-brand-600">{g.title}</h3>
+                    <p className="text-xs text-gray-500">From {formatPrice(g.bestPrice)}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );
