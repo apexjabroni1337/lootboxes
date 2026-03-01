@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Search, X, Gamepad2, FileText } from "lucide-react";
-import ScoreBadge from "@/components/analytics/ScoreBadge";
+import { Search, FileText, Tag } from "lucide-react";
+import { formatPrice, formatDiscount } from "@/lib/utils";
+import { STORES } from "@/lib/types";
+import GameAvatar from "@/components/ui/GameAvatar";
 
 interface SearchResult {
   games: {
@@ -14,6 +16,20 @@ interface SearchResult {
     platforms: string[];
     genres: string[];
     lootboxes_score: number | null;
+  }[];
+  deals: {
+    id: string;
+    store: string;
+    price: number;
+    original_price: number;
+    discount_pct: number;
+    is_historic_low: boolean;
+    game: {
+      id: string;
+      title: string;
+      slug: string;
+      cover_image: string | null;
+    };
   }[];
   analytics: {
     id: string;
@@ -47,7 +63,6 @@ export default function SearchDialog({
     }
   }, [open]);
 
-  // Keyboard shortcut: Escape to close
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -60,7 +75,6 @@ export default function SearchDialog({
     return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
 
-  // Debounced search
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     if (!query || query.length < 2) {
@@ -84,19 +98,19 @@ export default function SearchDialog({
   if (!open) return null;
 
   const hasResults =
-    results && (results.games.length > 0 || results.analytics.length > 0);
+    results &&
+    ((results.games?.length || 0) > 0 ||
+      (results.deals?.length || 0) > 0 ||
+      (results.analytics?.length || 0) > 0);
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh]">
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* Dialog */}
       <div className="relative w-full max-w-xl rounded-2xl border border-gray-200 bg-white shadow-2xl">
-        {/* Search input */}
         <div className="flex items-center gap-3 border-b border-gray-100 px-4 py-3">
           <Search className="h-5 w-5 text-gray-400" />
           <input
@@ -104,7 +118,7 @@ export default function SearchDialog({
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search games, articles, drop rates..."
+            placeholder="Search games, deals, articles..."
             className="flex-1 bg-transparent text-base text-gray-900 outline-none placeholder:text-gray-400"
           />
           <button
@@ -115,7 +129,6 @@ export default function SearchDialog({
           </button>
         </div>
 
-        {/* Results */}
         <div className="max-h-96 overflow-y-auto p-2">
           {loading && (
             <div className="py-8 text-center text-sm text-gray-400">
@@ -132,7 +145,7 @@ export default function SearchDialog({
           {hasResults && (
             <>
               {/* Games */}
-              {results!.games.length > 0 && (
+              {results!.games?.length > 0 && (
                 <div>
                   <div className="px-3 py-2 text-xs font-semibold uppercase text-gray-400">
                     Games
@@ -144,25 +157,63 @@ export default function SearchDialog({
                       onClick={onClose}
                       className="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-gray-50"
                     >
-                      <Gamepad2 className="h-4 w-4 text-gray-400" />
-                      <div className="flex-1">
-                        <div className="text-sm font-medium text-gray-900">
-                          {game.title}
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          {game.platforms.join(", ")}
-                        </div>
+                      <div className="h-8 w-6 flex-shrink-0 overflow-hidden rounded">
+                        {game.cover_image ? (
+                          <img src={game.cover_image} alt={game.title} className="h-full w-full object-cover" />
+                        ) : (
+                          <GameAvatar gameName={game.title} size="sm" aspectRatio="portrait" className="h-full w-full" />
+                        )}
                       </div>
-                      {game.lootboxes_score && (
-                        <ScoreBadge score={game.lootboxes_score} size="sm" />
-                      )}
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-gray-900 truncate">{game.title}</div>
+                        <div className="text-xs text-gray-500">{game.platforms?.join(", ")}</div>
+                      </div>
                     </Link>
                   ))}
                 </div>
               )}
 
+              {/* Deals */}
+              {results!.deals?.length > 0 && (
+                <div className="mt-1">
+                  <div className="px-3 py-2 text-xs font-semibold uppercase text-gray-400">
+                    Best Deals
+                  </div>
+                  {results!.deals.map((deal) => {
+                    const store = STORES[deal.store] || { name: deal.store, color: "#666" };
+                    return (
+                      <Link
+                        key={deal.id}
+                        href={`/games/${deal.game.slug}`}
+                        onClick={onClose}
+                        className="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-gray-50"
+                      >
+                        <div className="h-8 w-6 flex-shrink-0 overflow-hidden rounded">
+                          {deal.game.cover_image ? (
+                            <img src={deal.game.cover_image} alt={deal.game.title} className="h-full w-full object-cover" />
+                          ) : (
+                            <Tag className="h-4 w-4 text-gray-400 mx-auto mt-2" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-medium text-gray-900 truncate">{deal.game.title}</div>
+                          <div className="flex items-center gap-2 text-xs">
+                            <span className="rounded px-1 py-0.5 text-[10px] font-medium text-white" style={{ backgroundColor: store.color }}>
+                              {store.name}
+                            </span>
+                            <span className="text-gray-400 line-through">{formatPrice(deal.original_price)}</span>
+                            <span className="font-bold text-gray-900">{formatPrice(deal.price)}</span>
+                          </div>
+                        </div>
+                        <span className="badge-discount text-xs">{formatDiscount(deal.discount_pct)}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+
               {/* Analytics */}
-              {results!.analytics.length > 0 && (
+              {results!.analytics?.length > 0 && (
                 <div className="mt-1">
                   <div className="px-3 py-2 text-xs font-semibold uppercase text-gray-400">
                     Articles
@@ -174,14 +225,10 @@ export default function SearchDialog({
                       onClick={onClose}
                       className="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-gray-50"
                     >
-                      <FileText className="h-4 w-4 text-gray-400" />
-                      <div className="flex-1">
-                        <div className="text-sm font-medium text-gray-900">
-                          {article.title}
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          {article.type}
-                        </div>
+                      <FileText className="h-4 w-4 flex-shrink-0 text-gray-400" />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-gray-900 truncate">{article.title}</div>
+                        <div className="text-xs text-gray-500">{article.type}</div>
                       </div>
                     </Link>
                   ))}
@@ -190,7 +237,7 @@ export default function SearchDialog({
             </>
           )}
 
-          {/* Quick actions */}
+          {/* Quick links when empty */}
           {!query && (
             <div className="py-4">
               <div className="px-3 py-2 text-xs font-semibold uppercase text-gray-400">

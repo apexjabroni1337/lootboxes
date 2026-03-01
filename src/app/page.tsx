@@ -5,8 +5,8 @@ import ScoreBadge from "@/components/analytics/ScoreBadge";
 import NewsletterForm from "@/components/newsletter/NewsletterForm";
 import HowItWorks from "@/components/home/HowItWorks";
 import TrustSignals from "@/components/home/TrustSignals";
+import HeroSearch from "@/components/search/HeroSearch";
 import {
-  Search,
   TrendingDown,
   BarChart3,
   Zap,
@@ -119,17 +119,7 @@ export default async function HomePage() {
           </p>
 
           {/* Search bar */}
-          <div className="mx-auto mt-8 max-w-xl">
-            <div className="flex items-center gap-2 rounded-xl border border-white/20 bg-white/95 p-2 shadow-lg backdrop-blur-sm">
-              <Search className="ml-2 h-5 w-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search games, deals, or analytics..."
-                className="flex-1 border-0 bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-400"
-              />
-              <button className="btn-primary">Search</button>
-            </div>
-          </div>
+          <HeroSearch />
 
           {/* Quick filter chips */}
           <div className="mt-6 flex flex-wrap justify-center gap-2">
