@@ -60,7 +60,7 @@ async function getTopDeals(): Promise<Deal[]> {
       ...d,
       game: d.games,
     });
-    if (topDeals.length >= 6) break;
+    if (topDeals.length >= 8) break;
   }
 
   return topDeals;
@@ -175,7 +175,7 @@ export default async function HomePage() {
           </div>
 
           {topDeals.length > 0 ? (
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-6 grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {topDeals.map((deal) => (
                 <DealCard key={deal.id} deal={deal} />
               ))}

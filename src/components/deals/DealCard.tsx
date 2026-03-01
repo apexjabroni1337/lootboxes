@@ -16,7 +16,7 @@ export default function DealCard({ deal }: DealCardProps) {
       {/* Game cover */}
       <div className="relative mb-3 overflow-hidden rounded-lg">
         {deal.game?.cover_image ? (
-          <div className="aspect-[16/9] overflow-hidden">
+          <div className="aspect-[3/4] overflow-hidden">
             <img
               src={deal.game.cover_image}
               alt={deal.game.title}
@@ -28,7 +28,7 @@ export default function DealCard({ deal }: DealCardProps) {
           <GameAvatar
             gameName={deal.game?.title || "Unknown"}
             size="md"
-            aspectRatio="video"
+            aspectRatio="portrait"
             className="transition-transform group-hover:scale-[1.02]"
           />
         )}
