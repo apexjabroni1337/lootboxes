@@ -58,18 +58,35 @@ async function getDeals() {
         title,
         slug,
         cover_image,
-        screenshot_image
+        screenshot_image,
+        hot_score
       )
     `)
     .order("discount_pct", { ascending: false })
-    .limit(100);
+    .limit(200);
 
   if (error) {
     console.error("Deals query error:", error.message);
     return [];
   }
 
-  return deals || [];
+  if (!deals) return [];
+
+  // Sort: prioritize games with images + high discounts + hot_score
+  const sorted = [...deals].sort((a: any, b: any) => {
+    const aHasImg = a.games?.cover_image ? 1 : 0;
+    const bHasImg = b.games?.cover_image ? 1 : 0;
+    // Image boost: games with images sort first
+    if (aHasImg !== bHasImg) return bHasImg - aHasImg;
+    // Then by hot_score (if available)
+    const aScore = a.games?.hot_score || 0;
+    const bScore = b.games?.hot_score || 0;
+    if (aScore !== bScore) return bScore - aScore;
+    // Fallback: discount percentage
+    return (b.discount_pct || 0) - (a.discount_pct || 0);
+  });
+
+  return sorted.slice(0, 100);
 }
 
 export default async function DealsPage() {

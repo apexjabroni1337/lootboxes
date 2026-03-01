@@ -76,6 +76,11 @@ export async function GET(request: NextRequest) {
             continue;
           }
 
+          // Title-based filter: catch bundles/soundtracks/collections ITAD didn't flag
+          if (isJunkTitle(deal.title)) {
+            continue;
+          }
+
           if (newGamesMap.has(itadId)) {
             newGamesMap.get(itadId)!.deals.push(deal);
           } else {
@@ -240,5 +245,11 @@ function extractPlatforms(deals: ITADDeal[]): string[] {
     }
   }
   return Array.from(platformSet);
+}
+
+const JUNK_PATTERN = /\b(bundle|soundtrack|collection|season\s+pass|expansion\s+pass|dlc\s+pack)\b/i;
+
+function isJunkTitle(title: string): boolean {
+  return JUNK_PATTERN.test(title);
 }
 
