@@ -104,7 +104,8 @@ export async function GET(request: NextRequest) {
       let slug = game.slug;
       const count = slugCounts.get(slug) || 0;
       if (count > 0) {
-        slug = `${slug}-${itadId.slice(0, 6)}`;
+        // Always make duplicate slugs unique with itad_id prefix
+        slug = `${slug}-${itadId.slice(0, 8)}`;
       }
       slugCounts.set(game.slug, count + 1);
 
@@ -117,6 +118,17 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    // Also check for slug conflicts with existing DB games
+    const { data: existingSlugs } = await supabase
+      .from("games")
+      .select("slug");
+    const existingSlugSet = new Set((existingSlugs || []).map((g) => g.slug));
+    for (const row of gameRows) {
+      if (existingSlugSet.has(row.slug)) {
+        row.slug = `${row.slug}-${row.itad_id.slice(0, 8)}`;
+      }
+    }
+
     // Insert games in chunks of 100 to avoid payload limits
     const CHUNK_SIZE = 100;
     const insertedGames: { id: string; itad_id: string }[] = [];
@@ -125,7 +137,7 @@ export async function GET(request: NextRequest) {
       const chunk = gameRows.slice(i, i + CHUNK_SIZE);
       const { data, error } = await supabase
         .from("games")
-        .upsert(chunk, { onConflict: "itad_id", ignoreDuplicates: true })
+        .upsert(chunk, { onConflict: "itad_id", ignoreDuplicates: false })
         .select("id, itad_id");
 
       if (error) {
