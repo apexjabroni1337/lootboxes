@@ -13,6 +13,8 @@ export interface Game {
   release_date: string | null;
   metacritic: number | null;
   lootboxes_score: number | null;
+  loot_system_type?: string | null;
+  hot_score?: number | null;
   created_at: string;
   updated_at: string;
 }

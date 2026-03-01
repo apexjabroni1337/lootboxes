@@ -17,6 +17,10 @@ import {
   ArrowRight,
   Clock,
   ChevronRight,
+  Zap,
+  CheckCircle,
+  HelpCircle,
+  AlertTriangle,
 } from "lucide-react";
 
 export const revalidate = 300;
@@ -64,6 +68,41 @@ async function getPriceHistory(gameId: string) {
     }
   }
   return Array.from(byDate.values()) as { date: string; [store: string]: number | string }[];
+}
+
+async function getDropRates(gameId: string) {
+  const supabase = createServerClient();
+  const { data: rates } = await supabase
+    .from("drop_rates")
+    .select("*")
+    .eq("game_id", gameId)
+    .order("drop_rate_pct", { ascending: true });
+  return rates || [];
+}
+
+const DR_SOURCE_META: Record<string, { label: string; icon: any; color: string }> = {
+  official: { label: "Official", icon: CheckCircle, color: "text-success-600" },
+  community_verified: { label: "Community Verified", icon: HelpCircle, color: "text-brand-600" },
+  user_reported: { label: "User Reported", icon: AlertTriangle, color: "text-warning-600" },
+};
+
+function getDrRarityColor(rarity: string): string {
+  const lower = rarity.toLowerCase();
+  if (lower.includes("heirloom") || lower.includes("mythic") || lower.includes("icon") || lower.includes("crown") || lower.includes("exceedingly") || lower.includes("black market"))
+    return "bg-amber-100 text-amber-800";
+  if (lower.includes("covert") || lower.includes("5-star") || lower.includes("s-rank") || lower.includes("legendary") || lower.includes("exotic") || lower.includes("secret") || lower.includes("series 5"))
+    return "bg-red-100 text-red-800";
+  if (lower.includes("classified") || lower.includes("4-star") || lower.includes("a-rank") || lower.includes("epic") || lower.includes("elite") || lower.includes("import") || lower.includes("full art") || lower.includes("series 4") || lower.includes("premium") || lower.includes("exclusive"))
+    return "bg-purple-100 text-purple-800";
+  if (lower.includes("restricted") || lower.includes("very rare") || lower.includes("rare") || lower.includes("star rare") || lower.includes("deluxe") || lower.includes("variant"))
+    return "bg-blue-100 text-blue-800";
+  if (lower.includes("mil-spec") || lower.includes("3-star") || lower.includes("b-rank") || lower.includes("common") || lower.includes("uncommon") || lower.includes("select"))
+    return "bg-gray-100 text-gray-700";
+  if (lower.includes("stattrak") || lower.includes("painted") || lower.includes("certified"))
+    return "bg-orange-100 text-orange-800";
+  if (lower.includes("pity")) return "bg-emerald-100 text-emerald-800";
+  if (lower.includes("effective")) return "bg-rose-50 text-rose-700";
+  return "bg-gray-100 text-gray-700";
 }
 
 async function getSimilarGames(gameId: string) {
@@ -129,10 +168,11 @@ export default async function GamePage({ params }: { params: { slug: string } })
   const game = await getGame(params.slug);
   if (!game) notFound();
 
-  const [deals, priceHistory, similarGames] = await Promise.all([
+  const [deals, priceHistory, similarGames, dropRates] = await Promise.all([
     getDealsForGame(game.id),
     getPriceHistory(game.id),
     getSimilarGames(game.id),
+    getDropRates(game.id),
   ]);
 
   const bestDeal = deals[0] || null;
@@ -388,6 +428,79 @@ export default async function GamePage({ params }: { params: { slug: string } })
                 </p>
                 <div className="mt-4 rounded-xl border border-gray-200 bg-white p-4">
                   <PriceChart data={priceHistory} />
+                </div>
+              </section>
+            )}
+
+            {/* Drop Rates section */}
+            {dropRates.length > 0 && (
+              <section className="mt-10">
+                <div className="flex items-center gap-2">
+                  <Zap className="h-5 w-5 text-brand-600" />
+                  <h2 className="text-xl font-bold text-gray-900">Loot Box Drop Rates</h2>
+                </div>
+                <p className="mt-1 text-sm text-gray-500">
+                  Verified probabilities for in-game items. Know your odds before you spend.
+                </p>
+
+                <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="border-b border-gray-200 bg-gray-50">
+                        <tr>
+                          <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase text-gray-500">Item</th>
+                          <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase text-gray-500">Rarity</th>
+                          <th className="px-4 py-2.5 text-right text-xs font-semibold uppercase text-gray-500">Drop Rate</th>
+                          <th className="hidden px-4 py-2.5 text-right text-xs font-semibold uppercase text-gray-500 sm:table-cell">~Avg. Opens</th>
+                          <th className="hidden px-4 py-2.5 text-left text-xs font-semibold uppercase text-gray-500 md:table-cell">Source</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-50">
+                        {dropRates.map((rate: any, i: number) => {
+                          const SourceMeta = DR_SOURCE_META[rate.source] || DR_SOURCE_META.user_reported;
+                          const isPity = rate.rarity.toLowerCase().includes("pity");
+                          const avgOpens =
+                            rate.drop_rate_pct > 0 && rate.drop_rate_pct < 100
+                              ? Math.ceil(100 / rate.drop_rate_pct)
+                              : "—";
+                          return (
+                            <tr key={i} className={`transition-colors hover:bg-gray-50 ${isPity ? "bg-emerald-50/30" : ""}`}>
+                              <td className="px-4 py-3 text-sm font-medium text-gray-900">{rate.item_name}</td>
+                              <td className="px-4 py-3">
+                                <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${getDrRarityColor(rate.rarity)}`}>
+                                  {rate.rarity}
+                                </span>
+                              </td>
+                              <td className="px-4 py-3 text-right">
+                                <span className="text-sm font-bold text-gray-900">
+                                  {rate.drop_rate_pct >= 100
+                                    ? "Guaranteed"
+                                    : rate.drop_rate_pct < 1
+                                      ? `${Number(rate.drop_rate_pct).toFixed(rate.drop_rate_pct < 0.1 ? 3 : 2)}%`
+                                      : `${Number(rate.drop_rate_pct).toFixed(1)}%`}
+                                </span>
+                              </td>
+                              <td className="hidden px-4 py-3 text-right text-sm text-gray-500 sm:table-cell">
+                                {typeof avgOpens === "number" ? `~${avgOpens.toLocaleString()} opens` : avgOpens}
+                              </td>
+                              <td className="hidden px-4 py-3 md:table-cell">
+                                <span className={`flex items-center gap-1 text-xs font-medium ${SourceMeta.color}`}>
+                                  <SourceMeta.icon className="h-3.5 w-3.5" />
+                                  {SourceMeta.label}
+                                </span>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="mt-3 text-right">
+                  <Link href="/drop-rates" className="text-sm font-medium text-brand-600 hover:text-brand-700">
+                    View all drop rates →
+                  </Link>
                 </div>
               </section>
             )}
