@@ -175,7 +175,7 @@ export async function getHistoricLow(
 export async function getDeals(opts: {
   offset?: number;
   limit?: number;
-  sort?: "price:asc" | "price:desc" | "cut:desc" | "cut:asc" | "added:desc";
+  sort?: string;
   shops?: string[];
   country?: string;
 } = {}): Promise<{ list: ITADDeal[]; count: number }> {
@@ -183,12 +183,15 @@ export async function getDeals(opts: {
   url.searchParams.set("key", getKey());
   url.searchParams.set("country", opts.country || "US");
   url.searchParams.set("offset", String(opts.offset || 0));
-  url.searchParams.set("limit", String(opts.limit || 20));
-  url.searchParams.set("sort", opts.sort || "cut:desc");
+  url.searchParams.set("limit", String(Math.min(opts.limit || 20, 200)));
+  if (opts.sort) url.searchParams.set("sort", opts.sort);
   if (opts.shops?.length) url.searchParams.set("shops", opts.shops.join(","));
 
   const res = await fetch(url.toString(), { next: { revalidate: 300 } });
-  if (!res.ok) throw new Error(`ITAD deals failed: ${res.status}`);
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`ITAD deals failed: ${res.status} ${body}`);
+  }
   return res.json();
 }
 

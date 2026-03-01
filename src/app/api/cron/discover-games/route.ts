@@ -18,8 +18,8 @@ import { getDeals, mapShopId, type ITADDeal } from "@/lib/itad";
  *   Optional: &pages=8 (default 4, each page = 500 deals)
  */
 
-const DEALS_PER_PAGE = 500;
-const DEFAULT_PAGES = 4; // 4 pages × 500 = 2000 deals scanned per run
+const DEALS_PER_PAGE = 200;
+const DEFAULT_PAGES = 10; // 10 pages × 200 = 2000 deals scanned per run
 
 export async function GET(request: NextRequest) {
   // Auth
@@ -64,7 +64,6 @@ export async function GET(request: NextRequest) {
         const { list: deals, count } = await getDeals({
           offset,
           limit: DEALS_PER_PAGE,
-          sort: "cut:desc", // Best discounts first
         });
 
         stats.pagesScanned++;
