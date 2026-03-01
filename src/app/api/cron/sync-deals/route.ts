@@ -13,9 +13,11 @@ import { getDeals, getPrices, mapShopId, type ITADDeal } from "@/lib/itad";
  * Auth: requires CRON_SECRET header to prevent public access.
  */
 export async function GET(request: NextRequest) {
-  // Verify cron secret
+  // Verify cron secret (header or query param)
+  const secret = request.nextUrl.searchParams.get("secret");
   const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const cronSecret = process.env.CRON_SECRET;
+  if (secret !== cronSecret && authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
