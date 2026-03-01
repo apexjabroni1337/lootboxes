@@ -14,7 +14,7 @@ async function getGamesWithDeals() {
 
   const { data: games, error } = await supabase
     .from("games")
-    .select("id, title, slug, cover_image, genres, platforms, metacritic, release_date")
+    .select("id, title, slug, cover_image, genres, platforms, metacritic, release_date, hot_score")
     .order("title", { ascending: true });
 
   if (error || !games) return [];
@@ -36,11 +36,25 @@ async function getGamesWithDeals() {
     }
   }
 
-  return games.map((game: any) => ({
+  const enriched = games.map((game: any) => ({
     ...game,
     bestPrice: dealStats.get(game.id)?.bestPrice ?? null,
     dealCount: dealStats.get(game.id)?.dealCount ?? 0,
   }));
+
+  // Sort: games with images first, then by hot_score, then by deal count
+  enriched.sort((a: any, b: any) => {
+    const aHasImg = a.cover_image ? 1 : 0;
+    const bHasImg = b.cover_image ? 1 : 0;
+    if (aHasImg !== bHasImg) return bHasImg - aHasImg;
+    const aScore = a.hot_score || 0;
+    const bScore = b.hot_score || 0;
+    if (aScore !== bScore) return bScore - aScore;
+    if (a.dealCount !== b.dealCount) return b.dealCount - a.dealCount;
+    return a.title.localeCompare(b.title);
+  });
+
+  return enriched;
 }
 
 export default async function GamesPage() {
