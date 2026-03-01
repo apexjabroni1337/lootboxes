@@ -35,7 +35,8 @@ async function getDeals() {
       games!inner (
         id,
         title,
-        slug
+        slug,
+        cover_image
       )
     `)
     .order("discount_pct", { ascending: false })
@@ -126,7 +127,11 @@ export default async function DealsPage() {
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
                           <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg">
-                            <GameAvatar gameName={game.title} size="sm" aspectRatio="square" />
+                            {game.cover_image ? (
+                              <img src={game.cover_image} alt={game.title} className="h-full w-full object-cover" />
+                            ) : (
+                              <GameAvatar gameName={game.title} size="sm" aspectRatio="square" />
+                            )}
                           </div>
                           <div>
                             <Link
