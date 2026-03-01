@@ -97,9 +97,31 @@ async function getSimilarGames(gameId: string) {
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const game = await getGame(params.slug);
   if (!game) return { title: "Game Not Found" };
+
+  const title = `${game.title} — Best Price, Deals & Analysis`;
+  const description = `Compare prices for ${game.title} across Steam, Epic, GOG, Humble Bundle, and more. Find the cheapest deal and see the full price history.`;
+  const ogImage = game.screenshot_image || game.cover_image || undefined;
+  const url = `https://lootboxes.com/games/${game.slug}`;
+
   return {
-    title: `${game.title} — Best Price, Deals & Analysis`,
-    description: `Compare prices for ${game.title} across Steam, Epic, GOG, Humble Bundle, and more. Find the cheapest deal and see the full price history.`,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "website",
+      ...(ogImage ? { images: [{ url: ogImage, width: 889, height: 500, alt: game.title }] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      ...(ogImage ? { images: [ogImage] } : {}),
+    },
+    alternates: {
+      canonical: url,
+    },
   };
 }
 
@@ -118,8 +140,47 @@ export default async function GamePage({ params }: { params: { slug: string } })
   const genres = game.genres || [];
   const heroImage = game.screenshot_image || game.cover_image;
 
+  // JSON-LD structured data for Google rich results
+  const jsonLd: Record<string, any> = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: game.title,
+    description: `Compare prices for ${game.title} across multiple stores.`,
+    url: `https://lootboxes.com/games/${game.slug}`,
+    ...(heroImage ? { image: heroImage } : {}),
+    ...(game.metacritic ? { aggregateRating: { "@type": "AggregateRating", ratingValue: game.metacritic, bestRating: 100, worstRating: 0, ratingCount: 1 } } : {}),
+    ...(deals.length > 0
+      ? {
+          offers: {
+            "@type": "AggregateOffer",
+            lowPrice: deals[0].price,
+            highPrice: deals[deals.length - 1].price,
+            priceCurrency: deals[0].currency || "USD",
+            offerCount: deals.length,
+            offers: deals.slice(0, 5).map((d: any) => ({
+              "@type": "Offer",
+              price: d.price,
+              priceCurrency: d.currency || "USD",
+              availability: "https://schema.org/InStock",
+              seller: {
+                "@type": "Organization",
+                name: STORES[d.store]?.name || d.store,
+              },
+              url: d.affiliate_url || d.store_url,
+            })),
+          },
+        }
+      : {}),
+  };
+
   return (
     <div className="pb-12">
+      {/* JSON-LD for Google rich results */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* ── Full-width screenshot hero ── */}
       <section className="relative overflow-hidden bg-gray-100">
         {heroImage ? (

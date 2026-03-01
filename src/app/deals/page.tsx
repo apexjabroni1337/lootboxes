@@ -15,6 +15,22 @@ export const metadata = {
   title: "Best Gaming Deals Today — Compare Prices Across Every Store",
   description:
     "Find the cheapest prices on PC and console games. Compare deals across Steam, Epic, GOG, Humble Bundle, and more. Updated every 30 minutes.",
+  openGraph: {
+    title: "Best Gaming Deals Today — Compare Prices Across Every Store",
+    description:
+      "Find the cheapest prices on PC and console games. Compare deals across Steam, Epic, GOG, Humble Bundle, and more.",
+    url: "https://lootboxes.com/deals",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Best Gaming Deals Today",
+    description:
+      "Compare prices across 15+ stores. Find the cheapest PC & console game deals. Updated every 30 minutes.",
+  },
+  alternates: {
+    canonical: "https://lootboxes.com/deals",
+  },
 };
 
 export const revalidate = 300;
