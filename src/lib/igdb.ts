@@ -103,6 +103,20 @@ export interface IGDBGame {
   }[];
 }
 
+/** Extended game type for bulk IGDB imports with full metadata */
+export interface IGDBBulkGame {
+  id: number;
+  name: string;
+  slug: string;
+  cover?: { image_id: string };
+  screenshots?: { image_id: string }[];
+  genres?: { name: string }[];
+  platforms?: { abbreviation: string; name: string }[];
+  total_rating?: number;
+  first_release_date?: number; // Unix timestamp
+  external_games?: { category: number; uid: string }[]; // category 1 = Steam
+}
+
 // ─── Public API ───
 
 /**
@@ -233,4 +247,47 @@ export function igdbImageUrl(
     | "1080p" = "cover_big"
 ): string {
   return `https://images.igdb.com/igdb/image/upload/t_${size}/${imageId}.jpg`;
+}
+
+// ─── Bulk Import API ───
+
+/**
+ * Fetch a page of games from IGDB with full metadata for bulk import.
+ *
+ * Filters:
+ *  - category = 0 (main games only, excludes DLC/expansions/mods)
+ *  - cover != null (guaranteed to have cover art)
+ *  - PC/PS4/PS5/Xbox One/Series X|S/Switch platforms
+ *  - Sorted by total_rating desc (best-rated games first)
+ *
+ * IGDB limits: 500 results per request, 4 requests/sec.
+ * At 500/request, fetching 9,000 games takes only 18 requests.
+ */
+export async function bulkFetchGames(
+  offset: number,
+  limit = 500
+): Promise<IGDBBulkGame[]> {
+  return igdbQuery<IGDBBulkGame>(
+    "games",
+    `fields name, slug, cover.image_id, screenshots.image_id,
+            genres.name, platforms.abbreviation, platforms.name,
+            total_rating, first_release_date,
+            external_games.category, external_games.uid;
+     where category = 0 & cover != null & platforms = (6,48,49,130,170);
+     sort total_rating desc;
+     limit ${Math.min(limit, 500)};
+     offset ${offset};`
+  );
+}
+
+/**
+ * Extract Steam App ID from IGDB external_games array.
+ * Category 1 = Steam in IGDB's external game category enum.
+ */
+export function extractSteamAppId(
+  externalGames?: { category: number; uid: string }[]
+): string | null {
+  if (!externalGames?.length) return null;
+  const steam = externalGames.find((eg) => eg.category === 1);
+  return steam?.uid || null;
 }

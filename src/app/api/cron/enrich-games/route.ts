@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
   try {
     const { data: games, error: queryErr } = await supabase
       .from("games")
-      .select("id, title, slug, cover_image, screenshot_image")
+      .select("id, title, slug, cover_image, screenshot_image, steam_app_id")
       .or("cover_image.is.null,screenshot_image.is.null")
       .order("created_at", { ascending: false })
       .limit(limit);
@@ -147,6 +147,7 @@ async function enrichGame(game: {
   slug: string;
   cover_image: string | null;
   screenshot_image: string | null;
+  steam_app_id: string | null;
 }): Promise<EnrichResult> {
   const result: EnrichResult = {
     gameId: game.id,
@@ -180,7 +181,19 @@ async function enrichGame(game: {
       // IGDB failure — continue to Steam fallback
     }
 
-    // ── Strategy 2: Steam store search ──
+    // ── Strategy 2: Steam CDN via stored steam_app_id (instant, no API call) ──
+    if (!result.found && !game.cover_image && game.steam_app_id) {
+      result.updates.cover_image = `https://cdn.akamai.steamstatic.com/steam/apps/${game.steam_app_id}/library_600x900.jpg`;
+      result.coversAdded = true;
+      if (!game.screenshot_image) {
+        result.updates.screenshot_image = `https://cdn.akamai.steamstatic.com/steam/apps/${game.steam_app_id}/header.jpg`;
+        result.screenshotsAdded = true;
+      }
+      result.steamHit = true;
+      result.found = true;
+    }
+
+    // ── Strategy 3: Steam store search (title-based fallback) ──
     if (!result.found && !game.cover_image) {
       try {
         const steamAppId = await searchSteamAppId(game.title);
@@ -201,7 +214,7 @@ async function enrichGame(game: {
       }
     }
 
-    // ── Strategy 3: Manual overrides (for mobile/niche titles) ──
+    // ── Strategy 4: Manual overrides (for mobile/niche titles) ──
     if (!result.found && game.slug in MANUAL_COVERS) {
       const manual = MANUAL_COVERS[game.slug];
       if (!game.cover_image && manual.cover) {

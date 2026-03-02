@@ -22,6 +22,9 @@ CREATE TABLE IF NOT EXISTS games (
 
 CREATE INDEX idx_games_slug ON games(slug);
 CREATE INDEX idx_games_itad_id ON games(itad_id);
+CREATE INDEX idx_games_steam_app_id ON games(steam_app_id);
+CREATE INDEX idx_games_missing_images ON games(id) WHERE cover_image IS NULL;
+CREATE INDEX idx_games_missing_itad ON games(id) WHERE itad_id IS NULL;
 
 -- Active deals
 CREATE TABLE IF NOT EXISTS deals (
