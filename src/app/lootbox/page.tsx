@@ -101,6 +101,12 @@ export async function generateMetadata({
   };
 }
 
+interface LootboxContentRow {
+  cost_per_pull: number | null;
+  has_pity_system: boolean;
+  overview_html: string | null;
+}
+
 interface GameWithContent {
   id: string;
   title: string;
@@ -108,11 +114,14 @@ interface GameWithContent {
   cover_image: string | null;
   lootboxes_score: number | null;
   loot_system_type: string | null;
-  lootbox_content: {
-    cost_per_pull: number | null;
-    has_pity_system: boolean;
-    overview_html: string | null;
-  }[];
+  lootbox_content: LootboxContentRow | LootboxContentRow[] | null;
+}
+
+function toContentArray(
+  content: LootboxContentRow | LootboxContentRow[] | null
+): LootboxContentRow[] {
+  if (!content) return [];
+  return Array.isArray(content) ? content : [content];
 }
 
 function systemLabel(type: string | null): { label: string; color: string } {
@@ -160,7 +169,7 @@ async function getGamesWithLootboxContent(
        lootbox_content (cost_per_pull, has_pity_system, overview_html)`
     )
     .not("loot_system_type", "is", null)
-    .order("lootboxes_score", { ascending: true });
+    .order("lootboxes_score", { ascending: false });
 
   if (typeFilter && VALID_TYPES.includes(typeFilter)) {
     query = query.eq("loot_system_type", typeFilter);
@@ -170,7 +179,7 @@ async function getGamesWithLootboxContent(
 
   if (error || !data) return [];
   return (data as GameWithContent[]).filter(
-    (g) => g.lootbox_content && g.lootbox_content.length > 0
+    (g) => g.lootbox_content !== null && (Array.isArray(g.lootbox_content) ? g.lootbox_content.length > 0 : true)
   );
 }
 
@@ -305,6 +314,55 @@ export default async function LootboxHubPage({
         </div>
       )}
 
+      {/* Type-specific stats cards (shown on filtered pages) */}
+      {typeFilter && games.length > 0 && (() => {
+        const contents = games.map((g) => toContentArray(g.lootbox_content)[0]).filter(Boolean);
+        const withPity = contents.filter((c) => c.has_pity_system).length;
+        const pityPct = Math.round((withPity / games.length) * 100);
+        const costs = contents.map((c) => c.cost_per_pull).filter((c): c is number => c !== null && c > 0);
+        const avgCost = costs.length > 0 ? (costs.reduce((a, b) => a + b, 0) / costs.length) : null;
+        const scores = games.map((g) => g.lootboxes_score).filter((s): s is number => s !== null);
+        const bestGame = games.reduce((best, g) => (!best || (g.lootboxes_score || 0) > (best.lootboxes_score || 0) ? g : best), games[0]);
+        const worstGame = games.reduce((worst, g) => (!worst || (g.lootboxes_score || 0) < (worst.lootboxes_score || 0) ? g : worst), games[0]);
+
+        return (
+          <div className="mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <div className={`rounded-xl border p-4 ${typeMeta!.accentBg} ${typeMeta!.accentBorder}`}>
+                <p className="text-xs font-medium text-gray-500 mb-1">Pity System Rate</p>
+                <p className="text-2xl font-bold text-gray-900">{pityPct}%</p>
+                <p className="text-xs text-gray-500">{withPity} of {games.length} games</p>
+              </div>
+              <div className="rounded-xl border border-gray-200 bg-white p-4">
+                <p className="text-xs font-medium text-gray-500 mb-1">Avg Cost / Pull</p>
+                <p className="text-2xl font-bold text-gray-900">{avgCost ? `$${avgCost.toFixed(2)}` : "—"}</p>
+                <p className="text-xs text-gray-500">{costs.length} games with data</p>
+              </div>
+              <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+                <p className="text-xs font-medium text-gray-500 mb-1">Best Rated</p>
+                <p className="text-lg font-bold text-gray-900 line-clamp-1">{bestGame.title}</p>
+                <p className="text-xs text-emerald-600 font-semibold">{bestGame.lootboxes_score?.toFixed(1)} / 10</p>
+              </div>
+              <div className="rounded-xl border border-rose-200 bg-rose-50 p-4">
+                <p className="text-xs font-medium text-gray-500 mb-1">Lowest Rated</p>
+                <p className="text-lg font-bold text-gray-900 line-clamp-1">{worstGame.title}</p>
+                <p className="text-xs text-rose-600 font-semibold">{worstGame.lootboxes_score?.toFixed(1)} / 10</p>
+              </div>
+            </div>
+
+            {/* Quick comparison link */}
+            <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-5 py-3">
+              <p className="text-sm text-gray-600">
+                See how these {games.length} {typeMeta!.heading.toLowerCase().replace(" games", "")} games compare to all {typeFilter === "gacha" ? "loot box" : "gacha"} games and more.
+              </p>
+              <Link href="/lootbox/rankings" className="text-sm font-medium text-blue-600 hover:underline flex-shrink-0 ml-4">
+                Full Rankings →
+              </Link>
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Games Grid */}
       {games.length === 0 && typeFilter && (
         <div className="text-center py-16 mb-12">
@@ -314,9 +372,14 @@ export default async function LootboxHubPage({
           </Link>
         </div>
       )}
+
+      {/* Section heading for filtered views */}
+      {typeFilter && games.length > 0 && (
+        <h2 className="text-xl font-bold text-gray-900 mb-4">All {typeMeta!.heading} ({games.length})</h2>
+      )}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-12">
         {games.map((game) => {
-          const content = game.lootbox_content[0];
+          const content = toContentArray(game.lootbox_content)[0];
           const sys = systemLabel(game.loot_system_type);
           return (
             <Link
