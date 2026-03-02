@@ -8,20 +8,27 @@ import {
 } from "@/lib/igdb";
 
 /**
- * Bulk import games from IGDB.
+ * Bulk import games from IGDB — AUTO-LOOPING version.
  *
- * Fetches 500 games per call with full metadata: covers, screenshots,
- * genres, platforms, release dates, ratings, and Steam App IDs.
+ * Continuously fetches batches of 500 from IGDB and inserts them into
+ * Supabase until either:
+ *  - IGDB returns 0 games (reached the end)
+ *  - We approach the Vercel timeout (270s safety margin)
  *
- * Designed to be called in a loop from PowerShell:
- *   for ($i=0; $i -lt 9000; $i+=500) {
- *     Invoke-RestMethod ".../import-igdb?secret=...&offset=$i"
- *   }
+ * Call it with an offset and it'll keep going from there:
+ *   /api/cron/import-igdb?secret=...&offset=64500
  *
- * GET /api/cron/import-igdb?secret=<CRON_SECRET>&offset=0&limit=500
+ * When it returns, check `nextOffset` and `done`:
+ *  - done=true → full catalog imported
+ *  - done=false → call again with offset=nextOffset
+ *
+ * GET /api/cron/import-igdb?secret=<CRON_SECRET>&offset=0
  */
 
 export const maxDuration = 300;
+
+const BATCH_SIZE = 500;
+const SAFETY_MS = 270_000; // Stop 30s before Vercel kills us
 
 /* ── Platform mapping: IGDB abbreviation → our format ── */
 
@@ -36,7 +43,7 @@ const PLATFORM_MAP: Record<string, string> = {
   Mac: "Mac",
   PS3: "PS3",
   X360: "Xbox 360",
-  "Stadia": "Stadia",
+  Stadia: "Stadia",
   WiiU: "Wii U",
   Wii: "Wii",
   VITA: "PS Vita",
@@ -55,29 +62,29 @@ const GENRE_MAP: Record<string, string> = {
   "Role-playing (RPG)": "RPG",
   Shooter: "Shooter",
   Adventure: "Adventure",
-  "Platform": "Platformer",
-  "Puzzle": "Puzzle",
-  "Racing": "Racing",
+  Platform: "Platformer",
+  Puzzle: "Puzzle",
+  Racing: "Racing",
   "Real Time Strategy (RTS)": "Strategy",
   Strategy: "Strategy",
   "Turn-based strategy (TBS)": "Strategy",
-  "Tactical": "Strategy",
-  "Sport": "Sports",
+  Tactical: "Strategy",
+  Sport: "Sports",
   Simulator: "Simulation",
-  "Fighting": "Fighting",
+  Fighting: "Fighting",
   "Hack and slash/Beat 'em up": "Action",
-  "Music": "Music",
-  "Indie": "Indie",
-  "Arcade": "Arcade",
+  Music: "Music",
+  Indie: "Indie",
+  Arcade: "Arcade",
   "Card & Board Game": "Card Game",
-  "MOBA": "MOBA",
+  MOBA: "MOBA",
   "Point-and-click": "Adventure",
   "Visual Novel": "Visual Novel",
   "Quiz/Trivia": "Puzzle",
-  "Pinball": "Arcade",
+  Pinball: "Arcade",
 };
 
-/* ── Junk title filter (reuse patterns from cleanup) ── */
+/* ── Junk title filter ── */
 
 const JUNK_RE =
   /\b(soundtrack|ost|artbook|wallpaper|skin pack|voice pack|commentary|making of|digital art|music pack|demo|trial|beta|playtest|prologue|season\s*pass|add[\s-]?on)\b/i;
@@ -88,7 +95,6 @@ const SPAM_RE =
 function shouldSkip(title: string): boolean {
   if (JUNK_RE.test(title)) return true;
   if (SPAM_RE.test(title)) return true;
-  // Skip titles that are just numbers or very short
   if (title.length < 3) return true;
   return false;
 }
@@ -106,11 +112,14 @@ function makeSlug(title: string): string {
 
 /* ── Extract data from IGDB game ── */
 
-function mapPlatforms(platforms?: { abbreviation: string; name: string }[]): string[] {
+function mapPlatforms(
+  platforms?: { abbreviation: string; name: string }[]
+): string[] {
   if (!platforms?.length) return ["PC"];
   const set = new Set<string>();
   for (const p of platforms) {
-    const mapped = PLATFORM_MAP[p.abbreviation] || PLATFORM_MAP[p.name] || p.name;
+    const mapped =
+      PLATFORM_MAP[p.abbreviation] || PLATFORM_MAP[p.name] || p.name;
     set.add(mapped);
   }
   return Array.from(set);
@@ -129,7 +138,7 @@ function mapGenres(genres?: { name: string }[]): string[] {
 function formatDate(unixTimestamp?: number): string | null {
   if (!unixTimestamp) return null;
   const d = new Date(unixTimestamp * 1000);
-  return d.toISOString().split("T")[0]; // YYYY-MM-DD
+  return d.toISOString().split("T")[0];
 }
 
 function buildGameRow(game: IGDBBulkGame) {
@@ -155,6 +164,33 @@ function buildGameRow(game: IGDBBulkGame) {
   };
 }
 
+/* ── Load existing slugs (paginated for large DBs) ── */
+
+async function loadExistingSlugs(supabase: any): Promise<Set<string>> {
+  const slugs = new Set<string>();
+  let from = 0;
+  const PAGE = 10000;
+
+  while (true) {
+    const { data, error } = await supabase
+      .from("games")
+      .select("slug")
+      .range(from, from + PAGE - 1);
+
+    if (error) throw new Error(`Load slugs: ${error.message}`);
+    if (!data?.length) break;
+
+    for (const g of data) {
+      slugs.add(g.slug);
+    }
+
+    if (data.length < PAGE) break;
+    from += PAGE;
+  }
+
+  return slugs;
+}
+
 /* ── Main handler ── */
 
 export async function GET(request: NextRequest) {
@@ -163,13 +199,16 @@ export async function GET(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET;
 
   if (!cronSecret) {
-    return NextResponse.json({ error: "CRON_SECRET not configured" }, { status: 500 });
+    return NextResponse.json(
+      { error: "CRON_SECRET not configured" },
+      { status: 500 }
+    );
   }
   if (secret !== cronSecret && authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Debug mode: test IGDB connection with a simple query
+  // Debug test mode
   const testMode = request.nextUrl.searchParams.get("test") === "true";
   if (testMode) {
     try {
@@ -183,151 +222,158 @@ export async function GET(request: NextRequest) {
         "Content-Type": "text/plain",
       };
 
-      // Test 1: No where clause (works)
       const res1 = await fetch("https://api.igdb.com/v4/games", {
-        method: "POST", headers: hdrs,
+        method: "POST",
+        headers: hdrs,
         body: "fields name; limit 3;",
       });
       const text1 = await res1.text();
-
-      // Test 2: category field exploration
-      const res2 = await fetch("https://api.igdb.com/v4/games", {
-        method: "POST", headers: hdrs,
-        body: "fields name, category; where cover != null; limit 5;",
-      });
-      const text2 = await res2.text();
-
-      // Test 3: Full import query (no category filter)
-      const res3 = await fetch("https://api.igdb.com/v4/games", {
-        method: "POST", headers: hdrs,
-        body: "fields name, slug, cover.image_id, screenshots.image_id, genres.name, platforms.abbreviation, total_rating, first_release_date, external_games.category, external_games.uid; where cover != null & themes != (42); sort id asc; limit 3; offset 0;",
-      });
-      const text3 = await res3.text();
 
       return NextResponse.json({
         ok: true,
         test: true,
         tokenOk: !!token,
         test1: { status: res1.status, body: text1.slice(0, 500) },
-        test2: { status: res2.status, body: text2.slice(0, 500) },
-        test3: { status: res3.status, body: text3.slice(0, 500) },
       });
     } catch (err: any) {
-      return NextResponse.json({ ok: false, test: true, error: err.message }, { status: 500 });
+      return NextResponse.json(
+        { ok: false, test: true, error: err.message },
+        { status: 500 }
+      );
     }
   }
 
-  const offset = parseInt(request.nextUrl.searchParams.get("offset") || "0");
-  const limit = Math.min(
-    parseInt(request.nextUrl.searchParams.get("limit") || "500"),
-    500
+  let currentOffset = parseInt(
+    request.nextUrl.searchParams.get("offset") || "0"
   );
 
   const supabase = createServerClient();
+  const startTime = Date.now();
+
   const stats = {
-    offset,
-    limit,
-    fetched: 0,
-    imported: 0,
-    skipped: 0,
-    duplicates: 0,
+    startOffset: currentOffset,
+    currentOffset,
+    batchesProcessed: 0,
+    totalFetched: 0,
+    totalImported: 0,
+    totalSkipped: 0,
+    totalDuplicates: 0,
     errors: [] as string[],
-    nextOffset: offset + limit,
+    nextOffset: currentOffset,
     done: false,
   };
 
   try {
-    // Step 1: Fetch games from IGDB
-    let igdbGames: IGDBBulkGame[];
-    try {
-      igdbGames = await bulkFetchGames(offset, limit);
-    } catch (fetchErr: any) {
-      return NextResponse.json(
-        { ok: false, error: `IGDB fetch failed: ${fetchErr.message}`, ...stats },
-        { status: 500 }
-      );
-    }
-    stats.fetched = igdbGames.length;
+    // Load existing slugs once (paginated to handle 60K+)
+    const usedSlugs = await loadExistingSlugs(supabase);
+    const slugLoadTime = Date.now() - startTime;
 
-    if (igdbGames.length === 0) {
-      stats.done = true;
-      return NextResponse.json({ ok: true, ...stats, debug: "IGDB returned 0 games for this offset" });
-    }
-
-    // Step 2: Get existing slugs to detect duplicates
-    const { data: existingSlugs } = await supabase
-      .from("games")
-      .select("slug");
-    const usedSlugs = new Set((existingSlugs || []).map((g) => g.slug));
-
-    // Step 3: Build game rows
-    const gameRows: Record<string, any>[] = [];
-
-    for (const game of igdbGames) {
-      // Skip junk titles
-      if (shouldSkip(game.name)) {
-        stats.skipped++;
-        continue;
+    // Auto-loop through batches until timeout or done
+    while (Date.now() - startTime < SAFETY_MS) {
+      // Fetch batch from IGDB
+      let igdbGames: IGDBBulkGame[];
+      try {
+        igdbGames = await bulkFetchGames(currentOffset, BATCH_SIZE);
+      } catch (fetchErr: any) {
+        stats.errors.push(
+          `IGDB fetch at offset ${currentOffset}: ${fetchErr.message}`
+        );
+        // If IGDB errors, stop but don't mark as done (retry later)
+        break;
       }
 
-      const row = buildGameRow(game);
+      stats.totalFetched += igdbGames.length;
 
-      // Skip if no cover (shouldn't happen with our IGDB filter, but safety)
-      if (!row.cover_image) {
-        stats.skipped++;
-        continue;
+      // If IGDB returned 0 games, we've reached the end!
+      if (igdbGames.length === 0) {
+        stats.done = true;
+        break;
       }
 
-      // Handle slug collisions
-      if (usedSlugs.has(row.slug)) {
-        // Try with IGDB ID suffix
-        const altSlug = `${row.slug}-${game.id}`;
-        if (usedSlugs.has(altSlug)) {
-          stats.duplicates++;
+      // Build game rows for this batch
+      const gameRows: Record<string, any>[] = [];
+
+      for (const game of igdbGames) {
+        if (shouldSkip(game.name)) {
+          stats.totalSkipped++;
           continue;
         }
-        row.slug = altSlug;
-      }
-      usedSlugs.add(row.slug);
-      gameRows.push(row);
-    }
 
-    // Step 4: Batch insert (chunks of 50)
-    const CHUNK_SIZE = 50;
-    for (let i = 0; i < gameRows.length; i += CHUNK_SIZE) {
-      const chunk = gameRows.slice(i, i + CHUNK_SIZE);
-      const { error } = await supabase.from("games").insert(chunk as any);
+        const row = buildGameRow(game);
 
-      if (error) {
-        // Batch failed — try individual inserts
-        for (const row of chunk) {
-          const { error: singleErr } = await supabase
-            .from("games")
-            .insert(row as any);
-          if (singleErr) {
-            // Could be duplicate slug race condition — try upsert
-            if (singleErr.message?.includes("duplicate") || singleErr.code === "23505") {
-              stats.duplicates++;
-            } else {
-              stats.errors.push(`${row.title}: ${singleErr.message}`);
-            }
-          } else {
-            stats.imported++;
-          }
+        if (!row.cover_image) {
+          stats.totalSkipped++;
+          continue;
         }
-      } else {
-        stats.imported += chunk.length;
+
+        // Handle slug collisions
+        if (usedSlugs.has(row.slug)) {
+          const altSlug = `${row.slug}-${game.id}`;
+          if (usedSlugs.has(altSlug)) {
+            stats.totalDuplicates++;
+            continue;
+          }
+          row.slug = altSlug;
+        }
+        usedSlugs.add(row.slug);
+        gameRows.push(row);
       }
+
+      // Batch insert (chunks of 50)
+      for (let i = 0; i < gameRows.length; i += 50) {
+        const chunk = gameRows.slice(i, i + 50);
+        const { error } = await supabase.from("games").insert(chunk as any);
+
+        if (error) {
+          // Batch failed — try individual inserts
+          for (const row of chunk) {
+            const { error: singleErr } = await supabase
+              .from("games")
+              .insert(row as any);
+            if (singleErr) {
+              if (
+                singleErr.message?.includes("duplicate") ||
+                singleErr.code === "23505"
+              ) {
+                stats.totalDuplicates++;
+              } else {
+                stats.errors.push(`${row.title}: ${singleErr.message}`);
+              }
+            } else {
+              stats.totalImported++;
+            }
+          }
+        } else {
+          stats.totalImported += chunk.length;
+        }
+      }
+
+      // Advance offset
+      currentOffset += BATCH_SIZE;
+      stats.currentOffset = currentOffset;
+      stats.nextOffset = currentOffset;
+      stats.batchesProcessed++;
+
+      // If IGDB returned fewer than batch size, we're done
+      if (igdbGames.length < BATCH_SIZE) {
+        stats.done = true;
+        break;
+      }
+
+      // Brief pause to be nice to IGDB rate limits (4 req/sec)
+      await new Promise((r) => setTimeout(r, 300));
     }
 
-    // If IGDB returned fewer than `limit`, we've reached the end
-    if (igdbGames.length < limit) {
-      stats.done = true;
-    }
+    const elapsed = Math.round((Date.now() - startTime) / 1000);
 
     return NextResponse.json({
       ok: true,
       ...stats,
+      elapsedSeconds: elapsed,
+      slugLoadTimeMs: slugLoadTime,
+      message: stats.done
+        ? "Import complete! Full IGDB catalog has been imported."
+        : `Processed ${stats.batchesProcessed} batches in ${elapsed}s. Call again with offset=${stats.nextOffset} to continue.`,
       timestamp: new Date().toISOString(),
     });
   } catch (err: any) {
