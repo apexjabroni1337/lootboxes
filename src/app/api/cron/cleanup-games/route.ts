@@ -5,16 +5,21 @@ import { searchGame, igdbImageUrl } from "@/lib/igdb";
 /**
  * All-in-one games cleanup:
  *
- * Phase 1 — Delete non-English games (titles with non-Latin chars, soundtracks,
- *           DLC junk, season passes, artbooks, etc.)
- * Phase 2 — Fix broken/missing cover images via IGDB → Steam fallback
+ * Phase 1 — Delete non-English / junk / shovelware games
+ * Phase 2 — Fix missing cover images via IGDB → Steam (NULL only, skip HEAD checks)
+ * Phase 3 — Delete "dead" games: no image + IGDB/Steam can't find them = too obscure
+ *
+ * Optimized: Skips expensive HEAD checks. Only targets cover_image IS NULL.
+ * Run multiple times — each run fixes a batch within the timeout.
  *
  * GET /api/cron/cleanup-games?secret=<CRON_SECRET>
+ * GET /api/cron/cleanup-games?secret=<CRON_SECRET>&phase=2  (skip Phase 1, image-only)
+ * GET /api/cron/cleanup-games?secret=<CRON_SECRET>&nuke=true (Phase 3: delete unfixable)
  */
 
 export const maxDuration = 300; // 5 min for paid Vercel plans, 60s for hobby
 
-const CONCURRENCY = 4;
+const CONCURRENCY = 5;
 const SAFETY_MS = 55_000;
 
 /* ── Patterns for non-English / junk titles ── */
@@ -228,6 +233,73 @@ const SPAM_TITLE_PATTERNS = [
   /\bMission Blattpest\b/i,
   /\bMission Blatttpest\b/i,
   /\bBlattpes/i,
+  // Round 3: Aggressive catches from remaining output
+  /\bForest Ranger\b/i,
+  /\bAquarist\b/i,
+  /\bDemolish\s*&?\s*Build\b/i,
+  /\bFluffy Kitchen\b/i,
+  /\bMy Anime\b/i,
+  /\bBest Platformers\b/i,
+  /\bFishy\b.*\bseries\b/i,
+  /\bMoonshine\s+(and|&)\b/i,
+  /\bDieselpunk Wars\b/i,
+  /\bPirates on Frigato\b/i,
+  /\bFarmer\s+(and|&)\b/i,
+  /\bPool\s+(Party|Cleaning)\b/i,
+  /\bGardener\b.*\b(and|&)\b/i,
+  /\bZoo Simulator\b/i,
+  /\bHouse Flipper\b/i,
+  /\bCar Mechanic Simulator\b/i,
+  /\bPC Building Simulator\b/i,
+  /\bThief Simulator\b/i,
+  /\bElectrician Simulator\b/i,
+  /\bGas Station Simulator\b/i,
+  /\bBakery Simulator\b/i,
+  /\bAnimal Shelter\b/i,
+  /\bRescue HQ\b/i,
+  /\bBarn Finders\b/i,
+  /\bGold Rush\b.*\b(The Game|Simulator)\b/i,
+  /\bLumber Empire\b/i,
+  /\bOvercooked\b/i,
+  /\bSlime Rancher\b/i,
+  /\bMy Time at\b/i,
+  /\bDrugDealer\b/i,
+  /\bPlumber\b.*\bSimulator\b/i,
+  /\bElectricity Manager\b/i,
+  /\bRealty Co\b/i,
+  /\bKebab Simulator\b/i,
+  /\bPainter Simulator\b/i,
+  /\bTrader Life\b/i,
+  /\bSupermarket Sim/i,
+  /\bInternet Cafe\b/i,
+  /\bGym Simulator\b/i,
+  /\bMuseum Sim\b/i,
+  /\bSnowplowing\b/i,
+  /\bFishing Sim\b/i,
+  /\bFarm Together\b/i,
+  /\bGarden Simulator\b/i,
+  /\bWrecking Ball\b/i,
+  /\bMoving Out\b/i,
+  /\bTools Up\b/i,
+  /\bRaid & Loot\b/i,
+  /\bMeat Factory\b/i,
+  /\bPet Shop\b/i,
+  /\bVet Clinic\b/i,
+  /\bDentist Sim\b/i,
+  /\bBarber Shop\b/i,
+  /\bLaundry Sim\b/i,
+  /\bRestaurant Sim\b/i,
+  /\bHotel Sim\b/i,
+  // Generic "X and Y" bundle pattern (cheap Steam bundles)
+  /^[\w\s:'-]+\s+and\s+[\w\s:'-]+\s+and\s+[\w\s:'-]+$/i,
+  // Titles with "pack" at the end (DLC packs)
+  /\bPack\s*$/i,
+  /\bBundle\s*$/i,
+  /\bCollection\s*$/i,
+  /\bCompilation\s*$/i,
+  // Cheap simulator spam
+  /Simulator\s*20[12]\d/i,
+  /\bTycoon\s*$/i,
 ];
 
 function shouldDelete(title: string): { delete: boolean; reason: string } {
@@ -295,19 +367,20 @@ async function searchSteamAppId(title: string): Promise<string | null> {
   }
 }
 
-/* ── Image URL validation ── */
+/* ── Bulk delete helper ── */
 
-async function isImageBroken(url: string): Promise<boolean> {
-  try {
-    const res = await fetch(url, {
-      method: "HEAD",
-      signal: AbortSignal.timeout(4000),
-    });
-    if (!res.ok) return true;
-    const ct = res.headers.get("content-type") || "";
-    return !ct.startsWith("image/");
-  } catch {
-    return true;
+async function bulkDelete(supabase: any, ids: string[], stats: any) {
+  for (let c = 0; c < ids.length; c += 50) {
+    const chunk = ids.slice(c, c + 50);
+    await supabase.from("deals").delete().in("game_id", chunk as any);
+    await supabase.from("lootbox_content").delete().in("game_id", chunk as any);
+    await supabase.from("drop_rates").delete().in("game_id", chunk as any);
+    const { error } = await supabase.from("games").delete().in("id", chunk as any);
+    if (error) {
+      stats.errors.push(`Delete chunk: ${error.message}`);
+    } else {
+      stats.phase1_deleted += chunk.length;
+    }
   }
 }
 
@@ -325,17 +398,20 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const phase = request.nextUrl.searchParams.get("phase") || "all";
+  const nukeMode = request.nextUrl.searchParams.get("nuke") === "true";
+
   const supabase = createServerClient();
   const stats = {
     phase1_deleted: 0,
     phase1_deletedTitles: [] as string[],
-    phase2_checked: 0,
-    phase2_broken: 0,
-    phase2_missing: 0,
+    phase2_total: 0,
     phase2_fixed: 0,
     phase2_igdb: 0,
     phase2_steam: 0,
     phase2_unfixable: [] as string[],
+    phase3_nuked: 0,
+    phase3_nukedTitles: [] as string[],
     errors: [] as string[],
   };
 
@@ -345,165 +421,150 @@ export async function GET(request: NextRequest) {
     /* ═══════════════════════════════════════════
      * PHASE 1: Delete non-English & junk games
      * ═══════════════════════════════════════════ */
+    if (phase === "all" || phase === "1") {
+      const { data: allGames, error: allErr } = await supabase
+        .from("games")
+        .select("id, title")
+        .order("title");
 
-    const { data: allGames, error: allErr } = await supabase
-      .from("games")
-      .select("id, title")
-      .order("title");
+      if (allErr) throw new Error(`Fetch all games: ${allErr.message}`);
 
-    if (allErr) throw new Error(`Fetch all games: ${allErr.message}`);
-
-    const toDelete: string[] = [];
-    for (const game of allGames || []) {
-      const check = shouldDelete(game.title);
-      if (check.delete) {
-        toDelete.push(game.id);
-        stats.phase1_deletedTitles.push(`${game.title} (${check.reason})`);
-      }
-    }
-
-    if (toDelete.length > 0) {
-      // Delete in chunks of 50 to avoid TS depth issues and query limits
-      for (let c = 0; c < toDelete.length; c += 50) {
-        const chunk = toDelete.slice(c, c + 50);
-
-        // Delete related deals first (foreign key)
-        await supabase.from("deals").delete().in("game_id", chunk as any);
-
-        // Delete related lootbox_content
-        await supabase.from("lootbox_content").delete().in("game_id", chunk as any);
-
-        // Delete related drop_rates
-        await supabase.from("drop_rates").delete().in("game_id", chunk as any);
-
-        // Delete the games themselves
-        const { error: gameDelErr } = await supabase
-          .from("games")
-          .delete()
-          .in("id", chunk as any);
-
-        if (gameDelErr) {
-          stats.errors.push(`Game delete chunk: ${gameDelErr.message}`);
-        } else {
-          stats.phase1_deleted += chunk.length;
+      const toDelete: string[] = [];
+      for (const game of allGames || []) {
+        const check = shouldDelete(game.title);
+        if (check.delete) {
+          toDelete.push(game.id);
+          stats.phase1_deletedTitles.push(`${game.title} (${check.reason})`);
         }
       }
-    }
 
-    /* ═══════════════════════════════════════════
-     * PHASE 2: Fix broken / missing images
-     * ═══════════════════════════════════════════ */
-
-    // Re-fetch remaining games
-    const { data: remainingGames, error: remErr } = await supabase
-      .from("games")
-      .select("id, title, slug, cover_image, screenshot_image")
-      .order("hot_score", { ascending: false, nullsFirst: false });
-
-    if (remErr) throw new Error(`Fetch remaining: ${remErr.message}`);
-    if (!remainingGames?.length) {
-      return NextResponse.json({ ok: true, message: "No games left", ...stats });
-    }
-
-    // Check all images in parallel batches
-    const needsFix: typeof remainingGames = [];
-
-    for (let i = 0; i < remainingGames.length; i += CONCURRENCY * 3) {
-      if (Date.now() - startTime > SAFETY_MS * 0.35) break;
-
-      const batch = remainingGames.slice(i, i + CONCURRENCY * 3);
-      const results = await Promise.allSettled(
-        batch.map(async (game) => {
-          stats.phase2_checked++;
-          if (!game.cover_image) {
-            stats.phase2_missing++;
-            return { game, needsFix: true };
-          }
-          const broken = await isImageBroken(game.cover_image);
-          if (broken) {
-            stats.phase2_broken++;
-            return { game, needsFix: true };
-          }
-          return { game, needsFix: false };
-        })
-      );
-
-      for (const r of results) {
-        if (r.status === "fulfilled" && r.value.needsFix) {
-          needsFix.push(r.value.game);
-        }
+      if (toDelete.length > 0) {
+        await bulkDelete(supabase, toDelete, stats);
       }
     }
 
-    // Fix images via IGDB → Steam
-    for (let i = 0; i < needsFix.length; i += CONCURRENCY) {
-      if (Date.now() - startTime > SAFETY_MS) {
-        stats.errors.push(`Timeout at ${stats.phase2_fixed} fixes`);
-        break;
-      }
+    /* ═══════════════════════════════════════════════════════════
+     * PHASE 2: Fix missing cover images (NULL only — NO HEAD checks)
+     * Much faster: directly queries cover_image IS NULL
+     * ═══════════════════════════════════════════════════════════ */
+    if (phase === "all" || phase === "2") {
+      // Only fetch games that actually need images — no wasting time HEAD-checking
+      const { data: needsFix, error: remErr } = await supabase
+        .from("games")
+        .select("id, title, slug, cover_image, screenshot_image")
+        .is("cover_image", null)
+        .order("hot_score", { ascending: false, nullsFirst: false })
+        .limit(200);
 
-      const batch = needsFix.slice(i, i + CONCURRENCY);
-      const fixResults = await Promise.allSettled(
-        batch.map(async (game) => {
-          const updates: Record<string, any> = {};
+      if (remErr) throw new Error(`Fetch missing images: ${remErr.message}`);
 
-          // Strategy 1: IGDB
-          try {
-            const igdb = await searchGame(game.title);
-            if (igdb?.cover?.image_id) {
-              updates.cover_image = igdbImageUrl(igdb.cover.image_id, "cover_big");
-              if (igdb.screenshots?.length) {
-                updates.screenshot_image = igdbImageUrl(igdb.screenshots[0].image_id, "screenshot_big");
+      stats.phase2_total = needsFix?.length || 0;
+
+      if (needsFix?.length) {
+        for (let i = 0; i < needsFix.length; i += CONCURRENCY) {
+          if (Date.now() - startTime > SAFETY_MS) {
+            stats.errors.push(`Timeout at ${stats.phase2_fixed}/${needsFix.length} fixes`);
+            break;
+          }
+
+          const batch = needsFix.slice(i, i + CONCURRENCY);
+          const fixResults = await Promise.allSettled(
+            batch.map(async (game) => {
+              const updates: Record<string, any> = {};
+
+              // Strategy 1: IGDB
+              try {
+                const igdb = await searchGame(game.title);
+                if (igdb?.cover?.image_id) {
+                  updates.cover_image = igdbImageUrl(igdb.cover.image_id, "cover_big");
+                  if (!game.screenshot_image && igdb.screenshots?.length) {
+                    updates.screenshot_image = igdbImageUrl(igdb.screenshots[0].image_id, "screenshot_big");
+                  }
+                  return { game, updates, source: "igdb" as const };
+                }
+              } catch { /* continue */ }
+
+              // Strategy 2: Steam
+              try {
+                const steamId = await searchSteamAppId(game.title);
+                if (steamId) {
+                  updates.cover_image = `https://cdn.akamai.steamstatic.com/steam/apps/${steamId}/library_600x900.jpg`;
+                  if (!game.screenshot_image) {
+                    updates.screenshot_image = `https://cdn.akamai.steamstatic.com/steam/apps/${steamId}/header.jpg`;
+                  }
+                  return { game, updates, source: "steam" as const };
+                }
+              } catch { /* continue */ }
+
+              return { game, updates, source: "none" as const };
+            })
+          );
+
+          for (const r of fixResults) {
+            if (r.status === "fulfilled") {
+              const { game, updates, source } = r.value;
+              if (Object.keys(updates).length > 0) {
+                const { error: updErr } = await supabase
+                  .from("games")
+                  .update(updates)
+                  .eq("id", game.id);
+                if (updErr) {
+                  stats.errors.push(`Update ${game.title}: ${updErr.message}`);
+                } else {
+                  stats.phase2_fixed++;
+                  if (source === "igdb") stats.phase2_igdb++;
+                  if (source === "steam") stats.phase2_steam++;
+                }
+              } else {
+                stats.phase2_unfixable.push(game.title);
               }
-              stats.phase2_igdb++;
-              return { game, updates };
             }
-          } catch { /* continue */ }
+          }
 
-          // Strategy 2: Steam
-          try {
-            const steamId = await searchSteamAppId(game.title);
-            if (steamId) {
-              updates.cover_image = `https://cdn.akamai.steamstatic.com/steam/apps/${steamId}/library_600x900.jpg`;
-              updates.screenshot_image = `https://cdn.akamai.steamstatic.com/steam/apps/${steamId}/header.jpg`;
-              stats.phase2_steam++;
-              return { game, updates };
-            }
-          } catch { /* continue */ }
-
-          return { game, updates };
-        })
-      );
-
-      for (const r of fixResults) {
-        if (r.status === "fulfilled") {
-          const { game, updates } = r.value;
-          if (Object.keys(updates).length > 0) {
-            const { error: updErr } = await supabase
-              .from("games")
-              .update(updates)
-              .eq("id", game.id);
-            if (updErr) {
-              stats.errors.push(`Update ${game.title}: ${updErr.message}`);
-            } else {
-              stats.phase2_fixed++;
-            }
-          } else {
-            stats.phase2_unfixable.push(game.title);
+          // Shorter delay — we're not doing HEAD checks anymore so less load
+          if (i + CONCURRENCY < needsFix.length) {
+            await new Promise((r) => setTimeout(r, 250));
           }
         }
       }
+    }
 
-      if (i + CONCURRENCY < needsFix.length) {
-        await new Promise((r) => setTimeout(r, 300));
+    /* ═══════════════════════════════════════════════════════════
+     * PHASE 3 (nuke mode): Delete games that STILL have no image
+     * These are too obscure for IGDB and Steam — dead weight
+     * Only runs with ?nuke=true to prevent accidental data loss
+     * ═══════════════════════════════════════════════════════════ */
+    if (nukeMode) {
+      const { data: deadGames, error: deadErr } = await supabase
+        .from("games")
+        .select("id, title")
+        .is("cover_image", null);
+
+      if (deadErr) throw new Error(`Fetch dead games: ${deadErr.message}`);
+
+      if (deadGames?.length) {
+        const deadIds = deadGames.map((g) => g.id);
+        stats.phase3_nukedTitles = deadGames.map((g) => g.title);
+        stats.phase3_nuked = deadGames.length;
+        await bulkDelete(supabase, deadIds, stats);
       }
     }
+
+    // Count remaining
+    const { count: totalRemaining } = await supabase
+      .from("games")
+      .select("id", { count: "exact", head: true });
+
+    const { count: stillMissing } = await supabase
+      .from("games")
+      .select("id", { count: "exact", head: true })
+      .is("cover_image", null);
 
     return NextResponse.json({
       ok: true,
       ...stats,
-      totalRemaining: remainingGames.length - (stats.phase1_deleted || 0),
-      needsFixCount: needsFix.length,
+      totalRemaining,
+      stillMissingImages: stillMissing,
       timestamp: new Date().toISOString(),
     });
   } catch (err: any) {
