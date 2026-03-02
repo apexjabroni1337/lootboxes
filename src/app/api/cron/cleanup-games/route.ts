@@ -22,6 +22,15 @@ const SAFETY_MS = 55_000;
 // Non-Latin character ranges (CJK, Cyrillic, Arabic, Thai, Korean, Japanese, etc.)
 const NON_LATIN_RE = /[\u0400-\u04FF\u0500-\u052F\u2DE0-\u2DFF\uA640-\uA69F\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF\u0E00-\u0E7F\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF\uF900-\uFAFF\uAC00-\uD7AF\u1100-\u11FF]/;
 
+// Mojibake / broken UTF-8 encoding (Ã©, Ã¶, Ã¼, Ã¤, etc.)
+const MOJIBAKE_RE = /Ã[©¶¼¤³±®ˆ°]/;
+
+// German word patterns
+const GERMAN_RE = /\b(und|oder|mit|für|der|die|das|ein|eine|des|dem|den|von|auf|aus|bei|ist|nach|über|unter|nicht|aber|auch|noch|wie|nur|kann|wird|wenn|sind|hat|haben|sein|mehr|zur|zum|bis|seit|dann|denn|durch|gegen|weil|schon|hier|ohne|immer)\b/gi;
+
+// French word patterns
+const FRENCH_RE = /\b(les|des|une|dans|avec|pour|sur|par|qui|est|sont|mais|ses|leur|cette|tout|entre|aussi|chez|nous|vous|très|comme|d'un|d'une|l'|qu'|c'est|n'est|l'invasion)\b/gi;
+
 // Junk title patterns (soundtracks, DLC, artbooks, wallpapers, etc.)
 const JUNK_PATTERNS = [
   /\bsoundtrack\b/i,
@@ -36,18 +45,119 @@ const JUNK_PATTERNS = [
   /\bmusic pack\b/i,
   /\bOST\s*[-\/&+]\s*Art/i,
   /\b(Demo|Trial|Beta|Playtest|Prologue)\s*$/i,
+  /\bSeason\s*Pass\b/i,
+  /\bLifetime Pass\b/i,
+  /\bPaper\s*Editions?\b/i,
+  /\bRetro\s*Pack\b/i,
+  /\bWeapon\s*Skins?\b/i,
+  /\bDamage\s*Cars?\s*Pack\b/i,
+  /\bWingsuit\s*Pack\b/i,
+  /\bAdd[\s-]?on\b/i,
+  /\bGroundhouse\s*Pack\b/i,
+  /\bGrindhouse\b/i,
+  /\bLeaders?\s*Pack\b/i,
+  /\bContributor\s*Pack\b/i,
+  /\bDouble\s*Pack\b/i,
+  /\bdemo\s*disc\b/i,
+  /\bSolitaire\s*Pack\b/i,
+];
+
+// Spam / shovelware series that flood the database
+const SPAM_TITLE_PATTERNS = [
+  /\bDream Office\b/i,
+  /\bPool Cleaning\b/i,
+  /\bServiceIT\b/i,
+  /\bFarmer'?s?\s*(Father|Life|Farm)/i,
+  /\bGardener\s+and\s+(Creatura|ServiceIT)/i,
+  /\bVoid Miner\b/i,
+  /\bFactory Planner\b/i,
+  /\bGas Station\b.*\b(demo|Cooking|Simulator)/i,
+  /\bLiquor Store\b/i,
+  /\bRentlord\b/i,
+  /\bPixelMouse\b/i,
+  /\bSCUM\s*(Man|Weapon)\b/i,
+  /\bfor\s+ServiceIT\b/i,
+  /\bVillage Tale\b/i,
+  /\bLesson abo/i,
+  /\bReality Break\b/i,
+  /\bOverDrift Festival\b/i,
+  /\bPizza Possum\b.*Sheepherds/i,
+  /\bStar Crafter\b/i,
+  /\bOld Market Simulator\b/i,
+  /\bMedieval Machines\b/i,
+  /\bPrimitive Tribe\b/i,
+  /\bColor Breakers\b/i,
+  /\bPlanets & P/i,
+  /\bDU&I\b/,
+  /\bMonsters and Me\b/i,
+  /\bMorning Call\b.*\bAll Ages\b/i,
+  /\bsummoned eldritch\b/i,
+  /\bStation Goblin\b/i,
+  /\bSokpop\b/i,
+  /\bBRundle\b/i,
+  /\bPurrrifiers\b/i,
+  /\bHelio s/i,
+  /\bARROW Patterns\b/i,
+  /\bTiny Aquarium\b/i,
+  /\bPlane Accident\b/i,
+  /\bGoat of Duty\b/i,
+  /\bSuchArt\b/i,
+  /\bSquad 44\b/i,
+  /\bHeroes of Hellas\b/i,
+  /\bDreamland Solitaire\b/i,
+  /\bWildlife Creative\b/i,
+  /\bCrown Northern\b/i,
+  /\bOffroad Mechanic\b/i,
+  /\bGO\(L\)D\b/,
+  /\bMannschaftsbus\b/i,
+  /\bYoutubers Life\b/i,
+  /\bCooking Simulator\b.*\bCookie/i,
+  /\bShin chan\b/i,
+  /\bFalling Daggers\b/i,
+  /\bUrbek City\b/i,
+  /\bFolly Of The Wizards\b/i,
+  /\bStand Survivors\b/i,
 ];
 
 function shouldDelete(title: string): { delete: boolean; reason: string } {
-  // Non-English characters
+  // Non-Latin characters (CJK, Cyrillic, Arabic, etc.)
   if (NON_LATIN_RE.test(title)) {
-    return { delete: true, reason: "non-English characters" };
+    return { delete: true, reason: "non-Latin characters" };
   }
 
-  // Junk patterns
+  // Broken encoding / mojibake
+  if (MOJIBAKE_RE.test(title)) {
+    return { delete: true, reason: "mojibake/broken encoding" };
+  }
+
+  // German titles (3+ German words = almost certainly German)
+  const germanMatches = title.match(GERMAN_RE);
+  if (germanMatches && germanMatches.length >= 2) {
+    return { delete: true, reason: "German title" };
+  }
+
+  // French titles
+  const frenchMatches = title.match(FRENCH_RE);
+  if (frenchMatches && frenchMatches.length >= 2) {
+    return { delete: true, reason: "French title" };
+  }
+
+  // Tilde in title (common in German/Japanese localized titles like ~Die endlose~)
+  if (/~.*~/.test(title) || title.includes("endlose")) {
+    return { delete: true, reason: "localized title markers" };
+  }
+
+  // Junk patterns (DLC, soundtracks, etc.)
   for (const pat of JUNK_PATTERNS) {
     if (pat.test(title)) {
-      return { delete: true, reason: `matches junk pattern: ${pat.source}` };
+      return { delete: true, reason: `junk: ${pat.source}` };
+    }
+  }
+
+  // Spam / shovelware
+  for (const pat of SPAM_TITLE_PATTERNS) {
+    if (pat.test(title)) {
+      return { delete: true, reason: `spam/shovelware: ${pat.source}` };
     }
   }
 
