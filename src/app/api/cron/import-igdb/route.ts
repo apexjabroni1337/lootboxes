@@ -190,12 +190,20 @@ export async function GET(request: NextRequest) {
 
   try {
     // Step 1: Fetch games from IGDB
-    const igdbGames = await bulkFetchGames(offset, limit);
+    let igdbGames: IGDBBulkGame[];
+    try {
+      igdbGames = await bulkFetchGames(offset, limit);
+    } catch (fetchErr: any) {
+      return NextResponse.json(
+        { ok: false, error: `IGDB fetch failed: ${fetchErr.message}`, ...stats },
+        { status: 500 }
+      );
+    }
     stats.fetched = igdbGames.length;
 
     if (igdbGames.length === 0) {
       stats.done = true;
-      return NextResponse.json({ ok: true, ...stats });
+      return NextResponse.json({ ok: true, ...stats, debug: "IGDB returned 0 games for this offset" });
     }
 
     // Step 2: Get existing slugs to detect duplicates
