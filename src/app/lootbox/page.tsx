@@ -122,6 +122,20 @@ export default async function LootboxHubPage() {
         </div>
       </div>
 
+      {/* Rankings CTA */}
+      <div className="mb-8 flex items-center justify-between rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 px-6 py-4">
+        <div>
+          <h2 className="font-bold text-gray-900">Loot Box Rankings</h2>
+          <p className="text-sm text-gray-600">See every game ranked by monetization fairness — best to worst.</p>
+        </div>
+        <Link
+          href="/lootbox/rankings"
+          className="flex-shrink-0 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
+        >
+          View Rankings
+        </Link>
+      </div>
+
       {/* Games Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-12">
         {games.map((game) => {
@@ -198,38 +212,67 @@ export default async function LootboxHubPage() {
 
       {/* Methodology */}
       <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-3 mb-5">
           <Shield className="w-6 h-6 text-blue-600" />
           <h2 className="text-xl font-bold text-gray-900">
             How We Rate Games
           </h2>
         </div>
-        <div className="grid md:grid-cols-2 gap-6 text-sm text-gray-600">
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-2">
-              Our Scoring System
-            </h3>
-            <p>
-              Every game receives a Lootboxes Score from 1-10 based on four
-              criteria: Transparency (are rates disclosed?), Value (what does
-              your money actually get you?), Fairness (are pity systems and
-              guarantees in place?), and Player Control (can you choose what to
-              buy?). Higher scores indicate more consumer-friendly monetization.
+        <p className="text-sm text-gray-600 mb-6 max-w-2xl">
+          Every game receives a Lootboxes Score from 1-10 based on 8 criteria
+          across three weighted categories. Our methodology is transparent,
+          criteria-based, and open to scrutiny.
+        </p>
+
+        {/* Category cards */}
+        <div className="grid md:grid-cols-3 gap-4 mb-6">
+          <div className="bg-white rounded-xl border border-blue-200 p-4">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-semibold text-gray-900 text-sm">
+                Consumer Protection
+              </h3>
+              <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+                40%
+              </span>
+            </div>
+            <p className="text-xs text-gray-500">
+              Transparency, regulatory compliance, and spending safeguards.
             </p>
           </div>
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-2">
-              Data Sources
-            </h3>
-            <p>
-              Drop rates come from three tiers: Official disclosures (published
-              by the developer, often required by law), Community Verified
-              (large-sample empirical testing by trusted researchers), and User
-              Reported (aggregated from individual submissions). We always
-              display the source alongside every rate.
+          <div className="bg-white rounded-xl border border-emerald-200 p-4">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-semibold text-gray-900 text-sm">
+                Value &amp; Fairness
+              </h3>
+              <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                35%
+              </span>
+            </div>
+            <p className="text-xs text-gray-500">
+              Value for money, fairness mechanics, and pay-to-win impact.
+            </p>
+          </div>
+          <div className="bg-white rounded-xl border border-purple-200 p-4">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-semibold text-gray-900 text-sm">
+                Player Experience
+              </h3>
+              <span className="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">
+                25%
+              </span>
+            </div>
+            <p className="text-xs text-gray-500">
+              Player control over purchases and psychological design integrity.
             </p>
           </div>
         </div>
+
+        <Link
+          href="/methodology"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:underline"
+        >
+          Read our full methodology →
+        </Link>
       </div>
 
       {/* Quick links */}

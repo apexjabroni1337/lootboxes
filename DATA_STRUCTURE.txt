@@ -1,0 +1,268 @@
+================================================================================
+LOOTBOX CONTENT DATA STRUCTURE
+================================================================================
+
+Each of the 12 INSERT statements contains the following data structure:
+
+================================================================================
+GAME IDENTIFICATION
+================================================================================
+
+game_id (UUID)
+  Retrieved from: SELECT g.id FROM games g WHERE g.slug = 'XXX'
+  Purpose: Links to the games table
+  Example: f5c7e921-8d4a-4b2c-9e1a-3f6d2c8b1a4e
+
+================================================================================
+PRICING INFORMATION (USD)
+================================================================================
+
+cost_per_pull (NUMERIC)
+  Description: Cost of a single pull/roll in USD
+  Example values: 1.00, 1.10, 1.80, 2.00, 2.50
+  Range: $0.49 to $6.49 depending on bundle type
+  NULL: Not applicable (some games)
+
+cost_to_pity (NUMERIC)
+  Description: Total cost in USD to reach hard pity
+  Calculation: cost_per_pull * pulls_to_pity
+  Example values: 50.00 (Overwatch 2), 225.00 (Genshin), NULL (no pity)
+  NULL: Games without pity system
+
+pulls_to_pity (INTEGER)
+  Description: Number of pulls to guarantee a top-tier item
+  Example values: 25 (Overwatch 2), 60 (Apex), 90 (Genshin)
+  NULL: Games without hard pity
+
+has_pity_system (BOOLEAN)
+  Description: Does the game have a pity/guarantee system?
+  Values: true or false
+  Examples: true (Genshin), false (Fortnite), true (Overwatch 2)
+
+================================================================================
+CURRENCY INFORMATION
+================================================================================
+
+currency_name (TEXT)
+  Description: In-game currency used for pulls
+  Example values:
+    - "Primogems" (Genshin Impact)
+    - "Stellar Jade" (Honkai: Star Rail)
+    - "FC Points" (EA FC 25)
+    - "Overwatch Coins" (Overwatch 2)
+    - "Apex Coins" (Apex Legends)
+    - "Polychrome" (Zenless Zone Zero)
+
+currency_per_dollar (NUMERIC)
+  Description: How much in-game currency you get per USD spent
+  Calculation: At optimal exchange rate (usually bulk purchase rate)
+  Example values: 64 (Genshin), 100 (EA FC 25), 50-60 (varies)
+  Note: May vary based on bundle size purchased
+
+================================================================================
+SCORING METRICS (1-10 SCALE)
+================================================================================
+
+score_transparency (INTEGER: 1-10)
+  Description: How transparent is the loot box system?
+  10 = Rates fully disclosed, mechanics explained clearly
+  1 = Rates hidden, mechanics obscure
+  Examples:
+    - 6 (Counter-Strike 2: Rates disclosed, but secondary market concerns)
+    - 7 (Genshin Impact: Rates disclosed by Chinese law)
+    - 4 (EA FC 25: Rates disclosed but in menus, not prominent)
+
+score_value (INTEGER: 1-10)
+  Description: Is the system good value for money?
+  10 = Players get fair value for spending
+  1 = Terrible value, strong negative expected value
+  Examples:
+    - 2 (Genshin Impact: High cost for single characters)
+    - 1 (EA FC 25: Extremely poor expected value)
+    - 3 (Overwatch 2: Mediocre value)
+    - 4 (Apex Legends: Slightly better than some)
+
+score_fairness (INTEGER: 1-10)
+  Description: Is the system fair to all players?
+  10 = Fair and non-exploitative
+  1 = Heavily exploitative or predatory
+  Examples:
+    - 2 (EA FC 25: Annual reset, no pity)
+    - 3 (Genshin Impact: Pity system but expensive)
+    - 3 (Overwatch 2: Limited pity, but affordable)
+    - 4 (Apex Legends: Reasonable pricing)
+
+score_player_control (INTEGER: 1-10)
+  Description: Can players control their spending?
+  10 = Easy to play without spending, clear budgeting possible
+  1 = Difficult to avoid spending, pressure to spend
+  Examples:
+    - 2 (EA FC 25: Annual reset pressure)
+    - 3 (Genshin Impact: FOMO pressure, constellation trap)
+    - 4 (Overwatch 2: Better control with lower cost)
+    - 4 (Honkai: Star Rail: Slightly better than Genshin)
+
+================================================================================
+METADATA
+================================================================================
+
+comparable_slugs (TEXT ARRAY)
+  Description: Array of game slugs with similar loot box systems
+  Data Type: PostgreSQL array of TEXT
+  SQL Format: ARRAY['slug1', 'slug2', 'slug3']
+  Examples:
+    - ['honkai-star-rail', 'zenless-zone-zero', 'marvel-snap'] (Genshin)
+    - ['genshin-impact', 'zenless-zone-zero', 'marvel-snap'] (Star Rail)
+    - ['overwatch-2', 'rocket-league', 'apex-legends'] (CS2)
+  Purpose: Show players similar games for comparison
+
+================================================================================
+HTML CONTENT (TEXT FIELDS - 300-1000+ CHARACTERS EACH)
+================================================================================
+
+overview_html (TEXT)
+  Description: Overview of how the loot box system works
+  Typical length: 300-500 characters
+  Content: <p> tags with system explanation
+  Example topics:
+    - How the gacha/roll/case system works
+    - What you can get
+    - Cost structure
+    - Key features unique to that system
+
+pity_explanation_html (TEXT)
+  Description: Detailed explanation of pity/guarantee system
+  Typical length: 200-400 characters
+  Content: <p> tags with hard pity, soft pity, mechanics
+  Example topics:
+    - Hard pity mechanics (guaranteed after X pulls)
+    - Soft pity (increased rates before hard pity)
+    - 50/50 systems
+    - Multi-tier guarantees
+    - Math and statistics
+
+history_html (TEXT)
+  Description: Timeline of loot box system changes
+  Typical length: 300-500 characters
+  Content: <p> tags with year/date markers
+  Format:
+    <p><strong>YEAR:</strong> Description of changes</p>
+    <p><strong>YEAR:</strong> Next change</p>
+
+controversy_html (TEXT)
+  Description: Controversies, legal issues, player criticism
+  Typical length: 300-500 characters
+  Content: <p> tags with historical events
+  Topics covered:
+    - Regulatory actions (Belgium, Netherlands, etc.)
+    - Lawsuits and legal challenges
+    - Community backlash
+    - Ethical concerns
+    - Public perception
+
+tips_html (TEXT)
+  Description: Advice for players on handling the system
+  Typical length: 300-500 characters
+  Content: <p> tags with <strong> highlighted tips
+  Format:
+    <p><strong>Tip title:</strong> Explanation of tip</p>
+  Examples:
+    - Best value purchases
+    - What to avoid
+    - Budgeting advice
+    - Alternative methods to get items
+
+editorial_html (TEXT)
+  Description: Our analysis, scoring rationale, recommendations
+  Typical length: 500-1000+ characters
+  Content: <p> tags with our professional review
+  Structure:
+    - Summary of system
+    - Strengths and weaknesses
+    - Scoring explanation
+    - Final recommendation
+    - Value assessment
+
+================================================================================
+EXAMPLE: GENSHIN IMPACT RECORD
+================================================================================
+
+game_id: (UUID from games table where slug='genshin-impact')
+cost_per_pull: 2.5
+cost_to_pity: 225
+pulls_to_pity: 90
+has_pity_system: true
+currency_name: "Primogems"
+currency_per_dollar: 64
+score_transparency: 7
+score_value: 2
+score_fairness: 3
+score_player_control: 3
+comparable_slugs: ['honkai-star-rail', 'zenless-zone-zero', 'marvel-snap']
+overview_html: '<p>Genshin Impact uses a gacha system called "Wishes"...</p>'
+pity_explanation_html: '<p>Genshin Impact features both <strong>soft pity...</strong></p>'
+history_html: '<p><strong>September 2020:</strong> Genshin Impact launches...</p>'
+controversy_html: '<p>Genshin Impact has faced sustained criticism...</p>'
+tips_html: '<p><strong>Save for characters you truly want.</strong>...</p>'
+editorial_html: '<p>Genshin Impact occupies a unique position in the loot box...</p>'
+
+================================================================================
+EXAMPLE: EA FC 25 RECORD (NO PITY SYSTEM)
+================================================================================
+
+game_id: (UUID from games table where slug='ea-fc-25')
+cost_per_pull: 1.0
+cost_to_pity: NULL (no pity)
+pulls_to_pity: NULL (no pity)
+has_pity_system: false
+currency_name: "FC Points"
+currency_per_dollar: 100
+score_transparency: 4
+score_value: 1
+score_fairness: 2
+score_player_control: 2
+comparable_slugs: ['pokemon-tcg-pocket', 'marvel-snap', 'counter-strike-2']
+overview_html: '<p>EA FC 25''s Ultimate Team mode features one of the most...</p>'
+pity_explanation_html: '<p>EA FC 25 has <strong>no pity system</strong>...</p>'
+[... etc ...]
+
+Note: NULL values for pity fields because there's no pity system
+
+================================================================================
+DATA VALIDATION RULES
+================================================================================
+
+Each record follows these rules:
+
+1. game_id: Must exist in games table, cannot be NULL
+2. cost_per_pull: Must be positive number or NULL
+3. cost_to_pity: If NULL, pulls_to_pity must be NULL
+4. pulls_to_pity: If NULL, cost_to_pity must be NULL
+5. has_pity_system: Must be true if pity fields are populated
+6. currency_name: Can be NULL, otherwise 1-50 characters
+7. currency_per_dollar: Must be positive number if not NULL
+8. score_* fields: Must be integers 1-10
+9. comparable_slugs: Array must contain 2-4 valid game slugs
+10. *_html fields: Text content, single quotes escaped as ''
+
+================================================================================
+TOTAL DATA SUMMARY
+================================================================================
+
+Total Records: 12 games
+Total Columns: 18 per record
+Total Rows: 12
+Estimated Total Characters: 100,000+ (all HTML content)
+File Size: 71 KB (compressed, includes comments and whitespace)
+
+Breakdown by game:
+- 2 games with pity (90-pull): Genshin, Honkai
+- 2 games with pity (60-pull): Apex, Zenless
+- 1 game with pity (25-pull): Overwatch 2
+- 1 game with pity (soft only): Pokemon TCG
+- 6 games with NO pity: EA FC, Diablo, Fortnite, Rocket, Valorant, Marvel
+
+Average HTML content per record: ~8,000 characters
+(6 HTML fields × ~1,200-1,400 chars average)
+
+================================================================================

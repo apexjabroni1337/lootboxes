@@ -217,13 +217,29 @@ export default function Header() {
                       >
                         View all analyzed games →
                       </Link>
-                      <Link
-                        href="/drop-rates"
-                        onClick={() => setLootboxMegaOpen(false)}
-                        className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
-                      >
-                        Drop Rate Database
-                      </Link>
+                      <div className="flex items-center gap-2">
+                        <Link
+                          href="/lootbox/rankings"
+                          onClick={() => setLootboxMegaOpen(false)}
+                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                        >
+                          Rankings
+                        </Link>
+                        <Link
+                          href="/methodology"
+                          onClick={() => setLootboxMegaOpen(false)}
+                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                        >
+                          How We Rate
+                        </Link>
+                        <Link
+                          href="/drop-rates"
+                          onClick={() => setLootboxMegaOpen(false)}
+                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                        >
+                          Drop Rate Database
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 )}

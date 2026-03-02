@@ -82,10 +82,15 @@ export interface LootboxContent {
   has_pity_system: boolean;
   currency_name: string | null;
   currency_per_dollar: number | null;
+  // Sub-scores (each 1-10)
   score_transparency: number | null;
+  score_compliance: number | null;
+  score_age_gating: number | null;
   score_value: number | null;
   score_fairness: number | null;
+  score_p2w_impact: number | null;
   score_player_control: number | null;
+  score_psych_design: number | null;
   overview_html: string | null;
   pity_explanation_html: string | null;
   history_html: string | null;

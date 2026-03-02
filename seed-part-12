@@ -1,0 +1,59 @@
+INSERT INTO lootbox_content (
+  game_id,
+  cost_per_pull,
+  cost_to_pity,
+  pulls_to_pity,
+  has_pity_system,
+  currency_name,
+  currency_per_dollar,
+  score_transparency,
+  score_value,
+  score_fairness,
+  score_player_control,
+  comparable_slugs,
+  overview_html,
+  pity_explanation_html,
+  history_html,
+  controversy_html,
+  tips_html,
+  editorial_html
+)
+SELECT
+  g.id,
+  2.5,
+  225,
+  90,
+  true,
+  'Polychrome',
+  64,
+  7,
+  3,
+  3,
+  4,
+  ARRAY['genshin-impact', 'honkai-star-rail', 'marvel-snap'],
+  '<p>Zenless Zone Zero, HoYoverse''s third major gacha title, uses the same fundamental Signal Search (gacha) system as Genshin Impact and Honkai: Star Rail. Players use Polychrome (premium currency) to purchase Master Tapes or Encrypted Master Tapes for pulls on various banners.</p>
+<p>The system features the same banner types: Exclusive Agent banners (limited characters), W-Engine banners (weapons), and a Standard banner. The rates are identical to its sister titles — 0.6% base rate for S-Rank agents with soft pity starting around pull 74 and hard pity at 90.</p>
+<p>What distinguishes ZZZ''s gacha is the game''s action combat system, which makes individual character kits feel more distinct and impactful than in turn-based Star Rail, creating stronger desire for specific pulls — similar to the Genshin dynamic.</p>',
+  '<p>Zenless Zone Zero uses <strong>HoYoverse''s standard pity system</strong>:</p>
+<p><strong>Soft Pity (~Pull 74+):</strong> S-Rank probability increases significantly starting around pull 74, with rates climbing sharply with each subsequent pull.</p>
+<p><strong>Hard Pity (Pull 90):</strong> An S-Rank agent or W-Engine is guaranteed at exactly 90 pulls.</p>
+<p><strong>50/50 System:</strong> Exclusive Agent banners feature a 50% chance of the featured agent. Losing the 50/50 guarantees the featured agent on your next S-Rank. Maximum cost for a specific agent: 180 pulls (~$450).</p>
+<p>Average pulls to S-Rank is approximately 62 due to soft pity, making the effective rate about 1.6% — identical to Genshin and Star Rail.</p>',
+  '<p><strong>July 2024:</strong> Zenless Zone Zero launches globally as HoYoverse''s third major title. The gacha system is immediately familiar to Genshin and Star Rail players.</p>
+<p><strong>2024:</strong> Launch window is perceived as relatively generous with free Polychrome, a pattern HoYoverse has followed for each new game launch. Early banners feature compelling characters that drive initial spending.</p>
+<p><strong>2025:</strong> The game settles into HoYoverse''s standard cadence of updates and banners. Free currency distribution is comparable to Honkai: Star Rail''s current state — slightly more generous than Genshin''s early days.</p>',
+  '<p>As HoYoverse''s third gacha title, Zenless Zone Zero has faced the "gacha fatigue" criticism — some players argue that supporting three concurrent gacha games from the same publisher is unsustainable. The identical monetization across all three titles means players choosing to play multiple HoYoverse games face compounded spending pressure.</p>
+<p>The game''s stylish action combat and character designs have been praised, but critics note that the gacha model remains unchanged from Genshin (2020), suggesting HoYoverse sees no reason to innovate on monetization while the formula continues to be highly profitable.</p>
+<p>Community sentiment is generally positive toward the game itself while resigned about the monetization — a pattern familiar to HoYoverse veterans.</p>',
+  '<p><strong>Apply lessons from Genshin/Star Rail.</strong> The system is identical. Save for characters you truly want, understand the 50/50, and buy the monthly pass for best value.</p>
+<p><strong>Inter-Knot Membership (Welkin equivalent) is the best value.</strong> ~$4.99/month for significant Polychrome over 30 days.</p>
+<p><strong>Don''t spread spending across all three HoYoverse games.</strong> If you play multiple HoYoverse titles, pick one to focus spending on and play the others free-to-play.</p>
+<p><strong>All content is clearable at S0 (no duplicates).</strong> Never feel pressured to pull for Mindscape Cinema levels (constellations).</p>',
+  '<p>Zenless Zone Zero is the clearest evidence of HoYoverse''s monetization philosophy: find what works and replicate it. The gacha system is essentially copy-pasted from Genshin Impact and Honkai: Star Rail — same 0.6% rates, same pity at 90, same 50/50 mechanic, same approximately $2.50 per pull. The only things that change are the names.</p>
+<p>This isn''t necessarily a criticism of the game itself, which is excellent. The action combat is fluid, the aesthetic is unique, and the character designs are compelling. But it does raise questions about an industry where the most successful monetization template is simply reproduced across titles rather than improved.</p>
+<p>We score Zenless Zone Zero at 3.5 on our Lootboxes Scale — identical to Honkai: Star Rail, because the system IS identical. The transparency and pity system prevent a lower score, but the fundamental cost structure ($225-450 per character) remains steep.</p>
+<p>For HoYoverse veterans: you already know what you''re getting into. For newcomers: ZZZ is a great free game with an expensive gacha layer. Enjoy the game, set your budget, and don''t let the character collection compulsion override your financial judgment.</p>'
+FROM games g
+WHERE g.slug = 'zenless-zone-zero'
+ON CONFLICT (game_id) DO NOTHING;
+

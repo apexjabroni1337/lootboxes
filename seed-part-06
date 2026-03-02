@@ -1,0 +1,58 @@
+INSERT INTO lootbox_content (
+  game_id,
+  cost_per_pull,
+  cost_to_pity,
+  pulls_to_pity,
+  has_pity_system,
+  currency_name,
+  currency_per_dollar,
+  score_transparency,
+  score_value,
+  score_fairness,
+  score_player_control,
+  comparable_slugs,
+  overview_html,
+  pity_explanation_html,
+  history_html,
+  controversy_html,
+  tips_html,
+  editorial_html
+)
+SELECT
+  g.id,
+  NULL,
+  NULL,
+  NULL,
+  false,
+  'Platinum',
+  100,
+  6,
+  6,
+  7,
+  7,
+  ARRAY['fortnite', 'overwatch-2', 'rocket-league'],
+  '<p>Diablo IV takes a different approach to monetization compared to traditional loot box games. The game uses a cosmetic shop and seasonal Battle Pass system rather than randomized paid loot boxes. The "loot" in Diablo IV refers to the in-game item drop system — the core gameplay loop of killing monsters and finding gear — which is entirely separate from the premium monetization.</p>
+<p>Players spend Platinum (premium currency) in the cosmetic shop for character skins, mounts, and visual effects. The seasonal Battle Pass ($9.99 premium, or $24.99 accelerated) provides cosmetic rewards through gameplay progression. None of these purchases affect gameplay power.</p>
+<p>The in-game loot system, however, features randomized drop rates for equipment that directly impacts gameplay. Mythic Unique items have an extremely low 0.02% drop rate, making them exceedingly rare finds that can take hundreds of hours to obtain.</p>',
+  '<p>Diablo IV''s premium shop is <strong>direct-purchase only</strong> — no randomness, no pity needed. You see exactly what you''re buying.</p>
+<p>The in-game loot system has <strong>no formal pity mechanic</strong> for item drops. Drop rates are fixed based on difficulty level and enemy type. There are systems that increase drop quality (such as Nightmare Dungeons and Helltides), but no guaranteed drops of specific items regardless of time invested.</p>
+<p>The "bad luck protection" that exists is purely informal — higher World Tiers and endgame activities increase the overall drop rates, but a specific Mythic Unique is never guaranteed.</p>',
+  '<p><strong>June 2023:</strong> Diablo IV launches as a premium $69.99 title with a cosmetic shop and seasonal Battle Pass. The initial monetization model is relatively restrained compared to free-to-play titles.</p>
+<p><strong>2023:</strong> Season 1 launches with its first Battle Pass. Shop prices for premium bundles ($20-25 for cosmetic sets) draw some criticism but are generally accepted for a premium title.</p>
+<p><strong>2024:</strong> Vessel of Hatred expansion launches at $39.99. The monetization model expands slightly with new cosmetic categories. In-game loot tables are adjusted multiple times to improve the endgame experience.</p>
+<p><strong>2025:</strong> Drop rates for Mythic Uniques are adjusted upward slightly after community feedback about the extreme rarity. The cosmetic shop continues as the primary monetization outside of expansion sales.</p>',
+  '<p>Diablo IV''s monetization is relatively mild compared to free-to-play titles, but it hasn''t been without criticism. The decision to include a cosmetic shop in a $70 premium game drew initial skepticism, though the separation of cosmetics from gameplay power has been largely respected.</p>
+<p>The bigger controversy surrounds the in-game loot system. The 0.02% Mythic Unique drop rate means some players invest hundreds of hours without finding specific items, leading to frustration and debates about whether the loot system respects player time. Season 4''s loot rework was a direct response to these concerns.</p>
+<p>Some criticism has been leveled at the Battle Pass for containing filler content and requiring significant play time to complete, but the overall sentiment is that Diablo IV''s monetization is among the more reasonable in modern gaming — a relatively low bar, but one it clears.</p>',
+  '<p><strong>The Battle Pass is optional.</strong> All gameplay content is accessible without the Battle Pass. Only purchase it if you genuinely play enough to complete it and want the cosmetic rewards.</p>
+<p><strong>Wait for sales on cosmetic bundles.</strong> Shop items occasionally go on sale or are bundled with better value during seasonal events.</p>
+<p><strong>For loot: focus on efficient farming.</strong> Higher Nightmare Dungeon tiers and Helltide events significantly increase drop rates for rare items. Play smarter, not just longer.</p>
+<p><strong>Don''t chase Mythic Uniques.</strong> At 0.02% drop rate, these items should be treated as pleasant surprises rather than goals. Build your character around what drops naturally.</p>',
+  '<p>Diablo IV occupies a refreshingly moderate position in the modern monetization landscape. As a premium-priced game ($69.99 base), it doesn''t rely on aggressive loot box mechanics to drive revenue. The cosmetic shop exists and the Battle Pass is there, but neither feels predatory or essential. This alone puts it ahead of many competitors in our database.</p>
+<p>Where Diablo IV intersects with loot box concerns is through its in-game drop rate system. While not a premium loot box — you don''t pay real money per "pull" — the Mythic Unique drop rates (0.02%) rival some of the most punishing gacha rates in the industry. The difference is that you''re investing time rather than money, and the journey of hunting for loot IS the game rather than a monetization overlay.</p>
+<p>We score Diablo IV at 6.5 on our Lootboxes Scale — comfortably in the "Good Value" range. The direct-purchase cosmetic shop with no randomness, reasonable Battle Pass pricing, and the separation of premium currency from gameplay power all contribute positively. The score is moderated by the premium price tag plus ongoing monetization, and the extremely rare in-game drop rates that, while not paid, can still feel unrewarding.</p>
+<p>Diablo IV demonstrates that a major live-service game can monetize responsibly. It''s not perfect, but it''s a model that more games should aspire to.</p>'
+FROM games g
+WHERE g.slug = 'diablo-4'
+ON CONFLICT (game_id) DO NOTHING;
+

@@ -1,0 +1,60 @@
+INSERT INTO lootbox_content (
+  game_id,
+  cost_per_pull,
+  cost_to_pity,
+  pulls_to_pity,
+  has_pity_system,
+  currency_name,
+  currency_per_dollar,
+  score_transparency,
+  score_value,
+  score_fairness,
+  score_player_control,
+  comparable_slugs,
+  overview_html,
+  pity_explanation_html,
+  history_html,
+  controversy_html,
+  tips_html,
+  editorial_html
+)
+SELECT
+  g.id,
+  2.5,
+  225,
+  90,
+  true,
+  'Stellar Jade',
+  64,
+  7,
+  3,
+  3,
+  4,
+  ARRAY['genshin-impact', 'zenless-zone-zero', 'marvel-snap'],
+  '<p>Honkai: Star Rail employs the same gacha framework as its sister title Genshin Impact, with some notable improvements. Players use Stellar Jade to purchase Star Rail Passes or Special Passes for "Warps" on various banners. The cost per warp is equivalent to approximately $2.50 USD, with the same 0.6% base rate for 5-star characters.</p>
+<p>The game features Character Event Warps, Light Cone (weapon) Warps, and a Standard Warp banner. Each maintains independent pity counters. HoYoverse has applied lessons learned from Genshin, offering slightly more generous free currency distribution and additional quality-of-life features for tracking pity progress.</p>
+<p>As a turn-based RPG rather than an action game, Star Rail''s character diversity feels less critical to moment-to-moment gameplay, somewhat reducing the pressure to pull for every new character compared to Genshin Impact.</p>',
+  '<p>Honkai: Star Rail uses an identical pity system to Genshin Impact:</p>
+<p><strong>Soft Pity (Warp 74+):</strong> Drop rates increase significantly starting at warp 74, with community data suggesting rates climb to approximately 6% and increase linearly with each additional pull.</p>
+<p><strong>Hard Pity (Warp 90):</strong> A 5-star character or Light Cone is guaranteed at exactly 90 warps.</p>
+<p><strong>50/50 System:</strong> On the Character Event Warp, there''s a 50% chance of getting the featured character. Losing the 50/50 guarantees the featured character on your next 5-star pull. Maximum cost for a guaranteed featured character: 180 warps (~$450).</p>
+<p>Average pulls to 5-star is approximately 62, making the effective rate roughly 1.6% — identical to Genshin Impact.</p>',
+  '<p><strong>April 2023:</strong> Honkai: Star Rail launches globally with its gacha system largely mirroring Genshin Impact''s proven model.</p>
+<p><strong>2023:</strong> The game earns over $1 billion in its first year, validating HoYoverse''s gacha approach. Free currency distribution is perceived as slightly more generous than Genshin''s early days.</p>
+<p><strong>2024:</strong> Version 2.0 introduces new regions and characters, maintaining the same gacha structure. HoYoverse adds more ways to earn free pulls through events and achievements.</p>
+<p><strong>2025:</strong> The system remains stable. Star Rail continues to be one of the top-grossing gacha games, consistently ranking in mobile revenue charts alongside Genshin.</p>',
+  '<p>Honkai: Star Rail has largely avoided the major controversies that plagued Genshin Impact''s early days, partly because players already understood HoYoverse''s gacha model going in. However, criticism of the overall cost structure persists — the same $450 worst-case for a single character that defines all HoYoverse games.</p>
+<p>The Light Cone (weapon) banner has drawn some criticism for being less valuable than character pulls, similar to Genshin''s weapon banner complaints. Some players feel that Eidolons (Star Rail''s equivalent of Genshin''s constellations) create too large a gap between free-to-play and spending players in endgame content.</p>
+<p>Overall community sentiment is more positive than Genshin''s, largely due to HoYoverse applying lessons learned: better communication, more generous events, and a perceived respect for player time.</p>',
+  '<p><strong>Prioritize characters over Light Cones.</strong> New characters add more gameplay variety than weapon upgrades. Light Cone banners are best reserved for heavy spenders.</p>
+<p><strong>Take advantage of the Express Supply Pass.</strong> At $4.99/month, it''s the best value purchase — similar to Genshin''s Welkin Moon, providing roughly 19 warps worth of Stellar Jade over 30 days.</p>
+<p><strong>Plan around version livestreams.</strong> HoYoverse announces upcoming banners during version preview streams. Use this information to plan your Stellar Jade savings.</p>
+<p><strong>Don''t chase E6 (max Eidolons).</strong> Most characters are fully functional at E0. Eidolons provide diminishing returns relative to their enormous cost.</p>',
+  '<p>Honkai: Star Rail represents an iterative improvement on HoYoverse''s gacha formula rather than a reinvention. The fundamental economics are identical to Genshin Impact — same 0.6% base rate, same pity system, same approximately $2.50 per pull. What''s different is the context and the quality-of-life improvements that come from a studio learning from its previous title.</p>
+<p>The turn-based combat system actually works in the monetization''s favor from a consumer perspective. Because combat is strategic rather than action-based, individual character performance matters less than team composition and planning. Free-to-play players can compete with spenders more effectively than in Genshin, where character action mechanics can feel more impactful.</p>
+<p>We score Honkai: Star Rail at 3.5 on our Lootboxes Scale — slightly better than Genshin''s 3.2. The higher score reflects the marginally more generous free currency, better communication from HoYoverse, and the game design that reduces the pressure to pull. The core economics remain the same, however, and the score reflects that $225-450 for a single character is still a steep ask.</p>
+<p>The pattern is clear: HoYoverse has found a monetization formula that generates billions, and they''re refining the edges rather than changing the core. For players, the advice remains the same — enjoy the excellent free content, set a budget if you choose to spend, and never feel obligated to chase every new character.</p>'
+FROM games g
+WHERE g.slug = 'honkai-star-rail'
+ON CONFLICT (game_id) DO NOTHING;
+

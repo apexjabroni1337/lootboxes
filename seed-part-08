@@ -1,0 +1,57 @@
+INSERT INTO lootbox_content (
+  game_id,
+  cost_per_pull,
+  cost_to_pity,
+  pulls_to_pity,
+  has_pity_system,
+  currency_name,
+  currency_per_dollar,
+  score_transparency,
+  score_value,
+  score_fairness,
+  score_player_control,
+  comparable_slugs,
+  overview_html,
+  pity_explanation_html,
+  history_html,
+  controversy_html,
+  tips_html,
+  editorial_html
+)
+SELECT
+  g.id,
+  0,
+  NULL,
+  NULL,
+  false,
+  'Credits',
+  100,
+  6,
+  5,
+  5,
+  5,
+  ARRAY['overwatch-2', 'fortnite', 'counter-strike-2'],
+  '<p>Rocket League underwent a major monetization transformation in 2019 when Psyonix replaced the traditional loot crate/key system with Blueprints and a Credits-based economy. Previously, players bought keys ($1.49 each) to open random crates — a classic loot box model. The new system shows players what item a Blueprint contains before they decide whether to spend Credits to build it.</p>
+<p>The current system revolves around Blueprints (which drop randomly after matches and show their contents), the Item Shop (rotating direct purchases), and the Rocket Pass (seasonal Battle Pass). Credits are the premium currency, purchasable at roughly 100 per dollar.</p>
+<p>While the system is more transparent than the old crate model, Blueprint build costs have been criticized for being significantly higher than what items cost on the secondary market, making them poor value for most players.</p>',
+  '<p>The current Blueprint system has <strong>no pity mechanic</strong>, but it also doesn''t need one in the traditional sense — Blueprints show their contents before you spend Credits, so you always know what you''re getting.</p>
+<p>The old crate system (pre-2019) also had no pity, making it a pure random gamble with each key purchase.</p>
+<p>Blueprint drop rates from post-match rewards follow the disclosed rates: Black Market 1%, Exotic 4%, Import 12%, Very Rare 28%, Rare 55%.</p>',
+  '<p><strong>2015:</strong> Rocket League launches with a cosmetic crate and key system, similar to CS:GO''s model.</p>
+<p><strong>2019:</strong> Under pressure from loot box regulations and following Epic Games'' acquisition of Psyonix, crates are replaced with Blueprints. Psyonix publishes official drop rates for the first time during this transition.</p>
+<p><strong>2020:</strong> Rocket League goes free-to-play, adding the Item Shop and Rocket Pass as primary monetization. The Blueprint system continues alongside these.</p>
+<p><strong>2021-2025:</strong> The system has remained largely stable, with periodic adjustments to shop pricing and Rocket Pass rewards. The player trading market continues to be active for moving items between players.</p>',
+  '<p>The transition from crates to Blueprints was initially praised for removing randomness, but the celebration was short-lived when players discovered Blueprint build costs. Items that previously cost $1.49 in a random crate now cost $5-20 to build from a Blueprint — a massive price increase for known items.</p>
+<p>The community argued that Psyonix had effectively replaced a gambling system with overpriced direct purchases, with the net result being worse value for players. The secondary trading market often offers the same items for a fraction of the Blueprint build cost.</p>
+<p>Going free-to-play in 2020 also frustrated original purchasers who had paid $20 for the game, though Psyonix offered legacy status rewards as compensation.</p>',
+  '<p><strong>Never build Blueprints.</strong> The build costs are almost universally higher than buying the same item from other players through trading. Use third-party trading sites to find better prices.</p>
+<p><strong>The Rocket Pass is decent value.</strong> If you play regularly, the seasonal Rocket Pass provides cosmetics and enough Credits to offset the cost. Complete it and the next pass is essentially free.</p>
+<p><strong>Trade up items.</strong> The trade-up system lets you combine 5 items of one rarity for 1 item of the next rarity. This can be a cost-effective way to obtain specific items.</p>
+<p><strong>Check trading prices before buying from the shop.</strong> The Item Shop often charges premium prices for items that trade for much less between players.</p>',
+  '<p>Rocket League''s monetization journey is instructive. The game went from loot boxes (crates) to a transparent Blueprint system, only for players to discover that transparency without competitive pricing is barely an improvement. When a known item costs more to build from a Blueprint than a random crate previously cost, the "improvement" feels hollow.</p>
+<p>We score Rocket League at 5.0 on our Lootboxes Scale — squarely average. The Blueprint transparency and the removal of paid randomness are genuine positives. The player trading market provides an alternative economy. But the inflated Blueprint costs and the mismatch between shop prices and market values prevent a higher score.</p>
+<p>Rocket League is a case study in how removing loot boxes isn''t automatically a win for consumers. The replacement system matters enormously. A direct-purchase model with reasonable pricing is great. A direct-purchase model with inflated pricing can feel like a different flavor of the same exploitation.</p>'
+FROM games g
+WHERE g.slug = 'rocket-league'
+ON CONFLICT (game_id) DO NOTHING;
+

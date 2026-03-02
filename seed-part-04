@@ -1,0 +1,58 @@
+INSERT INTO lootbox_content (
+  game_id,
+  cost_per_pull,
+  cost_to_pity,
+  pulls_to_pity,
+  has_pity_system,
+  currency_name,
+  currency_per_dollar,
+  score_transparency,
+  score_value,
+  score_fairness,
+  score_player_control,
+  comparable_slugs,
+  overview_html,
+  pity_explanation_html,
+  history_html,
+  controversy_html,
+  tips_html,
+  editorial_html
+)
+SELECT
+  g.id,
+  2,
+  50,
+  25,
+  true,
+  'Overwatch Coins',
+  100,
+  5,
+  4,
+  5,
+  5,
+  ARRAY['fortnite', 'apex-legends', 'valorant'],
+  '<p>Overwatch 2''s monetization has undergone a dramatic transformation from its predecessor. The original Overwatch featured a loot box system where players earned boxes through gameplay and could purchase additional ones. Overwatch 2 largely replaced this with a Battle Pass system and a direct-purchase cosmetic shop, though limited loot box-like mechanics remain in certain events and promotions.</p>
+<p>The current system revolves around seasonal Battle Passes ($9.99), a rotating cosmetic shop with direct purchases, and occasional event-based cosmetic crates. Overwatch Coins can be earned slowly through gameplay or purchased directly. Mythic skins — the rarest tier — are typically Battle Pass rewards rather than random drops.</p>
+<p>The shift away from pure loot boxes was driven by regulatory pressure and changing industry norms, though the new system has its own criticisms regarding pricing and the slow rate of free coin earnings.</p>',
+  '<p>Overwatch 2''s remaining loot box-like elements feature a <strong>pseudo-pity system</strong> where Legendary items are guaranteed within approximately 25 boxes/crates during events that still use the random reward model.</p>
+<p>For the primary Battle Pass and shop systems, pity isn''t applicable — these are direct-purchase models where you know exactly what you''re getting before buying.</p>',
+  '<p><strong>2016:</strong> Overwatch launches with a loot box system. Players earn boxes through leveling and can purchase additional ones. All cosmetics are available through this system.</p>
+<p><strong>2018:</strong> Belgium and Netherlands restrictions force Blizzard to disable loot box purchases in those countries.</p>
+<p><strong>2022:</strong> Overwatch 2 launches as free-to-play, replacing the original. The monetization shifts dramatically from loot boxes to Battle Pass and direct-purchase shop. Community backlash over skin pricing ($20+ for individual skins) is immediate and intense.</p>
+<p><strong>2023-2024:</strong> Blizzard gradually adjusts pricing and increases free Overwatch Coin earnings in response to criticism. Mythic skins are added as premium Battle Pass rewards.</p>
+<p><strong>2025:</strong> The system has stabilized with a mix of Battle Pass, shop, and occasional event crates. The pure loot box model is largely gone.</p>',
+  '<p>The transition from Overwatch 1 to 2 was itself a major controversy. Players who had earned hundreds of loot boxes worth of cosmetics in the original game saw those items transfer, but the new system made earning comparable rewards dramatically slower without spending money.</p>
+<p>Individual skin pricing in the shop (often $20+) was widely criticized as excessive, especially compared to the original game where all cosmetics could be earned through gameplay alone. The Battle Pass also drew criticism for offering mostly filler content with desirable items locked behind the premium track.</p>
+<p>The slow rate of free Overwatch Coin earnings (approximately 8 weeks of challenges for a single $20 skin) has been a persistent complaint, effectively making the free-to-play economy feel punishing compared to the original game''s generosity.</p>',
+  '<p><strong>The Battle Pass is the best value.</strong> At $9.99 per season, the Battle Pass provides the most cosmetics per dollar, including the exclusive Mythic skin at the end of the premium track.</p>
+<p><strong>Complete weekly challenges.</strong> These are your primary source of free Overwatch Coins. Consistency over time adds up to meaningful purchasing power.</p>
+<p><strong>Wait for returning skins.</strong> Shop items rotate back eventually, so there''s no need to impulse-buy during the first appearance of a skin you like.</p>
+<p><strong>Avoid event crates unless you want everything in the pool.</strong> If you only want one specific item from an event crate, buying it directly from the shop (when available) is more cost-effective than gambling on random drops.</p>',
+  '<p>Overwatch 2''s monetization story is really a tale of two systems. The original Overwatch''s loot boxes were considered among the fairest in gaming — generous earnings, cosmetic-only items, and a system where dedicated play could eventually unlock everything for free. Then the sequel abandoned that goodwill in favor of a more aggressive free-to-play model.</p>
+<p>The irony is that Overwatch 2''s current system is actually more consumer-friendly than most of its competitors in terms of what you know you''re getting. Direct purchases from the shop mean no gambling on random outcomes. The Battle Pass has predictable rewards. The remaining random elements are limited to occasional event crates. In isolation, it''s a reasonable model.</p>
+<p>The problem is context. Players remember how generous the original game was, and every $20 skin in the shop feels like a betrayal of that original promise. The slow drip of free coins also creates a frustrating experience for players who can''t or won''t spend money.</p>
+<p>We score Overwatch 2 at 4.5 on our Lootboxes Scale. The move away from pure loot boxes, the transparency of direct purchases, and the Battle Pass value proposition all push the score up. But the aggressive shop pricing, slow free earnings, and the unfavorable comparison to its predecessor prevent a higher rating. It''s an average system in an above-average game.</p>'
+FROM games g
+WHERE g.slug = 'overwatch-2'
+ON CONFLICT (game_id) DO NOTHING;
+

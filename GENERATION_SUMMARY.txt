@@ -1,0 +1,259 @@
+================================================================================
+LOOTBOX CONTENT SQL GENERATION - COMPLETE SUMMARY
+================================================================================
+
+DATE GENERATED: 2026-03-02T00:50:32.561Z
+SOURCE FILE: src/app/api/admin/seed-lootbox-content/route.ts
+DESTINATION: seed-lootbox-content.sql
+
+================================================================================
+GENERATION PROCESS
+================================================================================
+
+1. Parsed TypeScript seed file containing CONTENT array
+2. Extracted data for 13 games total
+3. Filtered out Counter-Strike 2 (already inserted)
+4. Generated SQL INSERT statements for remaining 12 games
+5. Applied proper SQL escaping for HTML content
+6. Created lookup queries using game slugs
+
+================================================================================
+OUTPUT FILES CREATED
+================================================================================
+
+1. seed-lootbox-content.sql (710 lines)
+   - 12 complete INSERT statements
+   - All HTML content properly escaped
+   - Uses SELECT subquery for game_id lookup
+   - Includes ON CONFLICT clauses for safety
+   - Ready to execute in Supabase
+
+2. insert-lootbox-content.js
+   - Node.js script using @supabase/supabase-js
+   - Parses seed file and inserts via API
+   - Requires .env.local with correct credentials
+   - Can be run with: node insert-lootbox-content.js
+
+3. LOOTBOX_CONTENT_IMPORT.md
+   - Comprehensive import guide
+   - Three different methods to import
+   - Data integrity checks
+   - Troubleshooting tips
+
+4. SQL_SAMPLE.md
+   - Example of generated SQL
+   - Explanation of SQL features used
+   - Data statistics
+   - Verification queries
+
+================================================================================
+GAMES INCLUDED (12 TOTAL)
+================================================================================
+
+1. genshin-impact
+   - Cost per pull: $2.50
+   - Pity: 90 pulls ($225 total)
+   - Has pity system: YES
+   
+2. honkai-star-rail
+   - Cost per pull: $2.50
+   - Pity: 90 pulls ($225 total)
+   - Has pity system: YES
+   
+3. ea-fc-25
+   - Cost per pull: $1.00
+   - Pity: None
+   - Has pity system: NO
+   
+4. overwatch-2
+   - Cost per pull: $2.00
+   - Pity: 25 pulls ($50 total)
+   - Has pity system: YES
+   
+5. apex-legends
+   - Cost per pull: $1.80
+   - Pity: 60 pulls ($108 total)
+   - Has pity system: YES
+   
+6. diablo-4
+   - Cost per pull: $1.00
+   - Pity: None
+   - Has pity system: NO
+   
+7. fortnite
+   - Cost per pull: $2.00
+   - Pity: None
+   - Has pity system: NO
+   
+8. rocket-league
+   - Cost per pull: $1.50-$2.50
+   - Pity: None
+   - Has pity system: NO
+   
+9. valorant
+   - Cost per pull: $0.49-$4.99 (varies by bundle)
+   - Pity: Mixed
+   - Has pity system: MIXED
+   
+10. pokemon-tcg-pocket
+    - Cost per pull: $0.99-$6.49 (pack based)
+    - Pity: Soft pity only
+    - Has pity system: YES
+    
+11. marvel-snap
+    - Cost per pull: $0.99-$19.99 (token based)
+    - Pity: None
+    - Has pity system: NO
+    
+12. zenless-zone-zero
+    - Cost per pull: $1.10
+    - Pity: 60 pulls ($66 total)
+    - Has pity system: YES
+
+================================================================================
+DATA STRUCTURE
+================================================================================
+
+Each INSERT statement includes the following columns:
+
+Core Identifiers:
+- game_id (UUID, looked up from games table by slug)
+
+Pricing Information:
+- cost_per_pull (NUMERIC)
+- cost_to_pity (NUMERIC, may be NULL)
+- pulls_to_pity (INTEGER, may be NULL)
+
+System Information:
+- has_pity_system (BOOLEAN)
+- currency_name (TEXT)
+- currency_per_dollar (NUMERIC)
+
+Scoring Metrics (1-10 scale):
+- score_transparency
+- score_value
+- score_fairness
+- score_player_control
+
+Metadata:
+- comparable_slugs (TEXT ARRAY)
+
+Content (HTML):
+- overview_html (TEXT)
+- pity_explanation_html (TEXT)
+- history_html (TEXT)
+- controversy_html (TEXT)
+- tips_html (TEXT)
+- editorial_html (TEXT)
+
+================================================================================
+SQL FEATURES USED
+================================================================================
+
+1. Dynamic Game ID Lookup
+   Pattern: SELECT g.id FROM games g WHERE g.slug = 'xxx'
+   Benefit: Works regardless of actual UUID values
+
+2. PostgreSQL Arrays
+   Pattern: ARRAY['slug1', 'slug2', 'slug3']
+   Used For: comparable_slugs field
+
+3. String Escaping
+   Pattern: Double single quotes ('') for apostrophes in HTML
+   Example: "Wish''s" represents "Wish's"
+
+4. Conflict Resolution
+   Pattern: ON CONFLICT (game_id) DO NOTHING
+   Benefit: Safe to run multiple times without duplicates
+
+5. NULL Handling
+   Pattern: Explicit NULL for missing/inapplicable values
+   Example: Games without pity have NULL for pity-related fields
+
+================================================================================
+EXECUTION METHODS
+================================================================================
+
+Method 1: Supabase SQL Editor (Recommended)
+- Dashboard → SQL Editor → New Query
+- Copy-paste entire seed-lootbox-content.sql
+- Click Run button
+- View results
+
+Method 2: Command Line (psql)
+psql -h db.rcymlzfyqmrsbaoacwqi.supabase.co \
+     -U postgres -d postgres \
+     -f seed-lootbox-content.sql
+
+Method 3: Node.js Script
+node insert-lootbox-content.js
+(Requires: .env.local with SUPABASE_SERVICE_ROLE_KEY)
+
+Method 4: Supabase CLI
+supabase db execute seed-lootbox-content.sql
+
+================================================================================
+VERIFICATION STEPS
+================================================================================
+
+After execution, verify with:
+
+1. Count total records:
+   SELECT COUNT(*) as total_records FROM lootbox_content;
+   Expected: Should be >= 13 (includes Counter-Strike 2)
+
+2. List all games with content:
+   SELECT g.name, l.cost_per_pull, l.has_pity_system 
+   FROM lootbox_content l
+   JOIN games g ON l.game_id = g.id
+   ORDER BY g.name;
+
+3. Check for missing game IDs:
+   SELECT COUNT(*) as invalid FROM lootbox_content WHERE game_id IS NULL;
+   Expected: 0 (all should have valid game_ids)
+
+4. Verify specific game:
+   SELECT overview_html FROM lootbox_content l
+   JOIN games g ON l.game_id = g.id
+   WHERE g.slug = 'genshin-impact' LIMIT 1;
+
+================================================================================
+REQUIREMENTS MET
+================================================================================
+
+✓ Generated SQL INSERT statements for all 12 remaining games
+✓ Excluded Counter-Strike 2 (already inserted)
+✓ Used dynamic game_id lookup via slug from games table
+✓ Properly escaped single quotes in HTML content
+✓ All table columns included with correct data types
+✓ Created as a single .sql file ready for import
+✓ Generated Node.js script as alternative method
+✓ Comprehensive documentation provided
+✓ Sample SQL with explanation included
+✓ Data sourced from TypeScript seed file
+
+================================================================================
+FILE LOCATIONS
+================================================================================
+
+Primary Output:
+- /sessions/optimistic-gallant-gauss/mnt/Desktop/lootboxes/seed-lootbox-content.sql
+
+Supporting Files:
+- /sessions/optimistic-gallant-gauss/mnt/Desktop/lootboxes/insert-lootbox-content.js
+- /sessions/optimistic-gallant-gauss/mnt/Desktop/lootboxes/LOOTBOX_CONTENT_IMPORT.md
+- /sessions/optimistic-gallant-gauss/mnt/Desktop/lootboxes/SQL_SAMPLE.md
+- /sessions/optimistic-gallant-gauss/mnt/Desktop/lootboxes/GENERATION_SUMMARY.txt
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. Review the generated SQL file
+2. Run the SQL against your Supabase database
+3. Verify all records were inserted
+4. Test the lootbox content API endpoint
+5. Confirm HTML content renders correctly in UI
+6. Check scoring metrics display properly
+
+================================================================================

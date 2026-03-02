@@ -1,0 +1,58 @@
+INSERT INTO lootbox_content (
+  game_id,
+  cost_per_pull,
+  cost_to_pity,
+  pulls_to_pity,
+  has_pity_system,
+  currency_name,
+  currency_per_dollar,
+  score_transparency,
+  score_value,
+  score_fairness,
+  score_player_control,
+  comparable_slugs,
+  overview_html,
+  pity_explanation_html,
+  history_html,
+  controversy_html,
+  tips_html,
+  editorial_html
+)
+SELECT
+  g.id,
+  NULL,
+  NULL,
+  NULL,
+  false,
+  'V-Bucks',
+  100,
+  7,
+  6,
+  6,
+  7,
+  ARRAY['overwatch-2', 'valorant', 'apex-legends'],
+  '<p>Fortnite has evolved its monetization significantly since launch. The game originally featured randomized Loot Llamas in its Save the World mode, but the massively popular Battle Royale mode has moved almost entirely to direct-purchase cosmetics and a seasonal Battle Pass system.</p>
+<p>The current monetization centers on V-Bucks, which can be used to purchase items from the rotating Item Shop or the seasonal Battle Pass ($9.50). The Item Shop offers skins, emotes, wraps, and other cosmetics at fixed prices, with no randomness involved in most purchases.</p>
+<p>While the Save the World mode retains some loot box elements with X-Ray Llamas (which now show their contents before purchase), the Battle Royale experience is primarily a direct-purchase model. This makes Fortnite one of the more consumer-friendly free-to-play games in terms of monetization transparency.</p>',
+  '<p>Fortnite''s Battle Royale mode is predominantly a <strong>direct-purchase system</strong> and does not have traditional pity mechanics. You buy exactly what you see in the Item Shop.</p>
+<p>The Save the World mode features X-Ray Llamas that show their contents before purchase — effectively eliminating the "random" element that would necessitate a pity system. This was a significant consumer-friendly change made after regulatory scrutiny.</p>',
+  '<p><strong>2017:</strong> Fortnite launches with Save the World mode featuring Loot Llamas — randomized loot boxes. The free Battle Royale mode launches later with the Item Shop.</p>
+<p><strong>2018:</strong> The Battle Pass system is introduced for Season 2, revolutionizing gaming monetization. The $9.50 Battle Pass becomes the industry standard that dozens of games would copy.</p>
+<p><strong>2019:</strong> X-Ray Llamas are introduced in Save the World, showing contents before purchase in response to loot box criticism. This effectively makes them a "see before you buy" system.</p>
+<p><strong>2020-2023:</strong> The Item Shop expands with collaborations (Marvel, Star Wars, etc.) and increasingly premium pricing for branded skins ($15-20+). The Battle Pass remains at $9.50.</p>
+<p><strong>2024-2025:</strong> Fortnite continues to refine its shop with more direct-purchase bundles and collaboration events. The monetization is firmly in the "cosmetic shop" category rather than loot boxes.</p>',
+  '<p>Fortnite''s early loot box system in Save the World drew criticism, but Epic Games addressed it proactively with X-Ray Llamas. The bigger, ongoing controversy is around the game''s appeal to children combined with aggressive marketing of premium cosmetics.</p>
+<p>The FTC investigated Epic Games over its marketing practices toward children, resulting in a $520 million settlement in 2022 covering both privacy violations and practices that led to unwanted charges for minors. Epic implemented additional purchase safeguards as a result.</p>
+<p>Community criticism tends to focus on the high pricing of collaboration skins ($15-20 for a single skin) and the FOMO-driven rotating shop that creates pressure to buy items before they disappear — potentially for months.</p>',
+  '<p><strong>The Battle Pass is excellent value.</strong> At $9.50 per season, it provides dozens of cosmetics and enough V-Bucks to buy the next season''s pass if you complete it. It''s effectively a one-time purchase.</p>
+<p><strong>Wait for items to return.</strong> Almost every Item Shop skin eventually returns. Don''t impulse buy — if you still want it when it comes back, it''ll be there.</p>
+<p><strong>Set spending limits for younger players.</strong> Fortnite''s design creates social pressure to own premium skins. Having a clear budget prevents overspending.</p>
+<p><strong>Earn V-Bucks through Save the World.</strong> If you own Save the World, daily quests provide free V-Bucks that can be used in Battle Royale.</p>',
+  '<p>Fortnite deserves credit for being one of the most proactive mainstream games in moving away from predatory loot box mechanics. The introduction of X-Ray Llamas in Save the World and the consistently direct-purchase model in Battle Royale set an industry example that other games have been slow to follow.</p>
+<p>The Battle Pass model that Fortnite popularized is now the gold standard of gaming monetization — a fixed price for a known set of rewards, with gameplay progression as the unlocking mechanism. At $9.50 with enough V-Bucks to fund the next season, it''s genuinely one of the best value propositions in free-to-play gaming.</p>
+<p>We score Fortnite at 6.0 on our Lootboxes Scale. The transparency of direct purchases, the excellent Battle Pass value, and the proactive addressing of loot box concerns all earn high marks. The score is pulled down by the premium pricing on individual shop items, the FOMO tactics of the rotating shop, and the ongoing concerns about marketing to children.</p>
+<p>Fortnite shows that a game can be massively profitable without resorting to predatory loot box mechanics. It''s not perfect — the psychological pressure of rotating shops and collaboration FOMO is real — but it''s a model the industry should learn from.</p>'
+FROM games g
+WHERE g.slug = 'fortnite'
+ON CONFLICT (game_id) DO NOTHING;
+

@@ -1,0 +1,57 @@
+INSERT INTO lootbox_content (
+  game_id,
+  cost_per_pull,
+  cost_to_pity,
+  pulls_to_pity,
+  has_pity_system,
+  currency_name,
+  currency_per_dollar,
+  score_transparency,
+  score_value,
+  score_fairness,
+  score_player_control,
+  comparable_slugs,
+  overview_html,
+  pity_explanation_html,
+  history_html,
+  controversy_html,
+  tips_html,
+  editorial_html
+)
+SELECT
+  g.id,
+  0.5,
+  NULL,
+  NULL,
+  false,
+  'Pack Hourglasses',
+  6,
+  6,
+  3,
+  4,
+  4,
+  ARRAY['ea-fc-25', 'marvel-snap', 'genshin-impact'],
+  '<p>Pokemon TCG Pocket brings the iconic Pokemon Trading Card Game to mobile with a digital booster pack system. Players open packs containing 5 cards each, with rarity determined by the established Pokemon TCG rarity system (Common through Crown Rare). Free packs are earned through a timer system (one pack every 12 hours), with additional packs available through premium purchases.</p>
+<p>The game uses Pack Hourglasses as its acceleration currency — spending hourglasses lets you open additional packs beyond the free timer. The Crown Rare cards (the most desirable "immersive" full-art cards) have an extremely low 0.04% drop rate, making them among the rarest pulls in any digital card game.</p>
+<p>The Pokemon brand''s appeal to younger audiences makes the monetization model particularly scrutinized. While the free pack timer ensures some level of free access, the ultra-low rates for premium cards create significant spending pressure for collectors.</p>',
+  '<p>Pokemon TCG Pocket has <strong>no formal pity system</strong>. Every pack is an independent random event with fixed rates. There is no guaranteed Crown Rare or Secret Rare after any number of packs.</p>
+<p>The only "pseudo-pity" is the God Pack — an extremely rare special pack where all 5 cards are high rarity. These appear randomly at a very low rate and function as a bonus rather than a reliable mechanism.</p>
+<p>The absence of pity combined with a 0.04% Crown Rare rate means the expected cost to pull a specific Crown Rare card is extremely high.</p>',
+  '<p><strong>October 2024:</strong> Pokemon TCG Pocket launches globally, immediately becoming one of the top-grossing mobile games. The nostalgia factor and Pokemon brand drive massive initial downloads.</p>
+<p><strong>Late 2024:</strong> Players begin documenting the extremely low Crown Rare rates. Community data collection confirms the official 0.04% figure, sparking discussions about value.</p>
+<p><strong>2025:</strong> New card sets are released regularly, each expanding the pool of potential pulls and making specific cards harder to obtain. The game introduces trading features with significant restrictions (only cards of the same rarity can be traded).</p>',
+  '<p>The primary concern with Pokemon TCG Pocket is the combination of an extremely child-friendly brand with some of the lowest premium drop rates in digital gaming. A 0.04% Crown Rare rate means a player could spend hundreds of dollars without seeing a single one.</p>
+<p>The restricted trading system has also drawn criticism — players cannot freely trade cards of different rarities, limiting the ability of the community to self-correct the harsh drop rates through player-to-player exchange.</p>
+<p>Parent advocacy groups have raised concerns about the game''s "just one more pack" timer mechanic and the way premium currency is marketed to a demographic that skews young. The Pokemon Company''s family-friendly reputation creates heightened expectations for responsible monetization.</p>',
+  '<p><strong>Be patient with the free timer.</strong> Two free packs per day adds up quickly. In a month, that''s 60 free packs — enough to build a solid collection without spending.</p>
+<p><strong>Focus on completing sets, not chasing Crown Rares.</strong> The odds are against you. Enjoy the collection journey with Common through Rare cards, and let Crown Rares be pleasant surprises.</p>
+<p><strong>Use Wonder Pick wisely.</strong> The Wonder Pick feature lets you choose a card from another player''s recent pack. This is a strategic tool for targeting specific cards you need.</p>
+<p><strong>Don''t spend Pack Hourglasses on chase cards.</strong> The math doesn''t support buying packs to hunt specific Crown Rares. Use free hourglasses earned through gameplay.</p>',
+  '<p>Pokemon TCG Pocket is a beautifully designed digital card game that captures the joy of opening Pokemon card packs — with all the problematic economics that implies. The 0.04% Crown Rare rate translates to an expected 2,500 packs to see one, making these among the most elusive items in any game we track.</p>
+<p>The Pokemon brand creates a unique tension. On one hand, the game''s appeal to children demands responsible monetization practices. On the other, the physical Pokemon TCG has always been about random packs and rare pulls — this is simply the digital version of a decades-old model. The counterargument is that digital goods have zero production cost, making the artificial scarcity harder to justify.</p>
+<p>We score Pokemon TCG Pocket at 4.0 on our Lootboxes Scale. The free pack timer ensures baseline access, the disclosed rates provide transparency, and the game''s core experience is genuinely enjoyable without spending. But the extreme rarity of premium cards, the restrictions on trading, and the child-audience concern prevent a higher score.</p>
+<p>For parents: set spending limits and have conversations about odds before letting children spend on additional packs. For collectors: accept that completing a full set including Crown Rares is designed to be extremely expensive, and enjoy the journey of building your collection gradually through free packs.</p>'
+FROM games g
+WHERE g.slug = 'pokemon-tcg-pocket'
+ON CONFLICT (game_id) DO NOTHING;
+

@@ -1,0 +1,60 @@
+INSERT INTO lootbox_content (
+  game_id,
+  cost_per_pull,
+  cost_to_pity,
+  pulls_to_pity,
+  has_pity_system,
+  currency_name,
+  currency_per_dollar,
+  score_transparency,
+  score_value,
+  score_fairness,
+  score_player_control,
+  comparable_slugs,
+  overview_html,
+  pity_explanation_html,
+  history_html,
+  controversy_html,
+  tips_html,
+  editorial_html
+)
+SELECT
+  g.id,
+  1,
+  500,
+  500,
+  true,
+  'Apex Coins',
+  100,
+  5,
+  2,
+  3,
+  3,
+  ARRAY['overwatch-2', 'fortnite', 'counter-strike-2'],
+  '<p>Apex Legends uses Apex Packs as its primary loot box mechanic — cosmetic crates containing three random items of varying rarity. Players earn a limited number of free packs through leveling (roughly 199 packs through level 500), with additional packs available for purchase at approximately $1.00 each when bought in bulk.</p>
+<p>The crown jewel of the Apex Pack system is Heirloom Shards — an ultra-rare drop that allows players to craft a character-specific Heirloom weapon skin. With a 0.2% drop rate and a guarantee at 500 packs, Heirlooms represent one of the most expensive guaranteed cosmetics in gaming at approximately $500 USD.</p>
+<p>Alongside the pack system, Apex features seasonal Battle Passes, a direct-purchase rotating shop, and Collection Events where all items from a themed collection must be obtained (usually through purchase) to unlock a new Heirloom.</p>',
+  '<p>Apex Legends features two pity systems:</p>
+<p><strong>Legendary Pity (30 packs):</strong> You are guaranteed at least one Legendary item within every 30 Apex Packs opened. This ensures regular "wow" moments during pack opening sessions.</p>
+<p><strong>Heirloom Pity (500 packs):</strong> Heirloom Shards are guaranteed on your 500th pack if you haven''t received them earlier. At ~$1 per pack, this represents a $500 spending ceiling for the game''s most coveted cosmetic items. This is one of the highest pity ceilings in mainstream gaming.</p>
+<p>Both pity counters persist across the lifetime of your account and are not reset between seasons.</p>',
+  '<p><strong>February 2019:</strong> Apex Legends launches with the Apex Pack system. The game''s surprise release and polished gameplay quickly attract millions of players.</p>
+<p><strong>August 2019:</strong> The Iron Crown Collection Event sparks massive backlash when players realize obtaining the new Heirloom requires spending over $150 on event packs. EA and Respawn apologize and adjust future event pricing.</p>
+<p><strong>2020:</strong> EA discloses official drop rates as required by regulations. Heirloom Shards system replaces direct Heirloom drops, giving players choice in which character''s Heirloom to craft.</p>
+<p><strong>2021-2024:</strong> Collection Events continue with a similar structure but with more ways to earn event packs through gameplay. The $500 Heirloom pity remains unchanged.</p>
+<p><strong>2025:</strong> Apex continues to operate with the same fundamental pack economy, though the direct-purchase shop has become a larger portion of the monetization mix.</p>',
+  '<p>The Iron Crown event of 2019 was a watershed moment for Apex''s monetization reputation. Players discovered that the event''s exclusive Bloodhound Heirloom could only be obtained by purchasing all 24 event-exclusive items ($7 each) — totaling $168 before the Heirloom was even unlockable. Respawn developers'' defensive responses on Reddit only inflamed the situation.</p>
+<p>The $500 Heirloom pity ceiling remains a persistent criticism. While Heirlooms are purely cosmetic, they''ve become a status symbol within the community, and the price tag is difficult to justify by any consumer-friendly standard.</p>
+<p>More recently, criticism has focused on the frequency and pricing of Collection Events, which effectively function as $168 paywalls for new Heirlooms. The rotating shop has also been criticized for inconsistent pricing and artificial scarcity tactics.</p>',
+  '<p><strong>Never buy packs hoping for Heirloom Shards.</strong> At 0.2% odds, the expected cost is $500. If you want an Heirloom, accept that it''s a $500 commitment or wait for the free packs from leveling.</p>
+<p><strong>Collection Events are the "cheapest" Heirloom path.</strong> At roughly $168 for all 24 items plus the Heirloom, Collection Events are actually cheaper than the 500-pack pity — and you get 24 other items along the way.</p>
+<p><strong>The Battle Pass pays for itself.</strong> If you complete the Battle Pass, you earn enough Apex Coins to buy the next season''s pass, making it effectively a one-time $9.99 investment.</p>
+<p><strong>Track your pack count.</strong> Third-party trackers can estimate how many packs you''ve opened lifetime, helping you gauge how close you are to Heirloom pity.</p>',
+  '<p>Apex Legends sits in an interesting position in the loot box landscape. The core gameplay is among the best in the battle royale genre, and the game is entirely free-to-play with no pay-to-win elements whatsoever. Every match is decided by skill, not spending. But the cosmetic economy tells a different story — one of some of the most expensive individual items in gaming.</p>
+<p>The $500 Heirloom pity is the elephant in the room. While it technically provides a guaranteed ceiling, that ceiling is set so high that it functions more as a psychological anchor than a genuine consumer protection. "At least it''s not random" rings hollow when "not random" costs as much as a new gaming console.</p>
+<p>We rate Apex Legends at 3.0 on our Lootboxes Scale. The game earns points for having disclosed rates, persistent pity counters, and a zero pay-to-win policy. But the extreme cost of Heirlooms, the aggressive Collection Event pricing, and the manipulative rotation of the shop keep the score firmly in the "Poor Value" range.</p>
+<p>Apex is a game best enjoyed with the mental model that Heirlooms simply don''t exist. Play the game for its exceptional gunplay and movement, enjoy the free cosmetics you earn, and treat any spending as a conscious luxury decision rather than a pursuit of specific items.</p>'
+FROM games g
+WHERE g.slug = 'apex-legends'
+ON CONFLICT (game_id) DO NOTHING;
+

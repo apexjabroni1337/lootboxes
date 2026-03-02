@@ -1,0 +1,57 @@
+INSERT INTO lootbox_content (
+  game_id,
+  cost_per_pull,
+  cost_to_pity,
+  pulls_to_pity,
+  has_pity_system,
+  currency_name,
+  currency_per_dollar,
+  score_transparency,
+  score_value,
+  score_fairness,
+  score_player_control,
+  comparable_slugs,
+  overview_html,
+  pity_explanation_html,
+  history_html,
+  controversy_html,
+  tips_html,
+  editorial_html
+)
+SELECT
+  g.id,
+  NULL,
+  NULL,
+  NULL,
+  false,
+  'Valorant Points (VP)',
+  100,
+  8,
+  6,
+  8,
+  8,
+  ARRAY['fortnite', 'overwatch-2', 'counter-strike-2'],
+  '<p>Valorant''s monetization is almost entirely based on direct purchases — a rarity in the competitive shooter space. Players buy weapon skins, gun buddies, and other cosmetics from the rotating daily shop or through premium skin bundles. There are no loot boxes in the traditional sense.</p>
+<p>The closest thing to randomized content is the Night Market — a periodic event where players receive personalized discounts on a random selection of skins. The Night Market offers 6 random skins at discounted prices, but players see exactly what''s offered and can choose whether to purchase.</p>
+<p>Valorant Points (VP) are purchased at roughly 100 per $1. Individual skin prices range from roughly $10 for Select Edition skins to $25+ for Premium and Exclusive Edition bundles. Complete bundle purchases (4-5 weapon skins plus extras) typically cost $50-100.</p>',
+  '<p>Valorant has <strong>no pity system because there are no loot boxes</strong>. All purchases are direct — you see exactly what you''re buying before spending. The Night Market shows you the random selection of discounted skins upfront, with no hidden mechanics.</p>
+<p>This is one of the most consumer-transparent systems in competitive gaming.</p>',
+  '<p><strong>June 2020:</strong> Valorant launches with its direct-purchase cosmetic shop model. No loot boxes are included from day one — a conscious design choice by Riot Games.</p>
+<p><strong>2020:</strong> The Night Market is introduced as a periodic event, offering randomized discounts on a personal selection of skins. Community reception is positive.</p>
+<p><strong>2021-2023:</strong> Skin quality and pricing escalate with increasingly elaborate Premium and Exclusive Edition skins featuring custom animations, sounds, and finishers. Bundle prices frequently exceed $70.</p>
+<p><strong>2024-2025:</strong> The Battle Pass remains at a stable price point while the shop continues to feature high-priced premium bundles. Riot maintains the no-loot-box stance consistently.</p>',
+  '<p>Valorant''s primary criticism is price, not randomness. Individual Premium Edition skins at $17.50+ and Exclusive bundles at $70-100 are among the highest in the competitive shooter genre. Players frequently point out that a single skin bundle can cost more than many full-priced games.</p>
+<p>The lack of a way to earn VP through gameplay means free-to-play players have extremely limited cosmetic options. The free Battle Pass track is widely considered to offer minimal value compared to the premium track and shop items.</p>
+<p>However, the community generally acknowledges that Riot''s approach — high prices but no gambling — is preferable to randomized loot box systems. The controversy is about value rather than fairness.</p>',
+  '<p><strong>Wait for the Night Market.</strong> Night Market discounts can be significant (up to 50% off), making it the best time to pick up skins you''ve been eyeing.</p>
+<p><strong>Buy bundles, not individual skins.</strong> Purchasing a complete bundle is almost always cheaper per-skin than buying individual weapons separately.</p>
+<p><strong>The Battle Pass is the best entry point.</strong> At roughly $10, it provides the most cosmetics per dollar and introduces you to different skin styles before committing to expensive shop purchases.</p>
+<p><strong>Radianite Points are misleading.</strong> Some premium skins require Radianite Points to unlock upgrades (VFX, finishers). Factor this additional cost into your purchasing decisions — a "complete" skin may cost more than the listed price.</p>',
+  '<p>Valorant stands as proof that a major competitive game can succeed financially without loot boxes. Riot Games made a deliberate choice to avoid randomized monetization from day one, and the result is a system that, while expensive, is fundamentally honest.</p>
+<p>We score Valorant at 7.5 on our Lootboxes Scale — one of the highest in our database. The score reflects the complete absence of randomized paid content, full transparency in pricing, and the Night Market as a player-friendly discount mechanism. The score isn''t higher because the raw prices are steep, the free-to-play cosmetic options are limited, and the Radianite upgrade system adds hidden costs to premium purchases.</p>
+<p>Valorant''s model proves an important principle: transparency and player control matter more than raw price. Players generally prefer paying $25 for a known skin they want over paying $2.50 for a random chance at it. Riot understands that trust builds long-term revenue better than exploitation, and their consistently growing revenue numbers support this thesis.</p>
+<p>If every game adopted Valorant''s approach — direct purchases with clear pricing, no gambling mechanics, no pity systems needed because there''s nothing random — the gaming industry would be dramatically more consumer-friendly. The prices might still sting, but at least you''d always know what you''re getting.</p>'
+FROM games g
+WHERE g.slug = 'valorant'
+ON CONFLICT (game_id) DO NOTHING;
+

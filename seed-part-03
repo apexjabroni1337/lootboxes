@@ -1,0 +1,61 @@
+INSERT INTO lootbox_content (
+  game_id,
+  cost_per_pull,
+  cost_to_pity,
+  pulls_to_pity,
+  has_pity_system,
+  currency_name,
+  currency_per_dollar,
+  score_transparency,
+  score_value,
+  score_fairness,
+  score_player_control,
+  comparable_slugs,
+  overview_html,
+  pity_explanation_html,
+  history_html,
+  controversy_html,
+  tips_html,
+  editorial_html
+)
+SELECT
+  g.id,
+  1,
+  NULL,
+  NULL,
+  false,
+  'FC Points',
+  100,
+  4,
+  1,
+  2,
+  2,
+  ARRAY['pokemon-tcg-pocket', 'marvel-snap', 'counter-strike-2'],
+  '<p>EA FC 25''s Ultimate Team mode features one of the most lucrative card pack systems in gaming history. Players purchase packs containing random player cards using either earned in-game coins or premium FC Points (purchased with real money). Pack prices range from 150 FC Points (~$1.50) for basic packs to 2,500+ FC Points for premium packs.</p>
+<p>The system drives the entire Ultimate Team economy — players build squads by pulling cards from packs, trading on the transfer market, or completing Squad Building Challenges (SBCs). While the transfer market provides a direct purchase option, the most desirable cards often require either extraordinary luck from packs or millions of in-game coins.</p>
+<p>EA was forced to disclose pack odds under EU regulations, revealing that the chances of pulling top-tier players are extraordinarily low. An Icon or Hero player has just a 0.04% chance — meaning on average, you''d need to open 2,500 packs to see one.</p>',
+  '<p>EA FC 25 has <strong>no pity system</strong>. Every pack is an independent event with fixed probabilities. There is no mechanism that increases your chances after a streak of poor results, and no guaranteed reward threshold regardless of spending.</p>
+<p>This makes EA FC''s pack system one of the most purely random (and potentially expensive) in mainstream gaming. The combination of no pity, low top-end rates, and annual game resets creates what critics call a "yearly money pit."</p>',
+  '<p><strong>2009:</strong> FIFA Ultimate Team launches as a paid DLC add-on, introducing card packs to the FIFA franchise.</p>
+<p><strong>2015-2018:</strong> FUT becomes FIFA''s primary revenue driver, with EA reporting billions in "live services" revenue largely from Ultimate Team pack sales across FIFA titles.</p>
+<p><strong>2019:</strong> Belgium bans FIFA loot boxes, forcing EA to disable FC Point purchases in the country. The Netherlands follows with similar restrictions.</p>
+<p><strong>2021:</strong> EA begins disclosing pack odds in compliance with regulations. The published rates confirm community suspicions about extremely low drop rates for elite players.</p>
+<p><strong>2023:</strong> FIFA becomes EA FC following the end of the FIFA licensing deal. The Ultimate Team pack system continues unchanged under the new branding.</p>
+<p><strong>2024-2025:</strong> EA FC 25 introduces Evolution system and updated SBCs but maintains the core pack economy. Regulatory scrutiny continues in multiple jurisdictions.</p>',
+  '<p>EA''s Ultimate Team pack system is arguably the most controversial loot box system in all of gaming. It has been the subject of regulatory action, multiple lawsuits, and sustained public criticism. Belgium and the Netherlands have outright banned the purchase of FC Points, classifying packs as illegal gambling.</p>
+<p>The annual reset is perhaps the most criticized aspect — every year when a new game launches, all cards and spending from the previous year become worthless. This creates a cycle where players spend hundreds or thousands annually, only to start from zero each September.</p>
+<p>Class-action lawsuits in multiple countries have alleged that EA deliberately designs pack animations and reward structures to mimic gambling machines. Internal documents leaked during litigation revealed EA referring to players as "whales" and optimizing pack designs to maximize spending.</p>
+<p>Despite all this, Ultimate Team continues to generate billions in annual revenue, making it one of the most financially successful monetization systems in entertainment history.</p>',
+  '<p><strong>Never buy packs with FC Points.</strong> The expected value of pack purchases is consistently negative. The chances of pulling a player worth more than the pack cost are extremely low.</p>
+<p><strong>Use the transfer market.</strong> If you want a specific player, buy them directly from the market using earned coins. It''s almost always cheaper than gambling on packs.</p>
+<p><strong>Complete SBCs.</strong> Squad Building Challenges offer guaranteed rewards and are the most reliable way to obtain high-value cards without spending money.</p>
+<p><strong>Remember the annual reset.</strong> Any money spent on FC Points becomes worthless when the next game launches. Budget accordingly and consider whether the temporary enjoyment justifies the cost.</p>',
+  '<p>EA FC 25''s Ultimate Team represents what happens when loot box mechanics are optimized for maximum revenue extraction over decades of iteration. The system works because it taps into multiple psychological drives simultaneously: the collectible card urge, competitive gaming ambition, the gambling dopamine hit, and the social pressure of building impressive teams.</p>
+<p>By every consumer-friendly metric, EA FC''s pack system fails. A 0.04% chance at the most desirable items with no pity system means the expected cost of a top-tier Icon player through packs alone is astronomically high. The annual reset compounds this — every dollar spent has a built-in expiration date, creating perpetual demand for new spending.</p>
+<p>We score EA FC 25 at 2.1 on our Lootboxes Scale — one of the lowest scores in our database. The minimal transparency (odds are disclosed, but buried in menus), complete lack of pity, annual depreciation of all purchases, and the system''s documented psychological manipulation tactics all contribute to this score.</p>
+<p>The saving grace — and the reason it doesn''t score even lower — is that the transfer market provides a genuine alternative. Players who never buy a single pack can still build competitive teams through smart trading, SBC completion, and Division Rivals rewards. The game doesn''t technically require spending, even if its entire design nudges you toward it.</p>
+<p>Our strongest recommendation across our entire database: do not buy FC Points. The math is unambiguous, the annual reset is ruthless, and the psychological design is specifically engineered to override rational spending decisions. Play Ultimate Team for free, trade smartly, and enjoy the football. Your wallet will thank you.</p>'
+FROM games g
+WHERE g.slug = 'ea-fc-25'
+ON CONFLICT (game_id) DO NOTHING;
+

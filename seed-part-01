@@ -1,0 +1,64 @@
+INSERT INTO lootbox_content (
+  game_id,
+  cost_per_pull,
+  cost_to_pity,
+  pulls_to_pity,
+  has_pity_system,
+  currency_name,
+  currency_per_dollar,
+  score_transparency,
+  score_value,
+  score_fairness,
+  score_player_control,
+  comparable_slugs,
+  overview_html,
+  pity_explanation_html,
+  history_html,
+  controversy_html,
+  tips_html,
+  editorial_html
+)
+SELECT
+  g.id,
+  2.5,
+  225,
+  90,
+  true,
+  'Primogems',
+  64,
+  7,
+  2,
+  3,
+  3,
+  ARRAY['honkai-star-rail', 'zenless-zone-zero', 'marvel-snap'],
+  '<p>Genshin Impact uses a gacha system called "Wishes" that serves as the primary method for obtaining new characters and weapons. Players spend Primogems (the premium currency) or Intertwined/Acquaint Fates to make wishes on time-limited and permanent banners. Each wish costs 160 Primogems, equivalent to approximately $2.50 USD at the best Genesis Crystal exchange rate.</p>
+<p>The system features multiple banner types: the Character Event Banner (featuring a limited 5-star character), the Weapon Event Banner, and the Standard Banner. Each has independent pity counters, meaning progress toward a guaranteed 5-star doesn''t carry between banner types.</p>
+<p>HoYoverse (formerly miHoYo) publishes exact drop rates in-game as required by Chinese law, making this one of the more transparent gacha systems. However, the low base rates (0.6% for a 5-star) and the high cost to reach pity make it one of the more expensive systems in the market.</p>',
+  '<p>Genshin Impact features both <strong>soft pity</strong> and <strong>hard pity</strong> mechanics:</p>
+<p><strong>Soft Pity (Pull 74+):</strong> Starting at pull 74, the probability of receiving a 5-star item increases dramatically with each subsequent pull. Community research estimates the rate jumps to approximately 6% per pull at 74 and increases linearly, reaching roughly 33% by pull 89.</p>
+<p><strong>Hard Pity (Pull 90):</strong> At exactly 90 pulls, you are guaranteed a 5-star item. This is the absolute ceiling — no player will ever go beyond 90 pulls without a 5-star.</p>
+<p><strong>The 50/50 System:</strong> When you receive a 5-star on the Character Event Banner, there''s a 50% chance it''s the featured character and a 50% chance it''s a standard 5-star. If you lose the 50/50, your NEXT 5-star is guaranteed to be the featured character. This means the absolute worst case for a specific character is 180 pulls (~$450 USD).</p>
+<p>In practice, the average pulls needed for a 5-star is approximately 62.5 due to soft pity, making the effective rate about 1.6%.</p>',
+  '<p><strong>September 2020:</strong> Genshin Impact launches with the gacha system. Initial reception is polarized — praised for gameplay but criticized for aggressive monetization.</p>
+<p><strong>2021:</strong> HoYoverse introduces the Epitomized Path system for the Weapon Banner, adding a pseudo-pity that guarantees the desired weapon after a maximum of 3 five-star pulls (240 wishes worst case).</p>
+<p><strong>2022:</strong> Anniversary controversy erupts when players feel rewards are insufficient. HoYoverse eventually increases anniversary rewards after significant backlash.</p>
+<p><strong>2023:</strong> Genshin introduces more generous free Primogem distribution and quality-of-life improvements to wish tracking. Monthly free pulls increase slightly.</p>
+<p><strong>2024-2025:</strong> The system remains largely unchanged. Genshin continues to be one of the highest-grossing gacha games globally, earning billions in total revenue.</p>',
+  '<p>Genshin Impact has faced sustained criticism for its gacha monetization despite being a free-to-play title. The primary complaint is the sheer cost required to obtain specific characters — potentially $450 USD in a worst-case scenario for a single character. For players who want multiple copies for "constellations" (character upgrades), costs can reach $2,000+ per character.</p>
+<p>The 2021 anniversary controversy highlighted the tension between the game''s massive revenue and what players perceived as stingy reward distribution. The community organized review-bombing campaigns across app stores before HoYoverse improved anniversary rewards.</p>
+<p>Consumer protection groups have raised concerns about the game''s appeal to younger audiences combined with gambling-like mechanics. Several countries have investigated or required additional disclosures. Despite this, the game''s generous free-to-play content and the fact that all content can be cleared without premium characters have also earned it defenders.</p>',
+  '<p><strong>Save for characters you truly want.</strong> The worst mistake in Genshin is spending Primogems impulsively. Save for confirmed upcoming banners of characters you''re excited about.</p>
+<p><strong>Understand the 50/50 system.</strong> If you lost your last 50/50, your next 5-star is guaranteed to be the featured character. This "guaranteed" status carries across banners, so plan accordingly.</p>
+<p><strong>Never pull on the Standard Banner with Primogems.</strong> Use Primogems exclusively on limited banners. Standard Banner fates (Acquaint Fates) come free from leveling and other sources.</p>
+<p><strong>Welkin Moon is the best value.</strong> The $4.99/month Welkin Moon blessing provides 3,000 Primogems over 30 days — roughly 19 pulls for $5, compared to the standard rate of about 2 pulls for $5.</p>
+<p><strong>All content is clearable as free-to-play.</strong> Don''t feel pressured to pull for "meta" characters. Skill and team building matter far more than having the latest 5-star.</p>',
+  '<p>Genshin Impact occupies a unique position in the loot box landscape. It''s a genuinely outstanding open-world RPG that happens to be monetized through one of the most expensive gacha systems in mainstream gaming. This duality — exceptional game, aggressive monetization — is at the heart of every discussion about Genshin''s business model.</p>
+<p>The numbers tell a stark story. At $2.50 per pull and a 0.6% base rate for 5-star characters, the expected cost to obtain a specific featured character averages around $150-200 USD. Worst case with full pity and lost 50/50? That''s $450 for a single character. For context, most AAA games cost $60-70 for the complete experience. In Genshin, $450 gets you one character in a roster of over 80.</p>
+<p>HoYoverse deserves credit for transparency — drop rates are clearly published in-game, and the pity system provides a hard ceiling on spending. The soft pity mechanic starting at pull 74 also means most players won''t actually hit the 90-pull hard pity, with the average landing around 62 pulls. These are genuine consumer-friendly features that many competitors lack.</p>
+<p>Where the system falters is in value and player control. The constellation system — where pulling duplicate characters provides incremental power boosts — creates a whale trap where the true "complete" version of a character can cost upwards of $2,000. The weapon banner, despite improvements with Epitomized Path, remains widely regarded as a trap for all but the heaviest spenders.</p>
+<p>We score Genshin Impact at 3.2 on our Lootboxes Scale. The transparency and pity system prevent a lower score, but the raw cost of participation, the constellation system, and the psychological pressure of limited-time banners (FOMO) drag it down significantly. The game itself is free-to-play friendly — all content can be completed with free characters — but the monetization clearly targets players who develop emotional attachments to specific characters and feel compelled to "complete" them.</p>
+<p>Our advice? Enjoy Genshin as the remarkable free game it is. If you choose to spend, set a strict budget, buy Welkin Moon for the best value, and never chase constellations unless you''re comfortable treating it as a luxury entertainment expense.</p>'
+FROM games g
+WHERE g.slug = 'genshin-impact'
+ON CONFLICT (game_id) DO NOTHING;
+

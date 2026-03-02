@@ -1,0 +1,57 @@
+INSERT INTO lootbox_content (
+  game_id,
+  cost_per_pull,
+  cost_to_pity,
+  pulls_to_pity,
+  has_pity_system,
+  currency_name,
+  currency_per_dollar,
+  score_transparency,
+  score_value,
+  score_fairness,
+  score_player_control,
+  comparable_slugs,
+  overview_html,
+  pity_explanation_html,
+  history_html,
+  controversy_html,
+  tips_html,
+  editorial_html
+)
+SELECT
+  g.id,
+  1.5,
+  NULL,
+  NULL,
+  false,
+  'Gold',
+  100,
+  4,
+  5,
+  5,
+  6,
+  ARRAY['pokemon-tcg-pocket', 'ea-fc-25', 'honkai-star-rail'],
+  '<p>Marvel Snap uses a progression-based card acquisition system that blends collection mechanics with gacha-like randomness. Players advance along a Collection Level track by upgrading cards, earning random new cards from the pool at various milestones. The speed of this progression can be accelerated through spending.</p>
+<p>The game categorizes cards into Series (Pool 1-5), with higher-series cards being harder to obtain. Series 4 and 5 cards are the most powerful and rarest, available through Collector''s Reserves (random drops from the collection track), Token Shop purchases, or Spotlight Caches.</p>
+<p>Spotlight Caches are the closest thing to a traditional gacha — weekly featured cards with a curated pool of 4 possible outcomes. Players can earn keys through gameplay to open these caches, providing a somewhat predictable path to specific new cards.</p>',
+  '<p>Marvel Snap has <strong>no traditional pity system</strong>. Collector''s Reserves and Spotlight Caches are independent random events.</p>
+<p>However, the Spotlight Cache system provides a form of pseudo-pity: each cache has only 4 possible outcomes, and pulled items are removed from the pool. This means the 4th cache guarantees the remaining item — a natural pity-like mechanic, though you need 4 keys (earned through considerable gameplay or spending).</p>',
+  '<p><strong>October 2022:</strong> Marvel Snap launches globally. The Collection Level system is praised for its innovative approach to card acquisition, but concerns emerge about the endgame grind for Series 5 cards.</p>
+<p><strong>2023:</strong> The Token Shop and Spotlight Cache systems are introduced to address criticism about the randomness of high-series card acquisition. These provide more deterministic paths to specific cards.</p>
+<p><strong>2024:</strong> Second Dinner adjusts the economy multiple times in response to player feedback. Season passes become a larger part of the monetization mix.</p>
+<p><strong>2025:</strong> The game continues to evolve its economy, with ongoing tension between accessibility for new players and monetization depth for veterans.</p>',
+  '<p>Marvel Snap''s primary controversy has been the "Series 5 problem" — the extreme difficulty of obtaining the newest, most powerful cards without significant spending or months of patient gameplay. This created a perceived pay-to-win dynamic in a competitive game, where players with new Series 5 cards had meaningful advantages.</p>
+<p>The frequent economy changes have also frustrated players, with some feeling that the monetization goalposts keep shifting. Prices, earn rates, and card series assignments have all been adjusted multiple times, making it difficult for players to plan their resource spending.</p>
+<p>Recent pricing decisions for bundles and cosmetic variants have drawn criticism for escalating costs, though the core card acquisition remains technically possible through free play.</p>',
+  '<p><strong>Save Spotlight Keys.</strong> Spotlight Caches are the most efficient way to target specific new cards. Save keys for cards that genuinely interest you rather than spending on every new release.</p>
+<p><strong>Upgrade cards strategically.</strong> Boosters and credits drive your Collection Level progress. Focus upgrades on cards you use frequently to maximize value.</p>
+<p><strong>The Season Pass is good value.</strong> Each season''s pass provides a guaranteed card plus additional rewards for active players.</p>
+<p><strong>Don''t rush Series 5 cards.</strong> Many competitive decks use primarily Series 3 cards. Build a strong collection foundation before chasing the rarest cards.</p>',
+  '<p>Marvel Snap tried something genuinely different with its Collection Level system, and the results have been mixed. The concept — tying card acquisition to collection upgrading rather than pure pack opening — is clever and creates a satisfying progression loop. But the endgame reveals familiar problems: rare cards are extremely hard to obtain for free, and spending money significantly accelerates the process in a competitive game.</p>
+<p>The Spotlight Cache system was a major improvement, providing a more deterministic path to new cards. With only 4 outcomes per cache and removal of pulled items, players can target specific cards with reasonable certainty — though the key economy means this isn''t free.</p>
+<p>We score Marvel Snap at 5.5 on our Lootboxes Scale. The innovative progression system, Spotlight Caches, and the genuinely fun free-to-play experience earn positive marks. The score is held back by the opaque rarity rates in Collector''s Reserves, the evolving (sometimes worsening) economy, and the competitive advantage that spending provides.</p>
+<p>Marvel Snap is at its best when treated as a casual card game rather than a competitive ladder climber. Play for the fun of building creative decks, and the monetization pressure fades significantly.</p>'
+FROM games g
+WHERE g.slug = 'marvel-snap'
+ON CONFLICT (game_id) DO NOTHING;
+

@@ -353,9 +353,13 @@ export default async function LootboxGamePage({
               <ScoreBreakdown
                 overall={game.lootboxes_score}
                 transparency={content.score_transparency}
+                compliance={content.score_compliance}
+                ageGating={content.score_age_gating}
                 value={content.score_value}
                 fairness={content.score_fairness}
+                p2wImpact={content.score_p2w_impact}
                 playerControl={content.score_player_control}
+                psychDesign={content.score_psych_design}
               />
             </div>
           </section>
