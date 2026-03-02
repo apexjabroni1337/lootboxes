@@ -86,6 +86,16 @@ function avgScores(content: LootboxContent | LootboxContent[] | null, keys: (key
   return parseFloat((sum / (arr.length * keys.length)).toFixed(1));
 }
 
+function GameThumb({ game }: { game: Game }) {
+  return game.cover_image ? (
+    <img src={game.cover_image} alt={game.title} className="w-8 h-11 rounded object-cover flex-shrink-0" loading="lazy" />
+  ) : (
+    <div className="w-8 h-11 flex-shrink-0">
+      <GameAvatar gameName={game.title} aspectRatio="portrait" size="sm" />
+    </div>
+  );
+}
+
 // Main Component
 export default async function RankingsPage() {
   const supabase = createServerClient();
@@ -206,6 +216,7 @@ export default async function RankingsPage() {
                 {overallRanked.slice(0, 10).map((item, idx) => (
                   <li key={item.game.id} className="flex items-center gap-3">
                     <span className="font-bold text-gray-400 w-6 text-right">{idx + 1}</span>
+                    <GameThumb game={item.game} />
                     <Link href={`/lootbox/${item.game.slug}`} className="flex-1 hover:text-[#0074c5] transition-colors">
                       <span className="font-medium text-gray-900 hover:underline">{item.game.title}</span>
                     </Link>
@@ -233,6 +244,7 @@ export default async function RankingsPage() {
                 {protectionRanked.slice(0, 10).map((item, idx) => (
                   <li key={item.game.id} className="flex items-center gap-3">
                     <span className="font-bold text-gray-400 w-6 text-right">{idx + 1}</span>
+                    <GameThumb game={item.game} />
                     <Link href={`/lootbox/${item.game.slug}`} className="flex-1 hover:text-[#0074c5] transition-colors">
                       <span className="font-medium text-gray-900 hover:underline">{item.game.title}</span>
                     </Link>
@@ -260,6 +272,7 @@ export default async function RankingsPage() {
                 {valueRanked.slice(0, 10).map((item, idx) => (
                   <li key={item.game.id} className="flex items-center gap-3">
                     <span className="font-bold text-gray-400 w-6 text-right">{idx + 1}</span>
+                    <GameThumb game={item.game} />
                     <Link href={`/lootbox/${item.game.slug}`} className="flex-1 hover:text-[#0074c5] transition-colors">
                       <span className="font-medium text-gray-900 hover:underline">{item.game.title}</span>
                     </Link>
@@ -287,6 +300,7 @@ export default async function RankingsPage() {
                 {p2wRanked.slice(0, 10).map((item, idx) => (
                   <li key={item.game.id} className="flex items-center gap-3">
                     <span className="font-bold text-gray-400 w-6 text-right">{idx + 1}</span>
+                    <GameThumb game={item.game} />
                     <Link href={`/lootbox/${item.game.slug}`} className="flex-1 hover:text-[#0074c5] transition-colors">
                       <span className="font-medium text-gray-900 hover:underline">{item.game.title}</span>
                     </Link>
@@ -317,6 +331,7 @@ export default async function RankingsPage() {
               {worstOffenders.map((item, idx) => (
                 <li key={item.game.id} className="flex items-center gap-3">
                   <span className="font-bold text-rose-600 w-6 text-right">{games.length - item.rank + 1}</span>
+                  <GameThumb game={item.game} />
                   <Link href={`/lootbox/${item.game.slug}`} className="flex-1 hover:text-[#0074c5] transition-colors">
                     <span className="font-medium text-gray-900 hover:underline">{item.game.title}</span>
                   </Link>
@@ -363,7 +378,8 @@ export default async function RankingsPage() {
                   <tr key={item.game.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                     <td className="px-4 py-3 text-sm font-medium text-gray-700 sticky left-0 bg-inherit">{idx + 1}</td>
                     <td className="px-4 py-3 text-sm sticky left-12 bg-inherit">
-                      <Link href={`/lootbox/${item.game.slug}`} className="font-medium text-gray-900 hover:text-[#0074c5] transition-colors">
+                      <Link href={`/lootbox/${item.game.slug}`} className="flex items-center gap-2 font-medium text-gray-900 hover:text-[#0074c5] transition-colors">
+                        <GameThumb game={item.game} />
                         {item.game.title}
                       </Link>
                     </td>

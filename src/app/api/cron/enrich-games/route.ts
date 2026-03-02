@@ -1,13 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase";
 import { searchGame, igdbImageUrl } from "@/lib/igdb";
+import { MANUAL_COVERS } from "@/lib/manual-covers";
 
 /**
  * Cron endpoint: Enrich games with images.
  *
- * Strategy (per game):
- *   1. Try IGDB search (best quality covers + screenshots)
- *   2. Fallback: Steam store search → Steam CDN images
+ * Image enrichment pipeline (per game, in priority order):
+ *
+ *   1. IGDB (via Twitch API) — Best quality. Covers most PC/console/mobile
+ *      games. Returns portrait covers (264×374) and landscape screenshots.
+ *
+ *   2. Steam Store API — Fallback for Steam-available titles that IGDB
+ *      missed. Uses predictable CDN URLs based on Steam App ID.
+ *
+ *   3. Manual Overrides (src/lib/manual-covers.ts) — For mobile-only,
+ *      region-specific, or niche titles that neither API can match.
+ *      Add entries to the MANUAL_COVERS map as needed.
+ *
+ *   4. GameAvatar component (UI-level) — Final graceful fallback.
+ *      Renders a deterministic gradient + initials when no image exists.
  *
  * Uses parallel processing (3 concurrent) to maximize throughput
  * within Vercel's 60s timeout. Processes ~80-100 games per run.
@@ -51,7 +63,7 @@ export async function GET(request: NextRequest) {
   try {
     const { data: games, error: queryErr } = await supabase
       .from("games")
-      .select("id, title, cover_image, screenshot_image")
+      .select("id, title, slug, cover_image, screenshot_image")
       .or("cover_image.is.null,screenshot_image.is.null")
       .order("created_at", { ascending: false })
       .limit(limit);
@@ -132,6 +144,7 @@ interface EnrichResult {
 async function enrichGame(game: {
   id: string;
   title: string;
+  slug: string;
   cover_image: string | null;
   screenshot_image: string | null;
 }): Promise<EnrichResult> {
@@ -185,6 +198,22 @@ async function enrichGame(game: {
         }
       } catch {
         // Steam search failed — skip
+      }
+    }
+
+    // ── Strategy 3: Manual overrides (for mobile/niche titles) ──
+    if (!result.found && game.slug in MANUAL_COVERS) {
+      const manual = MANUAL_COVERS[game.slug];
+      if (!game.cover_image && manual.cover) {
+        result.updates.cover_image = manual.cover;
+        result.coversAdded = true;
+      }
+      if (!game.screenshot_image && manual.screenshot) {
+        result.updates.screenshot_image = manual.screenshot;
+        result.screenshotsAdded = true;
+      }
+      if (Object.keys(result.updates).length > 0) {
+        result.found = true;
       }
     }
   } catch (err: any) {
