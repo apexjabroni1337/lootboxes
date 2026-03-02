@@ -153,7 +153,7 @@ export default function Header() {
                   onClick={() => setLootboxMegaOpen(!lootboxMegaOpen)}
                 >
                   <Zap className="h-3.5 w-3.5 text-purple-500" />
-                  Loot Box
+                  Loot Boxes
                   <ChevronDown
                     className={`h-3.5 w-3.5 transition-transform ${lootboxMegaOpen ? "rotate-180" : ""}`}
                   />
