@@ -218,31 +218,29 @@ export default async function RankingsPage() {
 
       {/* How We Rank — Intro */}
       <section className="container-main py-10">
-        <div className="max-w-3xl">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">How We Rank Games</h2>
-          <div className="prose">
-            <p>
-              Every game in our database is evaluated across <strong>eight scoring dimensions</strong> grouped into
-              three weighted categories: <strong>Consumer Protection</strong> (40%), which covers transparency, regulatory
-              compliance, and age gating; <strong>Value &amp; Fairness</strong> (35%), which measures whether players get
-              reasonable value for their money; and <strong>Player Experience</strong> (25%), which evaluates pay-to-win
-              impact, player control, and the use of psychological pressure tactics.
-            </p>
-            <p>
-              The final <strong>Lootboxes Score</strong> is a weighted composite of all eight sub-scores on a 1–10 scale. A
-              score of 7 or above indicates a monetization system we consider consumer-friendly, while anything below 4
-              signals significant concerns about fairness or predatory design. We research official disclosures, community
-              data, and in-game testing to compile each analysis.
-            </p>
-            <p>
-              The rankings below are split into category leaderboards so you can see which games lead in specific areas,
-              followed by the full tier-grouped table with every score dimension visible. For a deeper dive into how each
-              dimension is calculated, see our{' '}
-              <Link href="/methodology" className="text-brand-600 hover:text-brand-700 font-medium no-underline">
-                full methodology breakdown
-              </Link>.
-            </p>
-          </div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">How We Rank Games</h2>
+        <div className="prose prose-gray max-w-none">
+          <p>
+            Every game in our database is evaluated across <strong>eight scoring dimensions</strong> grouped into
+            three weighted categories: <strong>Consumer Protection</strong> (40&nbsp;%), which covers transparency, regulatory
+            compliance, and age gating; <strong>Value &amp; Fairness</strong> (35&nbsp;%), which measures whether players get
+            reasonable value for their money; and <strong>Player Experience</strong> (25&nbsp;%), which evaluates pay-to-win
+            impact, player control, and the use of psychological pressure tactics.
+          </p>
+          <p>
+            The final <strong>Lootboxes Score</strong> is a weighted composite of all eight sub-scores on a 1–10 scale. A
+            score of 7 or above indicates a monetization system we consider consumer-friendly, while anything below 4
+            signals significant concerns about fairness or predatory design. We research official disclosures, community
+            data, and in-game testing to compile each analysis.
+          </p>
+          <p>
+            The rankings below are split into category leaderboards so you can see which games lead in specific areas,
+            followed by the full tier-grouped table with every score dimension visible. For a deeper dive into how each
+            dimension is calculated, see our{' '}
+            <Link href="/methodology" className="text-[#0074c5] hover:text-[#005a9e] font-medium no-underline">
+              full methodology breakdown
+            </Link>.
+          </p>
         </div>
       </section>
 
