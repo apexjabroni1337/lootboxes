@@ -145,124 +145,160 @@ export default async function LootboxGamePage({
   );
 
   return (
-    <div className="container-main py-8">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-1.5 text-sm text-gray-500 mb-6">
-        <Link href="/" className="hover:text-blue-600">
-          Home
-        </Link>
-        <ChevronRight className="w-3.5 h-3.5" />
-        <Link href="/lootbox" className="hover:text-blue-600">
-          Loot Box Database
-        </Link>
-        <ChevronRight className="w-3.5 h-3.5" />
-        <span className="text-gray-900 font-medium">{game.title}</span>
-      </nav>
+    <div>
+      {/* ─── CINEMATIC HERO SECTION ─── */}
+      <section className="relative overflow-hidden bg-slate-900 -mx-4 sm:mx-0">
+        {/* Background screenshot */}
+        {(game.screenshot_image || game.cover_image) && (
+          <img
+            src={game.screenshot_image || game.cover_image}
+            alt={game.title}
+            className="absolute inset-0 w-full h-full object-cover opacity-20"
+          />
+        )}
+        {/* Dark overlay gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-slate-900/40" />
 
-      {/* ─── HERO ─── */}
-      <div className="flex flex-col lg:flex-row gap-6 mb-10">
-        {/* Image */}
-        <div className="flex-shrink-0 w-full lg:w-48 h-48 lg:h-64 rounded-2xl overflow-hidden bg-gray-100">
-          {game.cover_image ? (
-            <img
-              src={game.cover_image}
-              alt={game.title}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <GameAvatar gameName={game.title} aspectRatio="portrait" size="lg" />
-          )}
-        </div>
+        {/* Content on top */}
+        <div className="relative container-main py-8 pb-24">
+          {/* Breadcrumb (white/translucent text) */}
+          <nav className="flex items-center gap-1.5 text-sm text-white/60 mb-8">
+            <Link href="/" className="hover:text-white/80 transition-colors">
+              Home
+            </Link>
+            <ChevronRight className="w-3.5 h-3.5" />
+            <Link href="/lootbox" className="hover:text-white/80 transition-colors">
+              Loot Box Database
+            </Link>
+            <ChevronRight className="w-3.5 h-3.5" />
+            <span className="text-white font-medium">{game.title}</span>
+          </nav>
 
-        <div className="flex-1">
-          <div className="flex flex-wrap gap-2 mb-3">
-            <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${sys.color}`}>
-              {sys.label}
-            </span>
-            {content.has_pity_system && (
-              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700">
-                Pity System
-              </span>
-            )}
-          </div>
+          {/* Hero content: cover image and text info */}
+          <div className="flex items-end gap-6">
+            {/* Cover image with border */}
+            <div className="flex-shrink-0 w-32 h-44 rounded-xl overflow-hidden border-2 border-white/20 shadow-2xl">
+              {game.cover_image ? (
+                <img
+                  src={game.cover_image}
+                  alt={game.title}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <GameAvatar gameName={game.title} aspectRatio="portrait" size="lg" />
+              )}
+            </div>
 
-          <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
-            {game.title} Loot Box Analysis
-          </h1>
+            {/* Text info */}
+            <div className="flex-1 pb-1">
+              <div className="flex flex-wrap gap-2 mb-3">
+                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${sys.color}`}>
+                  {sys.label}
+                </span>
+                {content.has_pity_system && (
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700">
+                    Pity System
+                  </span>
+                )}
+              </div>
 
-          {/* Quick stats */}
-          <div className="flex flex-wrap gap-3 mb-4">
-            {game.lootboxes_score !== null && (
-              <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2">
-                <div
-                  className={`h-7 w-9 rounded text-xs font-bold text-white flex items-center justify-center ${
-                    game.lootboxes_score >= 7
-                      ? "bg-emerald-500"
-                      : game.lootboxes_score >= 5
-                      ? "bg-amber-500"
-                      : game.lootboxes_score >= 3
-                      ? "bg-orange-500"
-                      : "bg-red-500"
-                  }`}
-                >
-                  {game.lootboxes_score.toFixed(1)}
-                </div>
-                <span className="text-sm font-medium text-gray-700">
-                  Lootboxes Score
+              <h1 className="text-3xl lg:text-4xl font-bold text-white mb-2">
+                {game.title}
+              </h1>
+              <p className="text-lg text-white/70 mb-4">Loot Box Analysis</p>
+
+              {/* Secondary info */}
+              <div className="flex gap-3 text-white/60 text-sm">
+                {content.currency_name && (
+                  <span className="flex items-center gap-1">
+                    Currency: <span className="text-white font-medium">{content.currency_name}</span>
+                    {content.currency_per_dollar && (
+                      <span className="text-white/50">· {content.currency_per_dollar} per $1</span>
+                    )}
+                  </span>
+                )}
+                <span className="flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5" />
+                  Updated {new Date(content.updated_at).toLocaleDateString()}
                 </span>
               </div>
-            )}
-            {content.cost_per_pull !== null && content.cost_per_pull > 0 && (
-              <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2 text-sm font-medium text-gray-700">
-                ${content.cost_per_pull.toFixed(2)} per pull
+            </div>
+
+            {/* Score card - positioned absolute top-right */}
+            <div className="absolute top-8 right-8 bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl px-6 py-4 text-center min-w-[160px]">
+              <div className="text-4xl font-extrabold text-white">
+                {game.lootboxes_score !== null ? game.lootboxes_score.toFixed(1) : "—"}
               </div>
-            )}
-            {content.has_pity_system && content.pulls_to_pity && (
-              <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2 text-sm font-medium text-gray-700">
-                Pity at {content.pulls_to_pity} pulls
-              </div>
-            )}
-            <div className="flex items-center gap-1.5 bg-gray-100 rounded-lg px-3 py-2 text-sm text-gray-500">
-              <Clock className="w-3.5 h-3.5" />
-              Updated {new Date(content.updated_at).toLocaleDateString()}
+              <div className="text-xs text-white/60 uppercase tracking-wider mt-1">Lootboxes Score</div>
+              {game.lootboxes_score !== null && (
+                <div className="mt-3 h-1.5 w-20 bg-white/10 rounded-full overflow-hidden mx-auto">
+                  <div
+                    style={{ width: `${(game.lootboxes_score / 10) * 100}%` }}
+                    className={`h-full rounded-full ${
+                      game.lootboxes_score >= 7
+                        ? "bg-emerald-400"
+                        : game.lootboxes_score >= 5
+                        ? "bg-amber-400"
+                        : game.lootboxes_score >= 3
+                        ? "bg-orange-400"
+                        : "bg-red-400"
+                    }`}
+                  />
+                </div>
+              )}
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Currency info */}
-          {content.currency_name && (
-            <p className="text-sm text-gray-500">
-              Premium currency: <span className="font-medium text-gray-700">{content.currency_name}</span>
-              {content.currency_per_dollar && (
-                <> · {content.currency_per_dollar} per $1 USD</>
-              )}
-            </p>
+      {/* ─── QUICK STATS ROW ─── */}
+      <div className="container-main -mt-20 relative z-10 mb-10">
+        <div className="flex flex-wrap gap-3">
+          {content.cost_per_pull !== null && content.cost_per_pull > 0 && (
+            <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 shadow-lg border border-gray-200">
+              <span className="text-lg font-bold text-blue-600">${content.cost_per_pull.toFixed(2)}</span>
+              <span>per pull</span>
+            </div>
+          )}
+          {content.has_pity_system && content.pulls_to_pity && (
+            <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 shadow-lg border border-gray-200">
+              <span className="text-lg font-bold text-emerald-600">{content.pulls_to_pity}</span>
+              <span>pulls to pity</span>
+            </div>
+          )}
+          {content.cost_to_pity !== null && content.cost_to_pity > 0 && (
+            <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 shadow-lg border border-gray-200">
+              <span className="text-lg font-bold text-purple-600">${content.cost_to_pity.toFixed(2)}</span>
+              <span>to guarantee pity</span>
+            </div>
           )}
         </div>
       </div>
 
       {/* ─── MAIN CONTENT ─── */}
-      <div className="space-y-10">
-        {/* Section: Overview */}
-        {content.overview_html && (
-          <section>
-            <SectionHeader icon={BookOpen} title="Monetization Overview" />
-            <div
-              className="prose prose-gray max-w-none"
-              dangerouslySetInnerHTML={{ __html: content.overview_html }}
-            />
-          </section>
+      <div className="container-main">
+        <div className="space-y-10">
+          {/* Section: Overview */}
+          {content.overview_html && (
+            <section>
+              <SectionHeader icon={BookOpen} title="Monetization Overview" />
+              <div
+                className="prose prose-gray max-w-none"
+                dangerouslySetInnerHTML={{ __html: content.overview_html }}
+              />
+            </section>
         )}
 
-        {/* Section: Drop Rate Visualization */}
-        {dropRates.length > 0 && (
-          <section>
-            <SectionHeader icon={BarChart3} title="Drop Rate Breakdown" />
-            <div className="bg-white rounded-xl border border-gray-200 p-5 mb-4">
+          {/* Section: Drop Rate Visualization */}
+          {dropRates.length > 0 && (
+            <section>
+              <SectionHeader icon={BarChart3} title="Drop Rate Breakdown" />
+              <div className="bg-white rounded-xl border border-gray-200 p-5 mb-4">
               <DropRateBarChart items={dropRates} />
-            </div>
+              </div>
 
-            {/* Drop rate table */}
-            <div className="overflow-x-auto -mx-4 sm:mx-0">
+              {/* Drop rate table */}
+              <div className="overflow-x-auto -mx-4 sm:mx-0">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b-2 border-gray-200">
@@ -310,11 +346,11 @@ export default async function LootboxGamePage({
           </section>
         )}
 
-        {/* Section: Cost Calculator */}
-        {(content.cost_per_pull !== null || content.cost_to_pity !== null) && (
-          <section>
-            <SectionHeader icon={Zap} title="Expected Cost Analysis" />
-            <CostCalculator
+          {/* Section: Cost Calculator */}
+          {(content.cost_per_pull !== null || content.cost_to_pity !== null) && (
+            <section>
+              <SectionHeader icon={Zap} title="Expected Cost Analysis" />
+              <CostCalculator
               costPerPull={content.cost_per_pull}
               costToPity={content.cost_to_pity}
               pullsToPity={content.pulls_to_pity}
@@ -323,146 +359,147 @@ export default async function LootboxGamePage({
               currencyPerDollar={content.currency_per_dollar}
               topRarityRate={rarestItem?.drop_rate_pct ?? 0}
               topRarityName={rarestItem?.rarity ?? "Rare"}
-            />
-          </section>
-        )}
-
-        {/* Section: Pity System */}
-        {content.pity_explanation_html && (
-          <section>
-            <SectionHeader
-              icon={content.has_pity_system ? CheckCircle : AlertTriangle}
-              title={
-                content.has_pity_system
-                  ? "Pity System Explained"
-                  : "No Pity System"
-              }
-            />
-            <div
-              className="prose prose-gray max-w-none"
-              dangerouslySetInnerHTML={{ __html: content.pity_explanation_html }}
-            />
-          </section>
-        )}
-
-        {/* Section: Score Breakdown */}
-        {game.lootboxes_score !== null && (
-          <section>
-            <SectionHeader icon={Scale} title="Lootboxes Score Breakdown" />
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <ScoreBreakdown
-                overall={game.lootboxes_score}
-                transparency={content.score_transparency}
-                compliance={content.score_compliance}
-                ageGating={content.score_age_gating}
-                value={content.score_value}
-                fairness={content.score_fairness}
-                p2wImpact={content.score_p2w_impact}
-                playerControl={content.score_player_control}
-                psychDesign={content.score_psych_design}
               />
-            </div>
-          </section>
+            </section>
         )}
 
-        {/* Section: Historical Changes */}
-        {content.history_html && (
-          <section>
-            <SectionHeader icon={History} title="Historical Changes" />
-            <div
-              className="prose prose-gray max-w-none"
-              dangerouslySetInnerHTML={{ __html: content.history_html }}
-            />
-          </section>
-        )}
-
-        {/* Section: Comparison Table */}
-        {comparisons.length > 0 && (
-          <section>
-            <SectionHeader icon={BarChart3} title="Compared to Similar Games" />
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-              <ComparisonTable
-                current={{
-                  slug: game.slug,
-                  title: game.title,
-                  lootboxes_score: game.lootboxes_score,
-                  loot_system_type: game.loot_system_type,
-                  cost_per_pull: content.cost_per_pull,
-                  has_pity_system: content.has_pity_system,
-                  pulls_to_pity: content.pulls_to_pity,
-                }}
-                comparisons={comparisons}
+          {/* Section: Pity System */}
+          {content.pity_explanation_html && (
+            <section>
+              <SectionHeader
+                icon={content.has_pity_system ? CheckCircle : AlertTriangle}
+                title={
+                  content.has_pity_system
+                    ? "Pity System Explained"
+                    : "No Pity System"
+                }
               />
-            </div>
-          </section>
-        )}
-
-        {/* Section: Community Sentiment */}
-        {content.controversy_html && (
-          <section>
-            <SectionHeader
-              icon={Users}
-              title="Community Sentiment & Controversy"
-            />
-            <div
-              className="prose prose-gray max-w-none"
-              dangerouslySetInnerHTML={{ __html: content.controversy_html }}
-            />
-          </section>
-        )}
-
-        {/* Section: Spending Tips */}
-        {content.tips_html && (
-          <section>
-            <SectionHeader icon={Lightbulb} title="Spending Tips & Advice" />
-            <div className="bg-amber-50 rounded-xl border border-amber-200 p-6">
               <div
                 className="prose prose-gray max-w-none"
-                dangerouslySetInnerHTML={{ __html: content.tips_html }}
+                dangerouslySetInnerHTML={{ __html: content.pity_explanation_html }}
               />
-            </div>
-          </section>
+            </section>
         )}
 
-        {/* Section: Editorial */}
-        {content.editorial_html && (
-          <section>
-            <SectionHeader icon={BookOpen} title="Our Verdict" />
-            <div className="bg-gray-50 rounded-xl border border-gray-200 p-6 lg:p-8">
+          {/* Section: Score Breakdown */}
+          {game.lootboxes_score !== null && (
+            <section>
+              <SectionHeader icon={Scale} title="Lootboxes Score Breakdown" />
+              <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <ScoreBreakdown
+                  overall={game.lootboxes_score}
+                  transparency={content.score_transparency}
+                  compliance={content.score_compliance}
+                  ageGating={content.score_age_gating}
+                  value={content.score_value}
+                  fairness={content.score_fairness}
+                  p2wImpact={content.score_p2w_impact}
+                  playerControl={content.score_player_control}
+                  psychDesign={content.score_psych_design}
+                />
+              </div>
+            </section>
+        )}
+
+          {/* Section: Historical Changes */}
+          {content.history_html && (
+            <section>
+              <SectionHeader icon={History} title="Historical Changes" />
               <div
-                className="prose prose-gray prose-lg max-w-none"
-                dangerouslySetInnerHTML={{ __html: content.editorial_html }}
+                className="prose prose-gray max-w-none"
+                dangerouslySetInnerHTML={{ __html: content.history_html }}
               />
-            </div>
-          </section>
+            </section>
         )}
 
-        {/* Related Links */}
-        <section className="border-t border-gray-200 pt-8">
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href={`/games/${game.slug}`}
-              className="flex items-center gap-2 bg-blue-50 rounded-lg px-4 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100 transition-colors"
-            >
-              View Deals for {game.title}
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              href="/drop-rates"
-              className="flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors"
-            >
-              Drop Rate Database
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              href="/lootbox"
-              className="flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors"
-            >
-              All Loot Box Analyses
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </section>
+          {/* Section: Comparison Table */}
+          {comparisons.length > 0 && (
+            <section>
+              <SectionHeader icon={BarChart3} title="Compared to Similar Games" />
+              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                <ComparisonTable
+                  current={{
+                    slug: game.slug,
+                    title: game.title,
+                    lootboxes_score: game.lootboxes_score,
+                    loot_system_type: game.loot_system_type,
+                    cost_per_pull: content.cost_per_pull,
+                    has_pity_system: content.has_pity_system,
+                    pulls_to_pity: content.pulls_to_pity,
+                  }}
+                  comparisons={comparisons}
+                />
+              </div>
+            </section>
+        )}
+
+          {/* Section: Community Sentiment */}
+          {content.controversy_html && (
+            <section>
+              <SectionHeader
+                icon={Users}
+                title="Community Sentiment & Controversy"
+              />
+              <div
+                className="prose prose-gray max-w-none"
+                dangerouslySetInnerHTML={{ __html: content.controversy_html }}
+              />
+            </section>
+        )}
+
+          {/* Section: Spending Tips */}
+          {content.tips_html && (
+            <section>
+              <SectionHeader icon={Lightbulb} title="Spending Tips & Advice" />
+              <div className="bg-amber-50 rounded-xl border border-amber-200 p-6">
+                <div
+                  className="prose prose-gray max-w-none"
+                  dangerouslySetInnerHTML={{ __html: content.tips_html }}
+                />
+              </div>
+            </section>
+        )}
+
+          {/* Section: Editorial */}
+          {content.editorial_html && (
+            <section>
+              <SectionHeader icon={BookOpen} title="Our Verdict" />
+              <div className="bg-gray-50 rounded-xl border border-gray-200 p-6 lg:p-8">
+                <div
+                  className="prose prose-gray prose-lg max-w-none"
+                  dangerouslySetInnerHTML={{ __html: content.editorial_html }}
+                />
+              </div>
+            </section>
+        )}
+
+          {/* Related Links */}
+          <section className="border-t border-gray-200 pt-8">
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href={`/games/${game.slug}`}
+                className="flex items-center gap-2 bg-blue-50 rounded-lg px-4 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100 transition-colors"
+              >
+                View Deals for {game.title}
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/drop-rates"
+                className="flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors"
+              >
+                Drop Rate Database
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/lootbox"
+                className="flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors"
+              >
+                All Loot Box Analyses
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   );

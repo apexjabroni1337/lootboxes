@@ -1,3 +1,4 @@
+import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Trophy, Shield, DollarSign, Swords, AlertTriangle, TrendingUp } from 'lucide-react';
@@ -84,6 +85,21 @@ function avgScores(content: LootboxContent | LootboxContent[] | null, keys: (key
     return acc + scoreSum;
   }, 0);
   return parseFloat((sum / (arr.length * keys.length)).toFixed(1));
+}
+
+function getTier(score: number): { label: string; emoji: string; bgClass: string; textClass: string; borderClass: string; scoreRange: string } {
+  if (score >= 8) return { label: 'TIER S — Excellent', emoji: '🏆', bgClass: 'bg-emerald-50', textClass: 'text-emerald-700', borderClass: 'border-emerald-200', scoreRange: '8.0+' };
+  if (score >= 7) return { label: 'TIER A — Good', emoji: '⭐', bgClass: 'bg-emerald-50', textClass: 'text-emerald-600', borderClass: 'border-emerald-200', scoreRange: '7.0-7.9' };
+  if (score >= 5) return { label: 'TIER B — Average', emoji: '🎯', bgClass: 'bg-amber-50', textClass: 'text-amber-700', borderClass: 'border-amber-200', scoreRange: '5.0-6.9' };
+  if (score >= 3) return { label: 'TIER C — Below Average', emoji: '⚠️', bgClass: 'bg-orange-50', textClass: 'text-orange-700', borderClass: 'border-orange-200', scoreRange: '3.0-4.9' };
+  return { label: 'TIER D — Poor', emoji: '💀', bgClass: 'bg-rose-50', textClass: 'text-rose-700', borderClass: 'border-rose-200', scoreRange: '0-2.9' };
+}
+
+function getRankBadge(rank: number): { bgClass: string; textClass: string; metalColor: string } {
+  if (rank === 1) return { bgClass: 'bg-yellow-100', textClass: 'text-yellow-800', metalColor: 'gold' };
+  if (rank === 2) return { bgClass: 'bg-gray-200', textClass: 'text-gray-800', metalColor: 'silver' };
+  if (rank === 3) return { bgClass: 'bg-orange-100', textClass: 'text-orange-800', metalColor: 'bronze' };
+  return { bgClass: 'bg-gray-100', textClass: 'text-gray-700', metalColor: 'plain' };
 }
 
 function GameThumb({ game }: { game: Game }) {
@@ -367,48 +383,71 @@ export default async function RankingsPage() {
               </tr>
             </thead>
             <tbody>
-              {overallRanked.map((item, idx) => {
-                const protectionScore = avgScores(item.game.lootbox_content, ['score_transparency', 'score_compliance', 'score_age_gating']);
-                const valueScore = avgScores(item.game.lootbox_content, ['score_value', 'score_fairness', 'score_p2w_impact']);
-                const p2wScore = avgScores(item.game.lootbox_content, ['score_p2w_impact']);
-                const hasPity = toArray(item.game.lootbox_content).some((c) => c.has_pity_system);
-                const costPerPull = toArray(item.game.lootbox_content)[0]?.cost_per_pull;
+              {(() => {
+                let lastTier = '';
+                return overallRanked.map((item, idx) => {
+                  const tier = getTier(item.score);
+                  const showTierHeader = tier.label !== lastTier;
+                  lastTier = tier.label;
 
-                return (
-                  <tr key={item.game.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                    <td className="px-4 py-3 text-sm font-medium text-gray-700 sticky left-0 bg-inherit">{idx + 1}</td>
-                    <td className="px-4 py-3 text-sm sticky left-12 bg-inherit">
-                      <Link href={`/lootbox/${item.game.slug}`} className="flex items-center gap-2 font-medium text-gray-900 hover:text-[#0074c5] transition-colors">
-                        <GameThumb game={item.game} />
-                        {item.game.title}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3 text-sm">
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${systemLabel(item.game.loot_system_type).color}`}>
-                        {systemLabel(item.game.loot_system_type).label}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <span className={`px-2 py-1 rounded text-xs font-bold inline-block ${scoreColor(item.score)}`}>{item.score}</span>
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <span className={`px-2 py-1 rounded text-xs font-bold inline-block ${scoreColor(protectionScore)}`}>{protectionScore}</span>
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <span className={`px-2 py-1 rounded text-xs font-bold inline-block ${scoreColor(valueScore)}`}>{valueScore}</span>
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <span className={`px-2 py-1 rounded text-xs font-bold inline-block ${scoreColor(p2wScore)}`}>{p2wScore}</span>
-                    </td>
-                    <td className="px-4 py-3 text-center text-sm">
-                      <span className="text-gray-700">{hasPity ? '✓' : '—'}</span>
-                    </td>
-                    <td className="px-4 py-3 text-center text-sm">
-                      <span className="text-gray-700">{costPerPull ? `$${costPerPull.toFixed(2)}` : '—'}</span>
-                    </td>
-                  </tr>
-                );
-              })}
+                  const protectionScore = avgScores(item.game.lootbox_content, ['score_transparency', 'score_compliance', 'score_age_gating']);
+                  const valueScore = avgScores(item.game.lootbox_content, ['score_value', 'score_fairness', 'score_p2w_impact']);
+                  const p2wScore = avgScores(item.game.lootbox_content, ['score_p2w_impact']);
+                  const hasPity = toArray(item.game.lootbox_content).some((c) => c.has_pity_system);
+                  const costPerPull = toArray(item.game.lootbox_content)[0]?.cost_per_pull;
+                  const rankBadge = getRankBadge(idx + 1);
+
+                  return (
+                    <React.Fragment key={item.game.id}>
+                      {showTierHeader && (
+                        <tr>
+                          <td colSpan={9} className={`px-4 py-2 ${tier.bgClass} border-y ${tier.borderClass}`}>
+                            <span className={`text-xs font-bold uppercase tracking-wider ${tier.textClass}`}>
+                              {tier.emoji} {tier.label} ({tier.scoreRange})
+                            </span>
+                          </td>
+                        </tr>
+                      )}
+                      <tr className="hover:bg-blue-50/50 transition-colors">
+                        <td className={`px-4 py-3 text-sm font-medium sticky left-0 bg-inherit ${rankBadge.bgClass}`}>
+                          <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style={{ backgroundColor: rankBadge.bgClass }}>
+                            <span className={rankBadge.textClass}>{idx + 1}</span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-sm sticky left-12 bg-inherit hover:bg-blue-50/50">
+                          <Link href={`/lootbox/${item.game.slug}`} className="flex items-center gap-2 font-medium text-gray-900 hover:text-[#0074c5] transition-colors">
+                            <GameThumb game={item.game} />
+                            {item.game.title}
+                          </Link>
+                        </td>
+                        <td className="px-4 py-3 text-sm">
+                          <span className={`px-2 py-1 rounded text-xs font-medium ${systemLabel(item.game.loot_system_type).color}`}>
+                            {systemLabel(item.game.loot_system_type).label}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <span className="text-base font-bold text-gray-900">{item.score}</span>
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <span className={`px-2 py-1 rounded text-xs font-bold inline-block ${scoreColor(protectionScore)}`}>{protectionScore}</span>
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <span className={`px-2 py-1 rounded text-xs font-bold inline-block ${scoreColor(valueScore)}`}>{valueScore}</span>
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <span className={`px-2 py-1 rounded text-xs font-bold inline-block ${scoreColor(p2wScore)}`}>{p2wScore}</span>
+                        </td>
+                        <td className="px-4 py-3 text-center text-sm">
+                          <span className="text-gray-700">{hasPity ? '✓' : '—'}</span>
+                        </td>
+                        <td className="px-4 py-3 text-center text-sm">
+                          <span className="text-gray-700">{costPerPull ? `$${costPerPull.toFixed(2)}` : '—'}</span>
+                        </td>
+                      </tr>
+                    </React.Fragment>
+                  );
+                });
+              })()}
             </tbody>
           </table>
         </div>

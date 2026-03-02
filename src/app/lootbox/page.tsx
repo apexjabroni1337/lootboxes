@@ -112,6 +112,7 @@ interface GameWithContent {
   title: string;
   slug: string;
   cover_image: string | null;
+  screenshot_image: string | null;
   lootboxes_score: number | null;
   loot_system_type: string | null;
   lootbox_content: LootboxContentRow | LootboxContentRow[] | null;
@@ -165,7 +166,7 @@ async function getGamesWithLootboxContent(
   let query = supabase
     .from("games")
     .select(
-      `id, title, slug, cover_image, lootboxes_score, loot_system_type,
+      `id, title, slug, cover_image, screenshot_image, lootboxes_score, loot_system_type,
        lootbox_content (cost_per_pull, has_pity_system, overview_html)`
     )
     .not("loot_system_type", "is", null)
@@ -198,17 +199,59 @@ export default async function LootboxHubPage({
 
   return (
     <div className="container-main py-8">
-      {/* Hero */}
+      {/* Dark Hero Section (unfiltered only) */}
+      {!typeFilter && (
+        <div className="mb-12 -mx-6 -mt-8 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 rounded-2xl overflow-hidden">
+          <div className="px-8 py-12">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 bg-blue-500/20 border border-blue-400/30 rounded-full px-3.5 py-1.5 mb-6">
+              <Sparkles className="w-3.5 h-3.5 text-blue-300" />
+              <span className="text-xs font-semibold text-blue-200 uppercase tracking-wider">LOOT BOX DATABASE</span>
+            </div>
+
+            {/* Main Heading */}
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 max-w-3xl leading-tight">
+              Every Game&apos;s Monetization,<br className="hidden md:block" /> Analyzed &amp; Scored
+            </h1>
+            <p className="text-lg text-blue-200/80 max-w-2xl mb-2">
+              Drop rates, pity systems, cost breakdowns, and fairness scores for {games.length} major games. Data-driven. No guesswork.
+            </p>
+
+            {/* Stats Row */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-10">
+              <div>
+                <p className="text-4xl md:text-5xl font-bold text-white">{games.length}</p>
+                <p className="text-blue-200 text-sm mt-1">Games Analyzed</p>
+              </div>
+              <div>
+                <p className="text-4xl md:text-5xl font-bold text-white">{totalDropRates}+</p>
+                <p className="text-blue-200 text-sm mt-1">Drop Rates Tracked</p>
+              </div>
+              <div>
+                <p className="text-4xl md:text-5xl font-bold text-white">
+                  {games.length > 0 ? (games.reduce((s, g) => s + (g.lootboxes_score || 0), 0) / games.length).toFixed(1) : "—"}
+                </p>
+                <p className="text-blue-200 text-sm mt-1">Avg Score</p>
+              </div>
+              <div>
+                <p className="text-4xl md:text-5xl font-bold text-white">8</p>
+                <p className="text-blue-200 text-sm mt-1">Score Dimensions</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Hero (filtered views) */}
+      {typeFilter && (
       <div className="mb-10">
-        {typeFilter && (
-          <Link
-            href="/lootbox"
-            className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 mb-4 transition-colors"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            All Games
-          </Link>
-        )}
+        <Link
+          href="/lootbox"
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 mb-4 transition-colors"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          All Games
+        </Link>
         <div className="flex items-center gap-3 mb-3">
           <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${
             typeMeta
@@ -226,12 +269,10 @@ export default async function LootboxHubPage({
           </h1>
         </div>
         <p className="text-lg text-gray-600 max-w-2xl">
-          {typeMeta
-            ? typeMeta.subtitle
-            : "In-depth analysis of every major game\u2019s monetization system. Drop rates, cost breakdowns, pity mechanics, and expert reviews \u2014 all in one place."}
+          {typeMeta ? typeMeta.subtitle : ""}
         </p>
 
-        {/* Stats */}
+        {/* Stats (filtered views only) */}
         <div className="flex flex-wrap gap-4 mt-6">
           <div className={`flex items-center gap-2 rounded-lg px-4 py-2.5 border ${
             typeMeta
@@ -243,33 +284,14 @@ export default async function LootboxHubPage({
               {games.length} {typeMeta ? `${typeMeta.heading.replace(" Games", "")} Game${games.length !== 1 ? "s" : ""}` : "Games Analyzed"}
             </span>
           </div>
-          {!typeFilter && (
-            <>
-              <div className="flex items-center gap-2 bg-purple-50 rounded-lg px-4 py-2.5 border border-purple-100">
-                <Zap className="w-4 h-4 text-purple-600" />
-                <span className="text-sm font-semibold text-purple-900">
-                  {totalDropRates}+ Drop Rates Tracked
-                </span>
-              </div>
-              <div className="flex items-center gap-2 bg-emerald-50 rounded-lg px-4 py-2.5 border border-emerald-100">
-                <CheckCircle className="w-4 h-4 text-emerald-600" />
-                <span className="text-sm font-semibold text-emerald-900">
-                  Officially Verified Data
-                </span>
-              </div>
-            </>
-          )}
-          {typeFilter && (
-            <div className="flex items-center gap-2 bg-gray-50 rounded-lg px-4 py-2.5 border border-gray-200">
-              <span className="text-sm font-semibold text-gray-700">
-                Avg Score: {games.length > 0 ? (games.reduce((s, g) => s + (g.lootboxes_score || 0), 0) / games.length).toFixed(1) : "—"}
-              </span>
-            </div>
-          )}
+          <div className="flex items-center gap-2 bg-gray-50 rounded-lg px-4 py-2.5 border border-gray-200">
+            <span className="text-sm font-semibold text-gray-700">
+              Avg Score: {games.length > 0 ? (games.reduce((s, g) => s + (g.lootboxes_score || 0), 0) / games.length).toFixed(1) : "—"}
+            </span>
+          </div>
         </div>
 
         {/* Type filter pills (shown on filtered pages) */}
-        {typeFilter && (
           <div className="flex flex-wrap gap-2 mt-5">
             {VALID_TYPES.filter(t => t !== "battle_pass").map((t) => {
               const meta = SYSTEM_TYPE_META[t];
@@ -295,8 +317,8 @@ export default async function LootboxHubPage({
               View All
             </Link>
           </div>
-        )}
       </div>
+      )}
 
       {/* Rankings CTA */}
       {!typeFilter && (
@@ -381,67 +403,72 @@ export default async function LootboxHubPage({
         {games.map((game) => {
           const content = toContentArray(game.lootbox_content)[0];
           const sys = systemLabel(game.loot_system_type);
+          const bannerImage = game.screenshot_image || game.cover_image;
           return (
             <Link
               key={game.slug}
               href={`/lootbox/${game.slug}`}
-              className="group flex gap-4 rounded-xl border border-gray-200 bg-white p-4 hover:shadow-lg hover:border-blue-200 transition-all"
+              className="group rounded-xl border border-gray-200 bg-white overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all"
             >
-              {/* Image */}
-              <div className="flex-shrink-0 w-24 h-32 rounded-lg overflow-hidden bg-gray-100">
-                {game.cover_image ? (
+              {/* Banner Section */}
+              <div className="relative h-20 overflow-hidden bg-gray-100">
+                {bannerImage ? (
                   <img
-                    src={game.cover_image}
+                    src={bannerImage}
                     alt={game.title}
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <GameAvatar gameName={game.title} aspectRatio="portrait" size="md" />
+                  <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300"></div>
+                )}
+                {/* Dark overlay */}
+                <div className="absolute inset-0 bg-black/20"></div>
+
+                {/* Score Ring - positioned at top right */}
+                {game.lootboxes_score !== null && (
+                  <div
+                    className={`absolute top-3 right-3 ${scoreColor(
+                      game.lootboxes_score
+                    )} w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold border-2 border-white shadow-lg`}
+                  >
+                    {game.lootboxes_score.toFixed(1)}
+                  </div>
                 )}
               </div>
 
-              {/* Info */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <h2 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-1">
+              {/* Content Section */}
+              <div className="p-4">
+                <div className="mb-3">
+                  <h2 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2 text-base">
                     {game.title}
                   </h2>
-                  {game.lootboxes_score !== null && (
-                    <div
-                      className={`flex-shrink-0 ${scoreColor(
-                        game.lootboxes_score
-                      )} text-white text-sm font-bold h-8 w-10 rounded-lg flex items-center justify-center`}
-                    >
-                      {game.lootboxes_score.toFixed(1)}
-                    </div>
-                  )}
                 </div>
 
                 {/* Badges */}
-                <div className="flex flex-wrap gap-2 mb-2">
+                <div className="flex flex-wrap gap-2 mb-3">
                   <span
-                    className={`text-xs font-medium px-2 py-0.5 rounded-full ${sys.color}`}
+                    className={`text-xs font-medium px-2.5 py-1 rounded-full ${sys.color}`}
                   >
                     {sys.label}
                   </span>
                   {content?.has_pity_system && (
-                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+                    <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700">
                       Has Pity System
                     </span>
                   )}
                   {content?.cost_per_pull !== null && content.cost_per_pull > 0 && (
-                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+                    <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-gray-100 text-gray-600">
                       ${content.cost_per_pull.toFixed(2)}/pull
                     </span>
                   )}
                 </div>
 
                 {/* Verdict */}
-                <p className="text-sm text-gray-500 line-clamp-2">
+                <p className="text-sm text-gray-500 line-clamp-2 mb-2">
                   {scoreVerdict(game.lootboxes_score)}
                 </p>
 
-                <span className="inline-block mt-2 text-sm font-medium text-blue-600 group-hover:underline">
+                <span className="inline-block text-sm font-medium text-blue-600 group-hover:underline">
                   View Full Analysis →
                 </span>
               </div>
