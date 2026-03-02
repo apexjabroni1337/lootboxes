@@ -73,7 +73,8 @@ async function getDeals() {
         slug,
         cover_image,
         screenshot_image,
-        hot_score
+        hot_score,
+        genres
       )
     `)
     .order("discount_pct", { ascending: false })
@@ -111,8 +112,16 @@ async function getDeals() {
   return sorted.slice(0, 100);
 }
 
-export default async function DealsPage() {
+export default async function DealsPage({
+  searchParams,
+}: {
+  searchParams: { genre?: string; max?: string; min_discount?: string; filter?: string };
+}) {
   const deals = await getDeals();
+  const activeGenre = searchParams.genre || null;
+  const maxPrice = searchParams.max ? Number(searchParams.max) : null;
+  const minDiscount = searchParams.min_discount ? Number(searchParams.min_discount) : null;
+  const quickFilter = searchParams.filter || null;
   const historicLowCount = deals.filter((d: any) => d.is_historic_low).length;
   const bigDiscountCount = deals.filter(
     (d: any) => d.discount_pct >= 50
@@ -267,7 +276,13 @@ export default async function DealsPage() {
           <h2 className="mb-6 text-2xl font-bold text-gray-900">
             All Deals
           </h2>
-          <DealsFilter deals={deals} />
+          <DealsFilter
+            deals={deals}
+            initialGenre={activeGenre}
+            initialMaxPrice={maxPrice}
+            initialMinDiscount={minDiscount}
+            initialQuickFilter={quickFilter}
+          />
 
           {/* Bottom CTA */}
           <div className="mt-10 rounded-xl border border-brand-200 bg-gradient-to-r from-brand-50 to-white p-6 sm:p-8">

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { formatPrice, formatDiscount, timeAgo } from "@/lib/utils";
 import { STORES } from "@/lib/types";
 import {
@@ -13,10 +14,20 @@ import {
   Tag,
   Star,
   DollarSign,
+  X,
+  Swords,
+  Gamepad2,
+  Crosshair,
+  Globe,
+  Car,
+  Puzzle,
+  Users,
+  Trophy,
 } from "lucide-react";
 import GameAvatar from "@/components/ui/GameAvatar";
 import StoreIcon from "@/components/ui/StoreIcon";
 
+/* ── Price / discount tabs ── */
 const TABS = [
   { id: "top", label: "Top Picks", icon: Sparkles },
   { id: "historic", label: "Historic Lows", icon: TrendingDown },
@@ -27,28 +38,107 @@ const TABS = [
 
 type TabId = (typeof TABS)[number]["id"];
 
-interface DealsFilterProps {
-  deals: any[];
+/* ── Genre pills ── */
+const GENRE_OPTIONS = [
+  { id: "action", label: "Action", icon: Swords },
+  { id: "rpg", label: "RPG", icon: Gamepad2 },
+  { id: "fps", label: "FPS", icon: Crosshair },
+  { id: "open-world", label: "Open World", icon: Globe },
+  { id: "racing", label: "Racing", icon: Car },
+  { id: "strategy", label: "Strategy", icon: Puzzle },
+  { id: "multiplayer", label: "Multiplayer", icon: Users },
+  { id: "sports", label: "Sports", icon: Trophy },
+] as const;
+
+/* ── helpers to match genre strings loosely ── */
+function normalise(s: string) {
+  return s.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
-export default function DealsFilter({ deals }: DealsFilterProps) {
-  const [activeTab, setActiveTab] = useState<TabId>("top");
+function gameMatchesGenre(genres: string[] | null | undefined, genreId: string): boolean {
+  if (!genres || genres.length === 0) return false;
+  const target = normalise(genreId);
+  return genres.some((g) => {
+    const n = normalise(g);
+    // exact match or substring — e.g. "role-playing" matches "rpg" via alias
+    if (n === target) return true;
+    // common aliases
+    if (target === "rpg" && (n.includes("role") || n.includes("rpg"))) return true;
+    if (target === "fps" && (n.includes("shooter") || n.includes("fps"))) return true;
+    if (target === "openworld" && (n.includes("openworld") || n.includes("adventure") || n.includes("sandbox"))) return true;
+    if (target === "action" && n.includes("action")) return true;
+    if (target === "racing" && n.includes("racing")) return true;
+    if (target === "strategy" && n.includes("strategy")) return true;
+    if (target === "multiplayer" && (n.includes("multiplayer") || n.includes("mmo"))) return true;
+    if (target === "sports" && n.includes("sport")) return true;
+    return false;
+  });
+}
 
-  const filtered = deals.filter((deal: any) => {
+/* ── Derive initial tab from quick-filter URL params ── */
+function deriveInitialTab(
+  quickFilter: string | null,
+  maxPrice: number | null,
+  minDiscount: number | null,
+): TabId {
+  if (quickFilter === "historic") return "historic";
+  if (maxPrice === 10) return "under10";
+  if (maxPrice === 20) return "under20";
+  if (minDiscount && minDiscount >= 50) return "top";
+  return "top";
+}
+
+/* ── Component ── */
+
+interface DealsFilterProps {
+  deals: any[];
+  initialGenre?: string | null;
+  initialMaxPrice?: number | null;
+  initialMinDiscount?: number | null;
+  initialQuickFilter?: string | null;
+}
+
+export default function DealsFilter({
+  deals,
+  initialGenre = null,
+  initialMaxPrice = null,
+  initialMinDiscount = null,
+  initialQuickFilter = null,
+}: DealsFilterProps) {
+  const [activeTab, setActiveTab] = useState<TabId>(
+    deriveInitialTab(initialQuickFilter, initialMaxPrice, initialMinDiscount)
+  );
+  const [activeGenre, setActiveGenre] = useState<string | null>(initialGenre);
+
+  const filtered = useMemo(() => {
+    let result = deals;
+
+    // Tab filter
     switch (activeTab) {
       case "top":
-        return deal.discount_pct >= 40;
+        result = result.filter((d: any) => d.discount_pct >= 40);
+        break;
       case "historic":
-        return deal.is_historic_low;
+        result = result.filter((d: any) => d.is_historic_low);
+        break;
       case "under10":
-        return deal.price <= 10;
+        result = result.filter((d: any) => d.price <= 10);
+        break;
       case "under20":
-        return deal.price <= 20;
+        result = result.filter((d: any) => d.price <= 20);
+        break;
       case "all":
       default:
-        return true;
+        break;
     }
-  });
+
+    // Genre filter
+    if (activeGenre) {
+      result = result.filter((d: any) => gameMatchesGenre(d.games?.genres, activeGenre));
+    }
+
+    return result;
+  }, [deals, activeTab, activeGenre]);
 
   return (
     <div>
@@ -74,17 +164,54 @@ export default function DealsFilter({ deals }: DealsFilterProps) {
         })}
       </div>
 
+      {/* Genre filter pills */}
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <span className="text-xs font-medium text-gray-400 uppercase tracking-wider mr-1">Genre:</span>
+        {GENRE_OPTIONS.map((genre) => {
+          const Icon = genre.icon;
+          const isActive = activeGenre === genre.id;
+          return (
+            <button
+              key={genre.id}
+              onClick={() => setActiveGenre(isActive ? null : genre.id)}
+              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
+                isActive
+                  ? "bg-brand-600 text-white shadow-sm"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              <Icon className="h-3 w-3" />
+              {genre.label}
+              {isActive && <X className="h-3 w-3 ml-0.5" />}
+            </button>
+          );
+        })}
+        {activeGenre && (
+          <button
+            onClick={() => setActiveGenre(null)}
+            className="text-xs text-gray-400 hover:text-gray-600 underline ml-1"
+          >
+            Clear
+          </button>
+        )}
+      </div>
+
       {/* Results count */}
       <div className="mt-4 flex items-center justify-between">
         <p className="text-sm text-gray-500">
           Showing <span className="font-medium text-gray-900">{filtered.length}</span> deals
+          {activeGenre && (
+            <span className="text-gray-400">
+              {" "}in <span className="font-medium text-brand-600">{GENRE_OPTIONS.find(g => g.id === activeGenre)?.label}</span>
+            </span>
+          )}
         </p>
       </div>
 
       {/* Deals grid */}
       {filtered.length === 0 ? (
         <div className="mt-4 rounded-xl border border-gray-200 bg-white p-12 text-center">
-          <p className="text-gray-500">No deals match this filter. Try another tab!</p>
+          <p className="text-gray-500">No deals match this filter.{activeGenre ? " Try removing the genre filter or switching tabs!" : " Try another tab!"}</p>
         </div>
       ) : (
         <div className="mt-4 space-y-2">
