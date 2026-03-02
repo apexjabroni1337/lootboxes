@@ -89,6 +89,74 @@
   }
 }
 
+/* ── Prose typography fallback (works with or without @tailwindcss/typography) ── */
+.prose {
+  color: #374151;
+  line-height: 1.75;
+  font-size: 1rem;
+}
+.prose p {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+}
+.prose p:first-child {
+  margin-top: 0;
+}
+.prose p:last-child {
+  margin-bottom: 0;
+}
+.prose strong {
+  font-weight: 700;
+  color: #111827;
+}
+.prose ul, .prose ol {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  padding-left: 1.625em;
+}
+.prose li {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+.prose ul > li {
+  list-style-type: disc;
+}
+.prose ol > li {
+  list-style-type: decimal;
+}
+.prose h3 {
+  font-size: 1.25em;
+  font-weight: 700;
+  margin-top: 1.6em;
+  margin-bottom: 0.6em;
+  color: #111827;
+}
+.prose h4 {
+  font-weight: 700;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: #111827;
+}
+.prose a {
+  color: #0074c5;
+  text-decoration: underline;
+}
+.prose a:hover {
+  color: #015da0;
+}
+.prose blockquote {
+  border-left: 3px solid #e5e7eb;
+  padding-left: 1em;
+  font-style: italic;
+  margin-top: 1.6em;
+  margin-bottom: 1.6em;
+  color: #6b7280;
+}
+.prose-lg {
+  font-size: 1.125rem;
+  line-height: 1.8;
+}
+
 @layer utilities {
   /* Hide scrollbar for Chrome, Safari, Edge */
   .scrollbar-hide::-webkit-scrollbar {
