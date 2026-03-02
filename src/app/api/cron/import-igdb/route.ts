@@ -177,46 +177,30 @@ export async function GET(request: NextRequest) {
       const token = await getTwitchToken();
       const clientId = process.env.TWITCH_CLIENT_ID!;
 
-      // Test 1: Simplest possible query
+      const hdrs = {
+        "Client-ID": clientId,
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "text/plain",
+      };
+
+      // Test 1: No where clause (works)
       const res1 = await fetch("https://api.igdb.com/v4/games", {
-        method: "POST",
-        headers: {
-          "Client-ID": clientId,
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "text/plain",
-        },
-        body: `fields name; limit 3;`,
+        method: "POST", headers: hdrs,
+        body: "fields name; limit 3;",
       });
       const text1 = await res1.text();
 
-      // Test 2: With platform filter
+      // Test 2: Just where category = 0
       const res2 = await fetch("https://api.igdb.com/v4/games", {
-        method: "POST",
-        headers: {
-          "Client-ID": clientId,
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "text/plain",
-        },
-        body: `fields name, cover.image_id, platforms.abbreviation;
-               where category = 0 & cover != null & platforms != null;
-               sort id asc;
-               limit 3;`,
+        method: "POST", headers: hdrs,
+        body: "fields name; where category = 0; limit 3;",
       });
       const text2 = await res2.text();
 
-      // Test 3: Full query
+      // Test 3: where cover != null
       const res3 = await fetch("https://api.igdb.com/v4/games", {
-        method: "POST",
-        headers: {
-          "Client-ID": clientId,
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "text/plain",
-        },
-        body: `fields name, slug, cover.image_id, platforms.abbreviation, external_games.category, external_games.uid;
-               where category = 0 & cover != null & platforms != null;
-               sort id asc;
-               limit 3;
-               offset 0;`,
+        method: "POST", headers: hdrs,
+        body: "fields name, cover.image_id; where cover != null; limit 3;",
       });
       const text3 = await res3.text();
 
