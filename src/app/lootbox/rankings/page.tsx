@@ -33,7 +33,7 @@ interface Game {
   cover_image: string | null;
   lootboxes_score: number;
   loot_system_type: string;
-  lootbox_content: LootboxContent[];
+  lootbox_content: LootboxContent | LootboxContent[];
 }
 
 interface RankedGame {
@@ -67,16 +67,23 @@ function scoreColor(score: number): string {
   return 'bg-rose-100 text-rose-800';
 }
 
-function avgScores(content: LootboxContent[], keys: (keyof LootboxContent)[]): number {
-  if (!content || content.length === 0) return 0;
-  const sum = content.reduce((acc, item) => {
+function toArray(content: LootboxContent | LootboxContent[] | null): LootboxContent[] {
+  if (!content) return [];
+  return Array.isArray(content) ? content : [content];
+}
+
+function avgScores(content: LootboxContent | LootboxContent[] | null, keys: (keyof LootboxContent)[]): number {
+  if (!content) return 0;
+  const arr = Array.isArray(content) ? content : [content];
+  if (arr.length === 0) return 0;
+  const sum = arr.reduce((acc, item) => {
     const scoreSum = keys.reduce((keyAcc, key) => {
       const val = item[key];
       return keyAcc + (typeof val === 'number' ? val : 0);
     }, 0);
     return acc + scoreSum;
   }, 0);
-  return parseFloat((sum / (content.length * keys.length)).toFixed(1));
+  return parseFloat((sum / (arr.length * keys.length)).toFixed(1));
 }
 
 // Main Component
@@ -137,7 +144,7 @@ export default async function RankingsPage() {
   // Calculate stats
   const avgScore = parseFloat((overallRanked.reduce((sum, item) => sum + item.score, 0) / overallRanked.length).toFixed(1));
   const pityPercentage = Math.round(
-    (games.filter((g) => g.lootbox_content.some((c) => c.has_pity_system)).length / games.length) * 100
+    (games.filter((g) => toArray(g.lootbox_content).some((c) => c.has_pity_system)).length / games.length) * 100
   );
 
   const systemTypeDistribution = games.reduce(
@@ -349,8 +356,8 @@ export default async function RankingsPage() {
                 const protectionScore = avgScores(item.game.lootbox_content, ['score_transparency', 'score_compliance', 'score_age_gating']);
                 const valueScore = avgScores(item.game.lootbox_content, ['score_value', 'score_fairness', 'score_p2w_impact']);
                 const p2wScore = avgScores(item.game.lootbox_content, ['score_p2w_impact']);
-                const hasPity = item.game.lootbox_content.some((c) => c.has_pity_system);
-                const costPerPull = item.game.lootbox_content[0]?.cost_per_pull;
+                const hasPity = toArray(item.game.lootbox_content).some((c) => c.has_pity_system);
+                const costPerPull = toArray(item.game.lootbox_content)[0]?.cost_per_pull;
 
                 return (
                   <tr key={item.game.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
