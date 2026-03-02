@@ -23,6 +23,7 @@ import {
   Sparkles,
   Layers,
   ShoppingBag,
+  Shield,
 } from "lucide-react";
 import SearchDialog from "@/components/search/SearchDialog";
 import Logo from "@/components/brand/Logo";
@@ -50,6 +51,7 @@ const LOOTBOX_TYPES = [
   { label: "Loot Box", href: "/lootbox?type=loot_box", icon: Box },
   { label: "Card Pack", href: "/lootbox?type=card_pack", icon: Layers },
   { label: "Cosmetic Shop", href: "/lootbox?type=cosmetic_shop", icon: ShoppingBag },
+  { label: "Battle Pass", href: "/lootbox?type=battle_pass", icon: Shield },
 ];
 
 const LOOTBOX_POPULAR = [

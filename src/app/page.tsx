@@ -99,6 +99,13 @@ const SYSTEM_TYPES = [
     icon: ShoppingBag,
     gradient: "from-emerald-500 to-teal-600",
   },
+  {
+    type: "battle_pass",
+    label: "Battle Passes",
+    description: "Progression pacing, premium value & reward fairness",
+    icon: Shield,
+    gradient: "from-amber-500 to-orange-600",
+  },
 ];
 
 // Analytics section mock data
@@ -250,7 +257,7 @@ export default async function HomePage() {
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {SYSTEM_TYPES.map((st) => {
               const count = games.filter(
                 (g) => g.loot_system_type === st.type
