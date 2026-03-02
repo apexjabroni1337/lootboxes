@@ -73,6 +73,32 @@ export interface DropRate {
   game?: Game;
 }
 
+export interface LootboxContent {
+  id: string;
+  game_id: string;
+  cost_per_pull: number | null;
+  cost_to_pity: number | null;
+  pulls_to_pity: number | null;
+  has_pity_system: boolean;
+  currency_name: string | null;
+  currency_per_dollar: number | null;
+  score_transparency: number | null;
+  score_value: number | null;
+  score_fairness: number | null;
+  score_player_control: number | null;
+  overview_html: string | null;
+  pity_explanation_html: string | null;
+  history_html: string | null;
+  controversy_html: string | null;
+  tips_html: string | null;
+  editorial_html: string | null;
+  comparable_slugs: string[] | null;
+  published_at: string;
+  updated_at: string;
+  // Joined
+  game?: Game;
+}
+
 export interface Click {
   id: string;
   deal_id: string;

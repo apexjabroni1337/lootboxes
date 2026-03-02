@@ -18,6 +18,11 @@ import {
   Puzzle,
   Users,
   Trophy,
+  Zap,
+  Box,
+  Sparkles,
+  Layers,
+  ShoppingBag,
 } from "lucide-react";
 import SearchDialog from "@/components/search/SearchDialog";
 
@@ -39,6 +44,22 @@ const QUICK_LINKS = [
   { label: "50%+ Off", href: "/deals?min_discount=50", color: "bg-red-50 text-red-700" },
 ];
 
+const LOOTBOX_TYPES = [
+  { label: "Gacha", href: "/lootbox?type=gacha", icon: Sparkles },
+  { label: "Loot Box", href: "/lootbox?type=loot_box", icon: Box },
+  { label: "Card Pack", href: "/lootbox?type=card_pack", icon: Layers },
+  { label: "Cosmetic Shop", href: "/lootbox?type=cosmetic_shop", icon: ShoppingBag },
+];
+
+const LOOTBOX_POPULAR = [
+  { label: "Genshin Impact", href: "/lootbox/genshin-impact" },
+  { label: "Counter-Strike 2", href: "/lootbox/counter-strike-2" },
+  { label: "EA FC 25", href: "/lootbox/ea-fc-25" },
+  { label: "Fortnite", href: "/lootbox/fortnite" },
+  { label: "Apex Legends", href: "/lootbox/apex-legends" },
+  { label: "Valorant", href: "/lootbox/valorant" },
+];
+
 const TRENDING_SEARCHES = [
   "Elden Ring",
   "Baldur's Gate 3",
@@ -51,8 +72,11 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
+  const [lootboxMegaOpen, setLootboxMegaOpen] = useState(false);
   const megaRef = useRef<HTMLDivElement>(null);
+  const lootboxMegaRef = useRef<HTMLDivElement>(null);
   const megaTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lootboxTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Cmd+K / Ctrl+K shortcut to open search
   useEffect(() => {
@@ -66,11 +90,14 @@ export default function Header() {
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
-  // Close mega menu on outside click
+  // Close mega menus on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (megaRef.current && !megaRef.current.contains(e.target as Node)) {
         setMegaOpen(false);
+      }
+      if (lootboxMegaRef.current && !lootboxMegaRef.current.contains(e.target as Node)) {
+        setLootboxMegaOpen(false);
       }
     };
     document.addEventListener("mousedown", handler);
@@ -80,9 +107,18 @@ export default function Header() {
   const openMega = () => {
     if (megaTimeout.current) clearTimeout(megaTimeout.current);
     setMegaOpen(true);
+    setLootboxMegaOpen(false);
   };
   const closeMega = () => {
     megaTimeout.current = setTimeout(() => setMegaOpen(false), 150);
+  };
+  const openLootboxMega = () => {
+    if (lootboxTimeout.current) clearTimeout(lootboxTimeout.current);
+    setLootboxMegaOpen(true);
+    setMegaOpen(false);
+  };
+  const closeLootboxMega = () => {
+    lootboxTimeout.current = setTimeout(() => setLootboxMegaOpen(false), 150);
   };
 
   return (
@@ -110,6 +146,88 @@ export default function Header() {
                 <Flame className="h-3.5 w-3.5 text-orange-500" />
                 Hot Deals
               </Link>
+
+              {/* Loot Box mega menu trigger */}
+              <div
+                ref={lootboxMegaRef}
+                className="relative"
+                onMouseEnter={openLootboxMega}
+                onMouseLeave={closeLootboxMega}
+              >
+                <button
+                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                  onClick={() => setLootboxMegaOpen(!lootboxMegaOpen)}
+                >
+                  <Zap className="h-3.5 w-3.5 text-purple-500" />
+                  Loot Box
+                  <ChevronDown
+                    className={`h-3.5 w-3.5 transition-transform ${lootboxMegaOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {lootboxMegaOpen && (
+                  <div className="absolute left-0 top-full z-50 mt-1 w-[460px] rounded-xl border border-gray-200 bg-white p-5 shadow-xl">
+                    <div className="grid grid-cols-2 gap-6">
+                      {/* By System Type */}
+                      <div>
+                        <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                          By System Type
+                        </h4>
+                        <div className="space-y-0.5">
+                          {LOOTBOX_TYPES.map((t) => (
+                            <Link
+                              key={t.label}
+                              href={t.href}
+                              onClick={() => setLootboxMegaOpen(false)}
+                              className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
+                            >
+                              <t.icon className="h-4 w-4 text-gray-400" />
+                              {t.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Popular Games */}
+                      <div>
+                        <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                          Popular Games
+                        </h4>
+                        <div className="space-y-0.5">
+                          {LOOTBOX_POPULAR.map((g) => (
+                            <Link
+                              key={g.label}
+                              href={g.href}
+                              onClick={() => setLootboxMegaOpen(false)}
+                              className="block rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
+                            >
+                              {g.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bottom bar */}
+                    <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
+                      <Link
+                        href="/lootbox"
+                        onClick={() => setLootboxMegaOpen(false)}
+                        className="text-sm font-medium text-brand-600 hover:text-brand-700"
+                      >
+                        View all analyzed games →
+                      </Link>
+                      <Link
+                        href="/drop-rates"
+                        onClick={() => setLootboxMegaOpen(false)}
+                        className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                      >
+                        Drop Rate Database
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {/* Games mega menu trigger */}
               <div
@@ -224,12 +342,6 @@ export default function Header() {
               >
                 Analytics
               </Link>
-              <Link
-                href="/drop-rates"
-                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
-              >
-                Drop Rates
-              </Link>
             </nav>
 
             {/* Prominent search bar (desktop) */}
@@ -306,6 +418,14 @@ export default function Header() {
                 >
                   <Flame className="h-4 w-4 text-orange-500" />
                   Hot Deals
+                </Link>
+                <Link
+                  href="/lootbox"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <Zap className="h-4 w-4 text-purple-500" />
+                  Loot Box Database
                 </Link>
                 <Link
                   href="/games"
