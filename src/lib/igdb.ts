@@ -273,7 +273,7 @@ export async function bulkFetchGames(
             genres.name, platforms.abbreviation, platforms.name,
             total_rating, first_release_date,
             external_games.category, external_games.uid;
-     where category = 0 & cover != null & platforms != null;
+     where cover != null & themes != (42);
      sort id asc;
      limit ${Math.min(limit, 500)};
      offset ${offset};`

@@ -190,17 +190,17 @@ export async function GET(request: NextRequest) {
       });
       const text1 = await res1.text();
 
-      // Test 2: Just where category = 0
+      // Test 2: category field exploration
       const res2 = await fetch("https://api.igdb.com/v4/games", {
         method: "POST", headers: hdrs,
-        body: "fields name; where category = 0; limit 3;",
+        body: "fields name, category; where cover != null; limit 5;",
       });
       const text2 = await res2.text();
 
-      // Test 3: where cover != null
+      // Test 3: Full import query (no category filter)
       const res3 = await fetch("https://api.igdb.com/v4/games", {
         method: "POST", headers: hdrs,
-        body: "fields name, cover.image_id; where cover != null; limit 3;",
+        body: "fields name, slug, cover.image_id, screenshots.image_id, genres.name, platforms.abbreviation, total_rating, first_release_date, external_games.category, external_games.uid; where cover != null & themes != (42); sort id asc; limit 3; offset 0;",
       });
       const text3 = await res3.text();
 
