@@ -135,14 +135,6 @@ export default function Header() {
 
             {/* Desktop Nav */}
             <nav className="hidden items-center gap-1 lg:flex">
-              <Link
-                href="/deals"
-                className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
-              >
-                <Flame className="h-3.5 w-3.5 text-orange-500" />
-                Hot Deals
-              </Link>
-
               {/* Loot Box mega menu trigger */}
               <div
                 ref={lootboxMegaRef}
@@ -241,7 +233,7 @@ export default function Header() {
                 )}
               </div>
 
-              {/* Games mega menu trigger */}
+              {/* Hot Deals mega menu trigger */}
               <div
                 ref={megaRef}
                 className="relative"
@@ -252,7 +244,8 @@ export default function Header() {
                   className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
                   onClick={() => setMegaOpen(!megaOpen)}
                 >
-                  Games
+                  <Flame className="h-3.5 w-3.5 text-orange-500" />
+                  Hot Deals
                   <ChevronDown
                     className={`h-3.5 w-3.5 transition-transform ${megaOpen ? "rotate-180" : ""}`}
                   />
@@ -424,14 +417,6 @@ export default function Header() {
             <div className="border-t border-gray-100 py-4 lg:hidden">
               <nav className="flex flex-col gap-1">
                 <Link
-                  href="/deals"
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                >
-                  <Flame className="h-4 w-4 text-orange-500" />
-                  Hot Deals
-                </Link>
-                <Link
                   href="/lootbox"
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
@@ -440,11 +425,12 @@ export default function Header() {
                   Loot Box Database
                 </Link>
                 <Link
-                  href="/games"
+                  href="/deals"
                   onClick={() => setMobileOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                 >
-                  Games
+                  <Flame className="h-4 w-4 text-orange-500" />
+                  Hot Deals
                 </Link>
                 <Link
                   href="/analytics"
