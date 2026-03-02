@@ -30,7 +30,7 @@ const TYPES = [
 export const metadata = {
   title: "Loot Box Analytics & Battle Pass Reviews",
   description:
-    "Data-driven analysis of loot boxes, battle passes, gacha systems, and in-game economies. Our Lootboxes Score rates every game's monetization.",
+    "Data-driven analysis of loot boxes, battle passes, gacha systems, and in-game economies. Our LootBoxes Score rates every game's monetization.",
 };
 
 export default function AnalyticsPage() {
@@ -86,7 +86,7 @@ export default function AnalyticsPage() {
                 </h3>
               </div>
               <p className="mt-2 text-sm text-brand-700">
-                Our Lootboxes Score rates monetization on value, transparency,
+                Our LootBoxes Score rates monetization on value, transparency,
                 fairness, and consumer practices.
               </p>
               <Link

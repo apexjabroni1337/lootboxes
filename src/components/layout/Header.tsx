@@ -25,6 +25,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import SearchDialog from "@/components/search/SearchDialog";
+import Logo from "@/components/brand/Logo";
 
 const GENRES = [
   { label: "Action", href: "/deals?genre=action", icon: Swords },
@@ -128,14 +129,7 @@ export default function Header() {
           {/* Main header row */}
           <div className="flex h-16 items-center gap-4">
             {/* Logo */}
-            <Link href="/" className="flex flex-shrink-0 items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600">
-                <span className="text-lg font-bold text-white">L</span>
-              </div>
-              <span className="text-xl font-bold text-gray-900">
-                Loot<span className="text-brand-600">boxes</span>
-              </span>
-            </Link>
+            <Logo size="md" />
 
             {/* Desktop Nav */}
             <nav className="hidden items-center gap-1 lg:flex">

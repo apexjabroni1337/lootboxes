@@ -12,7 +12,7 @@ const steps = [
     icon: BarChart3,
     title: "Analyze Value",
     description:
-      "Our Lootboxes Score rates every battle pass, gacha system, and in-game shop so you know what's fair.",
+      "Our LootBoxes Score rates every battle pass, gacha system, and in-game shop so you know what's fair.",
     accent: "text-purple-600 bg-purple-50",
   },
   {
@@ -30,7 +30,7 @@ export default function HowItWorks() {
       <div className="container-main">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900">
-            How Lootboxes Works
+            How LootBoxes.com Works
           </h2>
           <p className="mx-auto mt-2 max-w-lg text-sm text-gray-500">
             More than a deal finder — we help you understand the true value of

@@ -17,7 +17,7 @@ import SaleBanners from "@/components/home/SaleBanners";
 import WhatsHot from "@/components/home/WhatsHot";
 
 export const metadata = {
-  title: "Hot Deals — Compare Game Prices Across Every Store | Lootboxes",
+  title: "Hot Deals — Compare Game Prices Across Every Store | LootBoxes",
   description:
     "Find the cheapest prices on PC and console games. Compare deals across Steam, Epic, GOG, Humble Bundle, and more. Updated every 30 minutes.",
   openGraph: {

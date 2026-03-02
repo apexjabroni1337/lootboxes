@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Shield, Heart, BarChart3, DollarSign, Users, Target } from "lucide-react";
 
 export const metadata = {
-  title: "About Lootboxes.com",
+  title: "About LootBoxes.com",
   description:
     "We help gamers save money on games and make smarter spending decisions on in-game purchases. Learn about our editorial policy and affiliate disclosures.",
 };
@@ -18,7 +18,7 @@ export default function AboutPage() {
         </div>
         <div className="container-main relative text-center">
           <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
-            About Lootboxes.com
+            About LootBoxes.com
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base text-brand-100 sm:text-lg">
             Helping gamers spend their money wisely — with the best deals across every store
@@ -36,7 +36,7 @@ export default function AboutPage() {
               <h2 className="text-xl font-semibold text-gray-900">Our Mission</h2>
             </div>
             <p className="mt-3">
-              Lootboxes.com exists for one reason: to help gamers spend their
+              LootBoxes.com exists for one reason: to help gamers spend their
               money wisely. We do this in two ways — by finding you the best
               deals on games across every storefront, and by giving you honest,
               data-driven analysis of in-game monetization so you know what&apos;s
@@ -54,7 +54,7 @@ export default function AboutPage() {
               {[
                 { icon: DollarSign, title: "Deal Aggregation", desc: "We compare prices across Steam, Epic, GOG, Humble Bundle, and 20+ other stores to find you the cheapest price on any game." },
                 { icon: BarChart3, title: "Loot Box Analytics", desc: "We analyze drop rates, battle pass value, and in-game economies with real math — not guesswork." },
-                { icon: Shield, title: "Consumer Advocacy", desc: "Our Lootboxes Score rates every game's monetization on transparency, fairness, and value." },
+                { icon: Shield, title: "Consumer Advocacy", desc: "Our LootBoxes Score rates every game's monetization on transparency, fairness, and value." },
                 { icon: Heart, title: "Community First", desc: "No paywalls on critical information. Drop rates and deal data should be accessible to everyone." },
               ].map((item) => (
                 <div key={item.title} className="card">
@@ -75,7 +75,7 @@ export default function AboutPage() {
             </h2>
             <p className="mt-3">
               Our reviews and scores are editorially independent. Sponsors pay
-              for coverage, never for favorable ratings. Every Lootboxes Score is
+              for coverage, never for favorable ratings. Every LootBoxes Score is
               calculated using our published methodology, and we will never change
               a score based on a business relationship.
             </p>
@@ -98,9 +98,9 @@ export default function AboutPage() {
               Affiliate Disclosure
             </h2>
             <p className="mt-3">
-              Lootboxes.com earns a commission when you purchase through our
+              LootBoxes.com earns a commission when you purchase through our
               affiliate links. This is how we keep the site running and free to
-              use. These commissions never affect our deal rankings, Lootboxes
+              use. These commissions never affect our deal rankings, LootBoxes
               Scores, or editorial recommendations.
             </p>
             <p className="mt-3">

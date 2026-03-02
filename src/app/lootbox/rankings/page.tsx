@@ -228,7 +228,7 @@ export default async function RankingsPage() {
             impact, player control, and the use of psychological pressure tactics.
           </p>
           <p>
-            The final <strong>Lootboxes Score</strong> is a weighted composite of all eight sub-scores on a 1–10 scale. A
+            The final <strong>LootBoxes Score</strong> is a weighted composite of all eight sub-scores on a 1–10 scale. A
             score of 7 or above indicates a monetization system we consider consumer-friendly, while anything below 4
             signals significant concerns about fairness or predatory design. We research official disclosures, community
             data, and in-game testing to compile each analysis.

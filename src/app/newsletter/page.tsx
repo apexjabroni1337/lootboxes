@@ -16,7 +16,7 @@ export default function NewsletterPage() {
         </div>
 
         <h1 className="mt-6 text-3xl font-bold text-gray-900 sm:text-4xl">
-          The Lootboxes Weekly
+          The LootBoxes Weekly
         </h1>
         <p className="mt-4 text-lg text-gray-600">
           One email per week. The best deals, smartest analysis, and everything
@@ -49,7 +49,7 @@ export default function NewsletterPage() {
               Featured Analysis
             </h3>
             <p className="mt-1 text-xs text-gray-500">
-              One deep-dive battle pass or loot box review with our Lootboxes
+              One deep-dive battle pass or loot box review with our LootBoxes
               Score.
             </p>
           </div>

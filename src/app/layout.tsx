@@ -5,8 +5,8 @@ import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: {
-    default: "Lootboxes.com — Gaming Deals, Drop Rates & In-Game Value Analysis",
-    template: "%s | Lootboxes",
+    default: "LootBoxes.com — Gaming Deals, Drop Rates & In-Game Value Analysis",
+    template: "%s | LootBoxes.com",
   },
   description:
     "Find the best gaming deals across every store. Get data-driven loot box analysis, battle pass reviews, and drop rates for every major game.",
@@ -17,14 +17,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://lootboxes.com",
-    siteName: "Lootboxes.com",
-    title: "Lootboxes.com — Gaming Deals, Drop Rates & In-Game Value Analysis",
+    siteName: "LootBoxes.com",
+    title: "LootBoxes.com — Gaming Deals, Drop Rates & In-Game Value Analysis",
     description:
       "Find the best gaming deals across every store. Get data-driven loot box analysis, battle pass reviews, and drop rates for every major game.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lootboxes.com",
+    title: "LootBoxes.com",
     description:
       "Gaming deals, drop rates, and in-game value analysis. Save smarter. Spend wiser.",
   },
@@ -54,7 +54,7 @@ function JsonLd() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Lootboxes.com",
+    name: "LootBoxes.com",
     url: "https://lootboxes.com",
     description:
       "Compare game deals across 30+ stores. Transparent loot box analysis, drop rates, and monetization reviews.",

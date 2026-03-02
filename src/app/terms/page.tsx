@@ -2,7 +2,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
-  description: "Terms and conditions for using Lootboxes.com.",
+  description: "Terms and conditions for using LootBoxes.com.",
 };
 
 export default function TermsPage() {
@@ -25,13 +25,13 @@ export default function TermsPage() {
           <article className="prose prose-gray max-w-none prose-headings:text-gray-900">
             <h2>Acceptance of Terms</h2>
             <p>
-              By accessing and using Lootboxes.com, you agree to these terms of
+              By accessing and using LootBoxes.com, you agree to these terms of
               service. If you do not agree, please do not use the site.
             </p>
 
             <h2>Service Description</h2>
             <p>
-              Lootboxes.com is a price comparison and analytics platform for
+              LootBoxes.com is a price comparison and analytics platform for
               video game deals. We aggregate publicly available pricing data
               from legitimate game stores and provide editorial analysis of
               in-game monetization systems.
@@ -42,13 +42,13 @@ export default function TermsPage() {
               While we strive for accuracy, game prices change frequently and
               may not always be perfectly up to date. We recommend verifying
               the final price on the store&apos;s website before making a purchase.
-              Lootboxes.com is not responsible for pricing errors on third-party
+              LootBoxes.com is not responsible for pricing errors on third-party
               stores.
             </p>
 
             <h2>Affiliate Disclosure</h2>
             <p>
-              Lootboxes.com earns commissions through affiliate links. When you
+              LootBoxes.com earns commissions through affiliate links. When you
               click a deal and make a purchase, we may receive a small commission
               at no additional cost to you. This never influences our editorial
               content, scores, or recommendations.
@@ -65,13 +65,13 @@ export default function TermsPage() {
             <h2>Intellectual Property</h2>
             <p>
               All original content, analysis, scores, and editorial material on
-              Lootboxes.com is our intellectual property. Game titles, logos, and
+              LootBoxes.com is our intellectual property. Game titles, logos, and
               related assets belong to their respective publishers.
             </p>
 
             <h2>Limitation of Liability</h2>
             <p>
-              Lootboxes.com is provided &quot;as is&quot; without warranty.
+              LootBoxes.com is provided &quot;as is&quot; without warranty.
               We are not liable for any losses arising from your use of
               the site, reliance on pricing data, or purchases made through
               affiliate links.

@@ -23,7 +23,7 @@ import {
 } from "@/lib/scoring";
 
 export const metadata: Metadata = {
-  title: "How We Rate Games — Lootboxes Score Methodology",
+  title: "How We Rate Games — LootBoxes Score Methodology",
   description:
     "Our transparent, criteria-based rating system for evaluating game monetization. Learn exactly how we score loot boxes, gacha systems, and in-game purchases.",
 };
@@ -46,7 +46,7 @@ interface FAQItem {
 
 const FAQ_ITEMS: FAQItem[] = [
   {
-    question: "Is the Lootboxes Score subjective?",
+    question: "Is the LootBoxes Score subjective?",
     answer:
       "No. Each sub-score is determined by specific, measurable criteria. A game either publishes drop rates or it doesn't; a pity system either exists with known thresholds or it doesn't. We document the evidence for every score and make it reproducible. What is intentional is our choice of which criteria matter — we weight Consumer Protection highest because informed consent is the foundation of fair monetization.",
   },
@@ -248,7 +248,7 @@ export default function MethodologyPage() {
       {/* Scale Section */}
       <div className="mb-14">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">
-          The Lootboxes Scale (1-10)
+          The LootBoxes Scale (1-10)
         </h2>
         <ScaleVisualization />
       </div>

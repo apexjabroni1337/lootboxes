@@ -2,7 +2,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "How Lootboxes.com collects, uses, and protects your data.",
+  description: "How LootBoxes.com collects, uses, and protects your data.",
 };
 
 export default function PrivacyPage() {
@@ -25,7 +25,7 @@ export default function PrivacyPage() {
           <article className="prose prose-gray max-w-none prose-headings:text-gray-900">
             <h2>Information We Collect</h2>
             <p>
-              Lootboxes.com collects minimal data to provide our service.
+              LootBoxes.com collects minimal data to provide our service.
               We collect your email address when you subscribe to our newsletter,
               anonymous usage analytics to improve the site, and affiliate click
               data (no personally identifiable information) to track which deals
