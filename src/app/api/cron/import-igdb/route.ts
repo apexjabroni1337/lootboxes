@@ -169,6 +169,70 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Debug mode: test IGDB connection with a simple query
+  const testMode = request.nextUrl.searchParams.get("test") === "true";
+  if (testMode) {
+    try {
+      const { getTwitchToken } = await import("@/lib/igdb");
+      const token = await getTwitchToken();
+      const clientId = process.env.TWITCH_CLIENT_ID!;
+
+      // Test 1: Simplest possible query
+      const res1 = await fetch("https://api.igdb.com/v4/games", {
+        method: "POST",
+        headers: {
+          "Client-ID": clientId,
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "text/plain",
+        },
+        body: `fields name; limit 3;`,
+      });
+      const text1 = await res1.text();
+
+      // Test 2: With platform filter
+      const res2 = await fetch("https://api.igdb.com/v4/games", {
+        method: "POST",
+        headers: {
+          "Client-ID": clientId,
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "text/plain",
+        },
+        body: `fields name, cover.image_id, platforms.abbreviation;
+               where category = 0 & cover != null & platforms = (6);
+               sort id asc;
+               limit 3;`,
+      });
+      const text2 = await res2.text();
+
+      // Test 3: Full query
+      const res3 = await fetch("https://api.igdb.com/v4/games", {
+        method: "POST",
+        headers: {
+          "Client-ID": clientId,
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "text/plain",
+        },
+        body: `fields name, slug, cover.image_id, platforms.abbreviation, external_games.category, external_games.uid;
+               where category = 0 & cover != null & platforms = (6,48,49,130,167,169);
+               sort id asc;
+               limit 3;
+               offset 0;`,
+      });
+      const text3 = await res3.text();
+
+      return NextResponse.json({
+        ok: true,
+        test: true,
+        tokenOk: !!token,
+        test1: { status: res1.status, body: text1.slice(0, 500) },
+        test2: { status: res2.status, body: text2.slice(0, 500) },
+        test3: { status: res3.status, body: text3.slice(0, 500) },
+      });
+    } catch (err: any) {
+      return NextResponse.json({ ok: false, test: true, error: err.message }, { status: 500 });
+    }
+  }
+
   const offset = parseInt(request.nextUrl.searchParams.get("offset") || "0");
   const limit = Math.min(
     parseInt(request.nextUrl.searchParams.get("limit") || "500"),
