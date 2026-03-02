@@ -198,7 +198,7 @@ export async function GET(request: NextRequest) {
           "Content-Type": "text/plain",
         },
         body: `fields name, cover.image_id, platforms.abbreviation;
-               where category = 0 & cover != null & platforms = (6);
+               where category = 0 & cover != null & platforms != null;
                sort id asc;
                limit 3;`,
       });
@@ -213,7 +213,7 @@ export async function GET(request: NextRequest) {
           "Content-Type": "text/plain",
         },
         body: `fields name, slug, cover.image_id, platforms.abbreviation, external_games.category, external_games.uid;
-               where category = 0 & cover != null & platforms = (6,48,49,130,167,169);
+               where category = 0 & cover != null & platforms != null;
                sort id asc;
                limit 3;
                offset 0;`,
