@@ -62,12 +62,23 @@ export default function HeroCarousel({ deals }: HeroCarouselProps) {
       {/* Background image with overlay */}
       <div className="relative h-[340px] sm:h-[400px] lg:h-[460px]">
         {bgImage ? (
-          <img
-            key={current}
-            src={bgImage}
-            alt={deal.game.title}
-            className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
-          />
+          <>
+            {/* Blurred background fill for portrait images */}
+            <img
+              key={`bg-${current}`}
+              src={bgImage}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover scale-110 blur-2xl opacity-60"
+            />
+            {/* Main image: centered, covers the container */}
+            <img
+              key={current}
+              src={bgImage}
+              alt={deal.game.title}
+              className="absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-700"
+            />
+          </>
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900" />
         )}

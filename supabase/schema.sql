@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS games (
   lootboxes_score NUMERIC(3,1),
   itad_id TEXT, -- IsThereAnyDeal game ID for API lookups
   steam_app_id TEXT, -- Steam app ID for direct API access
+  description TEXT, -- Game summary/description from IGDB
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );

@@ -154,6 +154,7 @@ function buildGameRow(game: IGDBBulkGame) {
   return {
     title: game.name,
     slug,
+    description: game.summary || null,
     cover_image: coverImage,
     screenshot_image: screenshotImage,
     platforms: mapPlatforms(game.platforms),

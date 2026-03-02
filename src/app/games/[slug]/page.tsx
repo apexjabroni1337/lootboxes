@@ -138,7 +138,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   if (!game) return { title: "Game Not Found" };
 
   const title = `${game.title} — Best Price, Deals & Analysis`;
-  const description = `Compare prices for ${game.title} across Steam, Epic, GOG, Humble Bundle, and more. Find the cheapest deal and see the full price history.`;
+  const description = game.description
+    ? `${game.description.slice(0, 150)}${game.description.length > 150 ? "..." : ""} Compare prices across Steam, Epic, GOG & more.`
+    : `Compare prices for ${game.title} across Steam, Epic, GOG, Humble Bundle, and more. Find the cheapest deal and see the full price history.`;
   const ogImage = game.screenshot_image || game.cover_image || undefined;
   const url = `https://lootboxes.com/games/${game.slug}`;
 
@@ -185,7 +187,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
     "@context": "https://schema.org",
     "@type": "Product",
     name: game.title,
-    description: `Compare prices for ${game.title} across multiple stores.`,
+    description: game.description || `Compare prices for ${game.title} across multiple stores.`,
     url: `https://lootboxes.com/games/${game.slug}`,
     ...(heroImage ? { image: heroImage } : {}),
     ...(game.metacritic ? { aggregateRating: { "@type": "AggregateRating", ratingValue: game.metacritic, bestRating: 100, worstRating: 0, ratingCount: 1 } } : {}),
@@ -297,6 +299,16 @@ export default async function GamePage({ params }: { params: { slug: string } })
         <div className="grid gap-8 lg:grid-cols-3">
           {/* Main content (2 cols) */}
           <div className="lg:col-span-2">
+            {/* Game description */}
+            {game.description && (
+              <section className="mb-8">
+                <h2 className="text-xl font-bold text-gray-900">About {game.title}</h2>
+                <p className="mt-3 text-sm leading-relaxed text-gray-600">
+                  {game.description}
+                </p>
+              </section>
+            )}
+
             {/* Best price callout */}
             {bestDeal && (
               <div className="flex flex-col gap-4 rounded-xl border border-success-200 bg-success-50 p-5 sm:flex-row sm:items-center sm:justify-between">

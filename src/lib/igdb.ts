@@ -108,6 +108,7 @@ export interface IGDBBulkGame {
   id: number;
   name: string;
   slug: string;
+  summary?: string;
   cover?: { image_id: string };
   screenshots?: { image_id: string }[];
   genres?: { name: string }[];
@@ -269,7 +270,7 @@ export async function bulkFetchGames(
 ): Promise<IGDBBulkGame[]> {
   return igdbQuery<IGDBBulkGame>(
     "games",
-    `fields name, slug, cover.image_id, screenshots.image_id,
+    `fields name, slug, summary, cover.image_id, screenshots.image_id,
             genres.name, platforms.abbreviation, platforms.name,
             total_rating, first_release_date,
             external_games.category, external_games.uid;

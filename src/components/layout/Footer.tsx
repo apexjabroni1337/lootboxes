@@ -73,21 +73,6 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Newsletter strip */}
-      <div className="border-b border-gray-200 bg-brand-50">
-        <div className="container-main flex flex-col items-center gap-4 py-8 sm:flex-row sm:justify-between">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900">
-              Never miss a deal
-            </h3>
-            <p className="text-sm text-gray-600">
-              Get the best gaming deals and analytics delivered weekly.
-            </p>
-          </div>
-          <NewsletterForm variant="inline" className="w-full sm:w-auto" />
-        </div>
-      </div>
-
       {/* Main footer links */}
       <div className="container-main py-12">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-5">

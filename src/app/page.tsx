@@ -47,6 +47,30 @@ async function getFeaturedGames() {
   );
 }
 
+/* ── Fetch dynamic site-wide stats ── */
+async function getSiteStats() {
+  const supabase = createServerClient();
+
+  const [
+    { count: totalGames },
+    { count: totalDeals },
+    { count: gamesWithDeals },
+  ] = await Promise.all([
+    supabase.from("games").select("id", { count: "exact", head: true }),
+    supabase.from("deals").select("id", { count: "exact", head: true }),
+    supabase
+      .from("games")
+      .select("id", { count: "exact", head: true })
+      .not("steam_app_id", "is", null),
+  ]);
+
+  return {
+    totalGames: totalGames || 0,
+    totalDeals: totalDeals || 0,
+    gamesWithDeals: gamesWithDeals || 0,
+  };
+}
+
 /* ── Score helpers ── */
 function scoreColor(score: number | null): string {
   if (score === null) return "bg-gray-400";
@@ -108,54 +132,96 @@ const SYSTEM_TYPES = [
   },
 ];
 
-// Analytics section mock data
-const MOCK_ANALYTICS: AnalyticsMeta[] = [
-  {
-    id: "a1",
-    game_id: "3",
-    slug: "fortnite-chapter-6-season-1-battle-pass",
-    title: "Fortnite Chapter 6 Season 1 Battle Pass — Is It Worth It?",
-    excerpt:
-      "We break down every tier, calculate the V-Buck value, and compare it to direct cosmetic purchases.",
-    type: "battlepass",
-    lootboxes_score: 7.2,
-    cover_image: null,
-    published_at: "2026-02-20",
-    updated_at: "2026-02-20",
-  },
-  {
-    id: "a2",
-    game_id: "4",
-    slug: "genshin-impact-gacha-analysis-2026",
-    title: "Genshin Impact Gacha System — Complete Drop Rate Analysis",
-    excerpt:
-      "Official drop rates, pity system breakdown, and expected spending to pull featured characters.",
-    type: "lootbox",
-    lootboxes_score: 4.8,
-    cover_image: null,
-    published_at: "2026-02-18",
-    updated_at: "2026-02-18",
-  },
-  {
-    id: "a3",
-    game_id: "6",
-    slug: "valorant-battle-pass-episode-10",
-    title: "Valorant Episode 10 Battle Pass Review",
-    excerpt:
-      "New skins, gun buddies, and sprays — here's whether this pass delivers enough value for 1000 VP.",
-    type: "battlepass",
-    lootboxes_score: 5.5,
-    cover_image: null,
-    published_at: "2026-02-15",
-    updated_at: "2026-02-15",
-  },
-];
+/* ── Fetch system type counts from DB ── */
+async function getSystemTypeCounts(): Promise<Record<string, number>> {
+  const supabase = createServerClient();
+  const types = ["gacha", "loot_box", "card_pack", "cosmetic_shop", "battle_pass"];
+  const counts: Record<string, number> = {};
+
+  const results = await Promise.all(
+    types.map((type) =>
+      supabase
+        .from("games")
+        .select("id", { count: "exact", head: true })
+        .eq("loot_system_type", type)
+    )
+  );
+
+  types.forEach((type, i) => {
+    counts[type] = results[i].count || 0;
+  });
+
+  return counts;
+}
+
+/* ── Fetch analytics article cover images from DB ── */
+async function getAnalyticsCovers(): Promise<Record<string, string | null>> {
+  const supabase = createServerClient();
+  const slugs = ["fortnite", "genshin-impact", "valorant"];
+  const { data } = await supabase
+    .from("games")
+    .select("slug, cover_image, screenshot_image")
+    .in("slug", slugs);
+
+  const map: Record<string, string | null> = {};
+  for (const g of data || []) {
+    map[g.slug] = g.screenshot_image || g.cover_image;
+  }
+  return map;
+}
+
+function buildHomeAnalytics(covers: Record<string, string | null>): AnalyticsMeta[] {
+  return [
+    {
+      id: "a1",
+      game_id: "3",
+      slug: "fortnite-chapter-6-season-1-battle-pass",
+      title: "Fortnite Chapter 6 Season 1 Battle Pass — Is It Worth It?",
+      excerpt: "We break down every tier, calculate the V-Buck value, and compare it to direct cosmetic purchases.",
+      type: "battlepass",
+      lootboxes_score: 7.2,
+      cover_image: covers["fortnite"] || null,
+      published_at: "2026-02-20",
+      updated_at: "2026-02-20",
+    },
+    {
+      id: "a2",
+      game_id: "4",
+      slug: "genshin-impact-gacha-analysis-2026",
+      title: "Genshin Impact Gacha System — Complete Drop Rate Analysis",
+      excerpt: "Official drop rates, pity system breakdown, and expected spending to pull featured characters.",
+      type: "lootbox",
+      lootboxes_score: 4.8,
+      cover_image: covers["genshin-impact"] || null,
+      published_at: "2026-02-18",
+      updated_at: "2026-02-18",
+    },
+    {
+      id: "a3",
+      game_id: "6",
+      slug: "valorant-battle-pass-episode-10",
+      title: "Valorant Episode 10 Battle Pass Review",
+      excerpt: "New skins, gun buddies, and sprays — here's whether this pass delivers enough value for 1000 VP.",
+      type: "battlepass",
+      lootboxes_score: 5.5,
+      cover_image: covers["valorant"] || null,
+      published_at: "2026-02-15",
+      updated_at: "2026-02-15",
+    },
+  ];
+}
 
 export default async function HomePage() {
-  const games = await getFeaturedGames();
+  const [games, siteStats, analyticCovers, systemCounts] = await Promise.all([
+    getFeaturedGames(),
+    getSiteStats(),
+    getAnalyticsCovers(),
+    getSystemTypeCounts(),
+  ]);
+  const homeAnalytics = buildHomeAnalytics(analyticCovers);
 
-  // Stats
-  const totalGames = games.length;
+  // Stats — use lootbox-analyzed games for scoring, site-wide for hero
+  const analyzedCount = games.length;
   const avgScore =
     games.length > 0
       ? (
@@ -191,8 +257,9 @@ export default async function HomePage() {
             <span className="text-blue-400">Analyzed &amp; Scored</span>
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-blue-200/80">
-            Drop rates, pity systems, cost breakdowns, and fairness scores for{" "}
-            {totalGames} major games. Data-driven analysis. No guesswork.
+            Compare prices across {siteStats.totalDeals > 0 ? `${siteStats.totalDeals}+` : "13+"} stores,
+            track {siteStats.totalGames > 1000 ? `${Math.round(siteStats.totalGames / 1000)}K+` : siteStats.totalGames} games,
+            and analyze in-game monetization. Data-driven. No guesswork.
           </p>
 
           {/* CTA buttons */}
@@ -223,20 +290,22 @@ export default async function HomePage() {
           {/* Stats row */}
           <div className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-4">
             <div>
-              <p className="text-4xl font-bold text-white sm:text-5xl">{totalGames}</p>
-              <p className="mt-1 text-sm text-blue-200">Games Analyzed</p>
+              <p className="text-4xl font-bold text-white sm:text-5xl">
+                {siteStats.totalGames > 1000 ? `${Math.round(siteStats.totalGames / 1000)}K+` : siteStats.totalGames}
+              </p>
+              <p className="mt-1 text-sm text-blue-200">Games Tracked</p>
             </div>
             <div>
-              <p className="text-4xl font-bold text-white sm:text-5xl">{totalGames * 6}+</p>
-              <p className="mt-1 text-sm text-blue-200">Drop Rates Tracked</p>
+              <p className="text-4xl font-bold text-white sm:text-5xl">{siteStats.totalDeals || "100"}+</p>
+              <p className="mt-1 text-sm text-blue-200">Active Deals</p>
             </div>
             <div>
-              <p className="text-4xl font-bold text-white sm:text-5xl">{avgScore}</p>
-              <p className="mt-1 text-sm text-blue-200">Avg Score</p>
+              <p className="text-4xl font-bold text-white sm:text-5xl">13+</p>
+              <p className="mt-1 text-sm text-blue-200">Stores Compared</p>
             </div>
             <div>
-              <p className="text-4xl font-bold text-white sm:text-5xl">8</p>
-              <p className="mt-1 text-sm text-blue-200">Score Dimensions</p>
+              <p className="text-4xl font-bold text-white sm:text-5xl">{analyzedCount}</p>
+              <p className="mt-1 text-sm text-blue-200">Loot Box Analyses</p>
             </div>
           </div>
         </div>
@@ -259,9 +328,7 @@ export default async function HomePage() {
           </div>
           <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {SYSTEM_TYPES.map((st) => {
-              const count = games.filter(
-                (g) => g.loot_system_type === st.type
-              ).length;
+              const count = systemCounts[st.type] || 0;
               return (
                 <Link
                   key={st.type}
@@ -400,7 +467,7 @@ export default async function HomePage() {
           <div className="mt-6 grid gap-6 lg:grid-cols-3">
             {/* Articles */}
             <div className="space-y-4 lg:col-span-2">
-              {MOCK_ANALYTICS.map((article) => (
+              {homeAnalytics.map((article) => (
                 <AnalyticsCard key={article.id} article={article} />
               ))}
             </div>
@@ -529,14 +596,16 @@ export default async function HomePage() {
               {/* Right: Visual accent */}
               <div className="hidden bg-gradient-to-br from-brand-500 to-brand-700 px-12 py-10 lg:flex lg:flex-col lg:items-center lg:justify-center">
                 <div className="text-center text-white">
-                  <p className="text-5xl font-extrabold">{totalGames}</p>
+                  <p className="text-5xl font-extrabold">
+                    {siteStats.totalGames > 1000 ? `${Math.round(siteStats.totalGames / 1000)}K+` : siteStats.totalGames}
+                  </p>
                   <p className="mt-1 text-lg font-medium text-brand-100">
-                    Games scored
+                    Games tracked
                   </p>
                   <div className="mx-auto my-5 h-px w-20 bg-white/20" />
-                  <p className="text-5xl font-extrabold">8</p>
+                  <p className="text-5xl font-extrabold">13+</p>
                   <p className="mt-1 text-lg font-medium text-brand-100">
-                    Scoring criteria
+                    Stores compared
                   </p>
                   <div className="mx-auto my-5 h-px w-20 bg-white/20" />
                   <p className="text-5xl font-extrabold">100%</p>
