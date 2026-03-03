@@ -16,63 +16,72 @@ const TYPE_LABELS: Record<string, string> = {
   droprates: "Drop Rates",
 };
 
+const TYPE_COLORS: Record<string, { bg: string; text: string }> = {
+  battlepass: { bg: "bg-amber-100 dark:bg-amber-950", text: "text-amber-700 dark:text-amber-300" },
+  lootbox: { bg: "bg-red-100 dark:bg-red-950", text: "text-red-700 dark:text-red-300" },
+  economy: { bg: "bg-emerald-100 dark:bg-emerald-950", text: "text-emerald-700 dark:text-emerald-300" },
+  droprates: { bg: "bg-blue-100 dark:bg-blue-950", text: "text-blue-700 dark:text-blue-300" },
+};
+
 export default function AnalyticsCard({ article }: AnalyticsCardProps) {
+  const typeColor = TYPE_COLORS[article.type] || { bg: "bg-gray-100 dark:bg-gray-800", text: "text-gray-700 dark:text-gray-300" };
+
   return (
     <Link
       href={`/analytics/${article.slug}`}
-      className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 dark:border-gray-800 dark:bg-gray-900"
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 dark:border-gray-800 dark:bg-gray-900"
     >
-      <div className="flex gap-0">
-        {/* Large thumbnail */}
-        <div className="relative w-44 flex-shrink-0 overflow-hidden sm:w-52">
-          {article.cover_image ? (
-            <img
-              src={article.cover_image}
-              alt={article.title}
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-              loading="lazy"
-            />
-          ) : (
-            <GameAvatar
-              gameName={article.game?.title || article.title}
-              size="md"
-              aspectRatio="square"
-              className="h-full w-full rounded-none"
-            />
-          )}
-          {/* Gradient fade on right edge */}
-          <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-white to-transparent dark:from-gray-900" />
-          {/* Score overlay */}
-          {article.lootboxes_score && (
-            <div className="absolute bottom-3 left-3">
-              <ScoreBadge score={article.lootboxes_score} size="sm" />
-            </div>
-          )}
+      {/* Image container - top of card */}
+      <div className="relative h-48 sm:h-56 overflow-hidden bg-gray-100 dark:bg-gray-800">
+        {article.cover_image ? (
+          <img
+            src={article.cover_image}
+            alt={article.title}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+          />
+        ) : (
+          <GameAvatar
+            gameName={article.game?.title || article.title}
+            size="lg"
+            aspectRatio="video"
+            className="h-full w-full rounded-none"
+          />
+        )}
+
+        {/* Dark gradient overlay for text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+
+        {/* Score badge - overlaid on image, bottom-left */}
+        {article.lootboxes_score && (
+          <div className="absolute bottom-4 left-4">
+            <ScoreBadge score={article.lootboxes_score} size="sm" />
+          </div>
+        )}
+
+        {/* Type badge - top-right on image */}
+        <div className={`absolute top-4 right-4 inline-flex rounded-xl px-3 py-1.5 text-xs font-semibold ${typeColor.bg} ${typeColor.text}`}>
+          {TYPE_LABELS[article.type] || article.type}
+        </div>
+      </div>
+
+      {/* Content - bottom of card */}
+      <div className="flex flex-1 flex-col px-5 py-5">
+        <div className="text-[11px] text-gray-500 dark:text-gray-400">
+          {formatDate(article.published_at)}
         </div>
 
-        {/* Content */}
-        <div className="flex flex-1 flex-col justify-center px-5 py-5">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex rounded-full bg-gray-100 px-2.5 py-0.5 text-[11px] font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-              {TYPE_LABELS[article.type] || article.type}
-            </span>
-            <span className="text-[11px] text-gray-400">
-              {formatDate(article.published_at)}
-            </span>
-          </div>
+        <h3 className="mt-3 text-lg font-bold text-gray-900 transition-colors group-hover:text-brand-600 dark:text-white line-clamp-3">
+          {article.title}
+        </h3>
 
-          <h3 className="mt-2 text-base font-bold text-gray-900 transition-colors group-hover:text-brand-600 sm:text-lg dark:text-white">
-            {article.title}
-          </h3>
+        <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400 line-clamp-2 flex-1">
+          {article.excerpt}
+        </p>
 
-          <p className="mt-2 text-sm leading-relaxed text-gray-500 line-clamp-3 dark:text-gray-400">
-            {article.excerpt}
-          </p>
-
-          <div className="mt-3 flex items-center gap-1.5 text-sm font-semibold text-brand-600 transition-all group-hover:gap-2">
-            Read Analysis
-            <ArrowRight className="h-3.5 w-3.5" />
-          </div>
+        <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-brand-600 dark:text-brand-400 transition-all group-hover:gap-3">
+          Read Analysis
+          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
         </div>
       </div>
     </Link>
