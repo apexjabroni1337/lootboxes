@@ -4,12 +4,17 @@ import { STORES } from "@/lib/types";
 import Logo from "@/components/brand/Logo";
 
 const FOOTER_SECTIONS = {
-  Product: [
-    { label: "Hot Deals", href: "/deals" },
-    { label: "Browse Games", href: "/games" },
+  "Loot Box Database": [
+    { label: "Loot Box Database", href: "/lootbox" },
+    { label: "Rankings", href: "/lootbox/rankings" },
+    { label: "Drop Rates", href: "/drop-rates" },
     { label: "Analytics", href: "/analytics" },
     { label: "Blog", href: "/blog" },
-    { label: "Drop Rates", href: "/drop-rates" },
+    { label: "Methodology", href: "/methodology" },
+  ],
+  "Game Deals": [
+    { label: "Hot Deals", href: "/deals" },
+    { label: "Browse Games", href: "/games" },
     { label: "New Releases", href: "/games/new-releases" },
     { label: "Price Alerts", href: "/newsletter" },
   ],
@@ -77,13 +82,13 @@ export default function Footer() {
 
       {/* Main footer links */}
       <div className="container-main py-12">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-5">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-6">
           {/* Brand column */}
           <div className="col-span-2">
             <Logo size="sm" />
             <p className="mt-3 max-w-xs text-sm text-gray-500">
-              The smartest way to buy games. Compare prices across every store,
-              track historic lows, and analyze in-game monetization — all in one place.
+              Loot box transparency for every game. Data-driven analysis, drop rates,
+              and monetization scores — plus price comparison across 13+ stores.
             </p>
 
             {/* Social links */}

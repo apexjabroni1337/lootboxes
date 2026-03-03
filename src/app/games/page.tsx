@@ -2,9 +2,9 @@ import GamesGrid from "@/components/games/GamesGrid";
 import { createServerClient } from "@/lib/supabase";
 
 export const metadata = {
-  title: "All Games — Browse Deals & Prices",
+  title: "Game Deals — Browse All Games & Compare Prices",
   description:
-    "Browse our complete catalog of video game deals and price comparisons across every major store.",
+    "Compare prices for thousands of games across 13+ stores. Find the best deals, track historic lows, and never overpay.",
 };
 
 export const revalidate = 300;

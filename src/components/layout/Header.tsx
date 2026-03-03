@@ -158,7 +158,7 @@ export default function Header() {
                 </button>
 
                 {lootboxMegaOpen && (
-                  <div className="absolute left-0 top-full z-50 mt-1 w-[460px] rounded-xl border border-gray-200 bg-white p-5 shadow-xl">
+                  <div className="absolute left-0 top-full z-50 mt-1 w-[460px] rounded-xl border border-gray-200 bg-white p-5 shadow-xl dark:border-gray-700 dark:bg-gray-900">
                     <div className="grid grid-cols-2 gap-6">
                       {/* By System Type */}
                       <div>
@@ -249,7 +249,7 @@ export default function Header() {
                   onClick={() => setMegaOpen(!megaOpen)}
                 >
                   <Flame className="h-3.5 w-3.5 text-orange-500" />
-                  Hot Deals
+                  Game Deals
                   <ChevronDown
                     className={`h-3.5 w-3.5 transition-transform ${megaOpen ? "rotate-180" : ""}`}
                   />
@@ -257,7 +257,7 @@ export default function Header() {
 
                 {/* Mega menu dropdown */}
                 {megaOpen && (
-                  <div className="absolute left-0 top-full z-50 mt-1 w-[520px] rounded-xl border border-gray-200 bg-white p-5 shadow-xl">
+                  <div className="absolute left-0 top-full z-50 mt-1 w-[520px] rounded-xl border border-gray-200 bg-white p-5 shadow-xl dark:border-gray-700 dark:bg-gray-900">
                     <div className="grid grid-cols-2 gap-6">
                       {/* Genres column */}
                       <div>
@@ -326,7 +326,7 @@ export default function Header() {
                       </Link>
                       <div className="flex gap-2">
                         <Link
-                          href="/deals?sort=newest"
+                          href="/games/new-releases"
                           onClick={() => setMegaOpen(false)}
                           className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
                         >
@@ -352,10 +352,10 @@ export default function Header() {
                 Analytics
               </Link>
               <Link
-                href="/games/new-releases"
+                href="/blog"
                 className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
               >
-                New Releases
+                Blog
               </Link>
             </nav>
 
@@ -457,7 +457,7 @@ export default function Header() {
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                 >
                   <Flame className="h-4 w-4 text-orange-500" />
-                  Hot Deals
+                  Game Deals
                 </Link>
                 <Link
                   href="/analytics"

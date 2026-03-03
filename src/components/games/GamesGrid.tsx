@@ -32,9 +32,9 @@ export default function GamesGrid({ games }: { games: GameWithDeals[] }) {
       {/* Header with search */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">All Games</h1>
-          <p className="mt-1 text-gray-500">
-            Browse our catalog of {games.length} tracked games with live prices.
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Game Deals — Browse All Games</h1>
+          <p className="mt-1 text-gray-500 dark:text-gray-400">
+            Compare prices across 13+ stores for {games.length} tracked games.
           </p>
         </div>
         <div className="relative">

@@ -249,7 +249,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
             <nav className="inline-flex items-center gap-1 rounded-lg bg-white/80 px-3 py-1.5 text-xs backdrop-blur-sm">
               <Link href="/" className="text-gray-500 hover:text-gray-700">Home</Link>
               <ChevronRight className="h-3 w-3 text-gray-400" />
-              <Link href="/deals" className="text-gray-500 hover:text-gray-700">Deals</Link>
+              <Link href="/games" className="text-gray-500 hover:text-gray-700">Game Deals</Link>
               <ChevronRight className="h-3 w-3 text-gray-400" />
               <span className="font-medium text-gray-700">{game.title}</span>
             </nav>
@@ -294,6 +294,35 @@ export default async function GamePage({ params }: { params: { slug: string } })
           </div>
         </div>
       </section>
+
+      {/* Lootbox Analysis Banner — show if this game has loot system analysis */}
+      {game.loot_system_type && (
+        <div className="border-b border-purple-100 bg-gradient-to-r from-purple-50 to-blue-50 dark:border-purple-900/30 dark:from-purple-950/20 dark:to-blue-950/20">
+          <div className="container-main flex flex-col items-center gap-3 py-4 sm:flex-row sm:justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/40">
+                <Zap className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                  Loot Box Analysis Available
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  View monetization scores, drop rates, and spending analysis for {game.title}
+                </p>
+              </div>
+            </div>
+            <Link
+              href={`/lootbox/${game.slug}`}
+              className="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-purple-700"
+            >
+              <Zap className="h-4 w-4" />
+              View Analysis
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      )}
 
       <div className="container-main mt-8">
         <div className="grid gap-8 lg:grid-cols-3">

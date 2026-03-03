@@ -17,6 +17,7 @@ import {
   ShoppingBag,
   TrendingDown,
   Award,
+  Flame,
 } from "lucide-react";
 import { AnalyticsMeta } from "@/lib/types";
 import { createServerClient } from "@/lib/supabase";
@@ -253,13 +254,12 @@ export default async function HomePage() {
           </div>
 
           <h1 className="max-w-3xl text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-            Every Game&apos;s Monetization,{" "}
-            <span className="text-blue-400">Analyzed &amp; Scored</span>
+            Loot Box Transparency{" "}
+            <span className="text-blue-400">for Every Game</span>
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-blue-200/80">
-            Compare prices across {siteStats.totalDeals > 0 ? `${siteStats.totalDeals}+` : "13+"} stores,
-            track {siteStats.totalGames > 1000 ? `${Math.round(siteStats.totalGames / 1000)}K+` : siteStats.totalGames} games,
-            and analyze in-game monetization. Data-driven. No guesswork.
+            Data-driven loot box analysis, drop rates, and monetization scores
+            for every major game. Plus compare prices across 13+ stores for {siteStats.totalGames > 1000 ? `${Math.round(siteStats.totalGames / 1000)}K+` : siteStats.totalGames} games.
           </p>
 
           {/* CTA buttons */}
@@ -269,7 +269,7 @@ export default async function HomePage() {
               className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition-all hover:bg-blue-50"
             >
               <BarChart3 className="h-4 w-4" />
-              Browse All Games
+              Browse Loot Box Database
             </Link>
             <Link
               href="/lootbox/rankings"
@@ -283,7 +283,7 @@ export default async function HomePage() {
               className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-blue-200 backdrop-blur transition-all hover:bg-white/10"
             >
               <TrendingDown className="h-4 w-4" />
-              Hot Deals
+              Game Deals
             </Link>
           </div>
 
@@ -553,6 +553,43 @@ export default async function HomePage() {
             >
               View Full Rankings
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Game Deals Crossover ─── */}
+      <section className="py-10 sm:py-12">
+        <div className="container-main">
+          <div className="overflow-hidden rounded-2xl border border-orange-100 bg-gradient-to-r from-orange-50 to-amber-50 dark:border-orange-900/30 dark:from-orange-950/30 dark:to-amber-950/30">
+            <div className="flex flex-col items-center gap-6 px-8 py-10 text-center sm:flex-row sm:text-left">
+              <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-orange-100 dark:bg-orange-900/40">
+                <Flame className="h-7 w-7 text-orange-500" />
+              </div>
+              <div className="flex-1">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                  Also Looking for Game Deals?
+                </h2>
+                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                  Compare prices across 13+ stores for {siteStats.totalGames > 1000 ? `${Math.round(siteStats.totalGames / 1000)}K+` : siteStats.totalGames} games.
+                  Find historic lows, track price drops, and never overpay.
+                </p>
+              </div>
+              <div className="flex flex-shrink-0 gap-3">
+                <Link
+                  href="/deals"
+                  className="inline-flex items-center gap-2 rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
+                >
+                  <TrendingDown className="h-4 w-4" />
+                  Browse Deals
+                </Link>
+                <Link
+                  href="/games"
+                  className="inline-flex items-center gap-2 rounded-lg border border-orange-200 bg-white px-5 py-2.5 text-sm font-semibold text-orange-700 transition-colors hover:bg-orange-50 dark:border-orange-800 dark:bg-gray-900 dark:text-orange-400 dark:hover:bg-gray-800"
+                >
+                  All Games
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
