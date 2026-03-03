@@ -165,31 +165,14 @@ function buildGameRow(game: IGDBBulkGame) {
   };
 }
 
-/* ── Load existing slugs (paginated for large DBs) ── */
+/* ── Check if slug exists (single fast query) ── */
 
-async function loadExistingSlugs(supabase: any): Promise<Set<string>> {
-  const slugs = new Set<string>();
-  let from = 0;
-  const PAGE = 10000;
-
-  while (true) {
-    const { data, error } = await supabase
-      .from("games")
-      .select("slug")
-      .range(from, from + PAGE - 1);
-
-    if (error) throw new Error(`Load slugs: ${error.message}`);
-    if (!data?.length) break;
-
-    for (const g of data) {
-      slugs.add(g.slug);
-    }
-
-    if (data.length < PAGE) break;
-    from += PAGE;
-  }
-
-  return slugs;
+async function slugExists(supabase: any, slug: string): Promise<boolean> {
+  const { count } = await supabase
+    .from("games")
+    .select("id", { count: "exact", head: true })
+    .eq("slug", slug);
+  return (count || 0) > 0;
 }
 
 /* ── Main handler ── */
@@ -265,9 +248,7 @@ export async function GET(request: NextRequest) {
   };
 
   try {
-    // Load existing slugs once (paginated to handle 60K+)
-    const usedSlugs = await loadExistingSlugs(supabase);
-    const slugLoadTime = Date.now() - startTime;
+    // No more loading all slugs upfront — we check per-game only on collision
 
     // Auto-loop through batches until timeout or done
     while (Date.now() - startTime < SAFETY_MS) {
@@ -293,6 +274,7 @@ export async function GET(request: NextRequest) {
 
       // Build game rows for this batch
       const gameRows: Record<string, any>[] = [];
+      const batchSlugs = new Set<string>();
 
       for (const game of igdbGames) {
         if (shouldSkip(game.name)) {
@@ -307,30 +289,28 @@ export async function GET(request: NextRequest) {
           continue;
         }
 
-        // Handle slug collisions
-        if (usedSlugs.has(row.slug)) {
-          const altSlug = `${row.slug}-${game.id}`;
-          if (usedSlugs.has(altSlug)) {
-            stats.totalDuplicates++;
-            continue;
-          }
-          row.slug = altSlug;
+        // Handle in-batch slug collisions
+        if (batchSlugs.has(row.slug)) {
+          row.slug = `${row.slug}-${game.id}`;
         }
-        usedSlugs.add(row.slug);
+        batchSlugs.add(row.slug);
         gameRows.push(row);
       }
 
-      // Batch insert (chunks of 50)
+      // Batch upsert (chunks of 50) — let DB handle duplicates via ON CONFLICT
       for (let i = 0; i < gameRows.length; i += 50) {
         const chunk = gameRows.slice(i, i + 50);
-        const { error } = await supabase.from("games").insert(chunk as any);
+        const { error } = await supabase.from("games").upsert(chunk as any, {
+          onConflict: "slug",
+          ignoreDuplicates: true,
+        });
 
         if (error) {
           // Batch failed — try individual inserts
           for (const row of chunk) {
             const { error: singleErr } = await supabase
               .from("games")
-              .insert(row as any);
+              .upsert(row as any, { onConflict: "slug", ignoreDuplicates: true });
             if (singleErr) {
               if (
                 singleErr.message?.includes("duplicate") ||
@@ -371,7 +351,6 @@ export async function GET(request: NextRequest) {
       ok: true,
       ...stats,
       elapsedSeconds: elapsed,
-      slugLoadTimeMs: slugLoadTime,
       message: stats.done
         ? "Import complete! Full IGDB catalog has been imported."
         : `Processed ${stats.batchesProcessed} batches in ${elapsed}s. Call again with offset=${stats.nextOffset} to continue.`,
