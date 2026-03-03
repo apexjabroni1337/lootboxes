@@ -61,11 +61,11 @@ export default async function AnalyticsPage() {
   return (
     <div className="pb-12">
       {/* Page hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 sm:py-10">
+      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 sm:py-10 dark:border-gray-800 dark:from-gray-900 dark:to-gray-950">
         <div className="container-main">
           <div className="flex items-center gap-2">
             <BarChart3 className="h-6 w-6 text-brand-600" />
-            <h1 className="text-3xl font-bold text-gray-900">Analytics</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Analytics</h1>
           </div>
           <p className="mt-1 text-sm text-gray-500">
             Data-driven analysis of loot boxes, battle passes, and in-game
@@ -83,7 +83,7 @@ export default async function AnalyticsPage() {
               className={`badge border ${
                 type.value === "all"
                   ? "border-brand-300 bg-brand-50 text-brand-700"
-                  : "border-gray-200 bg-white text-gray-600 hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700"
+                  : "border-gray-200 bg-white text-gray-600 hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400"
               }`}
             >
               {type.label}
@@ -123,7 +123,7 @@ export default async function AnalyticsPage() {
 
             {/* Recent scores */}
             <div className="card">
-              <h3 className="text-sm font-semibold text-gray-900">
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
                 Recent Scores
               </h3>
               <ul className="mt-3 space-y-3">

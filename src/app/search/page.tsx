@@ -42,7 +42,7 @@ function SearchContent() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="text-3xl font-bold text-gray-900">Search</h1>
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Search</h1>
 
       <div className="relative mt-4">
         <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
@@ -86,7 +86,7 @@ function SearchContent() {
                 <Link
                   key={game.id}
                   href={`/games/${game.slug}`}
-                  className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
+                  className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-900"
                 >
                   <div className="h-12 w-9 flex-shrink-0 overflow-hidden rounded-lg">
                     {game.cover_image ? (
@@ -96,7 +96,7 @@ function SearchContent() {
                     )}
                   </div>
                   <div className="flex-1">
-                    <div className="font-semibold text-gray-900">{game.title}</div>
+                    <div className="font-semibold text-gray-900 dark:text-white">{game.title}</div>
                     <div className="text-sm text-gray-500">{game.platforms?.join(", ")}</div>
                   </div>
                 </Link>
@@ -118,7 +118,7 @@ function SearchContent() {
                   <Link
                     key={deal.id}
                     href={`/games/${deal.game.slug}`}
-                    className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
+                    className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-900"
                   >
                     <div className="h-12 w-9 flex-shrink-0 overflow-hidden rounded-lg">
                       {deal.game.cover_image ? (
@@ -130,13 +130,13 @@ function SearchContent() {
                       )}
                     </div>
                     <div className="flex-1">
-                      <div className="font-semibold text-gray-900">{deal.game.title}</div>
+                      <div className="font-semibold text-gray-900 dark:text-white">{deal.game.title}</div>
                       <div className="mt-1 flex items-center gap-2 text-sm">
                         <span className="rounded px-1.5 py-0.5 text-xs font-medium text-white" style={{ backgroundColor: store.color }}>
                           {store.name}
                         </span>
                         <span className="text-gray-400 line-through">{formatPrice(deal.original_price)}</span>
-                        <span className="font-bold text-gray-900">{formatPrice(deal.price)}</span>
+                        <span className="font-bold text-gray-900 dark:text-white">{formatPrice(deal.price)}</span>
                       </div>
                     </div>
                     <span className="badge-discount">{formatDiscount(deal.discount_pct)}</span>
@@ -158,11 +158,11 @@ function SearchContent() {
                 <Link
                   key={article.id}
                   href={`/analytics/${article.slug}`}
-                  className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
+                  className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-900"
                 >
                   <FileText className="h-5 w-5 flex-shrink-0 text-gray-400" />
                   <div className="flex-1">
-                    <div className="font-semibold text-gray-900">{article.title}</div>
+                    <div className="font-semibold text-gray-900 dark:text-white">{article.title}</div>
                     <div className="text-sm text-gray-500">{article.excerpt}</div>
                   </div>
                   <span className="badge-type text-xs uppercase">{article.type}</span>
@@ -183,7 +183,7 @@ export default function SearchPage() {
         <Suspense
           fallback={
             <div className="mx-auto max-w-2xl">
-              <h1 className="text-3xl font-bold text-gray-900">Search</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Search</h1>
               <div className="mt-4 h-12 animate-pulse rounded-lg bg-gray-200" />
             </div>
           }

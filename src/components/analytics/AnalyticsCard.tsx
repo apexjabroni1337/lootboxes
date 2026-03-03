@@ -47,7 +47,7 @@ export default function AnalyticsCard({ article }: AnalyticsCardProps) {
           )}
         </div>
 
-        <h3 className="mt-1 text-sm font-semibold text-gray-900 group-hover:text-brand-600 sm:text-base">
+        <h3 className="mt-1 text-sm font-semibold text-gray-900 group-hover:text-brand-600 sm:text-base dark:text-white">
           {article.title}
         </h3>
 

@@ -44,7 +44,7 @@ export default function WhatsHot({ deals }: WhatsHotProps) {
             return (
               <div
                 key={deal.id}
-                className="group w-[260px] flex-shrink-0 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg"
+                className="group w-[260px] flex-shrink-0 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg dark:border-gray-700 dark:bg-gray-900"
               >
                 {/* Landscape image */}
                 <div className="relative aspect-[16/9] overflow-hidden bg-gray-100">
@@ -73,7 +73,7 @@ export default function WhatsHot({ deals }: WhatsHotProps) {
                 <div className="p-3">
                   <Link
                     href={`/games/${deal.game.slug}`}
-                    className="line-clamp-1 text-sm font-semibold text-gray-900 hover:text-brand-600"
+                    className="line-clamp-1 text-sm font-semibold text-gray-900 hover:text-brand-600 dark:text-white"
                   >
                     {deal.game.title}
                   </Link>
@@ -90,7 +90,7 @@ export default function WhatsHot({ deals }: WhatsHotProps) {
                       <span className="text-xs text-gray-400 line-through">
                         {formatPrice(deal.original_price)}
                       </span>
-                      <span className="ml-1 text-base font-bold text-gray-900">
+                      <span className="ml-1 text-base font-bold text-gray-900 dark:text-white">
                         {formatPrice(deal.price)}
                       </span>
                     </div>

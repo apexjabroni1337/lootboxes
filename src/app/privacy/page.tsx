@@ -9,10 +9,10 @@ export default function PrivacyPage() {
   return (
     <div className="pb-12">
       {/* Hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8">
+      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 dark:border-gray-800 dark:from-gray-900 dark:to-gray-950">
         <div className="container-main">
           <div className="mx-auto max-w-3xl">
-            <h1 className="text-3xl font-bold text-gray-900">Privacy Policy</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Privacy Policy</h1>
             <p className="mt-2 text-sm text-gray-500">
               Last updated: February 28, 2026
             </p>

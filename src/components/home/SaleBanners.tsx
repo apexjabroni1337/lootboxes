@@ -32,7 +32,7 @@ export default function SaleBanners() {
   return (
     <section className="py-10">
       <div className="container-main">
-        <h2 className="text-2xl font-bold text-gray-900">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
           Browse by Category
         </h2>
         <div className="mt-5 grid gap-4 sm:grid-cols-3">

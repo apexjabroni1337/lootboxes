@@ -15,10 +15,10 @@ export default function NewsletterPage() {
           <Mail className="h-7 w-7 text-brand-600" />
         </div>
 
-        <h1 className="mt-6 text-3xl font-bold text-gray-900 sm:text-4xl">
+        <h1 className="mt-6 text-3xl font-bold text-gray-900 sm:text-4xl dark:text-white">
           The LootBoxes Weekly
         </h1>
-        <p className="mt-4 text-lg text-gray-600">
+        <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
           One email per week. The best deals, smartest analysis, and everything
           you need to spend wisely on games. No spam, unsubscribe anytime.
         </p>
@@ -35,7 +35,7 @@ export default function NewsletterPage() {
         <div className="mt-12 grid gap-6 text-left sm:grid-cols-3">
           <div className="card text-center">
             <TrendingDown className="mx-auto h-6 w-6 text-success-600" />
-            <h3 className="mt-3 text-sm font-semibold text-gray-900">
+            <h3 className="mt-3 text-sm font-semibold text-gray-900 dark:text-white">
               Top 5 Deals
             </h3>
             <p className="mt-1 text-xs text-gray-500">
@@ -45,7 +45,7 @@ export default function NewsletterPage() {
           </div>
           <div className="card text-center">
             <BarChart3 className="mx-auto h-6 w-6 text-brand-600" />
-            <h3 className="mt-3 text-sm font-semibold text-gray-900">
+            <h3 className="mt-3 text-sm font-semibold text-gray-900 dark:text-white">
               Featured Analysis
             </h3>
             <p className="mt-1 text-xs text-gray-500">
@@ -55,7 +55,7 @@ export default function NewsletterPage() {
           </div>
           <div className="card text-center">
             <Bell className="mx-auto h-6 w-6 text-warning-500" />
-            <h3 className="mt-3 text-sm font-semibold text-gray-900">
+            <h3 className="mt-3 text-sm font-semibold text-gray-900 dark:text-white">
               Quick Hits
             </h3>
             <p className="mt-1 text-xs text-gray-500">

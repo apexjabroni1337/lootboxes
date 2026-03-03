@@ -150,11 +150,11 @@ export default async function DropRatesPage() {
   return (
     <div className="pb-12">
       {/* Page hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 sm:py-10">
+      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 sm:py-10 dark:border-gray-800 dark:from-gray-900 dark:to-gray-950">
         <div className="container-main">
           <div className="flex items-center gap-2">
             <Zap className="h-6 w-6 text-brand-600" />
-            <h1 className="text-3xl font-bold text-gray-900">Drop Rate Database</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Drop Rate Database</h1>
           </div>
           <p className="mt-2 max-w-2xl text-gray-500">
             Verified drop rates and loot box probabilities for every major game.
@@ -164,17 +164,17 @@ export default async function DropRatesPage() {
 
           {/* Stats bar */}
           <div className="mt-5 flex flex-wrap gap-4">
-            <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2">
-              <span className="text-lg font-bold text-gray-900">{totalGames}</span>
+            <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 dark:border-gray-700 dark:bg-gray-900">
+              <span className="text-lg font-bold text-gray-900 dark:text-white">{totalGames}</span>
               <span className="text-sm text-gray-500">Games Tracked</span>
             </div>
-            <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2">
-              <span className="text-lg font-bold text-gray-900">{totalRates}</span>
+            <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 dark:border-gray-700 dark:bg-gray-900">
+              <span className="text-lg font-bold text-gray-900 dark:text-white">{totalRates}</span>
               <span className="text-sm text-gray-500">Drop Rates</span>
             </div>
-            <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2">
+            <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 dark:border-gray-700 dark:bg-gray-900">
               <CheckCircle className="h-4 w-4 text-success-600" />
-              <span className="text-lg font-bold text-gray-900">{officialCount}</span>
+              <span className="text-lg font-bold text-gray-900 dark:text-white">{officialCount}</span>
               <span className="text-sm text-gray-500">Officially Verified</span>
             </div>
           </div>
@@ -207,9 +207,9 @@ export default async function DropRatesPage() {
         ) : (
           <div className="mt-8 space-y-8">
             {games.map((game) => (
-              <section key={game.slug} className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+              <section key={game.slug} className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
                 {/* Game header */}
-                <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50 px-5 py-3">
+                <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50 px-5 py-3 dark:border-gray-700 dark:bg-gray-800">
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg">
                       {game.cover_image ? (
@@ -220,7 +220,7 @@ export default async function DropRatesPage() {
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h2 className="text-lg font-bold text-gray-900">{game.title}</h2>
+                        <h2 className="text-lg font-bold text-gray-900 dark:text-white">{game.title}</h2>
                         {game.lootboxes_score && (
                           <ScoreBadge score={game.lootboxes_score} size="sm" />
                         )}
@@ -268,7 +268,7 @@ export default async function DropRatesPage() {
                             key={i}
                             className={`transition-colors hover:bg-gray-50 ${isPity ? "bg-emerald-50/30" : ""} ${isEffective ? "bg-rose-50/20" : ""}`}
                           >
-                            <td className="px-5 py-3 text-sm font-medium text-gray-900">
+                            <td className="px-5 py-3 text-sm font-medium text-gray-900 dark:text-white">
                               {item.item_name}
                             </td>
                             <td className="px-5 py-3">
@@ -277,7 +277,7 @@ export default async function DropRatesPage() {
                               </span>
                             </td>
                             <td className="px-5 py-3 text-right">
-                              <span className="text-sm font-bold text-gray-900">
+                              <span className="text-sm font-bold text-gray-900 dark:text-white">
                                 {item.drop_rate_pct >= 100
                                   ? "Guaranteed"
                                   : item.drop_rate_pct < 1
@@ -310,9 +310,9 @@ export default async function DropRatesPage() {
         )}
 
         {/* CTA */}
-        <div className="mt-10 rounded-xl border border-gray-200 bg-gray-50 p-6 text-center">
+        <div className="mt-10 rounded-xl border border-gray-200 bg-gray-50 p-6 text-center dark:border-gray-700 dark:bg-gray-800">
           <Sparkles className="mx-auto h-6 w-6 text-brand-600" />
-          <h3 className="mt-2 text-lg font-bold text-gray-900">Know drop rates we&apos;re missing?</h3>
+          <h3 className="mt-2 text-lg font-bold text-gray-900 dark:text-white">Know drop rates we&apos;re missing?</h3>
           <p className="mt-1 text-sm text-gray-500">
             Help us build the most accurate database by submitting your data.
           </p>

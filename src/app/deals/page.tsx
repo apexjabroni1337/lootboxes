@@ -194,7 +194,7 @@ export default async function DealsPage({
       <HeroCarousel deals={carouselDeals} />
 
       {/* ─── Stats Strip ─── */}
-      <section className="border-b border-gray-100 bg-gradient-to-r from-brand-50 via-white to-gray-50 py-6">
+      <section className="border-b border-gray-100 bg-gradient-to-r from-brand-50 via-white to-gray-50 py-6 dark:border-gray-800 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
         <div className="container-main">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
@@ -202,7 +202,7 @@ export default async function DealsPage({
                 <ShoppingBag className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Hot Deals</h1>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Hot Deals</h1>
                 <p className="text-sm text-gray-500">
                   Best prices across {uniqueStores.size}+ stores — updated every
                   30 minutes
@@ -211,7 +211,7 @@ export default async function DealsPage({
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 shadow-sm">
+              <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 shadow-sm dark:border-gray-700 dark:bg-gray-900">
                 <Zap className="h-4 w-4 text-brand-600" />
                 <div>
                   <p className="text-lg font-bold text-gray-900">
@@ -221,10 +221,10 @@ export default async function DealsPage({
                 </div>
               </div>
               {historicLowCount > 0 && (
-                <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 shadow-sm">
+                <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 shadow-sm dark:border-gray-700 dark:bg-gray-900">
                   <TrendingDown className="h-4 w-4 text-brand-600" />
                   <div>
-                    <p className="text-lg font-bold text-gray-900">
+                    <p className="text-lg font-bold text-gray-900 dark:text-white">
                       {historicLowCount}
                     </p>
                     <p className="text-[11px] text-gray-500">Historic lows</p>
@@ -232,10 +232,10 @@ export default async function DealsPage({
                 </div>
               )}
               {bigDiscountCount > 0 && (
-                <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 shadow-sm">
+                <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 shadow-sm dark:border-gray-700 dark:bg-gray-900">
                   <Sparkles className="h-4 w-4 text-amber-500" />
                   <div>
-                    <p className="text-lg font-bold text-gray-900">
+                    <p className="text-lg font-bold text-gray-900 dark:text-white">
                       {bigDiscountCount}
                     </p>
                     <p className="text-[11px] text-gray-500">50%+ off</p>
@@ -243,10 +243,10 @@ export default async function DealsPage({
                 </div>
               )}
               {under10Count > 0 && (
-                <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 shadow-sm">
+                <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 shadow-sm dark:border-gray-700 dark:bg-gray-900">
                   <Store className="h-4 w-4 text-success-600" />
                   <div>
-                    <p className="text-lg font-bold text-gray-900">
+                    <p className="text-lg font-bold text-gray-900 dark:text-white">
                       {under10Count}
                     </p>
                     <p className="text-[11px] text-gray-500">Under $10</p>
@@ -273,7 +273,7 @@ export default async function DealsPage({
       {/* ─── Full Deals List (tabbed & filterable) ─── */}
       <section className="py-10">
         <div className="container-main">
-          <h2 className="mb-6 text-2xl font-bold text-gray-900">
+          <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">
             All Deals
           </h2>
           <DealsFilter
@@ -288,7 +288,7 @@ export default async function DealsPage({
           <div className="mt-10 rounded-xl border border-brand-200 bg-gradient-to-r from-brand-50 to-white p-6 sm:p-8">
             <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
               <div>
-                <h3 className="text-lg font-bold text-gray-900">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                   Never miss a deal
                 </h3>
                 <p className="mt-1 text-sm text-gray-500">

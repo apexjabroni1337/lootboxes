@@ -147,7 +147,7 @@ export default function Header() {
                 onMouseLeave={closeLootboxMega}
               >
                 <button
-                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
                   onClick={() => setLootboxMegaOpen(!lootboxMegaOpen)}
                 >
                   <Zap className="h-3.5 w-3.5 text-purple-500" />
@@ -171,7 +171,7 @@ export default function Header() {
                               key={t.label}
                               href={t.href}
                               onClick={() => setLootboxMegaOpen(false)}
-                              className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
+                              className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
                             >
                               <t.icon className="h-4 w-4 text-gray-400" />
                               {t.label}
@@ -191,7 +191,7 @@ export default function Header() {
                               key={g.label}
                               href={g.href}
                               onClick={() => setLootboxMegaOpen(false)}
-                              className="block rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
+                              className="block rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
                             >
                               {g.label}
                             </Link>
@@ -201,7 +201,7 @@ export default function Header() {
                     </div>
 
                     {/* Bottom bar */}
-                    <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
+                    <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3 dark:border-gray-800">
                       <Link
                         href="/lootbox"
                         onClick={() => setLootboxMegaOpen(false)}
@@ -213,21 +213,21 @@ export default function Header() {
                         <Link
                           href="/lootbox/rankings"
                           onClick={() => setLootboxMegaOpen(false)}
-                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                         >
                           Rankings
                         </Link>
                         <Link
                           href="/methodology"
                           onClick={() => setLootboxMegaOpen(false)}
-                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                         >
                           How We Rate
                         </Link>
                         <Link
                           href="/drop-rates"
                           onClick={() => setLootboxMegaOpen(false)}
-                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                         >
                           Drop Rate Database
                         </Link>
@@ -245,7 +245,7 @@ export default function Header() {
                 onMouseLeave={closeMega}
               >
                 <button
-                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
                   onClick={() => setMegaOpen(!megaOpen)}
                 >
                   <Flame className="h-3.5 w-3.5 text-orange-500" />
@@ -270,7 +270,7 @@ export default function Header() {
                               key={g.label}
                               href={g.href}
                               onClick={() => setMegaOpen(false)}
-                              className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
+                              className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
                             >
                               <g.icon className="h-4 w-4 text-gray-400" />
                               {g.label}
@@ -297,7 +297,7 @@ export default function Header() {
                           ))}
                         </div>
 
-                        <div className="mt-5 rounded-lg border border-brand-100 bg-brand-50 p-3">
+                        <div className="mt-5 rounded-lg border border-brand-100 bg-brand-50 p-3 dark:border-brand-900 dark:bg-brand-950">
                           <p className="text-xs font-semibold text-brand-700">
                             Price Drop Alerts
                           </p>
@@ -316,7 +316,7 @@ export default function Header() {
                     </div>
 
                     {/* Bottom bar */}
-                    <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
+                    <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3 dark:border-gray-800">
                       <Link
                         href="/games"
                         onClick={() => setMegaOpen(false)}
@@ -328,14 +328,14 @@ export default function Header() {
                         <Link
                           href="/games/new-releases"
                           onClick={() => setMegaOpen(false)}
-                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                         >
                           New Releases
                         </Link>
                         <Link
                           href="/deals?sort=trending"
                           onClick={() => setMegaOpen(false)}
-                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                         >
                           Trending
                         </Link>
@@ -367,7 +367,7 @@ export default function Header() {
               >
                 <Search className="h-4 w-4 flex-shrink-0 text-gray-400" />
                 <span className="flex-1 text-left">Search games, deals, or analytics...</span>
-                <kbd className="hidden rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-medium text-gray-400 lg:inline">
+                <kbd className="hidden rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-medium text-gray-400 lg:inline dark:border-gray-700 dark:bg-gray-800">
                   ⌘K
                 </kbd>
               </button>
@@ -378,7 +378,7 @@ export default function Header() {
               {/* Mobile search trigger */}
               <button
                 onClick={() => setSearchOpen(true)}
-                className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 md:hidden"
+                className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 md:hidden dark:text-gray-400 dark:hover:bg-gray-800"
                 aria-label="Search"
               >
                 <Search className="h-5 w-5" />
@@ -409,7 +409,7 @@ export default function Header() {
               {/* Mobile menu toggle */}
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 lg:hidden"
+                className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 lg:hidden dark:text-gray-400 dark:hover:bg-gray-800"
                 aria-label="Menu"
               >
                 {mobileOpen ? (
@@ -422,7 +422,7 @@ export default function Header() {
           </div>
 
           {/* Trending searches bar (desktop only) */}
-          <div className="hidden border-t border-gray-100 md:block">
+          <div className="hidden border-t border-gray-100 md:block dark:border-gray-800">
             <div className="flex items-center gap-2 py-1.5">
               <span className="text-[11px] font-medium uppercase tracking-wide text-gray-400">
                 Trending:
@@ -431,7 +431,7 @@ export default function Header() {
                 <Link
                   key={term}
                   href={`/search?q=${encodeURIComponent(term)}`}
-                  className="rounded-full bg-gray-50 px-2.5 py-1 text-[11px] font-medium text-gray-500 transition-colors hover:bg-brand-50 hover:text-brand-600"
+                  className="rounded-full bg-gray-50 px-2.5 py-1 text-[11px] font-medium text-gray-500 transition-colors hover:bg-brand-50 hover:text-brand-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                 >
                   {term}
                 </Link>
@@ -441,12 +441,12 @@ export default function Header() {
 
           {/* Mobile Nav */}
           {mobileOpen && (
-            <div className="border-t border-gray-100 py-4 lg:hidden">
+            <div className="border-t border-gray-100 py-4 lg:hidden dark:border-gray-800">
               <nav className="flex flex-col gap-1">
                 <Link
                   href="/lootbox"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
                 >
                   <Zap className="h-4 w-4 text-purple-500" />
                   Loot Box Database
@@ -454,7 +454,7 @@ export default function Header() {
                 <Link
                   href="/deals"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
                 >
                   <Flame className="h-4 w-4 text-orange-500" />
                   Game Deals
@@ -462,20 +462,20 @@ export default function Header() {
                 <Link
                   href="/analytics"
                   onClick={() => setMobileOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
                 >
                   Analytics
                 </Link>
                 <Link
                   href="/drop-rates"
                   onClick={() => setMobileOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
                 >
                   Drop Rates
                 </Link>
 
                 {/* Mobile quick filters */}
-                <div className="mt-2 border-t border-gray-100 pt-3">
+                <div className="mt-2 border-t border-gray-100 pt-3 dark:border-gray-800">
                   <p className="px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
                     Quick Filters
                   </p>

@@ -255,19 +255,19 @@ export default async function LootboxGamePage({
       <div className="container-main -mt-20 relative z-10 mb-10">
         <div className="flex flex-wrap gap-3">
           {content.cost_per_pull !== null && content.cost_per_pull > 0 && (
-            <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 shadow-lg border border-gray-200">
+            <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 shadow-lg border border-gray-200 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300">
               <span className="text-lg font-bold text-blue-600">${content.cost_per_pull.toFixed(2)}</span>
               <span>per pull</span>
             </div>
           )}
           {content.has_pity_system && content.pulls_to_pity && (
-            <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 shadow-lg border border-gray-200">
+            <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 shadow-lg border border-gray-200 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300">
               <span className="text-lg font-bold text-emerald-600">{content.pulls_to_pity}</span>
               <span>pulls to pity</span>
             </div>
           )}
           {content.cost_to_pity !== null && content.cost_to_pity > 0 && (
-            <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 shadow-lg border border-gray-200">
+            <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 shadow-lg border border-gray-200 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300">
               <span className="text-lg font-bold text-purple-600">${content.cost_to_pity.toFixed(2)}</span>
               <span>to guarantee pity</span>
             </div>
@@ -293,7 +293,7 @@ export default async function LootboxGamePage({
           {dropRates.length > 0 && (
             <section>
               <SectionHeader icon={BarChart3} title="Drop Rate Breakdown" />
-              <div className="bg-white rounded-xl border border-gray-200 p-5 mb-4">
+              <div className="bg-white rounded-xl border border-gray-200 p-5 mb-4 dark:bg-gray-900 dark:border-gray-700">
               <DropRateBarChart items={dropRates} />
               </div>
 
@@ -301,12 +301,12 @@ export default async function LootboxGamePage({
               <div className="overflow-x-auto -mx-4 sm:mx-0">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b-2 border-gray-200">
-                    <th className="text-left py-3 px-4 font-semibold text-gray-600 uppercase text-xs tracking-wider">Item</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-600 uppercase text-xs tracking-wider">Rarity</th>
-                    <th className="text-right py-3 px-4 font-semibold text-gray-600 uppercase text-xs tracking-wider">Drop Rate</th>
-                    <th className="text-right py-3 px-4 font-semibold text-gray-600 uppercase text-xs tracking-wider">~Avg. Opens</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-600 uppercase text-xs tracking-wider">Source</th>
+                  <tr className="border-b-2 border-gray-200 dark:border-gray-700">
+                    <th className="text-left py-3 px-4 font-semibold text-gray-600 uppercase text-xs tracking-wider dark:text-gray-400">Item</th>
+                    <th className="text-left py-3 px-4 font-semibold text-gray-600 uppercase text-xs tracking-wider dark:text-gray-400">Rarity</th>
+                    <th className="text-right py-3 px-4 font-semibold text-gray-600 uppercase text-xs tracking-wider dark:text-gray-400">Drop Rate</th>
+                    <th className="text-right py-3 px-4 font-semibold text-gray-600 uppercase text-xs tracking-wider dark:text-gray-400">~Avg. Opens</th>
+                    <th className="text-left py-3 px-4 font-semibold text-gray-600 uppercase text-xs tracking-wider dark:text-gray-400">Source</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -314,14 +314,14 @@ export default async function LootboxGamePage({
                     const src = SOURCE_META[rate.source] || SOURCE_META.user_reported;
                     const SrcIcon = src.icon;
                     return (
-                      <tr key={rate.id} className="border-b border-gray-100 hover:bg-gray-50">
-                        <td className="py-2.5 px-4 font-medium text-gray-900">{rate.item_name}</td>
+                      <tr key={rate.id} className="border-b border-gray-100 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800">
+                        <td className="py-2.5 px-4 font-medium text-gray-900 dark:text-white">{rate.item_name}</td>
                         <td className="py-2.5 px-4">
                           <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${getRarityColor(rate.rarity)}`}>
                             {rate.rarity}
                           </span>
                         </td>
-                        <td className="py-2.5 px-4 text-right font-bold text-gray-900">
+                        <td className="py-2.5 px-4 text-right font-bold text-gray-900 dark:text-white">
                           {rate.drop_rate_pct < 1
                             ? `${rate.drop_rate_pct}%`
                             : `${Number(rate.drop_rate_pct).toFixed(1)}%`}
@@ -385,7 +385,7 @@ export default async function LootboxGamePage({
           {game.lootboxes_score !== null && (
             <section>
               <SectionHeader icon={Scale} title="Lootboxes Score Breakdown" />
-              <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <div className="bg-white rounded-xl border border-gray-200 p-6 dark:bg-gray-900 dark:border-gray-700">
                 <ScoreBreakdown
                   overall={game.lootboxes_score}
                   transparency={content.score_transparency}
@@ -416,7 +416,7 @@ export default async function LootboxGamePage({
           {comparisons.length > 0 && (
             <section>
               <SectionHeader icon={BarChart3} title="Compared to Similar Games" />
-              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden dark:bg-gray-900 dark:border-gray-700">
                 <ComparisonTable
                   current={{
                     slug: game.slug,
@@ -451,7 +451,7 @@ export default async function LootboxGamePage({
           {content.tips_html && (
             <section>
               <SectionHeader icon={Lightbulb} title="Spending Tips & Advice" />
-              <div className="bg-amber-50 rounded-xl border border-amber-200 p-6">
+              <div className="bg-amber-50 rounded-xl border border-amber-200 p-6 dark:bg-amber-950/20 dark:border-amber-800">
                 <div
                   className="prose prose-gray max-w-none"
                   dangerouslySetInnerHTML={{ __html: content.tips_html }}
@@ -464,7 +464,7 @@ export default async function LootboxGamePage({
           {content.editorial_html && (
             <section>
               <SectionHeader icon={BookOpen} title="Our Verdict" />
-              <div className="bg-gray-50 rounded-xl border border-gray-200 p-6 lg:p-8">
+              <div className="bg-gray-50 rounded-xl border border-gray-200 p-6 lg:p-8 dark:bg-gray-800 dark:border-gray-700">
                 <div
                   className="prose prose-gray prose-lg max-w-none"
                   dangerouslySetInnerHTML={{ __html: content.editorial_html }}
@@ -474,25 +474,25 @@ export default async function LootboxGamePage({
         )}
 
           {/* Related Links */}
-          <section className="border-t border-gray-200 pt-8">
+          <section className="border-t border-gray-200 pt-8 dark:border-gray-700">
             <div className="flex flex-wrap gap-3">
               <Link
                 href={`/games/${game.slug}`}
-                className="flex items-center gap-2 bg-blue-50 rounded-lg px-4 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100 transition-colors"
+                className="flex items-center gap-2 bg-blue-50 rounded-lg px-4 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100 transition-colors dark:bg-blue-950/30 dark:text-blue-400 dark:hover:bg-blue-950/50"
               >
                 View Deals for {game.title}
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/drop-rates"
-                className="flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors"
+                className="flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 Drop Rate Database
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/lootbox"
-                className="flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors"
+                className="flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 All Loot Box Analyses
                 <ArrowRight className="w-4 h-4" />
@@ -515,7 +515,7 @@ function SectionHeader({
   return (
     <div className="flex items-center gap-2.5 mb-4">
       <Icon className="w-5 h-5 text-blue-600" />
-      <h2 className="text-xl font-bold text-gray-900">{title}</h2>
+      <h2 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h2>
     </div>
   );
 }

@@ -91,11 +91,11 @@ function ScaleVisualization() {
   ];
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-6">
-      <h3 className="font-semibold text-gray-900 mb-4">The 1-10 Scale</h3>
+    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
+      <h3 className="font-semibold text-gray-900 dark:text-white mb-4">The 1-10 Scale</h3>
 
       {/* Color bands */}
-      <div className="flex h-12 rounded-lg overflow-hidden mb-6 border border-gray-200">
+      <div className="flex h-12 rounded-lg overflow-hidden mb-6 border border-gray-200 dark:border-gray-700">
         <div className="flex-1 bg-red-500 flex items-center justify-center">
           <span className="text-white text-xs font-bold">1-3: Poor</span>
         </div>
@@ -115,14 +115,14 @@ function ScaleVisualization() {
         {exampleGames.map((game) => (
           <div key={game.title}>
             <div className="flex justify-between mb-1">
-              <span className="text-sm font-medium text-gray-900">
+              <span className="text-sm font-medium text-gray-900 dark:text-white">
                 {game.title}
               </span>
-              <span className="text-sm font-bold text-gray-600">
+              <span className="text-sm font-bold text-gray-600 dark:text-gray-400">
                 {game.score}
               </span>
             </div>
-            <div className="w-full h-6 bg-gray-100 rounded-lg overflow-hidden relative border border-gray-200">
+            <div className="w-full h-6 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden relative border border-gray-200 dark:border-gray-700">
               <div
                 className={`h-full ${
                   game.score >= 9
@@ -167,17 +167,17 @@ function ScaleVisualization() {
 
 function CriteriaTable({ subScore }: { subScore: typeof SCORE_CATEGORIES[0]["subScores"][0] }) {
   return (
-    <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
+    <div className="bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
       <table className="w-full text-sm">
-        <thead className="bg-gray-100 border-b border-gray-200">
+        <thead className="bg-gray-100 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
           <tr>
-            <th className="text-left px-4 py-3 font-semibold text-gray-700">
+            <th className="text-left px-4 py-3 font-semibold text-gray-700 dark:text-gray-300">
               Score
             </th>
-            <th className="text-left px-4 py-3 font-semibold text-gray-700">
+            <th className="text-left px-4 py-3 font-semibold text-gray-700 dark:text-gray-300">
               Rating
             </th>
-            <th className="text-left px-4 py-3 font-semibold text-gray-700">
+            <th className="text-left px-4 py-3 font-semibold text-gray-700 dark:text-gray-300">
               What This Means
             </th>
           </tr>
@@ -247,7 +247,7 @@ export default function MethodologyPage() {
 
       {/* Scale Section */}
       <div className="mb-14">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           The LootBoxes Scale (1-10)
         </h2>
         <ScaleVisualization />
@@ -255,7 +255,7 @@ export default function MethodologyPage() {
 
       {/* Three Categories Section */}
       <div className="mb-14">
-        <h2 className="text-2xl font-bold text-gray-900 mb-8">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">
           Three Scoring Categories
         </h2>
 
@@ -268,7 +268,7 @@ export default function MethodologyPage() {
               >
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-1">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
                       {category.name}
                     </h3>
                     <p className={`text-sm font-semibold ${category.color}`}>
@@ -277,9 +277,9 @@ export default function MethodologyPage() {
                   </div>
                 </div>
                 <p className="text-gray-700 mb-4">{category.description}</p>
-                <div className="bg-white bg-opacity-60 rounded-lg p-4 border border-gray-200">
-                  <p className="text-sm text-gray-700">
-                    <span className="font-semibold text-gray-900">
+                <div className="bg-white dark:bg-gray-800 bg-opacity-60 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    <span className="font-semibold text-gray-900 dark:text-white">
                       Why It Matters:
                     </span>{" "}
                     {category.whyItMatters}
@@ -297,10 +297,10 @@ export default function MethodologyPage() {
                         {ICON_MAP[subScore.icon]}
                       </div>
                       <div>
-                        <h4 className="font-bold text-gray-900">
+                        <h4 className="font-bold text-gray-900 dark:text-white">
                           {subScore.name}
                         </h4>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
                           {subScore.description}
                         </p>
                       </div>
@@ -318,25 +318,25 @@ export default function MethodologyPage() {
 
       {/* How We Calculate */}
       <div className="mb-14">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           How We Calculate Your Score
         </h2>
 
-        <div className="bg-gray-50 rounded-xl border border-gray-200 p-8 mb-6">
-          <h3 className="font-bold text-gray-900 mb-4 text-lg">
+        <div className="bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-8 mb-6">
+          <h3 className="font-bold text-gray-900 dark:text-white mb-4 text-lg">
             The Weighted Formula
           </h3>
-          <div className="bg-white rounded-lg p-6 border border-blue-200 mb-6">
-            <code className="text-sm font-mono text-blue-900">
+          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 border border-blue-200 dark:border-blue-800 mb-6">
+            <code className="text-sm font-mono text-blue-900 dark:text-blue-300">
               Overall = (Consumer Protection avg × 0.40) + (Value & Fairness
               avg × 0.35) + (Player Experience avg × 0.25)
             </code>
           </div>
 
-          <h3 className="font-bold text-gray-900 mb-4">
+          <h3 className="font-bold text-gray-900 dark:text-white mb-4">
             Worked Example: Genshin Impact
           </h3>
-          <div className="space-y-4 text-sm text-gray-700">
+          <div className="space-y-4 text-sm text-gray-700 dark:text-gray-300">
             <div className="grid grid-cols-3 gap-4 font-mono">
               <div>
                 <p className="text-xs font-semibold text-gray-500 mb-1 uppercase">
@@ -364,17 +364,17 @@ export default function MethodologyPage() {
               </div>
             </div>
 
-            <div className="border-t border-gray-300 pt-4 mt-4">
-              <p className="font-bold text-gray-900 text-base">
+            <div className="border-t border-gray-300 dark:border-gray-600 pt-4 mt-4">
+              <p className="font-bold text-gray-900 dark:text-white text-base">
                 Overall Score: 2.40 + 1.51 + 0.75 = 4.66 → rounds to{" "}
                 <span className="text-amber-600">4.7 (Fair)</span>
               </p>
             </div>
           </div>
 
-          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-gray-700">
-              <span className="font-semibold text-gray-900">Why these weights?</span> Consumer
+          <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg">
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              <span className="font-semibold text-gray-900 dark:text-white">Why these weights?</span> Consumer
               Protection is weighted highest (40%) because informed consent is
               the foundation of fair monetization. A system can be
               consumer-friendly in value but exploitative in design. Without
@@ -387,7 +387,7 @@ export default function MethodologyPage() {
 
       {/* Data Sources */}
       <div className="mb-14">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Our Data Sources
         </h2>
         <div className="grid md:grid-cols-3 gap-6">
@@ -418,22 +418,22 @@ export default function MethodologyPage() {
           ].map((source, idx) => (
             <div
               key={idx}
-              className="bg-white border border-gray-200 rounded-xl p-6"
+              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6"
             >
               <div className={`mb-3 ${source.color}`}>{source.icon}</div>
-              <h3 className="font-bold text-gray-900 mb-2">{source.title}</h3>
-              <p className="text-sm text-gray-600 mb-4">{source.desc}</p>
-              <p className="text-xs text-gray-500">
-                <span className="font-semibold text-gray-700">Examples:</span>{" "}
+              <h3 className="font-bold text-gray-900 dark:text-white mb-2">{source.title}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{source.desc}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                <span className="font-semibold text-gray-700 dark:text-gray-300">Examples:</span>{" "}
                 {source.examples}
               </p>
             </div>
           ))}
         </div>
 
-        <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-          <p className="text-sm text-gray-700">
-            <span className="font-semibold text-gray-900">Cross-referencing & Verification:</span> We
+        <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg">
+          <p className="text-sm text-gray-700 dark:text-gray-300">
+            <span className="font-semibold text-gray-900 dark:text-white">Cross-referencing & Verification:</span> We
             require multiple independent sources before publishing a score. If
             official and community data disagree, we flag the game for manual
             review and note the discrepancy in our database.
@@ -443,12 +443,12 @@ export default function MethodologyPage() {
 
       {/* Score Updates */}
       <div className="mb-14">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Score Updates & Version History
         </h2>
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-          <div className="p-6 border-b border-gray-200 bg-gray-50">
-            <p className="text-sm text-gray-700">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+            <p className="text-sm text-gray-700 dark:text-gray-300">
               Scores are <span className="font-semibold">living documents</span>.
               When a game receives a major monetization patch, changes its
               regional pricing, or adds new safeguards, we re-evaluate and
@@ -458,32 +458,32 @@ export default function MethodologyPage() {
           </div>
 
           <table className="w-full text-sm">
-            <thead className="bg-gray-100 border-b border-gray-200">
+            <thead className="bg-gray-100 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
               <tr>
-                <th className="text-left px-6 py-3 font-semibold text-gray-700">
+                <th className="text-left px-6 py-3 font-semibold text-gray-700 dark:text-gray-300">
                   Version
                 </th>
-                <th className="text-left px-6 py-3 font-semibold text-gray-700">
+                <th className="text-left px-6 py-3 font-semibold text-gray-700 dark:text-gray-300">
                   Date
                 </th>
-                <th className="text-left px-6 py-3 font-semibold text-gray-700">
+                <th className="text-left px-6 py-3 font-semibold text-gray-700 dark:text-gray-300">
                   Changes
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr className="border-b border-gray-200 hover:bg-gray-50">
+              <tr className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
                 <td className="px-6 py-4 font-semibold text-blue-600">v2.0</td>
-                <td className="px-6 py-4 text-gray-600">March 2026</td>
-                <td className="px-6 py-4 text-gray-600">
+                <td className="px-6 py-4 text-gray-600 dark:text-gray-400">March 2026</td>
+                <td className="px-6 py-4 text-gray-600 dark:text-gray-400">
                   Introduced three-category framework with 8 sub-scores and
                   weighted calculation
                 </td>
               </tr>
-              <tr className="hover:bg-gray-50">
-                <td className="px-6 py-4 font-semibold text-gray-500">v1.0</td>
-                <td className="px-6 py-4 text-gray-600">Initial Release</td>
-                <td className="px-6 py-4 text-gray-600">
+              <tr className="hover:bg-gray-50 dark:hover:bg-gray-800">
+                <td className="px-6 py-4 font-semibold text-gray-500 dark:text-gray-400">v1.0</td>
+                <td className="px-6 py-4 text-gray-600 dark:text-gray-400">Initial Release</td>
+                <td className="px-6 py-4 text-gray-600 dark:text-gray-400">
                   Original 4-score system (Transparency, Value, Fairness,
                   Control)
                 </td>
@@ -495,20 +495,20 @@ export default function MethodologyPage() {
 
       {/* FAQ */}
       <div className="mb-14">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Frequently Asked Questions
         </h2>
         <div className="space-y-4">
           {FAQ_ITEMS.map((item, idx) => (
             <details
               key={idx}
-              className="bg-white border border-gray-200 rounded-lg overflow-hidden group"
+              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden group"
             >
-              <summary className="px-6 py-4 font-semibold text-gray-900 cursor-pointer hover:bg-gray-50 flex items-center justify-between">
+              <summary className="px-6 py-4 font-semibold text-gray-900 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-between">
                 <span>{item.question}</span>
                 <ChevronRight className="w-5 h-5 text-gray-400 group-open:rotate-90 transition-transform" />
               </summary>
-              <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 text-gray-700 text-sm">
+              <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm">
                 {item.answer}
               </div>
             </details>

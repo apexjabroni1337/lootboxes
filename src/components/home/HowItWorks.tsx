@@ -6,33 +6,33 @@ const steps = [
     title: "Compare Deals",
     description:
       "We scan 8+ stores every hour to find the lowest prices on PC and console games. No more tab-hopping.",
-    accent: "text-brand-600 bg-brand-50",
+    accent: "text-brand-600 bg-brand-50 dark:bg-brand-950 dark:text-brand-400",
   },
   {
     icon: BarChart3,
     title: "Analyze Value",
     description:
       "Our LootBoxes Score rates every battle pass, gacha system, and in-game shop so you know what's fair.",
-    accent: "text-purple-600 bg-purple-50",
+    accent: "text-purple-600 bg-purple-50 dark:bg-purple-950 dark:text-purple-400",
   },
   {
     icon: Wallet,
     title: "Save Money",
     description:
       "Get deal alerts, historic low notifications, and weekly roundups — never overpay for a game again.",
-    accent: "text-success-600 bg-success-50",
+    accent: "text-success-600 bg-success-50 dark:bg-emerald-950 dark:text-emerald-400",
   },
 ];
 
 export default function HowItWorks() {
   return (
-    <section className="border-y border-gray-100 bg-gray-50/50 py-14">
+    <section className="border-y border-gray-100 bg-gray-50/50 py-14 dark:border-gray-800 dark:bg-gray-900/50">
       <div className="container-main">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
             How LootBoxes.com Works
           </h2>
-          <p className="mx-auto mt-2 max-w-lg text-sm text-gray-500">
+          <p className="mx-auto mt-2 max-w-lg text-sm text-gray-500 dark:text-gray-400">
             More than a deal finder — we help you understand the true value of
             every gaming purchase.
           </p>
@@ -46,10 +46,10 @@ export default function HowItWorks() {
               >
                 <step.icon className="h-6 w-6" />
               </div>
-              <h3 className="mt-4 text-base font-semibold text-gray-900">
+              <h3 className="mt-4 text-base font-semibold text-gray-900 dark:text-white">
                 {step.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-gray-500">
+              <p className="mt-2 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
                 {step.description}
               </p>
             </div>

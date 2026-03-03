@@ -38,7 +38,7 @@
   }
 
   .badge-type {
-    @apply badge bg-gray-100 text-gray-700;
+    @apply badge bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300;
   }
 
   .btn {
@@ -99,6 +99,9 @@
   line-height: 1.75;
   font-size: 1rem;
 }
+:is(.dark .prose) {
+  color: #d1d5db;
+}
 .prose p {
   margin-top: 1.25em;
   margin-bottom: 1.25em;
@@ -112,6 +115,9 @@
 .prose strong {
   font-weight: 700;
   color: #111827;
+}
+:is(.dark .prose) strong {
+  color: #f3f4f6;
 }
 .prose ul, .prose ol {
   margin-top: 1.25em;
@@ -135,11 +141,17 @@
   margin-bottom: 0.6em;
   color: #111827;
 }
+:is(.dark .prose) h3 {
+  color: #f3f4f6;
+}
 .prose h4 {
   font-weight: 700;
   margin-top: 1.5em;
   margin-bottom: 0.5em;
   color: #111827;
+}
+:is(.dark .prose) h4 {
+  color: #f3f4f6;
 }
 .prose a {
   color: #0074c5;
@@ -155,6 +167,10 @@
   margin-top: 1.6em;
   margin-bottom: 1.6em;
   color: #6b7280;
+}
+:is(.dark .prose) blockquote {
+  border-left-color: #374151;
+  color: #9ca3af;
 }
 .prose-lg {
   font-size: 1.125rem;

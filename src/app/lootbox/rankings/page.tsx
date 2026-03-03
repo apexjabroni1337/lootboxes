@@ -192,25 +192,25 @@ export default async function RankingsPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white to-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
       {/* SEO Metadata in getMetadata function (handled separately) */}
 
       {/* Hero Section */}
-      <section className="border-b border-gray-200 bg-white">
+      <section className="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
         <div className="container-main py-12 md:py-16">
           <div className="flex items-center gap-3 mb-4">
             <Trophy className="w-8 h-8 text-[#0074c5]" />
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900">Loot Box Rankings</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Loot Box Rankings</h1>
           </div>
-          <p className="text-lg text-gray-600 mb-6 max-w-2xl">
+          <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 max-w-2xl">
             Every game ranked by monetization fairness — from the most consumer-friendly to the most predatory.
           </p>
           <div className="flex flex-wrap gap-4">
-            <div className="px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm font-medium text-blue-900">{games.length} Games Analyzed</p>
+            <div className="px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg dark:bg-blue-950/30 dark:border-blue-800">
+              <p className="text-sm font-medium text-blue-900 dark:text-blue-300">{games.length} Games Analyzed</p>
             </div>
-            <div className="px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm font-medium text-blue-900">Average Score: {avgScore}</p>
+            <div className="px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg dark:bg-blue-950/30 dark:border-blue-800">
+              <p className="text-sm font-medium text-blue-900 dark:text-blue-300">Average Score: {avgScore}</p>
             </div>
           </div>
         </div>
@@ -218,7 +218,7 @@ export default async function RankingsPage() {
 
       {/* How We Rank — Intro */}
       <section className="container-main py-10">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">How We Rank Games</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">How We Rank Games</h2>
         <div className="prose prose-gray max-w-none">
           <p>
             Every game in our database is evaluated across <strong>eight scoring dimensions</strong> grouped into
@@ -246,15 +246,15 @@ export default async function RankingsPage() {
 
       {/* Category Leaderboards */}
       <section className="container-main py-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-8">Category Leaderboards</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">Category Leaderboards</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Best Overall */}
-          <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+          <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden dark:border-gray-700 dark:bg-gray-900">
             <div className="h-1 bg-[#0074c5]" />
             <div className="p-6">
               <div className="flex items-center gap-2 mb-6">
                 <Trophy className="w-5 h-5 text-[#0074c5]" />
-                <h3 className="text-xl font-bold text-gray-900">Best Overall</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Best Overall</h3>
               </div>
               <ol className="space-y-3">
                 {overallRanked.slice(0, 10).map((item, idx) => (
@@ -262,7 +262,7 @@ export default async function RankingsPage() {
                     <span className="font-bold text-gray-400 w-6 text-right">{idx + 1}</span>
                     <GameThumb game={item.game} />
                     <Link href={`/lootbox/${item.game.slug}`} className="flex-1 hover:text-[#0074c5] transition-colors">
-                      <span className="font-medium text-gray-900 hover:underline">{item.game.title}</span>
+                      <span className="font-medium text-gray-900 dark:text-white hover:underline">{item.game.title}</span>
                     </Link>
                     <div className="flex items-center gap-2">
                       <span className={`px-2 py-1 rounded text-xs font-medium ${systemLabel(item.game.loot_system_type).color}`}>
@@ -277,12 +277,12 @@ export default async function RankingsPage() {
           </div>
 
           {/* Least Predatory */}
-          <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+          <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden dark:border-gray-700 dark:bg-gray-900">
             <div className="h-1 bg-[#0074c5]" />
             <div className="p-6">
               <div className="flex items-center gap-2 mb-6">
                 <Shield className="w-5 h-5 text-[#0074c5]" />
-                <h3 className="text-xl font-bold text-gray-900">Least Predatory</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Least Predatory</h3>
               </div>
               <ol className="space-y-3">
                 {protectionRanked.slice(0, 10).map((item, idx) => (
@@ -290,7 +290,7 @@ export default async function RankingsPage() {
                     <span className="font-bold text-gray-400 w-6 text-right">{idx + 1}</span>
                     <GameThumb game={item.game} />
                     <Link href={`/lootbox/${item.game.slug}`} className="flex-1 hover:text-[#0074c5] transition-colors">
-                      <span className="font-medium text-gray-900 hover:underline">{item.game.title}</span>
+                      <span className="font-medium text-gray-900 dark:text-white hover:underline">{item.game.title}</span>
                     </Link>
                     <div className="flex items-center gap-2">
                       <span className={`px-2 py-1 rounded text-xs font-medium ${systemLabel(item.game.loot_system_type).color}`}>
@@ -305,12 +305,12 @@ export default async function RankingsPage() {
           </div>
 
           {/* Most Rewarding */}
-          <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+          <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden dark:border-gray-700 dark:bg-gray-900">
             <div className="h-1 bg-emerald-500" />
             <div className="p-6">
               <div className="flex items-center gap-2 mb-6">
                 <DollarSign className="w-5 h-5 text-emerald-600" />
-                <h3 className="text-xl font-bold text-gray-900">Most Rewarding</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Most Rewarding</h3>
               </div>
               <ol className="space-y-3">
                 {valueRanked.slice(0, 10).map((item, idx) => (
@@ -318,7 +318,7 @@ export default async function RankingsPage() {
                     <span className="font-bold text-gray-400 w-6 text-right">{idx + 1}</span>
                     <GameThumb game={item.game} />
                     <Link href={`/lootbox/${item.game.slug}`} className="flex-1 hover:text-[#0074c5] transition-colors">
-                      <span className="font-medium text-gray-900 hover:underline">{item.game.title}</span>
+                      <span className="font-medium text-gray-900 dark:text-white hover:underline">{item.game.title}</span>
                     </Link>
                     <div className="flex items-center gap-2">
                       <span className={`px-2 py-1 rounded text-xs font-medium ${systemLabel(item.game.loot_system_type).color}`}>
@@ -333,12 +333,12 @@ export default async function RankingsPage() {
           </div>
 
           {/* Non-Game-Breaking */}
-          <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+          <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden dark:border-gray-700 dark:bg-gray-900">
             <div className="h-1 bg-purple-500" />
             <div className="p-6">
               <div className="flex items-center gap-2 mb-6">
                 <Swords className="w-5 h-5 text-purple-600" />
-                <h3 className="text-xl font-bold text-gray-900">Non-Game-Breaking</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Non-Game-Breaking</h3>
               </div>
               <ol className="space-y-3">
                 {p2wRanked.slice(0, 10).map((item, idx) => (
@@ -346,7 +346,7 @@ export default async function RankingsPage() {
                     <span className="font-bold text-gray-400 w-6 text-right">{idx + 1}</span>
                     <GameThumb game={item.game} />
                     <Link href={`/lootbox/${item.game.slug}`} className="flex-1 hover:text-[#0074c5] transition-colors">
-                      <span className="font-medium text-gray-900 hover:underline">{item.game.title}</span>
+                      <span className="font-medium text-gray-900 dark:text-white hover:underline">{item.game.title}</span>
                     </Link>
                     <div className="flex items-center gap-2">
                       <span className={`px-2 py-1 rounded text-xs font-medium ${systemLabel(item.game.loot_system_type).color}`}>
@@ -364,12 +364,12 @@ export default async function RankingsPage() {
 
       {/* Worst Offenders */}
       <section className="container-main py-8">
-        <div className="rounded-xl border border-rose-200 bg-rose-50 shadow-sm overflow-hidden">
+        <div className="rounded-xl border border-rose-200 bg-rose-50 shadow-sm overflow-hidden dark:border-rose-800 dark:bg-rose-950/20">
           <div className="h-1 bg-rose-500" />
           <div className="p-6">
             <div className="flex items-center gap-2 mb-6">
               <AlertTriangle className="w-5 h-5 text-rose-600" />
-              <h3 className="text-xl font-bold text-gray-900">Worst Offenders</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">Worst Offenders</h3>
             </div>
             <ol className="space-y-3">
               {worstOffenders.map((item, idx) => (
@@ -377,7 +377,7 @@ export default async function RankingsPage() {
                   <span className="font-bold text-rose-600 w-6 text-right">{games.length - item.rank + 1}</span>
                   <GameThumb game={item.game} />
                   <Link href={`/lootbox/${item.game.slug}`} className="flex-1 hover:text-[#0074c5] transition-colors">
-                    <span className="font-medium text-gray-900 hover:underline">{item.game.title}</span>
+                    <span className="font-medium text-gray-900 dark:text-white hover:underline">{item.game.title}</span>
                   </Link>
                   <div className="flex items-center gap-2">
                     <span className={`px-2 py-1 rounded text-xs font-medium ${systemLabel(item.game.loot_system_type).color}`}>
@@ -394,20 +394,20 @@ export default async function RankingsPage() {
 
       {/* Full Rankings Table */}
       <section className="container-main py-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Full Rankings</h2>
-        <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden overflow-x-auto">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Full Rankings</h2>
+        <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden overflow-x-auto dark:border-gray-700 dark:bg-gray-900">
           <table className="w-full min-w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-gray-50 border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 sticky left-0 bg-gray-50 w-8">#</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 sticky left-12 bg-gray-50 w-48">Game</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 w-32">Type</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 w-20">Overall</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 w-20">Protection</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 w-20">Value</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 w-20">P2W</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 w-16">Pity</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 w-20">$/Pull</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-gray-50 w-8">#</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 sticky left-12 bg-gray-50 w-48">Game</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 w-32">Type</th>
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 w-20">Overall</th>
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 w-20">Protection</th>
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 w-20">Value</th>
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 w-20">P2W</th>
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 w-16">Pity</th>
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 w-20">$/Pull</th>
               </tr>
             </thead>
             <tbody>
@@ -436,14 +436,14 @@ export default async function RankingsPage() {
                           </td>
                         </tr>
                       )}
-                      <tr className="hover:bg-blue-50/50 transition-colors">
+                      <tr className="hover:bg-blue-50/50 dark:hover:bg-blue-950/20 transition-colors">
                         <td className={`px-4 py-3 text-sm font-medium sticky left-0 bg-inherit ${rankBadge.bgClass}`}>
                           <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style={{ backgroundColor: rankBadge.bgClass }}>
                             <span className={rankBadge.textClass}>{idx + 1}</span>
                           </div>
                         </td>
                         <td className="px-4 py-3 text-sm sticky left-12 bg-inherit hover:bg-blue-50/50">
-                          <Link href={`/lootbox/${item.game.slug}`} className="flex items-center gap-2 font-medium text-gray-900 hover:text-[#0074c5] transition-colors">
+                          <Link href={`/lootbox/${item.game.slug}`} className="flex items-center gap-2 font-medium text-gray-900 dark:text-white hover:text-[#0074c5] transition-colors">
                             <GameThumb game={item.game} />
                             {item.game.title}
                           </Link>
@@ -454,7 +454,7 @@ export default async function RankingsPage() {
                           </span>
                         </td>
                         <td className="px-4 py-3 text-center">
-                          <span className="text-base font-bold text-gray-900">{item.score}</span>
+                          <span className="text-base font-bold text-gray-900 dark:text-white">{item.score}</span>
                         </td>
                         <td className="px-4 py-3 text-center">
                           <span className={`px-2 py-1 rounded text-xs font-bold inline-block ${scoreColor(protectionScore)}`}>{protectionScore}</span>
@@ -466,10 +466,10 @@ export default async function RankingsPage() {
                           <span className={`px-2 py-1 rounded text-xs font-bold inline-block ${scoreColor(p2wScore)}`}>{p2wScore}</span>
                         </td>
                         <td className="px-4 py-3 text-center text-sm">
-                          <span className="text-gray-700">{hasPity ? '✓' : '—'}</span>
+                          <span className="text-gray-700 dark:text-gray-300">{hasPity ? '✓' : '—'}</span>
                         </td>
                         <td className="px-4 py-3 text-center text-sm">
-                          <span className="text-gray-700">{costPerPull ? `$${costPerPull.toFixed(2)}` : '—'}</span>
+                          <span className="text-gray-700 dark:text-gray-300">{costPerPull ? `$${costPerPull.toFixed(2)}` : '—'}</span>
                         </td>
                       </tr>
                     </React.Fragment>
@@ -483,35 +483,35 @@ export default async function RankingsPage() {
 
       {/* Stats Summary */}
       <section className="container-main py-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Statistics</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Statistics</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-6">
-            <p className="text-sm font-medium text-gray-600 mb-2">Average Score</p>
-            <p className="text-3xl font-bold text-gray-900">{avgScore}</p>
+          <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-6 dark:border-gray-700 dark:bg-gray-900">
+            <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Average Score</p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">{avgScore}</p>
           </div>
-          <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-6">
-            <p className="text-sm font-medium text-gray-600 mb-2">Pity System Rate</p>
-            <p className="text-3xl font-bold text-gray-900">{pityPercentage}%</p>
+          <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-6 dark:border-gray-700 dark:bg-gray-900">
+            <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Pity System Rate</p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">{pityPercentage}%</p>
           </div>
-          <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-6">
-            <p className="text-sm font-medium text-gray-600 mb-2">Total Games</p>
-            <p className="text-3xl font-bold text-gray-900">{games.length}</p>
+          <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-6 dark:border-gray-700 dark:bg-gray-900">
+            <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Total Games</p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">{games.length}</p>
           </div>
-          <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-6">
-            <p className="text-sm font-medium text-gray-600 mb-2">System Types</p>
-            <p className="text-3xl font-bold text-gray-900">{Object.keys(systemTypeDistribution).length}</p>
+          <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-6 dark:border-gray-700 dark:bg-gray-900">
+            <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">System Types</p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">{Object.keys(systemTypeDistribution).length}</p>
           </div>
         </div>
 
         {/* System Type Breakdown */}
-        <div className="mt-6 rounded-xl border border-gray-200 bg-white shadow-sm p-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">By System Type</h3>
+        <div className="mt-6 rounded-xl border border-gray-200 bg-white shadow-sm p-6 dark:border-gray-700 dark:bg-gray-900">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">By System Type</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {avgBySystemType.map((item) => (
-              <div key={item.type} className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p className="text-sm font-medium text-gray-600">{systemLabel(item.type).label}</p>
+              <div key={item.type} className="p-4 bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{systemLabel(item.type).label}</p>
                 <div className="flex items-baseline gap-2 mt-2">
-                  <span className="text-2xl font-bold text-gray-900">{item.avg}</span>
+                  <span className="text-2xl font-bold text-gray-900 dark:text-white">{item.avg}</span>
                   <span className="text-xs text-gray-500">avg ({item.count} games)</span>
                 </div>
               </div>
@@ -521,17 +521,17 @@ export default async function RankingsPage() {
       </section>
 
       {/* Bottom CTA */}
-      <section className="container-main py-12 border-t border-gray-200">
+      <section className="container-main py-12 border-t border-gray-200 dark:border-gray-700">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Link href="/lootbox" className="p-6 rounded-xl border border-[#0074c5] bg-blue-50 hover:bg-blue-100 transition-colors">
             <TrendingUp className="w-6 h-6 text-[#0074c5] mb-3" />
-            <h3 className="font-bold text-gray-900 mb-2">Browse All Games</h3>
-            <p className="text-sm text-gray-600">Explore detailed loot box analyses for each game.</p>
+            <h3 className="font-bold text-gray-900 dark:text-white mb-2">Browse All Games</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Explore detailed loot box analyses for each game.</p>
           </Link>
           <Link href="/methodology" className="p-6 rounded-xl border border-gray-200 bg-white hover:border-[#0074c5] transition-colors">
             <Shield className="w-6 h-6 text-[#0074c5] mb-3" />
-            <h3 className="font-bold text-gray-900 mb-2">Our Methodology</h3>
-            <p className="text-sm text-gray-600">Learn how we score and analyze loot box systems.</p>
+            <h3 className="font-bold text-gray-900 dark:text-white mb-2">Our Methodology</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Learn how we score and analyze loot box systems.</p>
           </Link>
         </div>
       </section>

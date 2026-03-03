@@ -315,7 +315,7 @@ export default async function HomePage() {
       <section className="py-10 sm:py-12">
         <div className="container-main">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
               Browse by System Type
             </h2>
             <Link
@@ -364,11 +364,11 @@ export default async function HomePage() {
       </section>
 
       {/* ─── Featured Games Grid ─── */}
-      <section className="border-y border-gray-100 bg-gray-50/50 py-10 sm:py-12">
+      <section className="border-y border-gray-100 bg-gray-50/50 py-10 sm:py-12 dark:border-gray-800 dark:bg-gray-900/50">
         <div className="container-main">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                 Recently Analyzed
               </h2>
               <p className="mt-1 text-sm text-gray-500">
@@ -392,7 +392,7 @@ export default async function HomePage() {
                 <Link
                   key={game.slug}
                   href={`/lootbox/${game.slug}`}
-                  className="group overflow-hidden rounded-xl border border-gray-200 bg-white transition-all hover:shadow-lg hover:-translate-y-0.5"
+                  className="group overflow-hidden rounded-xl border border-gray-200 bg-white transition-all hover:shadow-lg hover:-translate-y-0.5 dark:border-gray-800 dark:bg-gray-900"
                 >
                   {/* Banner */}
                   <div className="relative h-24 overflow-hidden bg-gray-100">
@@ -424,7 +424,7 @@ export default async function HomePage() {
                   </div>
                   {/* Info */}
                   <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 group-hover:text-brand-600 transition-colors line-clamp-1">
+                    <h3 className="font-semibold text-gray-900 group-hover:text-brand-600 transition-colors line-clamp-1 dark:text-white">
                       {game.title}
                     </h3>
                     <div className="mt-2 flex items-center gap-2">
@@ -452,7 +452,7 @@ export default async function HomePage() {
       <section className="py-12 sm:py-14">
         <div className="container-main">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
               Latest Analysis
             </h2>
             <Link
@@ -490,7 +490,7 @@ export default async function HomePage() {
                       <ScoreBadge score={item.lootboxes_score} size="sm" />
                       <Link
                         href={`/lootbox/${item.slug}`}
-                        className="text-sm text-gray-700 hover:text-brand-600"
+                        className="text-sm text-gray-700 hover:text-brand-600 dark:text-gray-300"
                       >
                         {item.title}
                       </Link>
@@ -521,7 +521,7 @@ export default async function HomePage() {
                       <ScoreBadge score={item.lootboxes_score} size="sm" />
                       <Link
                         href={`/lootbox/${item.slug}`}
-                        className="text-sm text-gray-700 hover:text-brand-600"
+                        className="text-sm text-gray-700 hover:text-brand-600 dark:text-gray-300"
                       >
                         {item.title}
                       </Link>
@@ -537,12 +537,12 @@ export default async function HomePage() {
       {/* ─── Rankings CTA ─── */}
       <section className="py-8">
         <div className="container-main">
-          <div className="flex items-center justify-between rounded-2xl bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 px-8 py-6">
+          <div className="flex items-center justify-between rounded-2xl bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 px-8 py-6 dark:from-blue-950/30 dark:to-purple-950/30 dark:border-blue-900/30">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                 Loot Box Rankings
               </h2>
-              <p className="mt-1 text-sm text-gray-600">
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                 Every game ranked by monetization fairness — from best to worst.
                 See tier breakdowns, category leaders, and the worst offenders.
               </p>
@@ -600,7 +600,7 @@ export default async function HomePage() {
       {/* ─── Newsletter CTA ─── */}
       <section className="py-12 sm:py-14">
         <div className="container-main">
-          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
             <div className="grid items-center gap-0 lg:grid-cols-2">
               {/* Left: Content */}
               <div className="px-8 py-10 sm:px-12">
@@ -608,10 +608,10 @@ export default async function HomePage() {
                   <Bell className="h-3.5 w-3.5" />
                   Weekly Roundup
                 </div>
-                <h2 className="mt-4 text-2xl font-bold text-gray-900 sm:text-3xl">
+                <h2 className="mt-4 text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">
                   Stay in the loop
                 </h2>
-                <p className="mt-3 max-w-md text-gray-500">
+                <p className="mt-3 max-w-md text-gray-500 dark:text-gray-400">
                   Get weekly loot box analysis updates, new game scores, deal
                   roundups, and battle pass reviews delivered to your inbox.
                 </p>

@@ -86,7 +86,7 @@ export default function GamesGrid({ games }: { games: GameWithDeals[] }) {
             {/* Info */}
             <div className="flex flex-1 flex-col justify-between">
               <div>
-                <h3 className="font-semibold text-gray-900 group-hover:text-brand-600">
+                <h3 className="font-semibold text-gray-900 group-hover:text-brand-600 dark:text-white">
                   {game.title}
                 </h3>
                 {game.genres && (
@@ -106,7 +106,7 @@ export default function GamesGrid({ games }: { games: GameWithDeals[] }) {
                 <div className="flex items-center gap-2">
                   {game.dealCount > 0 ? (
                     <>
-                      <span className="text-sm font-bold text-gray-900">
+                      <span className="text-sm font-bold text-gray-900 dark:text-white">
                         From {formatPrice(game.bestPrice!)}
                       </span>
                       <span className="text-xs text-gray-400">
@@ -120,7 +120,7 @@ export default function GamesGrid({ games }: { games: GameWithDeals[] }) {
                 </div>
 
                 {game.metacritic && (
-                  <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs font-semibold text-gray-600">
+                  <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-400">
                     {game.metacritic}
                   </span>
                 )}
@@ -131,7 +131,7 @@ export default function GamesGrid({ games }: { games: GameWithDeals[] }) {
       </div>
 
       {filtered.length === 0 && search.length >= 2 && (
-        <div className="mt-6 rounded-xl border border-gray-200 bg-white p-12 text-center">
+        <div className="mt-6 rounded-xl border border-gray-200 bg-white p-12 text-center dark:border-gray-800 dark:bg-gray-900">
           <p className="text-gray-500">
             No games found for &ldquo;{search}&rdquo;
           </p>

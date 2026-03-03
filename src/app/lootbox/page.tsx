@@ -264,7 +264,7 @@ export default async function LootboxHubPage({
               <Zap className="w-5 h-5 text-white" />
             )}
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             {typeMeta ? typeMeta.heading : "Loot Box Database"}
           </h1>
         </div>
@@ -322,10 +322,10 @@ export default async function LootboxHubPage({
 
       {/* Rankings CTA */}
       {!typeFilter && (
-        <div className="mb-8 flex items-center justify-between rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 px-6 py-4">
+        <div className="mb-8 flex items-center justify-between rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 px-6 py-4 dark:from-blue-950/30 dark:to-purple-950/30 dark:border-blue-900/30">
           <div>
-            <h2 className="font-bold text-gray-900">Loot Box Rankings</h2>
-            <p className="text-sm text-gray-600">See every game ranked by monetization fairness — best to worst.</p>
+            <h2 className="font-bold text-gray-900 dark:text-white">Loot Box Rankings</h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400">See every game ranked by monetization fairness — best to worst.</p>
           </div>
           <Link
             href="/lootbox/rankings"
@@ -352,12 +352,12 @@ export default async function LootboxHubPage({
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <div className={`rounded-xl border p-4 ${typeMeta!.accentBg} ${typeMeta!.accentBorder}`}>
                 <p className="text-xs font-medium text-gray-500 mb-1">Pity System Rate</p>
-                <p className="text-2xl font-bold text-gray-900">{pityPct}%</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{pityPct}%</p>
                 <p className="text-xs text-gray-500">{withPity} of {games.length} games</p>
               </div>
-              <div className="rounded-xl border border-gray-200 bg-white p-4">
+              <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
                 <p className="text-xs font-medium text-gray-500 mb-1">Avg Cost / Pull</p>
-                <p className="text-2xl font-bold text-gray-900">{avgCost ? `$${avgCost.toFixed(2)}` : "—"}</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{avgCost ? `$${avgCost.toFixed(2)}` : "—"}</p>
                 <p className="text-xs text-gray-500">{costs.length} games with data</p>
               </div>
               <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
@@ -373,7 +373,7 @@ export default async function LootboxHubPage({
             </div>
 
             {/* Quick comparison link */}
-            <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-5 py-3">
+            <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-5 py-3 dark:border-gray-700 dark:bg-gray-900">
               <p className="text-sm text-gray-600">
                 See how these {games.length} {typeMeta!.heading.toLowerCase().replace(" games", "")} games compare to all {typeFilter === "gacha" ? "loot box" : "gacha"} games and more.
               </p>
@@ -397,7 +397,7 @@ export default async function LootboxHubPage({
 
       {/* Section heading for filtered views */}
       {typeFilter && games.length > 0 && (
-        <h2 className="text-xl font-bold text-gray-900 mb-4">All {typeMeta!.heading} ({games.length})</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-4 dark:text-white">All {typeMeta!.heading} ({games.length})</h2>
       )}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-12">
         {games.map((game) => {
@@ -408,7 +408,7 @@ export default async function LootboxHubPage({
             <Link
               key={game.slug}
               href={`/lootbox/${game.slug}`}
-              className="group rounded-xl border border-gray-200 bg-white overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all"
+              className="group rounded-xl border border-gray-200 bg-white overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all dark:border-gray-800 dark:bg-gray-900"
             >
               {/* Banner Section */}
               <div className="relative h-20 overflow-hidden bg-gray-100">
@@ -439,7 +439,7 @@ export default async function LootboxHubPage({
               {/* Content Section */}
               <div className="p-4">
                 <div className="mb-3">
-                  <h2 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2 text-base">
+                  <h2 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2 text-base dark:text-white">
                     {game.title}
                   </h2>
                 </div>
@@ -478,10 +478,10 @@ export default async function LootboxHubPage({
       </div>
 
       {/* Methodology (only on main hub) */}
-      {!typeFilter && <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
+      {!typeFilter && <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200 dark:bg-gray-900 dark:border-gray-800">
         <div className="flex items-center gap-3 mb-5">
           <Shield className="w-6 h-6 text-blue-600" />
-          <h2 className="text-xl font-bold text-gray-900">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             How We Rate Games
           </h2>
         </div>
@@ -493,9 +493,9 @@ export default async function LootboxHubPage({
 
         {/* Category cards */}
         <div className="grid md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white rounded-xl border border-blue-200 p-4">
+          <div className="bg-white rounded-xl border border-blue-200 p-4 dark:bg-gray-950 dark:border-blue-900/40">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-semibold text-gray-900 text-sm">
+              <h3 className="font-semibold text-gray-900 text-sm dark:text-white">
                 Consumer Protection
               </h3>
               <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
@@ -506,9 +506,9 @@ export default async function LootboxHubPage({
               Transparency, regulatory compliance, and spending safeguards.
             </p>
           </div>
-          <div className="bg-white rounded-xl border border-emerald-200 p-4">
+          <div className="bg-white rounded-xl border border-emerald-200 p-4 dark:bg-gray-950 dark:border-emerald-900/40">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-semibold text-gray-900 text-sm">
+              <h3 className="font-semibold text-gray-900 text-sm dark:text-white">
                 Value &amp; Fairness
               </h3>
               <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
@@ -519,9 +519,9 @@ export default async function LootboxHubPage({
               Value for money, fairness mechanics, and pay-to-win impact.
             </p>
           </div>
-          <div className="bg-white rounded-xl border border-purple-200 p-4">
+          <div className="bg-white rounded-xl border border-purple-200 p-4 dark:bg-gray-950 dark:border-purple-900/40">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-semibold text-gray-900 text-sm">
+              <h3 className="font-semibold text-gray-900 text-sm dark:text-white">
                 Player Experience
               </h3>
               <span className="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">

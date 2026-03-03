@@ -47,7 +47,7 @@ export default function CostCalculator({
                 Cost Per Pull
               </span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">
               ${costPerPull.toFixed(2)}
             </p>
             {currencyName && (
@@ -66,7 +66,7 @@ export default function CostCalculator({
                 Cost to Pity
               </span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">
               ${costToPity.toFixed(0)}
             </p>
             <p className="text-xs text-gray-500 mt-1">
@@ -83,7 +83,7 @@ export default function CostCalculator({
                 Expected Cost
               </span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">
               ~${expectedCostForRare.toFixed(0)}
             </p>
             <p className="text-xs text-gray-500 mt-1">
@@ -100,7 +100,7 @@ export default function CostCalculator({
                 Avg Opens Needed
               </span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">
               ~{avgOpensNeeded.toLocaleString()}
             </p>
             <p className="text-xs text-gray-500 mt-1">
@@ -112,12 +112,12 @@ export default function CostCalculator({
 
       {/* Interactive calculator */}
       {costPerPull !== null && (
-        <div className="bg-gray-50 rounded-xl p-5 border border-gray-200">
-          <h4 className="font-semibold text-gray-900 mb-3">
+        <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-5 border border-gray-200 dark:border-gray-700">
+          <h4 className="font-semibold text-gray-900 dark:text-white mb-3">
             Spending Calculator
           </h4>
           <div className="flex items-center gap-4 mb-4">
-            <label className="text-sm text-gray-600 whitespace-nowrap">
+            <label className="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
               Number of pulls:
             </label>
             <input
@@ -136,7 +136,7 @@ export default function CostCalculator({
               onChange={(e) =>
                 setPulls(Math.max(1, Math.min(999, Number(e.target.value))))
               }
-              className="w-20 rounded-lg border border-gray-300 px-2 py-1 text-center text-sm font-semibold"
+              className="w-20 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-2 py-1 text-center text-sm font-semibold"
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -144,7 +144,7 @@ export default function CostCalculator({
               <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
                 Total Cost
               </p>
-              <p className="text-xl font-bold text-gray-900">
+              <p className="text-xl font-bold text-gray-900 dark:text-white">
                 ${totalCostForPulls?.toFixed(2)}
               </p>
             </div>
@@ -153,7 +153,7 @@ export default function CostCalculator({
                 <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
                   Chance of {topRarityName}
                 </p>
-                <p className="text-xl font-bold text-gray-900">
+                <p className="text-xl font-bold text-gray-900 dark:text-white">
                   {chanceInPulls.toFixed(1)}%
                 </p>
               </div>

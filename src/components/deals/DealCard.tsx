@@ -16,7 +16,7 @@ export default function DealCard({ deal }: DealCardProps) {
   const bgImage = (deal.game as any)?.screenshot_image || deal.game?.cover_image;
 
   return (
-    <div className="group flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg">
+    <div className="group flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg dark:border-gray-800 dark:bg-gray-900">
       {/* ── Landscape game artwork ── */}
       <div className="relative overflow-hidden bg-gray-100">
         {bgImage ? (
@@ -61,16 +61,16 @@ export default function DealCard({ deal }: DealCardProps) {
       </div>
 
       {/* ── Store badge bar ── */}
-      <div className="flex items-center gap-2 border-b border-gray-100 px-3 py-2">
+      <div className="flex items-center gap-2 border-b border-gray-100 px-3 py-2 dark:border-gray-800">
         <StoreIcon store={deal.store} size="sm" />
-        <span className="text-xs font-medium text-gray-600">{store.name}</span>
+        <span className="text-xs font-medium text-gray-600 dark:text-gray-400">{store.name}</span>
       </div>
 
       {/* ── Content ── */}
       <div className="flex flex-1 flex-col px-3 pb-3 pt-2.5">
         <Link
           href={`/games/${deal.game?.slug || deal.game_id}`}
-          className="line-clamp-1 text-sm font-semibold text-gray-900 hover:text-brand-600"
+          className="line-clamp-1 text-sm font-semibold text-gray-900 hover:text-brand-600 dark:text-white"
         >
           {deal.game?.title || "Unknown Game"}
         </Link>
@@ -80,7 +80,7 @@ export default function DealCard({ deal }: DealCardProps) {
           <span className="text-xs text-gray-400 line-through">
             {formatPrice(deal.original_price)}
           </span>
-          <span className="text-lg font-bold text-gray-900">
+          <span className="text-lg font-bold text-gray-900 dark:text-white">
             {formatPrice(deal.price)}
           </span>
         </div>

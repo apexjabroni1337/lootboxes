@@ -143,7 +143,7 @@ export default function DealsFilter({
   return (
     <div>
       {/* Tab bar */}
-      <div className="flex gap-1 overflow-x-auto rounded-xl border border-gray-200 bg-gray-50 p-1 scrollbar-hide">
+      <div className="flex gap-1 overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-1 scrollbar-hide">
         {TABS.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -153,8 +153,8 @@ export default function DealsFilter({
               onClick={() => setActiveTab(tab.id)}
               className={`flex flex-shrink-0 items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium transition-all ${
                 isActive
-                  ? "bg-white text-gray-900 shadow-sm"
-                  : "text-gray-500 hover:text-gray-700"
+                  ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm"
+                  : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
               }`}
             >
               <Icon className={`h-3.5 w-3.5 ${isActive ? "text-brand-600" : ""}`} />
@@ -177,7 +177,7 @@ export default function DealsFilter({
               className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
                 isActive
                   ? "bg-brand-600 text-white shadow-sm"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
               }`}
             >
               <Icon className="h-3 w-3" />
@@ -199,7 +199,7 @@ export default function DealsFilter({
       {/* Results count */}
       <div className="mt-4 flex items-center justify-between">
         <p className="text-sm text-gray-500">
-          Showing <span className="font-medium text-gray-900">{filtered.length}</span> deals
+          Showing <span className="font-medium text-gray-900 dark:text-white">{filtered.length}</span> deals
           {activeGenre && (
             <span className="text-gray-400">
               {" "}in <span className="font-medium text-brand-600">{GENRE_OPTIONS.find(g => g.id === activeGenre)?.label}</span>
@@ -210,7 +210,7 @@ export default function DealsFilter({
 
       {/* Deals grid */}
       {filtered.length === 0 ? (
-        <div className="mt-4 rounded-xl border border-gray-200 bg-white p-12 text-center">
+        <div className="mt-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-12 text-center">
           <p className="text-gray-500">No deals match this filter.{activeGenre ? " Try removing the genre filter or switching tabs!" : " Try another tab!"}</p>
         </div>
       ) : (
@@ -225,7 +225,7 @@ export default function DealsFilter({
             return (
               <div
                 key={deal.id}
-                className={`group flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-3 transition-all hover:shadow-md ${
+                className={`group flex items-center gap-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-3 transition-all hover:shadow-md ${
                   deal.is_historic_low ? "ring-1 ring-brand-200" : ""
                 }`}
               >
@@ -252,7 +252,7 @@ export default function DealsFilter({
                   <div className="flex items-center gap-2">
                     <Link
                       href={`/games/${game?.slug}`}
-                      className="truncate text-sm font-semibold text-gray-900 group-hover:text-brand-600"
+                      className="truncate text-sm font-semibold text-gray-900 dark:text-white group-hover:text-brand-600"
                     >
                       {game?.title || "Unknown Game"}
                     </Link>
@@ -286,7 +286,7 @@ export default function DealsFilter({
                         {formatPrice(deal.original_price, deal.currency)}
                       </span>
                     )}
-                    <span className="text-lg font-bold text-gray-900">
+                    <span className="text-lg font-bold text-gray-900 dark:text-white">
                       {formatPrice(deal.price, deal.currency)}
                     </span>
                   </div>

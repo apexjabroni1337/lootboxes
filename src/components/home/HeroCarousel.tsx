@@ -84,8 +84,8 @@ export default function HeroCarousel({ deals }: HeroCarouselProps) {
         )}
 
         {/* Light overlay for readability (keeps things bright) */}
-        <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/70 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-transparent to-white/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/70 to-transparent dark:from-gray-950/90 dark:via-gray-950/70 dark:to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-transparent to-white/30 dark:from-gray-950/80 dark:via-transparent dark:to-gray-950/30" />
 
         {/* Content overlay */}
         <div className="container-main relative flex h-full items-center">
@@ -99,7 +99,7 @@ export default function HeroCarousel({ deals }: HeroCarouselProps) {
             </span>
 
             {/* Game title */}
-            <h2 className="mt-3 text-3xl font-extrabold text-gray-900 sm:text-4xl lg:text-5xl drop-shadow-sm">
+            <h2 className="mt-3 text-3xl font-extrabold text-gray-900 sm:text-4xl lg:text-5xl drop-shadow-sm dark:text-white">
               {deal.game.title}
             </h2>
 
@@ -111,7 +111,7 @@ export default function HeroCarousel({ deals }: HeroCarouselProps) {
               <span className="text-lg text-gray-400 line-through">
                 {formatPrice(deal.original_price)}
               </span>
-              <span className="text-2xl font-bold text-gray-900">
+              <span className="text-2xl font-bold text-gray-900 dark:text-white">
                 {formatPrice(deal.price)}
               </span>
             </div>

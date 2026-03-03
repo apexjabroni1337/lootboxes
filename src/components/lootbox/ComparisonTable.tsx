@@ -35,20 +35,20 @@ export default function ComparisonTable({
     <div className="overflow-x-auto -mx-4 sm:mx-0">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-gray-200">
-            <th className="text-left py-3 px-4 font-semibold text-gray-600">
+          <tr className="border-b border-gray-200 dark:border-gray-700">
+            <th className="text-left py-3 px-4 font-semibold text-gray-600 dark:text-gray-400">
               Game
             </th>
-            <th className="text-center py-3 px-4 font-semibold text-gray-600">
+            <th className="text-center py-3 px-4 font-semibold text-gray-600 dark:text-gray-400">
               Score
             </th>
-            <th className="text-center py-3 px-4 font-semibold text-gray-600">
+            <th className="text-center py-3 px-4 font-semibold text-gray-600 dark:text-gray-400">
               System
             </th>
-            <th className="text-center py-3 px-4 font-semibold text-gray-600">
+            <th className="text-center py-3 px-4 font-semibold text-gray-600 dark:text-gray-400">
               Cost/Pull
             </th>
-            <th className="text-center py-3 px-4 font-semibold text-gray-600">
+            <th className="text-center py-3 px-4 font-semibold text-gray-600 dark:text-gray-400">
               Pity
             </th>
           </tr>
@@ -59,13 +59,13 @@ export default function ComparisonTable({
             return (
               <tr
                 key={game.slug}
-                className={`border-b border-gray-100 ${
-                  isCurrent ? "bg-blue-50" : "hover:bg-gray-50"
+                className={`border-b border-gray-100 dark:border-gray-800 ${
+                  isCurrent ? "bg-blue-50 dark:bg-blue-950/20" : "hover:bg-gray-50 dark:hover:bg-gray-800"
                 }`}
               >
                 <td className="py-3 px-4">
                   {isCurrent ? (
-                    <span className="font-semibold text-gray-900">
+                    <span className="font-semibold text-gray-900 dark:text-white">
                       {game.title}{" "}
                       <span className="text-xs text-blue-600">(this game)</span>
                     </span>
@@ -97,7 +97,7 @@ export default function ComparisonTable({
                     "—"
                   )}
                 </td>
-                <td className="py-3 px-4 text-center text-gray-600">
+                <td className="py-3 px-4 text-center text-gray-600 dark:text-gray-400">
                   {systemLabel(game.loot_system_type)}
                 </td>
                 <td className="py-3 px-4 text-center font-medium">

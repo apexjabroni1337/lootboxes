@@ -331,8 +331,8 @@ export default async function GamePage({ params }: { params: { slug: string } })
             {/* Game description */}
             {game.description && (
               <section className="mb-8">
-                <h2 className="text-xl font-bold text-gray-900">About {game.title}</h2>
-                <p className="mt-3 text-sm leading-relaxed text-gray-600">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">About {game.title}</h2>
+                <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
                   {game.description}
                 </p>
               </section>
@@ -340,13 +340,13 @@ export default async function GamePage({ params }: { params: { slug: string } })
 
             {/* Best price callout */}
             {bestDeal && (
-              <div className="flex flex-col gap-4 rounded-xl border border-success-200 bg-success-50 p-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-col gap-4 rounded-xl border border-success-200 bg-success-50 p-5 dark:border-success-800 dark:bg-success-950/30 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <div className="text-xs font-medium text-success-700">
+                  <div className="text-xs font-medium text-success-700 dark:text-success-400">
                     Best Price Right Now
                   </div>
                   <div className="mt-1 flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">
                       {formatPrice(bestDeal.price, bestDeal.currency)}
                     </span>
                     {bestDeal.discount_pct > 0 && (
@@ -360,7 +360,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
                       </>
                     )}
                   </div>
-                  <div className="mt-1 flex items-center gap-2 text-sm text-gray-600">
+                  <div className="mt-1 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                     <StoreIcon store={bestDeal.store} size="sm" />
                     <span>{STORES[bestDeal.store]?.name || bestDeal.store}</span>
                     {bestDeal.is_historic_low && (
@@ -386,16 +386,16 @@ export default async function GamePage({ params }: { params: { slug: string } })
             {/* Price comparison table */}
             {deals.length > 0 && (
               <section className="mt-8">
-                <h2 className="text-xl font-bold text-gray-900">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                   Price Comparison
                 </h2>
                 <p className="mt-1 text-sm text-gray-500">
                   {deals.length} current deals across every store.
                 </p>
 
-                <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+                <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
                   <table className="w-full">
-                    <thead className="border-b border-gray-200 bg-gray-50">
+                    <thead className="border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800">
                       <tr>
                         <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">Store</th>
                         <th className="px-4 py-3 text-right text-xs font-semibold uppercase text-gray-500">Price</th>
@@ -404,19 +404,19 @@ export default async function GamePage({ params }: { params: { slug: string } })
                         <th className="px-4 py-3 text-right text-xs font-semibold uppercase text-gray-500">&nbsp;</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                       {deals.map((deal: any, i: number) => {
                         const store = STORES[deal.store] || { name: deal.store, color: "#666" };
                         return (
-                          <tr key={deal.id} className={`transition-colors hover:bg-gray-50 ${i === 0 ? "bg-success-50/50" : ""}`}>
+                          <tr key={deal.id} className={`transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 ${i === 0 ? "bg-success-50/50 dark:bg-success-950/20" : ""}`}>
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-2">
                                 <StoreIcon store={deal.store} size="sm" />
-                                <span className="text-sm font-medium text-gray-700">{store.name}</span>
+                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{store.name}</span>
                               </div>
                             </td>
                             <td className="px-4 py-3 text-right">
-                              <span className="text-sm font-bold text-gray-900">{formatPrice(deal.price, deal.currency)}</span>
+                              <span className="text-sm font-bold text-gray-900 dark:text-white">{formatPrice(deal.price, deal.currency)}</span>
                             </td>
                             <td className="hidden px-4 py-3 text-right sm:table-cell">
                               {deal.discount_pct > 0 ? (
@@ -463,11 +463,11 @@ export default async function GamePage({ params }: { params: { slug: string } })
             {/* Price History Chart */}
             {priceHistory.length > 0 && (
               <section className="mt-10">
-                <h2 className="text-xl font-bold text-gray-900">Price History</h2>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Price History</h2>
                 <p className="mt-1 text-sm text-gray-500">
                   Track how the price has changed over time across stores.
                 </p>
-                <div className="mt-4 rounded-xl border border-gray-200 bg-white p-4">
+                <div className="mt-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
                   <PriceChart data={priceHistory} />
                 </div>
               </section>
@@ -478,16 +478,16 @@ export default async function GamePage({ params }: { params: { slug: string } })
               <section className="mt-10">
                 <div className="flex items-center gap-2">
                   <Zap className="h-5 w-5 text-brand-600" />
-                  <h2 className="text-xl font-bold text-gray-900">Loot Box Drop Rates</h2>
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">Loot Box Drop Rates</h2>
                 </div>
                 <p className="mt-1 text-sm text-gray-500">
                   Verified probabilities for in-game items. Know your odds before you spend.
                 </p>
 
-                <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+                <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
                   <div className="overflow-x-auto">
                     <table className="w-full">
-                      <thead className="border-b border-gray-200 bg-gray-50">
+                      <thead className="border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800">
                         <tr>
                           <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase text-gray-500">Item</th>
                           <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase text-gray-500">Rarity</th>
@@ -496,7 +496,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
                           <th className="hidden px-4 py-2.5 text-left text-xs font-semibold uppercase text-gray-500 md:table-cell">Source</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-50">
+                      <tbody className="divide-y divide-gray-50 dark:divide-gray-800">
                         {dropRates.map((rate: any, i: number) => {
                           const SourceMeta = DR_SOURCE_META[rate.source] || DR_SOURCE_META.user_reported;
                           const isPity = rate.rarity.toLowerCase().includes("pity");
@@ -505,15 +505,15 @@ export default async function GamePage({ params }: { params: { slug: string } })
                               ? Math.ceil(100 / rate.drop_rate_pct)
                               : "—";
                           return (
-                            <tr key={i} className={`transition-colors hover:bg-gray-50 ${isPity ? "bg-emerald-50/30" : ""}`}>
-                              <td className="px-4 py-3 text-sm font-medium text-gray-900">{rate.item_name}</td>
+                            <tr key={i} className={`transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 ${isPity ? "bg-emerald-50/30 dark:bg-emerald-950/20" : ""}`}>
+                              <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{rate.item_name}</td>
                               <td className="px-4 py-3">
                                 <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${getDrRarityColor(rate.rarity)}`}>
                                   {rate.rarity}
                                 </span>
                               </td>
                               <td className="px-4 py-3 text-right">
-                                <span className="text-sm font-bold text-gray-900">
+                                <span className="text-sm font-bold text-gray-900 dark:text-white">
                                   {rate.drop_rate_pct >= 100
                                     ? "Guaranteed"
                                     : rate.drop_rate_pct < 1
@@ -549,7 +549,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
             {/* Analytics section */}
             {game.lootboxes_score && (
               <section className="mt-10">
-                <h2 className="text-xl font-bold text-gray-900">Monetization Analysis</h2>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Monetization Analysis</h2>
                 <div className="mt-4 card border-brand-200 bg-brand-50">
                   <div className="flex items-center gap-4">
                     <ScoreBadge score={game.lootboxes_score} size="lg" showLabel />
@@ -572,8 +572,8 @@ export default async function GamePage({ params }: { params: { slug: string } })
           <div className="space-y-6">
             {/* Lootboxes Score */}
             {game.lootboxes_score && (
-              <div className="rounded-xl border border-gray-200 bg-white p-5">
-                <h3 className="text-sm font-semibold text-gray-900">Lootboxes Score</h3>
+              <div className="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-900">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Lootboxes Score</h3>
                 <div className="mt-3">
                   <ScoreBadge score={game.lootboxes_score} size="lg" showLabel />
                 </div>
@@ -588,36 +588,36 @@ export default async function GamePage({ params }: { params: { slug: string } })
             />
 
             {/* Game info card */}
-            <div className="rounded-xl border border-gray-200 bg-white p-5">
-              <h3 className="text-sm font-semibold text-gray-900">Game Details</h3>
+            <div className="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-900">
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Game Details</h3>
               <dl className="mt-3 space-y-3 text-sm">
                 {game.release_date && (
                   <div className="flex justify-between">
                     <dt className="text-gray-500">Release Date</dt>
-                    <dd className="font-medium text-gray-900">{formatDate(game.release_date)}</dd>
+                    <dd className="font-medium text-gray-900 dark:text-white">{formatDate(game.release_date)}</dd>
                   </div>
                 )}
                 {game.metacritic && (
                   <div className="flex justify-between">
                     <dt className="text-gray-500">Metacritic</dt>
-                    <dd className="font-medium text-gray-900">{game.metacritic}/100</dd>
+                    <dd className="font-medium text-gray-900 dark:text-white">{game.metacritic}/100</dd>
                   </div>
                 )}
                 {platforms.length > 0 && (
                   <div className="flex justify-between">
                     <dt className="text-gray-500">Platforms</dt>
-                    <dd className="font-medium text-gray-900">{platforms.join(", ")}</dd>
+                    <dd className="font-medium text-gray-900 dark:text-white">{platforms.join(", ")}</dd>
                   </div>
                 )}
                 {genres.length > 0 && (
                   <div className="flex justify-between">
                     <dt className="text-gray-500">Genres</dt>
-                    <dd className="font-medium text-gray-900">{genres.join(", ")}</dd>
+                    <dd className="font-medium text-gray-900 dark:text-white">{genres.join(", ")}</dd>
                   </div>
                 )}
                 <div className="flex justify-between">
                   <dt className="text-gray-500">Deals Available</dt>
-                  <dd className="font-medium text-gray-900">{deals.length}</dd>
+                  <dd className="font-medium text-gray-900 dark:text-white">{deals.length}</dd>
                 </div>
               </dl>
             </div>
@@ -627,7 +627,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
         {/* Similar Games */}
         {similarGames.length > 0 && (
           <section className="mt-12">
-            <h2 className="text-xl font-bold text-gray-900">More Games</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">More Games</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {similarGames.map((g: any) => {
                 const img = g.screenshot_image || g.cover_image;
@@ -635,7 +635,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
                   <Link
                     key={g.slug}
                     href={`/games/${g.slug}`}
-                    className="group overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md"
+                    className="group overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-900"
                   >
                     <div className="aspect-video overflow-hidden bg-gray-100">
                       {img ? (
@@ -650,11 +650,11 @@ export default async function GamePage({ params }: { params: { slug: string } })
                       )}
                     </div>
                     <div className="p-3">
-                      <h3 className="line-clamp-1 text-sm font-semibold text-gray-900 group-hover:text-brand-600">
+                      <h3 className="line-clamp-1 text-sm font-semibold text-gray-900 group-hover:text-brand-600 dark:text-white">
                         {g.title}
                       </h3>
                       <div className="mt-1 flex items-center gap-2">
-                        <span className="text-sm font-bold text-gray-900">
+                        <span className="text-sm font-bold text-gray-900 dark:text-white">
                           From {formatPrice(g.bestPrice)}
                         </span>
                         {g.discount > 0 && (

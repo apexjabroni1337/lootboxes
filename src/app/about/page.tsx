@@ -28,12 +28,12 @@ export default function AboutPage() {
       </section>
 
       <div className="container-main max-w-3xl">
-        <div className="mt-12 space-y-10 text-gray-600">
+        <div className="mt-12 space-y-10 text-gray-600 dark:text-gray-400">
           {/* Mission */}
           <section>
             <div className="flex items-center gap-2">
               <Target className="h-5 w-5 text-brand-600" />
-              <h2 className="text-xl font-semibold text-gray-900">Our Mission</h2>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Our Mission</h2>
             </div>
             <p className="mt-3">
               LootBoxes.com exists for one reason: to help gamers spend their
@@ -48,7 +48,7 @@ export default function AboutPage() {
           <section>
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5 text-brand-600" />
-              <h2 className="text-xl font-semibold text-gray-900">What We Do</h2>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">What We Do</h2>
             </div>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               {[
@@ -61,7 +61,7 @@ export default function AboutPage() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-100">
                     <item.icon className="h-5 w-5 text-brand-600" />
                   </div>
-                  <h3 className="mt-3 font-semibold text-gray-900">{item.title}</h3>
+                  <h3 className="mt-3 font-semibold text-gray-900 dark:text-white">{item.title}</h3>
                   <p className="mt-1 text-sm">{item.desc}</p>
                 </div>
               ))}
@@ -69,8 +69,8 @@ export default function AboutPage() {
           </section>
 
           {/* Editorial Policy */}
-          <section id="editorial" className="rounded-xl border border-gray-200 bg-gray-50 p-6">
-            <h2 className="text-xl font-semibold text-gray-900">
+          <section id="editorial" className="rounded-xl border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-800">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
               Editorial Policy
             </h2>
             <p className="mt-3">
@@ -93,8 +93,8 @@ export default function AboutPage() {
           </section>
 
           {/* Affiliate Disclosure */}
-          <section id="disclosure" className="rounded-xl border border-gray-200 bg-gray-50 p-6">
-            <h2 className="text-xl font-semibold text-gray-900">
+          <section id="disclosure" className="rounded-xl border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-800">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
               Affiliate Disclosure
             </h2>
             <p className="mt-3">
@@ -112,10 +112,10 @@ export default function AboutPage() {
 
           {/* Contact */}
           <section id="contact">
-            <h2 className="text-xl font-semibold text-gray-900">Contact</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Contact</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div className="card">
-                <h3 className="text-sm font-semibold text-gray-900">General Inquiries</h3>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">General Inquiries</h3>
                 <a
                   href="mailto:contact@lootboxes.com"
                   className="mt-1 block text-sm text-brand-600 hover:text-brand-700"
@@ -124,7 +124,7 @@ export default function AboutPage() {
                 </a>
               </div>
               <div className="card">
-                <h3 className="text-sm font-semibold text-gray-900">Partnerships & Sponsorships</h3>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Partnerships & Sponsorships</h3>
                 <a
                   href="mailto:partnerships@lootboxes.com"
                   className="mt-1 block text-sm text-brand-600 hover:text-brand-700"

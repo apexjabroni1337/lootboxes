@@ -34,7 +34,7 @@ export default function FeaturedDeals({ deals }: FeaturedDealsProps) {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-50">
               <Star className="h-4 w-4 text-brand-600" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">Featured Deals</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Featured Deals</h2>
           </div>
           <Link
             href="/deals"
@@ -52,7 +52,7 @@ export default function FeaturedDeals({ deals }: FeaturedDealsProps) {
             return (
               <div
                 key={deal.id}
-                className="group overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg"
+                className="group overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg dark:border-gray-700 dark:bg-gray-900"
               >
                 {/* Wide landscape image */}
                 <div className="relative aspect-[16/9] overflow-hidden bg-gray-100">
@@ -89,7 +89,7 @@ export default function FeaturedDeals({ deals }: FeaturedDealsProps) {
                 </div>
 
                 {/* Store badge */}
-                <div className="flex items-center gap-2 border-b border-gray-100 px-4 py-2">
+                <div className="flex items-center gap-2 border-b border-gray-100 px-4 py-2 dark:border-gray-800">
                   <span
                     className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold text-white"
                     style={{ backgroundColor: store.color }}
@@ -102,7 +102,7 @@ export default function FeaturedDeals({ deals }: FeaturedDealsProps) {
                 <div className="p-4">
                   <Link
                     href={`/games/${deal.game.slug}`}
-                    className="text-base font-semibold text-gray-900 hover:text-brand-600"
+                    className="text-base font-semibold text-gray-900 hover:text-brand-600 dark:text-white"
                   >
                     {deal.game.title}
                   </Link>
@@ -112,7 +112,7 @@ export default function FeaturedDeals({ deals }: FeaturedDealsProps) {
                       <span className="text-sm text-gray-400 line-through">
                         {formatPrice(deal.original_price)}
                       </span>
-                      <span className="text-xl font-bold text-gray-900">
+                      <span className="text-xl font-bold text-gray-900 dark:text-white">
                         {formatPrice(deal.price)}
                       </span>
                     </div>
