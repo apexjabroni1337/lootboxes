@@ -1,8 +1,9 @@
 import Link from "next/link";
 import AnalyticsCard from "@/components/analytics/AnalyticsCard";
 import ScoreBadge from "@/components/analytics/ScoreBadge";
+import GameAvatar from "@/components/ui/GameAvatar";
 import { AnalyticsMeta, Game } from "@/lib/types";
-import { BarChart3, Sparkles } from "lucide-react";
+import { BarChart3, Sparkles, ArrowRight } from "lucide-react";
 import { createServerClient } from "@/lib/supabase";
 
 export const revalidate = 300;
@@ -21,6 +22,22 @@ async function getGameCovers(): Promise<Record<string, string | null>> {
     map[g.slug] = g.screenshot_image || g.cover_image;
   }
   return map;
+}
+
+/* ── Fetch recently scored lootbox games dynamically ── */
+async function getRecentScores() {
+  const supabase = createServerClient();
+  const { data } = await supabase
+    .from("games")
+    .select(
+      "id, title, slug, cover_image, screenshot_image, lootboxes_score, loot_system_type, updated_at"
+    )
+    .not("lootboxes_score", "is", null)
+    .not("loot_system_type", "is", null)
+    .order("updated_at", { ascending: false })
+    .limit(8);
+
+  return (data as any[]) || [];
 }
 
 // Game data with cover images populated from DB
@@ -48,6 +65,28 @@ const TYPES = [
   { label: "Drop Rate Reports", value: "droprates" },
 ];
 
+const SYSTEM_LABELS: Record<string, string> = {
+  gacha: "Gacha",
+  loot_box: "Loot Box",
+  card_pack: "Card Pack",
+  cosmetic_shop: "Cosmetic Shop",
+  battle_pass: "Battle Pass",
+};
+
+function scoreColor(score: number): string {
+  if (score >= 7) return "text-emerald-600 dark:text-emerald-400";
+  if (score >= 5) return "text-amber-600 dark:text-amber-400";
+  if (score >= 3) return "text-orange-600 dark:text-orange-400";
+  return "text-red-600 dark:text-red-400";
+}
+
+function scoreBg(score: number): string {
+  if (score >= 7) return "bg-emerald-500";
+  if (score >= 5) return "bg-amber-500";
+  if (score >= 3) return "bg-orange-500";
+  return "bg-red-500";
+}
+
 export const metadata = {
   title: "Loot Box Analytics & Battle Pass Reviews",
   description:
@@ -55,7 +94,10 @@ export const metadata = {
 };
 
 export default async function AnalyticsPage() {
-  const covers = await getGameCovers();
+  const [covers, recentScores] = await Promise.all([
+    getGameCovers(),
+    getRecentScores(),
+  ]);
   const ARTICLES = buildArticles(covers);
 
   return (
@@ -93,61 +135,113 @@ export default async function AnalyticsPage() {
 
         {/* Articles grid */}
         <div className="mt-8 grid gap-6 lg:grid-cols-3">
-          <div className="space-y-4 lg:col-span-2">
+          <div className="space-y-5 lg:col-span-2">
             {ARTICLES.map((article) => (
               <AnalyticsCard key={article.id} article={article} />
             ))}
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-4">
+          <div className="space-y-5">
             {/* Methodology link */}
-            <div className="card border-brand-200 bg-brand-50">
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-brand-600" />
-                <h3 className="font-semibold text-brand-900">
-                  How We Score Games
-                </h3>
+            <div className="overflow-hidden rounded-2xl border border-brand-200 bg-gradient-to-br from-brand-50 to-blue-50 dark:border-brand-900 dark:from-brand-950 dark:to-blue-950">
+              <div className="px-5 py-5">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600">
+                    <Sparkles className="h-4 w-4 text-white" />
+                  </div>
+                  <h3 className="font-bold text-brand-900 dark:text-brand-300">
+                    How We Score Games
+                  </h3>
+                </div>
+                <p className="mt-3 text-sm leading-relaxed text-brand-700 dark:text-brand-400">
+                  Our LootBoxes Score rates monetization on value, transparency,
+                  fairness, and consumer practices.
+                </p>
+                <Link
+                  href="/methodology"
+                  className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700"
+                >
+                  Read our methodology
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
               </div>
-              <p className="mt-2 text-sm text-brand-700">
-                Our LootBoxes Score rates monetization on value, transparency,
-                fairness, and consumer practices.
-              </p>
-              <Link
-                href="/methodology"
-                className="mt-3 inline-block text-sm font-medium text-brand-600 hover:text-brand-700"
-              >
-                Read our methodology →
-              </Link>
             </div>
 
-            {/* Recent scores */}
-            <div className="card">
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
-                Recent Scores
-              </h3>
-              <ul className="mt-3 space-y-3">
-                {ARTICLES.filter((a) => a.lootboxes_score).map(
-                  (article) => (
-                    <li key={article.id} className="flex items-center gap-3">
-                      <ScoreBadge score={article.lootboxes_score!} size="sm" />
-                      <div>
-                        <Link
-                          href={`/analytics/${article.slug}`}
-                          className="text-sm text-gray-700 hover:text-brand-600"
+            {/* Recent scores — dynamic from DB */}
+            <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+              <div className="border-b border-gray-100 bg-gray-50 px-5 py-3 dark:border-gray-800 dark:bg-gray-800/50">
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white">
+                  Recent Scores
+                </h3>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                  Latest games rated by our team
+                </p>
+              </div>
+              <ul className="divide-y divide-gray-100 dark:divide-gray-800">
+                {recentScores.map((game: any) => {
+                  const thumb =
+                    game.cover_image || game.screenshot_image;
+                  const sysLabel =
+                    SYSTEM_LABELS[game.loot_system_type] ||
+                    game.loot_system_type;
+                  return (
+                    <li key={game.slug}>
+                      <Link
+                        href={`/lootbox/${game.slug}`}
+                        className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                      >
+                        {/* Game thumbnail */}
+                        <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg shadow-sm">
+                          {thumb ? (
+                            <img
+                              src={thumb}
+                              alt={game.title}
+                              className="h-full w-full object-cover"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <GameAvatar
+                              gameName={game.title}
+                              size="sm"
+                              aspectRatio="square"
+                              className="h-full w-full"
+                            />
+                          )}
+                        </div>
+
+                        {/* Game info */}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                            {game.title}
+                          </p>
+                          <p className="text-[11px] text-gray-400">
+                            {sysLabel}
+                          </p>
+                        </div>
+
+                        {/* Score */}
+                        <div
+                          className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full ${scoreBg(
+                            game.lootboxes_score
+                          )} text-xs font-bold text-white shadow-sm`}
                         >
-                          {article.game?.title}
-                        </Link>
-                        <p className="text-xs text-gray-400">
-                          {article.type === "battlepass"
-                            ? "Battle Pass"
-                            : "Loot Box"}
-                        </p>
-                      </div>
+                          {game.lootboxes_score.toFixed(1)}
+                        </div>
+                      </Link>
                     </li>
-                  )
-                )}
+                  );
+                })}
               </ul>
+              <div className="border-t border-gray-100 px-5 py-3 dark:border-gray-800">
+                <Link
+                  href="/lootbox/rankings"
+                  className="flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-700"
+                >
+                  See full rankings
+                  <ArrowRight className="h-3 w-3" />
+                </Link>
+              </div>
             </div>
           </div>
         </div>

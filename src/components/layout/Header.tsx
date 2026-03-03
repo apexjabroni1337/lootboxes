@@ -79,6 +79,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
+  const [megaTab, setMegaTab] = useState<"lootbox" | "all">("all");
   const [lootboxMegaOpen, setLootboxMegaOpen] = useState(false);
   const megaRef = useRef<HTMLDivElement>(null);
   const lootboxMegaRef = useRef<HTMLDivElement>(null);
@@ -263,27 +264,47 @@ export default function Header() {
                 </button>
 
                 {/* Mega menu dropdown */}
-                {megaOpen && (
+                {megaOpen && (() => {
+                  const lbMode = megaTab === "lootbox";
+                  const lbParam = lbMode ? "&has_lootbox=true" : "";
+                  const lbParamFirst = lbMode ? "?has_lootbox=true" : "";
+                  const addLb = (href: string) =>
+                    href.includes("?") ? href + lbParam : href + lbParamFirst;
+
+                  return (
                   <div className="absolute left-0 top-full z-50 mt-1 w-[560px] rounded-xl border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-900">
                     {/* Top filter tabs */}
                     <div className="flex border-b border-gray-100 dark:border-gray-800">
-                      <Link
-                        href="/deals?has_lootbox=true"
-                        onClick={() => setMegaOpen(false)}
-                        className="flex flex-1 items-center justify-center gap-2 border-r border-gray-100 px-4 py-3 text-sm font-semibold text-brand-600 transition-colors hover:bg-brand-50 dark:border-gray-800 dark:hover:bg-brand-950"
+                      <button
+                        onClick={() => setMegaTab("lootbox")}
+                        className={`flex flex-1 items-center justify-center gap-2 border-r border-gray-100 px-4 py-3 text-sm font-semibold transition-colors dark:border-gray-800 ${
+                          lbMode
+                            ? "bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-brand-400"
+                            : "text-gray-500 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800"
+                        }`}
                       >
                         <Box className="h-4 w-4" />
                         Games with Loot Boxes
-                      </Link>
-                      <Link
-                        href="/deals"
-                        onClick={() => setMegaOpen(false)}
-                        className="flex flex-1 items-center justify-center gap-2 px-4 py-3 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800"
+                      </button>
+                      <button
+                        onClick={() => setMegaTab("all")}
+                        className={`flex flex-1 items-center justify-center gap-2 px-4 py-3 text-sm font-semibold transition-colors ${
+                          !lbMode
+                            ? "bg-gray-50 text-gray-900 dark:bg-gray-800 dark:text-white"
+                            : "text-gray-500 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800"
+                        }`}
                       >
                         <Gamepad2 className="h-4 w-4" />
                         All Game Deals
-                      </Link>
+                      </button>
                     </div>
+
+                    {/* Active mode indicator */}
+                    {lbMode && (
+                      <div className="bg-brand-50/60 px-5 py-1.5 text-[11px] font-medium text-brand-600 dark:bg-brand-950/40 dark:text-brand-400">
+                        Showing deals for games with loot box systems only
+                      </div>
+                    )}
 
                     <div className="p-5">
                       <div className="grid grid-cols-2 gap-6">
@@ -296,7 +317,7 @@ export default function Header() {
                             {GENRES.map((g) => (
                               <Link
                                 key={g.label}
-                                href={g.href}
+                                href={addLb(g.href)}
                                 onClick={() => setMegaOpen(false)}
                                 className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white"
                               >
@@ -316,7 +337,7 @@ export default function Header() {
                             {QUICK_LINKS.map((q) => (
                               <Link
                                 key={q.label}
-                                href={q.href}
+                                href={addLb(q.href)}
                                 onClick={() => setMegaOpen(false)}
                                 className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:opacity-80 ${q.color}`}
                               >
@@ -346,22 +367,22 @@ export default function Header() {
                       {/* Bottom bar */}
                       <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3 dark:border-gray-800">
                         <Link
-                          href="/games"
+                          href={addLb("/games")}
                           onClick={() => setMegaOpen(false)}
                           className="text-sm font-medium text-brand-600 hover:text-brand-700"
                         >
-                          Browse all games →
+                          {lbMode ? "Browse lootbox games →" : "Browse all games →"}
                         </Link>
                         <div className="flex gap-2">
                           <Link
-                            href="/games/new-releases"
+                            href={addLb("/games/new-releases")}
                             onClick={() => setMegaOpen(false)}
                             className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                           >
                             New Releases
                           </Link>
                           <Link
-                            href="/deals?sort=trending"
+                            href={addLb("/deals?sort=trending")}
                             onClick={() => setMegaOpen(false)}
                             className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                           >
@@ -371,7 +392,8 @@ export default function Header() {
                       </div>
                     </div>
                   </div>
-                )}
+                  );
+                })()}
               </div>
 
               <Link
