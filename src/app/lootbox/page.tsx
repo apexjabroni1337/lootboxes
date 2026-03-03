@@ -332,18 +332,18 @@ export default async function LootboxHubPage({
   const remainingGames = games.slice(7);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* ── Header ── */}
       <div className="container-main pt-10 pb-6">
         <div className="flex flex-col gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-200 rounded-full px-3.5 py-1.5 mb-4">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
-              <span className="text-[11px] font-bold text-indigo-600 uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-200 dark:bg-indigo-500/15 dark:border-indigo-400/25 rounded-full px-3.5 py-1.5 mb-4">
+              <Sparkles className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-300" />
+              <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-200 uppercase tracking-wider">
                 Loot Box Database
               </span>
             </div>
-            <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">
+            <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
               {typeFilter && typeMeta ? (
                 <>
                   {typeMeta.heading}
@@ -354,7 +354,7 @@ export default async function LootboxHubPage({
                 </>
               )}
             </h1>
-            <p className="text-gray-500 mt-2 max-w-lg text-sm">
+            <p className="text-gray-500 dark:text-slate-400 mt-2 max-w-lg text-sm">
               {typeFilter && typeMeta
                 ? typeMeta.subtitle
                 : `${allGames.length} games analyzed across ${Object.keys(typeCounts).length} monetization systems. Data-driven. No guesswork.`}
@@ -368,12 +368,12 @@ export default async function LootboxHubPage({
               href="/lootbox"
               className={`inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-xl border transition-all ${
                 !typeFilter
-                  ? "bg-gray-900 border-gray-900 text-white shadow-lg"
-                  : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300 hover:text-gray-900"
+                  ? "bg-gray-900 border-gray-900 text-white shadow-lg dark:bg-white/15 dark:border-white/25"
+                  : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300 hover:text-gray-900 dark:bg-white/[0.04] dark:border-white/[0.08] dark:text-slate-400 dark:hover:bg-white/[0.08] dark:hover:border-white/15 dark:hover:text-white"
               }`}
             >
               <span>All</span>
-              <span className={`text-xs font-medium ${!typeFilter ? "text-gray-300" : "text-gray-400"}`}>{allGames.length}</span>
+              <span className={`text-xs font-medium ${!typeFilter ? "text-gray-300 dark:text-slate-300" : "text-gray-400 dark:text-slate-500"}`}>{allGames.length}</span>
             </Link>
 
             {VALID_TYPES.map((t) => {
@@ -386,12 +386,12 @@ export default async function LootboxHubPage({
                   href={`/lootbox?type=${t}`}
                   className={`inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-xl border transition-all ${
                     isActive
-                      ? "bg-gray-900 border-gray-900 text-white shadow-lg"
-                      : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300 hover:text-gray-900"
+                      ? "bg-gray-900 border-gray-900 text-white shadow-lg dark:bg-white/15 dark:border-white/25"
+                      : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300 hover:text-gray-900 dark:bg-white/[0.04] dark:border-white/[0.08] dark:text-slate-400 dark:hover:bg-white/[0.08] dark:hover:border-white/15 dark:hover:text-white"
                   }`}
                 >
                   <span>{meta.heading.replace(" Games", "")}</span>
-                  <span className={`text-xs font-medium ${isActive ? "text-gray-300" : "text-gray-400"}`}>{count}</span>
+                  <span className={`text-xs font-medium ${isActive ? "text-gray-300 dark:text-slate-300" : "text-gray-400 dark:text-slate-500"}`}>{count}</span>
                 </Link>
               );
             })}
@@ -408,21 +408,21 @@ export default async function LootboxHubPage({
         return (
           <div className="container-main pb-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="rounded-xl bg-gray-50 border border-gray-200 p-4">
-                <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Games</p>
-                <p className="text-2xl font-extrabold text-gray-900">{games.length}</p>
+              <div className="rounded-xl bg-gray-50 border border-gray-200 dark:bg-white/[0.04] dark:border-white/[0.08] p-4">
+                <p className="text-[11px] font-medium text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1">Games</p>
+                <p className="text-2xl font-extrabold text-gray-900 dark:text-white">{games.length}</p>
               </div>
-              <div className="rounded-xl bg-gray-50 border border-gray-200 p-4">
-                <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Avg Score</p>
-                <p className="text-2xl font-extrabold text-gray-900">{avgScore}</p>
+              <div className="rounded-xl bg-gray-50 border border-gray-200 dark:bg-white/[0.04] dark:border-white/[0.08] p-4">
+                <p className="text-[11px] font-medium text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1">Avg Score</p>
+                <p className="text-2xl font-extrabold text-gray-900 dark:text-white">{avgScore}</p>
               </div>
-              <div className="rounded-xl bg-gray-50 border border-gray-200 p-4">
-                <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Pity System</p>
-                <p className="text-2xl font-extrabold text-gray-900">{Math.round((withPity / games.length) * 100)}%</p>
+              <div className="rounded-xl bg-gray-50 border border-gray-200 dark:bg-white/[0.04] dark:border-white/[0.08] p-4">
+                <p className="text-[11px] font-medium text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1">Pity System</p>
+                <p className="text-2xl font-extrabold text-gray-900 dark:text-white">{Math.round((withPity / games.length) * 100)}%</p>
               </div>
-              <div className="rounded-xl bg-gray-50 border border-gray-200 p-4">
-                <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Avg Cost/Pull</p>
-                <p className="text-2xl font-extrabold text-gray-900">{avgCostVal ? `$${avgCostVal.toFixed(2)}` : "—"}</p>
+              <div className="rounded-xl bg-gray-50 border border-gray-200 dark:bg-white/[0.04] dark:border-white/[0.08] p-4">
+                <p className="text-[11px] font-medium text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1">Avg Cost/Pull</p>
+                <p className="text-2xl font-extrabold text-gray-900 dark:text-white">{avgCostVal ? `$${avgCostVal.toFixed(2)}` : "—"}</p>
               </div>
             </div>
           </div>
@@ -435,7 +435,7 @@ export default async function LootboxHubPage({
           <p className="text-gray-500 mb-4">
             No {typeMeta?.heading.toLowerCase() || "games"} found yet.
           </p>
-          <Link href="/lootbox" className="text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors">
+          <Link href="/lootbox" className="text-sm font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
             View all games →
           </Link>
         </div>
@@ -465,23 +465,23 @@ export default async function LootboxHubPage({
         <div className="container-main pb-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             {/* Stats card — 2 cols */}
-            <div className="col-span-2 rounded-2xl bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-200 p-6 md:p-8 flex items-center">
+            <div className="col-span-2 rounded-2xl bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-200 dark:from-indigo-950 dark:to-violet-950 dark:border-indigo-500/15 p-6 md:p-8 flex items-center">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 w-full">
                 <div className="text-center md:text-left">
-                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900">{games.length}</p>
-                  <p className="text-xs text-indigo-400 font-medium mt-1">Games Analyzed</p>
+                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">{games.length}</p>
+                  <p className="text-xs text-indigo-400 dark:text-indigo-300/60 font-medium mt-1">Games Analyzed</p>
                 </div>
                 <div className="text-center md:text-left">
-                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900">{totalDropRates}+</p>
-                  <p className="text-xs text-indigo-400 font-medium mt-1">Drop Rates</p>
+                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">{totalDropRates}+</p>
+                  <p className="text-xs text-indigo-400 dark:text-indigo-300/60 font-medium mt-1">Drop Rates</p>
                 </div>
                 <div className="text-center md:text-left">
-                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900">{avgScore}</p>
-                  <p className="text-xs text-indigo-400 font-medium mt-1">Avg Score</p>
+                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">{avgScore}</p>
+                  <p className="text-xs text-indigo-400 dark:text-indigo-300/60 font-medium mt-1">Avg Score</p>
                 </div>
                 <div className="text-center md:text-left">
-                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900">8</p>
-                  <p className="text-xs text-indigo-400 font-medium mt-1">Dimensions</p>
+                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">8</p>
+                  <p className="text-xs text-indigo-400 dark:text-indigo-300/60 font-medium mt-1">Dimensions</p>
                 </div>
               </div>
             </div>
@@ -513,62 +513,62 @@ export default async function LootboxHubPage({
       <div className="container-main py-4">
         <Link
           href="/lootbox/rankings"
-          className="group flex items-center justify-between rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border border-indigo-200 px-6 md:px-8 py-5 hover:border-indigo-300 transition-all"
+          className="group flex items-center justify-between rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border border-indigo-200 dark:from-indigo-600/20 dark:via-purple-600/15 dark:to-pink-600/10 dark:border-indigo-500/20 px-6 md:px-8 py-5 hover:border-indigo-300 dark:hover:border-indigo-400/30 transition-all"
         >
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center">
-              <Trophy className="w-5 h-5 text-indigo-600" />
+            <div className="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-500/20 flex items-center justify-center">
+              <Trophy className="w-5 h-5 text-indigo-600 dark:text-indigo-300" />
             </div>
             <div>
-              <h2 className="font-bold text-gray-900 text-base">Loot Box Rankings</h2>
-              <p className="text-sm text-gray-500">See every game ranked by monetization fairness — best to worst</p>
+              <h2 className="font-bold text-gray-900 dark:text-white text-base">Loot Box Rankings</h2>
+              <p className="text-sm text-gray-500 dark:text-slate-400">See every game ranked by monetization fairness — best to worst</p>
             </div>
           </div>
-          <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-gray-900 group-hover:translate-x-1 transition-all" />
+          <ChevronRight className="w-5 h-5 text-gray-400 dark:text-slate-500 group-hover:text-gray-900 dark:group-hover:text-white group-hover:translate-x-1 transition-all" />
         </Link>
       </div>
 
       {/* ── Methodology Section ── */}
       <div className="container-main py-8 pb-16">
-        <div className="rounded-2xl bg-gray-50 border border-gray-200 p-8">
+        <div className="rounded-2xl bg-gray-50 border border-gray-200 dark:bg-slate-900/80 dark:border-slate-800 p-8">
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-blue-600" />
+            <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-500/15 flex items-center justify-center">
+              <Shield className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
-            <h2 className="text-xl font-bold text-gray-900">How We Rate Games</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">How We Rate Games</h2>
           </div>
-          <p className="text-sm text-gray-500 mb-6 max-w-2xl">
+          <p className="text-sm text-gray-500 dark:text-slate-400 mb-6 max-w-2xl">
             Every game receives a Lootboxes Score from 1-10 based on 8 criteria across three
             weighted categories. Our methodology is transparent, criteria-based, and open to scrutiny.
           </p>
 
           <div className="grid md:grid-cols-3 gap-4 mb-6">
-            <div className="rounded-xl bg-white border border-blue-200 p-4">
+            <div className="rounded-xl bg-white border border-blue-200 dark:bg-slate-800/60 dark:border-blue-500/15 p-4">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="font-semibold text-gray-900 text-sm">Consumer Protection</h3>
-                <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">40%</span>
+                <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Consumer Protection</h3>
+                <span className="text-xs font-bold text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-500/15 px-2 py-0.5 rounded-full">40%</span>
               </div>
-              <p className="text-xs text-gray-500">Transparency, regulatory compliance, and spending safeguards.</p>
+              <p className="text-xs text-gray-500 dark:text-slate-500">Transparency, regulatory compliance, and spending safeguards.</p>
             </div>
-            <div className="rounded-xl bg-white border border-emerald-200 p-4">
+            <div className="rounded-xl bg-white border border-emerald-200 dark:bg-slate-800/60 dark:border-emerald-500/15 p-4">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="font-semibold text-gray-900 text-sm">Value &amp; Fairness</h3>
-                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">35%</span>
+                <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Value &amp; Fairness</h3>
+                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-500/15 px-2 py-0.5 rounded-full">35%</span>
               </div>
-              <p className="text-xs text-gray-500">Value for money, fairness mechanics, and pay-to-win impact.</p>
+              <p className="text-xs text-gray-500 dark:text-slate-500">Value for money, fairness mechanics, and pay-to-win impact.</p>
             </div>
-            <div className="rounded-xl bg-white border border-purple-200 p-4">
+            <div className="rounded-xl bg-white border border-purple-200 dark:bg-slate-800/60 dark:border-purple-500/15 p-4">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="font-semibold text-gray-900 text-sm">Player Experience</h3>
-                <span className="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">25%</span>
+                <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Player Experience</h3>
+                <span className="text-xs font-bold text-purple-600 bg-purple-50 dark:text-purple-400 dark:bg-purple-500/15 px-2 py-0.5 rounded-full">25%</span>
               </div>
-              <p className="text-xs text-gray-500">Player control over purchases and psychological design integrity.</p>
+              <p className="text-xs text-gray-500 dark:text-slate-500">Player control over purchases and psychological design integrity.</p>
             </div>
           </div>
 
           <Link
             href="/methodology"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
           >
             Read our full methodology →
           </Link>
@@ -579,7 +579,7 @@ export default async function LootboxHubPage({
       <div className="container-main pb-12 text-center">
         <p className="text-gray-500 text-sm">
           Looking for raw data?{" "}
-          <Link href="/drop-rates" className="text-blue-400 font-medium hover:text-blue-300 transition-colors">
+          <Link href="/drop-rates" className="text-blue-600 font-medium hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
             View the Drop Rate Database →
           </Link>
         </p>
