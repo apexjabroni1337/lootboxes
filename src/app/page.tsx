@@ -186,7 +186,23 @@ async function getAnalyticsCovers(): Promise<Record<string, string | null>> {
 
   const map: Record<string, string | null> = {};
   for (const g of data || []) {
+    // Prefer screenshot (gameplay) over cover (logo art)
     map[g.slug] = g.screenshot_image || g.cover_image;
+  }
+  // Fallback: use gameplay screenshots for hardcoded articles
+  // if the DB image is missing or is just logo-style cover art
+  const SCREENSHOT_FALLBACKS: Record<string, string> = {
+    fortnite:
+      "https://images.igdb.com/igdb/image/upload/t_screenshot_big/qxm5yhnbavczjmuxy88h.jpg",
+    "genshin-impact":
+      "https://images.igdb.com/igdb/image/upload/t_screenshot_big/scbh5m.jpg",
+    valorant:
+      "https://images.igdb.com/igdb/image/upload/t_screenshot_big/sc86iy.jpg",
+  };
+  for (const slug of slugs) {
+    if (!map[slug] || map[slug]?.includes("cover_big")) {
+      map[slug] = SCREENSHOT_FALLBACKS[slug] || map[slug] || null;
+    }
   }
   return map;
 }
@@ -198,7 +214,7 @@ function buildHomeAnalytics(covers: Record<string, string | null>): AnalyticsMet
       game_id: "3",
       slug: "fortnite-chapter-6-season-1-battle-pass",
       title: "Fortnite Chapter 6 Season 1 Battle Pass — Is It Worth It?",
-      excerpt: "We break down every tier, calculate the V-Buck value, and compare it to direct cosmetic purchases.",
+      excerpt: "We break down every single tier of the Chapter 6 Season 1 Battle Pass, calculate the total V-Buck value you get back, and compare it to what you'd spend buying the same cosmetics directly from the Item Shop. Plus, we look at the XP grind required to hit Tier 100 and whether casual players can realistically finish the pass before the season ends.",
       type: "battlepass",
       lootboxes_score: 7.2,
       cover_image: covers["fortnite"] || null,
@@ -210,7 +226,7 @@ function buildHomeAnalytics(covers: Record<string, string | null>): AnalyticsMet
       game_id: "4",
       slug: "genshin-impact-gacha-analysis-2026",
       title: "Genshin Impact Gacha System — Complete Drop Rate Analysis",
-      excerpt: "Official drop rates, pity system breakdown, and expected spending to pull featured characters.",
+      excerpt: "A deep dive into Genshin Impact's gacha system: we break down the official drop rates for 5-star and 4-star characters, explain exactly how the soft pity and hard pity systems work, and calculate the expected real-money cost to pull a featured character. We also compare Genshin's rates to other gacha games and rate its overall fairness.",
       type: "lootbox",
       lootboxes_score: 4.8,
       cover_image: covers["genshin-impact"] || null,
@@ -222,7 +238,7 @@ function buildHomeAnalytics(covers: Record<string, string | null>): AnalyticsMet
       game_id: "6",
       slug: "valorant-battle-pass-episode-10",
       title: "Valorant Episode 10 Battle Pass Review",
-      excerpt: "New skins, gun buddies, and sprays — here's whether this pass delivers enough value for 1000 VP.",
+      excerpt: "Riot's latest battle pass brings new weapon skins, gun buddies, sprays, and player cards across 50 tiers. We analyze whether the 1000 VP price tag delivers enough value compared to buying skins from the rotating store, how the XP curve compares to previous episodes, and whether the premium rewards justify the grind for both casual and competitive players.",
       type: "battlepass",
       lootboxes_score: 5.5,
       cover_image: covers["valorant"] || null,
