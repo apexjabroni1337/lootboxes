@@ -8,7 +8,9 @@ const FOOTER_SECTIONS = {
     { label: "Hot Deals", href: "/deals" },
     { label: "Browse Games", href: "/games" },
     { label: "Analytics", href: "/analytics" },
+    { label: "Blog", href: "/blog" },
     { label: "Drop Rates", href: "/drop-rates" },
+    { label: "New Releases", href: "/games/new-releases" },
     { label: "Price Alerts", href: "/newsletter" },
   ],
   Company: [
@@ -41,9 +43,9 @@ const TRACKED_STORES = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-gray-200 bg-gray-50">
+    <footer className="border-t border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-950">
       {/* Store strip */}
-      <div className="border-b border-gray-200 bg-white">
+      <div className="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
         <div className="container-main py-6">
           <p className="text-center text-[11px] font-semibold uppercase tracking-wider text-gray-400">
             Comparing prices across {TRACKED_STORES.length}+ stores

@@ -97,13 +97,13 @@ export default function BlogPage() {
   return (
     <div className="pb-12">
       {/* Page hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 sm:py-10">
+      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 sm:py-10 dark:border-gray-800 dark:from-gray-900 dark:to-gray-950">
         <div className="container-main">
           <div className="flex items-center gap-2">
             <BookOpen className="h-6 w-6 text-brand-600" />
-            <h1 className="text-3xl font-bold text-gray-900">Blog</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Blog</h1>
           </div>
-          <p className="mt-1 text-gray-500">
+          <p className="mt-1 text-gray-500 dark:text-gray-400">
             Deal guides, industry analysis, and insights to help you game smarter.
           </p>
         </div>
@@ -113,7 +113,7 @@ export default function BlogPage() {
         {/* Featured post */}
         <Link
           href={`/blog/${featured.slug}`}
-          className="group block overflow-hidden rounded-2xl border border-gray-200 bg-white transition-shadow hover:shadow-lg"
+          className="group block overflow-hidden rounded-2xl border border-gray-200 bg-white transition-shadow hover:shadow-lg dark:border-gray-800 dark:bg-gray-900"
         >
           <div className={`relative h-48 bg-gradient-to-br ${getPostGradient(featured.slug)} sm:h-64`}>
             <div className="absolute inset-0 flex items-center justify-center">

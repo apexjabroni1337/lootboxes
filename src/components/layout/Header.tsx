@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import {
   Search,
   Menu,
+  Heart,
   X,
   ChevronDown,
   Flame,
@@ -27,6 +28,8 @@ import {
 } from "lucide-react";
 import SearchDialog from "@/components/search/SearchDialog";
 import Logo from "@/components/brand/Logo";
+import ThemeToggle from "@/components/theme/ThemeToggle";
+import { useWishlist } from "@/components/wishlist/WishlistProvider";
 
 const GENRES = [
   { label: "Action", href: "/deals?genre=action", icon: Swords },
@@ -72,6 +75,7 @@ const TRENDING_SEARCHES = [
 ];
 
 export default function Header() {
+  const { count: wishlistCount } = useWishlist();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
@@ -126,7 +130,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur-sm">
+      <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-950/95">
         <div className="container-main">
           {/* Main header row */}
           <div className="flex h-16 items-center gap-4">
@@ -343,9 +347,15 @@ export default function Header() {
 
               <Link
                 href="/analytics"
-                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
               >
                 Analytics
+              </Link>
+              <Link
+                href="/games/new-releases"
+                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+              >
+                New Releases
               </Link>
             </nav>
 
@@ -353,7 +363,7 @@ export default function Header() {
             <div className="hidden flex-1 justify-center md:flex">
               <button
                 onClick={() => setSearchOpen(true)}
-                className="flex w-full max-w-md items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-400 transition-all hover:border-brand-300 hover:bg-white hover:shadow-sm"
+                className="flex w-full max-w-md items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-400 transition-all hover:border-brand-300 hover:bg-white hover:shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:hover:border-brand-500 dark:hover:bg-gray-800"
               >
                 <Search className="h-4 w-4 flex-shrink-0 text-gray-400" />
                 <span className="flex-1 text-left">Search games, deals, or analytics...</span>
@@ -373,6 +383,23 @@ export default function Header() {
               >
                 <Search className="h-5 w-5" />
               </button>
+
+              {/* Wishlist */}
+              <Link
+                href="/wishlist"
+                className="relative rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+                aria-label="Wishlist"
+              >
+                <Heart className="h-5 w-5" />
+                {wishlistCount > 0 && (
+                  <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white">
+                    {wishlistCount > 9 ? "9+" : wishlistCount}
+                  </span>
+                )}
+              </Link>
+
+              {/* Dark mode toggle */}
+              <ThemeToggle />
 
               {/* Newsletter CTA */}
               <Link href="/newsletter" className="btn-primary hidden md:flex">
