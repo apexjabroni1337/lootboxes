@@ -370,32 +370,32 @@ export default async function HomePage() {
                       loading="lazy"
                     />
                   )}
-                  {/* Gradient overlay */}
+                  {/* Gradient overlay — stronger for legibility */}
                   <div
                     className={`absolute inset-0 bg-gradient-to-t ${st.gradient} ${
-                      info.image ? "opacity-80" : "opacity-100"
+                      info.image ? "opacity-85" : "opacity-100"
                     } transition-opacity duration-300 group-hover:opacity-90`}
                   />
-                  {/* Dark vignette for depth */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10" />
+                  {/* Dark vignette — heavier at bottom where text lives */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-black/5" />
                   {/* Content */}
-                  <div className="relative flex h-full flex-col justify-between px-5 py-6">
+                  <div className="relative flex h-full flex-col justify-between px-5 py-6" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.45)" }}>
                     <div>
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm ring-1 ring-white/10">
-                        <st.icon className="h-5 w-5 text-white drop-shadow" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/25 backdrop-blur-sm ring-1 ring-white/20 shadow-lg">
+                        <st.icon className="h-5 w-5 text-white drop-shadow-md" />
                       </div>
-                      <h3 className="mt-3 text-lg font-bold text-white drop-shadow-sm">
+                      <h3 className="mt-3 text-lg font-extrabold text-white" style={{ textShadow: "0 2px 6px rgba(0,0,0,0.5)" }}>
                         {st.label}
                       </h3>
-                      <p className="mt-1 text-[13px] leading-snug text-white/80">
+                      <p className="mt-1 text-[13px] font-medium leading-snug text-white/90">
                         {st.description}
                       </p>
                     </div>
-                    <div className="mt-4 flex items-center justify-between border-t border-white/15 pt-3">
-                      <span className="text-xs font-semibold uppercase tracking-wide text-white/70">
+                    <div className="mt-4 flex items-center justify-between border-t border-white/20 pt-3">
+                      <span className="text-xs font-bold uppercase tracking-wide text-white/80">
                         {info.count} games
                       </span>
-                      <span className="flex items-center gap-1 text-sm font-semibold text-white transition-transform duration-200 group-hover:translate-x-0.5">
+                      <span className="flex items-center gap-1 text-sm font-bold text-white transition-transform duration-200 group-hover:translate-x-0.5">
                         Explore
                         <ArrowRight className="h-3.5 w-3.5" />
                       </span>
@@ -504,12 +504,17 @@ export default async function HomePage() {
       <HowItWorks />
 
       {/* ─── Leaderboard + Latest Analysis ─── */}
-      <section className="py-12 sm:py-14">
+      <section className="py-14 sm:py-18">
         <div className="container-main">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Latest Analysis
-            </h2>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                Latest Analysis
+              </h2>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                Deep dives into the monetization systems that matter
+              </p>
+            </div>
             <Link
               href="/analytics"
               className="flex items-center gap-1 text-sm font-medium text-brand-600 hover:text-brand-700"
@@ -519,69 +524,118 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <div className="mt-6 grid gap-6 lg:grid-cols-3">
+          <div className="mt-8 grid gap-6 lg:grid-cols-3">
             {/* Articles */}
-            <div className="space-y-4 lg:col-span-2">
+            <div className="space-y-5 lg:col-span-2">
               {homeAnalytics.map((article) => (
                 <AnalyticsCard key={article.id} article={article} />
               ))}
             </div>
 
             {/* Lootboxes Score Leaderboard */}
-            <div className="space-y-4">
-              <div className="card">
-                <h3 className="flex items-center gap-1.5 text-sm font-semibold text-success-700">
-                  <span className="flex h-5 w-5 items-center justify-center rounded bg-success-100 text-[10px]">
-                    ▲
-                  </span>
-                  Best Value Monetization
-                </h3>
-                <p className="mt-1 text-[11px] text-gray-400">
-                  Games with the fairest in-game spending
-                </p>
-                <ul className="mt-3 space-y-3">
-                  {bestThree.map((item) => (
-                    <li key={item.slug} className="flex items-center gap-3">
-                      <ScoreBadge score={item.lootboxes_score} size="sm" />
-                      <Link
-                        href={`/lootbox/${item.slug}`}
-                        className="text-sm text-gray-700 hover:text-brand-600 dark:text-gray-300"
-                      >
-                        {item.title}
-                      </Link>
-                    </li>
-                  ))}
+            <div className="space-y-5">
+              {/* Best Value */}
+              <div className="overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-br from-white to-emerald-50/50 dark:border-emerald-900/40 dark:from-gray-900 dark:to-emerald-950/20">
+                <div className="border-b border-emerald-100 bg-emerald-50/50 px-5 py-3 dark:border-emerald-900/30 dark:bg-emerald-950/30">
+                  <h3 className="flex items-center gap-2 text-sm font-bold text-emerald-700 dark:text-emerald-400">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-500 text-[10px] text-white shadow-sm">
+                      ▲
+                    </span>
+                    Best Value Monetization
+                  </h3>
+                  <p className="mt-0.5 text-[11px] text-emerald-600/70 dark:text-emerald-500/60">
+                    Games with the fairest in-game spending
+                  </p>
+                </div>
+                <ul className="divide-y divide-gray-100 dark:divide-gray-800">
+                  {bestThree.map((item, idx) => {
+                    const thumb = item.cover_image || item.screenshot_image;
+                    return (
+                      <li key={item.slug}>
+                        <Link
+                          href={`/lootbox/${item.slug}`}
+                          className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-emerald-50/50 dark:hover:bg-emerald-950/20"
+                        >
+                          <span className="text-xs font-bold text-gray-300 dark:text-gray-600 w-4">
+                            {idx + 1}
+                          </span>
+                          <div className="h-9 w-9 flex-shrink-0 overflow-hidden rounded-lg">
+                            {thumb ? (
+                              <img
+                                src={thumb}
+                                alt={item.title}
+                                className="h-full w-full object-cover"
+                                loading="lazy"
+                              />
+                            ) : (
+                              <GameAvatar gameName={item.title} size="sm" aspectRatio="square" className="h-full w-full" />
+                            )}
+                          </div>
+                          <span className="flex-1 text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
+                            {item.title}
+                          </span>
+                          <ScoreBadge score={item.lootboxes_score} size="sm" />
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
-                <Link
-                  href="/lootbox/rankings"
-                  className="mt-4 block text-xs font-medium text-brand-600 hover:text-brand-700"
-                >
-                  See full rankings →
-                </Link>
+                <div className="px-5 py-3 border-t border-gray-100 dark:border-gray-800">
+                  <Link
+                    href="/lootbox/rankings"
+                    className="flex items-center gap-1 text-xs font-semibold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
+                  >
+                    See full rankings
+                    <ArrowRight className="h-3 w-3" />
+                  </Link>
+                </div>
               </div>
 
-              <div className="card">
-                <h3 className="flex items-center gap-1.5 text-sm font-semibold text-danger-600">
-                  <span className="flex h-5 w-5 items-center justify-center rounded bg-danger-100 text-[10px]">
-                    ▼
-                  </span>
-                  Watch Out
-                </h3>
-                <p className="mt-1 text-[11px] text-gray-400">
-                  Games with aggressive monetization
-                </p>
-                <ul className="mt-3 space-y-3">
-                  {worstThree.map((item) => (
-                    <li key={item.slug} className="flex items-center gap-3">
-                      <ScoreBadge score={item.lootboxes_score} size="sm" />
-                      <Link
-                        href={`/lootbox/${item.slug}`}
-                        className="text-sm text-gray-700 hover:text-brand-600 dark:text-gray-300"
-                      >
-                        {item.title}
-                      </Link>
-                    </li>
-                  ))}
+              {/* Watch Out */}
+              <div className="overflow-hidden rounded-2xl border border-red-200 bg-gradient-to-br from-white to-red-50/50 dark:border-red-900/40 dark:from-gray-900 dark:to-red-950/20">
+                <div className="border-b border-red-100 bg-red-50/50 px-5 py-3 dark:border-red-900/30 dark:bg-red-950/30">
+                  <h3 className="flex items-center gap-2 text-sm font-bold text-red-600 dark:text-red-400">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-red-500 text-[10px] text-white shadow-sm">
+                      ▼
+                    </span>
+                    Watch Out
+                  </h3>
+                  <p className="mt-0.5 text-[11px] text-red-600/70 dark:text-red-500/60">
+                    Games with aggressive monetization
+                  </p>
+                </div>
+                <ul className="divide-y divide-gray-100 dark:divide-gray-800">
+                  {worstThree.map((item, idx) => {
+                    const thumb = item.cover_image || item.screenshot_image;
+                    return (
+                      <li key={item.slug}>
+                        <Link
+                          href={`/lootbox/${item.slug}`}
+                          className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-red-50/50 dark:hover:bg-red-950/20"
+                        >
+                          <span className="text-xs font-bold text-gray-300 dark:text-gray-600 w-4">
+                            {idx + 1}
+                          </span>
+                          <div className="h-9 w-9 flex-shrink-0 overflow-hidden rounded-lg">
+                            {thumb ? (
+                              <img
+                                src={thumb}
+                                alt={item.title}
+                                className="h-full w-full object-cover"
+                                loading="lazy"
+                              />
+                            ) : (
+                              <GameAvatar gameName={item.title} size="sm" aspectRatio="square" className="h-full w-full" />
+                            )}
+                          </div>
+                          <span className="flex-1 text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
+                            {item.title}
+                          </span>
+                          <ScoreBadge score={item.lootboxes_score} size="sm" />
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </div>
@@ -592,22 +646,34 @@ export default async function HomePage() {
       {/* ─── Rankings CTA ─── */}
       <section className="py-8">
         <div className="container-main">
-          <div className="flex items-center justify-between rounded-2xl bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 px-8 py-6 dark:from-blue-950/30 dark:to-purple-950/30 dark:border-blue-900/30">
-            <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                Loot Box Rankings
-              </h2>
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Every game ranked by monetization fairness — from best to worst.
-                See tier breakdowns, category leaders, and the worst offenders.
-              </p>
+          <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-blue-950 to-purple-950 px-8 py-8 sm:px-10 transition-all hover:shadow-2xl">
+            {/* Subtle glow */}
+            <div className="absolute -right-20 -top-20 h-60 w-60 rounded-full bg-blue-500/20 blur-3xl" />
+            <div className="absolute -left-10 -bottom-10 h-40 w-40 rounded-full bg-purple-500/15 blur-2xl" />
+            <div className="relative flex flex-col items-center gap-5 sm:flex-row sm:justify-between">
+              <div>
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-400/30 bg-blue-500/20 px-3 py-1 mb-3">
+                  <Award className="h-3.5 w-3.5 text-blue-300" />
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-blue-200">
+                    Leaderboard
+                  </span>
+                </div>
+                <h2 className="text-xl font-bold text-white sm:text-2xl">
+                  Loot Box Rankings
+                </h2>
+                <p className="mt-2 max-w-lg text-sm text-blue-200/70">
+                  Every game ranked by monetization fairness — from best to worst.
+                  See tier breakdowns, category leaders, and the worst offenders.
+                </p>
+              </div>
+              <Link
+                href="/lootbox/rankings"
+                className="flex-shrink-0 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition-all hover:bg-blue-50 hover:shadow-lg"
+              >
+                View Full Rankings
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
-            <Link
-              href="/lootbox/rankings"
-              className="flex-shrink-0 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
-            >
-              View Full Rankings
-            </Link>
           </div>
         </div>
       </section>

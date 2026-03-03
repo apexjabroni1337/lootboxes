@@ -67,11 +67,11 @@ const LOOTBOX_POPULAR = [
 ];
 
 const TRENDING_SEARCHES = [
-  "Elden Ring",
-  "Baldur's Gate 3",
-  "Cyberpunk",
-  "Hogwarts",
-  "Red Dead",
+  "Genshin Impact",
+  "Fortnite",
+  "Diablo Immortal",
+  "Valorant",
+  "EA FC 25",
 ];
 
 export default function Header() {
