@@ -193,11 +193,9 @@ async function getAnalyticsCovers(): Promise<Record<string, string | null>> {
   // if the DB image is missing or is just logo-style cover art
   const SCREENSHOT_FALLBACKS: Record<string, string> = {
     fortnite:
-      "https://images.igdb.com/igdb/image/upload/t_screenshot_big/qxm5yhnbavczjmuxy88h.jpg",
+      "https://images.igdb.com/igdb/image/upload/t_screenshot_big/scvtmt.jpg",
     "genshin-impact":
       "https://images.igdb.com/igdb/image/upload/t_screenshot_big/scbh5m.jpg",
-    valorant:
-      "https://images.igdb.com/igdb/image/upload/t_screenshot_big/sc86iy.jpg",
   };
   for (const slug of slugs) {
     if (!map[slug] || map[slug]?.includes("cover_big")) {
