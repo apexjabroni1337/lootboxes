@@ -127,6 +127,7 @@ interface GameWithContent {
   screenshot_image: string | null;
   lootboxes_score: number | null;
   loot_system_type: string | null;
+  tags: string[] | null;
   lootbox_content: LootboxContentRow | LootboxContentRow[] | null;
 }
 
@@ -170,7 +171,7 @@ async function getAllGamesWithLootboxContent(): Promise<GameWithContent[]> {
   const { data, error } = await supabase
     .from("games")
     .select(
-      `id, title, slug, cover_image, screenshot_image, lootboxes_score, loot_system_type,
+      `id, title, slug, cover_image, screenshot_image, lootboxes_score, loot_system_type, tags,
        lootbox_content (cost_per_pull, has_pity_system, overview_html)`
     )
     .not("loot_system_type", "is", null)
@@ -192,6 +193,7 @@ function BentoGameCard({
 }) {
   const content = toContentArray(game.lootbox_content)[0];
   const sys = systemLabel(game.loot_system_type);
+  const tags = game.tags || [];
   const bannerImage = game.screenshot_image || game.cover_image;
 
   return (
@@ -247,10 +249,20 @@ function BentoGameCard({
           {game.title}
         </h3>
 
-        <div className={`flex items-center gap-2 ${featured ? "mt-3" : "mt-2"}`}>
+        <div className={`flex items-center gap-1.5 flex-wrap ${featured ? "mt-3" : "mt-2"}`}>
           <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-white/15 text-white/80 backdrop-blur-sm">
             {sys.label}
           </span>
+          {tags.includes("mobile") && (
+            <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 backdrop-blur-sm">
+              Mobile
+            </span>
+          )}
+          {tags.includes("multi_system") && (
+            <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-orange-500/20 text-orange-300 backdrop-blur-sm">
+              Multi-System
+            </span>
+          )}
           {featured && content?.has_pity_system && (
             <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 backdrop-blur-sm">
               Pity System

@@ -195,6 +195,16 @@ export default async function LootboxGamePage({
                 <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${sys.color}`}>
                   {sys.label}
                 </span>
+                {game.tags?.includes("mobile") && (
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-cyan-100 text-cyan-700">
+                    Mobile
+                  </span>
+                )}
+                {game.tags?.includes("multi_system") && (
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-100 text-orange-700">
+                    Multi-System
+                  </span>
+                )}
                 {content.has_pity_system && (
                   <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700">
                     Pity System

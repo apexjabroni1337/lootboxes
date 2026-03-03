@@ -17,6 +17,8 @@ CREATE TABLE IF NOT EXISTS games (
   itad_id TEXT, -- IsThereAnyDeal game ID for API lookups
   steam_app_id TEXT, -- Steam app ID for direct API access
   description TEXT, -- Game summary/description from IGDB
+  loot_system_type TEXT, -- Primary monetization system (gacha, loot_box, card_pack, cosmetic_shop, battle_pass)
+  tags TEXT[] DEFAULT '{}', -- Tags: mobile, multi_system, has_battle_pass, has_cosmetic_shop, has_gacha, has_loot_box, has_card_pack
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );

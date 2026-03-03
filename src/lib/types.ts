@@ -15,6 +15,7 @@ export interface Game {
   lootboxes_score: number | null;
   description?: string | null;
   loot_system_type?: string | null;
+  tags?: string[];
   hot_score?: number | null;
   created_at: string;
   updated_at: string;
