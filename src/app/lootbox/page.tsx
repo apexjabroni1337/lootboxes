@@ -11,7 +11,7 @@ const SYSTEM_TYPE_META: Record<
   string,
   {
     title: string;
-    description: string;
+    description: string;h
     heading: string;
     subtitle: string;
     icon: typeof Sparkles;
@@ -376,7 +376,7 @@ export default async function LootboxHubPage({
               <span className={`text-xs font-medium ${!typeFilter ? "text-slate-300" : "text-slate-500"}`}>{allGames.length}</span>
             </Link>
 
-            {VALID_TYPES.filter((t) => t !== "battle_pass").map((t) => {
+            {VALID_TYPES.map((t) => {
               const meta = SYSTEM_TYPE_META[t];
               const count = typeCounts[t] || 0;
               const isActive = typeFilter === t;
