@@ -11,7 +11,7 @@ const SYSTEM_TYPE_META: Record<
   string,
   {
     title: string;
-    description: string;h
+    description: string;
     heading: string;
     subtitle: string;
     icon: typeof Sparkles;
