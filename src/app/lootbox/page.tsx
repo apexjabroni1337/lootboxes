@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { createServerClient } from "@/lib/supabase";
-import { Zap, Shield, BarChart3, CheckCircle, ArrowLeft, Sparkles, Box, Layers, ShoppingBag } from "lucide-react";
+import { Zap, Shield, BarChart3, CheckCircle, ArrowLeft, Sparkles, Box, Layers, ShoppingBag, Trophy, TrendingUp, Target, ChevronRight } from "lucide-react";
 import GameAvatar from "@/components/ui/GameAvatar";
 
 export const revalidate = 3600;
@@ -18,6 +18,8 @@ const SYSTEM_TYPE_META: Record<
     accentColor: string;
     accentBg: string;
     accentBorder: string;
+    darkAccentBg: string;
+    pillColor: string;
   }
 > = {
   gacha: {
@@ -31,6 +33,8 @@ const SYSTEM_TYPE_META: Record<
     accentColor: "text-purple-600",
     accentBg: "bg-purple-50",
     accentBorder: "border-purple-100",
+    darkAccentBg: "dark:bg-purple-950/30",
+    pillColor: "bg-purple-500",
   },
   loot_box: {
     title: "Loot Box Games — Drop Rates, Odds & Value Analysis",
@@ -43,6 +47,8 @@ const SYSTEM_TYPE_META: Record<
     accentColor: "text-red-600",
     accentBg: "bg-red-50",
     accentBorder: "border-red-100",
+    darkAccentBg: "dark:bg-red-950/30",
+    pillColor: "bg-red-500",
   },
   card_pack: {
     title: "Card Pack Games — Pull Rates, Pack Odds & Cost Analysis",
@@ -55,6 +61,8 @@ const SYSTEM_TYPE_META: Record<
     accentColor: "text-blue-600",
     accentBg: "bg-blue-50",
     accentBorder: "border-blue-100",
+    darkAccentBg: "dark:bg-blue-950/30",
+    pillColor: "bg-blue-500",
   },
   cosmetic_shop: {
     title: "Cosmetic Shop Games — Pricing, Value & Fairness Analysis",
@@ -67,6 +75,8 @@ const SYSTEM_TYPE_META: Record<
     accentColor: "text-emerald-600",
     accentBg: "bg-emerald-50",
     accentBorder: "border-emerald-100",
+    darkAccentBg: "dark:bg-emerald-950/30",
+    pillColor: "bg-emerald-500",
   },
   battle_pass: {
     title: "Battle Pass Games — Value, Progression & Fairness Analysis",
@@ -79,6 +89,8 @@ const SYSTEM_TYPE_META: Record<
     accentColor: "text-amber-600",
     accentBg: "bg-amber-50",
     accentBorder: "border-amber-100",
+    darkAccentBg: "dark:bg-amber-950/30",
+    pillColor: "bg-amber-500",
   },
 };
 
@@ -125,21 +137,23 @@ function toContentArray(
   return Array.isArray(content) ? content : [content];
 }
 
-function systemLabel(type: string | null): { label: string; color: string } {
-  const map: Record<string, { label: string; color: string }> = {
-    gacha: { label: "Gacha", color: "bg-purple-100 text-purple-700" },
-    loot_box: { label: "Loot Box", color: "bg-red-100 text-red-700" },
-    card_pack: { label: "Card Pack", color: "bg-blue-100 text-blue-700" },
+function systemLabel(type: string | null): { label: string; color: string; darkColor: string } {
+  const map: Record<string, { label: string; color: string; darkColor: string }> = {
+    gacha: { label: "Gacha", color: "bg-purple-100 text-purple-700", darkColor: "dark:bg-purple-900/40 dark:text-purple-300" },
+    loot_box: { label: "Loot Box", color: "bg-red-100 text-red-700", darkColor: "dark:bg-red-900/40 dark:text-red-300" },
+    card_pack: { label: "Card Pack", color: "bg-blue-100 text-blue-700", darkColor: "dark:bg-blue-900/40 dark:text-blue-300" },
     cosmetic_shop: {
       label: "Cosmetic Shop",
       color: "bg-emerald-100 text-emerald-700",
+      darkColor: "dark:bg-emerald-900/40 dark:text-emerald-300",
     },
     battle_pass: {
       label: "Battle Pass",
       color: "bg-amber-100 text-amber-700",
+      darkColor: "dark:bg-amber-900/40 dark:text-amber-300",
     },
   };
-  return type && map[type] ? map[type] : { label: type || "Unknown", color: "bg-gray-100 text-gray-600" };
+  return type && map[type] ? map[type] : { label: type || "Unknown", color: "bg-gray-100 text-gray-600", darkColor: "dark:bg-gray-800 dark:text-gray-400" };
 }
 
 function scoreColor(score: number | null): string {
@@ -156,6 +170,14 @@ function scoreVerdict(score: number | null): string {
   if (score >= 5) return "Average — mixed practices";
   if (score >= 3) return "Below average — concerning practices";
   return "Poor value — predatory monetization";
+}
+
+function scoreVerdictShort(score: number | null): string {
+  if (score === null) return "";
+  if (score >= 7) return "Fair";
+  if (score >= 5) return "Mixed";
+  if (score >= 3) return "Below Avg";
+  return "Predatory";
 }
 
 async function getGamesWithLootboxContent(
@@ -184,6 +206,101 @@ async function getGamesWithLootboxContent(
   );
 }
 
+/* ── Bento Game Card (used in the grid) ── */
+function BentoGameCard({
+  game,
+  featured = false,
+}: {
+  game: GameWithContent;
+  featured?: boolean;
+}) {
+  const content = toContentArray(game.lootbox_content)[0];
+  const sys = systemLabel(game.loot_system_type);
+  const bannerImage = game.screenshot_image || game.cover_image;
+
+  return (
+    <Link
+      href={`/lootbox/${game.slug}`}
+      className={`group relative block rounded-2xl overflow-hidden ${
+        featured ? "h-full" : "h-full min-h-[200px]"
+      }`}
+    >
+      {/* Background Image */}
+      {bannerImage ? (
+        <img
+          src={bannerImage}
+          alt={game.title}
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          style={{ filter: featured ? "brightness(0.6)" : "brightness(0.55)" }}
+        />
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-900" />
+      )}
+
+      {/* Gradient overlays */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+      {/* Score Badge */}
+      {game.lootboxes_score !== null && (
+        <div
+          className={`absolute top-3 right-3 ${
+            featured ? "w-14 h-14 text-lg" : "w-10 h-10 text-sm"
+          } ${scoreColor(
+            game.lootboxes_score
+          )} rounded-full flex items-center justify-center text-white font-extrabold border-2 border-white/90 shadow-lg shadow-black/30`}
+        >
+          {game.lootboxes_score.toFixed(1)}
+        </div>
+      )}
+
+      {/* Content at bottom */}
+      <div className={`absolute bottom-0 left-0 right-0 ${featured ? "p-6" : "p-4"}`}>
+        {/* Featured tag */}
+        {featured && (
+          <span className="inline-block text-[10px] font-bold uppercase tracking-widest text-emerald-400 bg-emerald-500/20 border border-emerald-400/30 rounded-full px-3 py-1 mb-3">
+            Top Rated
+          </span>
+        )}
+
+        <h3
+          className={`font-extrabold text-white leading-tight ${
+            featured ? "text-2xl md:text-3xl" : "text-sm md:text-base"
+          }`}
+          style={{ textShadow: "0 2px 8px rgba(0,0,0,0.5)" }}
+        >
+          {game.title}
+        </h3>
+
+        <div className={`flex items-center gap-2 ${featured ? "mt-3" : "mt-2"}`}>
+          <span
+            className={`text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-white/15 text-white/80 backdrop-blur-sm`}
+          >
+            {sys.label}
+          </span>
+          {featured && content?.has_pity_system && (
+            <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 backdrop-blur-sm">
+              Pity System
+            </span>
+          )}
+          {featured && (
+            <span className="text-xs text-white/50 ml-auto group-hover:text-white/70 transition-colors">
+              View Analysis <ChevronRight className="w-3 h-3 inline" />
+            </span>
+          )}
+        </div>
+
+        {featured && (
+          <p className="text-sm text-white/50 mt-2 line-clamp-2">
+            {scoreVerdict(game.lootboxes_score)}
+            {content?.cost_per_pull ? ` • $${content.cost_per_pull.toFixed(2)}/pull` : ""}
+          </p>
+        )}
+      </div>
+    </Link>
+  );
+}
+
 export default async function LootboxHubPage({
   searchParams,
 }: {
@@ -196,104 +313,304 @@ export default async function LootboxHubPage({
   const typeMeta = typeFilter ? SYSTEM_TYPE_META[typeFilter] : undefined;
   const games = await getGamesWithLootboxContent(typeFilter);
   const totalDropRates = games.length * 6; // approximate
+  const avgScore =
+    games.length > 0
+      ? (
+          games.reduce((s, g) => s + (g.lootboxes_score || 0), 0) / games.length
+        ).toFixed(1)
+      : "—";
+
+  /* Split games for bento layout */
+  const featuredGame = games[0];
+  const topRowGames = games.slice(1, 5); // 4 cards beside the featured
+  const statsRowGames = games.slice(5, 7); // 2 cards beside the stats
+  const remainingGames = games.slice(7); // rest go in standard grid
+
+  /* Count system types */
+  const typeCounts: Record<string, number> = {};
+  games.forEach((g) => {
+    if (g.loot_system_type) {
+      typeCounts[g.loot_system_type] = (typeCounts[g.loot_system_type] || 0) + 1;
+    }
+  });
 
   return (
-    <div className="container-main py-8">
-      {/* Dark Hero Section (unfiltered only) */}
+    <div className="min-h-screen">
+      {/* ═══════════════════════════════════════════════
+          UNFILTERED VIEW — Bento Grid Layout
+          ═══════════════════════════════════════════════ */}
       {!typeFilter && (
-        <div className="mb-12 -mx-6 -mt-8 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 rounded-2xl overflow-hidden">
-          <div className="px-8 py-12">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-blue-500/20 border border-blue-400/30 rounded-full px-3.5 py-1.5 mb-6">
-              <Sparkles className="w-3.5 h-3.5 text-blue-300" />
-              <span className="text-xs font-semibold text-blue-200 uppercase tracking-wider">LOOT BOX DATABASE</span>
-            </div>
-
-            {/* Main Heading */}
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 max-w-3xl leading-tight">
-              Every Game&apos;s Monetization,<br className="hidden md:block" /> Analyzed &amp; Scored
-            </h1>
-            <p className="text-lg text-blue-200/80 max-w-2xl mb-2">
-              Drop rates, pity systems, cost breakdowns, and fairness scores for {games.length} major games. Data-driven. No guesswork.
-            </p>
-
-            {/* Stats Row */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-10">
+        <div className="bg-slate-950">
+          {/* Header */}
+          <div className="container-main pt-10 pb-6">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
               <div>
-                <p className="text-4xl md:text-5xl font-bold text-white">{games.length}</p>
-                <p className="text-blue-200 text-sm mt-1">Games Analyzed</p>
-              </div>
-              <div>
-                <p className="text-4xl md:text-5xl font-bold text-white">{totalDropRates}+</p>
-                <p className="text-blue-200 text-sm mt-1">Drop Rates Tracked</p>
-              </div>
-              <div>
-                <p className="text-4xl md:text-5xl font-bold text-white">
-                  {games.length > 0 ? (games.reduce((s, g) => s + (g.lootboxes_score || 0), 0) / games.length).toFixed(1) : "—"}
+                <div className="inline-flex items-center gap-2 bg-indigo-500/15 border border-indigo-400/25 rounded-full px-3.5 py-1.5 mb-4">
+                  <Sparkles className="w-3.5 h-3.5 text-indigo-300" />
+                  <span className="text-[11px] font-bold text-indigo-200 uppercase tracking-wider">
+                    Loot Box Database
+                  </span>
+                </div>
+                <h1 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">
+                  Every Game&apos;s Monetization,<br className="hidden md:block" /> Analyzed &amp; Scored
+                </h1>
+                <p className="text-slate-400 mt-2 max-w-lg text-sm">
+                  {games.length} games analyzed across {Object.keys(typeCounts).length} monetization systems. Data-driven. No guesswork.
                 </p>
-                <p className="text-blue-200 text-sm mt-1">Avg Score</p>
               </div>
-              <div>
-                <p className="text-4xl md:text-5xl font-bold text-white">8</p>
-                <p className="text-blue-200 text-sm mt-1">Score Dimensions</p>
+
+              {/* Filter pills */}
+              <div className="flex flex-wrap gap-2">
+                {VALID_TYPES.filter((t) => t !== "battle_pass").map((t) => {
+                  const meta = SYSTEM_TYPE_META[t];
+                  const count = typeCounts[t] || 0;
+                  return (
+                    <Link
+                      key={t}
+                      href={`/lootbox?type=${t}`}
+                      className="text-xs font-semibold px-3.5 py-2 rounded-full border border-white/10 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white hover:border-white/20 transition-all"
+                    >
+                      {meta.heading.replace(" Games", "")}
+                      <span className="text-white/30 ml-1.5">{count}</span>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
+          </div>
+
+          {/* ── Bento Grid ── */}
+          <div className="container-main pb-4">
+            {featuredGame && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                {/* Featured game — spans 2 columns & 2 rows */}
+                <div className="col-span-2 row-span-2 min-h-[340px] md:min-h-[416px]">
+                  <BentoGameCard game={featuredGame} featured />
+                </div>
+
+                {/* Top row — 4 regular cards (2 cols) */}
+                {topRowGames.map((game) => (
+                  <div key={game.slug} className="min-h-[200px]">
+                    <BentoGameCard game={game} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* ── Stats Row + 2 more game cards ── */}
+          <div className="container-main pb-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+              {/* Stats card — spans 2 cols */}
+              <div className="col-span-2 rounded-2xl bg-gradient-to-br from-indigo-950 to-violet-950 border border-indigo-500/15 p-6 md:p-8 flex items-center">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 w-full">
+                  <div className="text-center md:text-left">
+                    <p className="text-3xl md:text-4xl font-extrabold text-white">{games.length}</p>
+                    <p className="text-xs text-indigo-300/60 font-medium mt-1">Games Analyzed</p>
+                  </div>
+                  <div className="text-center md:text-left">
+                    <p className="text-3xl md:text-4xl font-extrabold text-white">{totalDropRates}+</p>
+                    <p className="text-xs text-indigo-300/60 font-medium mt-1">Drop Rates</p>
+                  </div>
+                  <div className="text-center md:text-left">
+                    <p className="text-3xl md:text-4xl font-extrabold text-white">{avgScore}</p>
+                    <p className="text-xs text-indigo-300/60 font-medium mt-1">Avg Score</p>
+                  </div>
+                  <div className="text-center md:text-left">
+                    <p className="text-3xl md:text-4xl font-extrabold text-white">8</p>
+                    <p className="text-xs text-indigo-300/60 font-medium mt-1">Dimensions</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2 more game cards */}
+              {statsRowGames.map((game) => (
+                <div key={game.slug} className="min-h-[200px]">
+                  <BentoGameCard game={game} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Remaining games — standard 4-col grid ── */}
+          {remainingGames.length > 0 && (
+            <div className="container-main pb-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                {remainingGames.map((game) => (
+                  <div key={game.slug} className="min-h-[200px]">
+                    <BentoGameCard game={game} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ── Rankings CTA Banner ── */}
+          <div className="container-main py-4">
+            <Link
+              href="/lootbox/rankings"
+              className="group flex items-center justify-between rounded-2xl bg-gradient-to-r from-indigo-600/20 via-purple-600/15 to-pink-600/10 border border-indigo-500/20 px-6 md:px-8 py-5 hover:border-indigo-400/30 transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">
+                  <Trophy className="w-5 h-5 text-indigo-300" />
+                </div>
+                <div>
+                  <h2 className="font-bold text-white text-base">Loot Box Rankings</h2>
+                  <p className="text-sm text-slate-400">See every game ranked by monetization fairness — best to worst</p>
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-white group-hover:translate-x-1 transition-all" />
+            </Link>
+          </div>
+
+          {/* ── Methodology Section ── */}
+          <div className="container-main py-8 pb-16">
+            <div className="rounded-2xl bg-slate-900/80 border border-slate-800 p-8">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-xl bg-blue-500/15 flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-blue-400" />
+                </div>
+                <h2 className="text-xl font-bold text-white">How We Rate Games</h2>
+              </div>
+              <p className="text-sm text-slate-400 mb-6 max-w-2xl">
+                Every game receives a Lootboxes Score from 1-10 based on 8 criteria across three
+                weighted categories. Our methodology is transparent, criteria-based, and open to
+                scrutiny.
+              </p>
+
+              <div className="grid md:grid-cols-3 gap-4 mb-6">
+                <div className="rounded-xl bg-slate-800/60 border border-blue-500/15 p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-semibold text-white text-sm">Consumer Protection</h3>
+                    <span className="text-xs font-bold text-blue-400 bg-blue-500/15 px-2 py-0.5 rounded-full">
+                      40%
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500">
+                    Transparency, regulatory compliance, and spending safeguards.
+                  </p>
+                </div>
+                <div className="rounded-xl bg-slate-800/60 border border-emerald-500/15 p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-semibold text-white text-sm">Value &amp; Fairness</h3>
+                    <span className="text-xs font-bold text-emerald-400 bg-emerald-500/15 px-2 py-0.5 rounded-full">
+                      35%
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500">
+                    Value for money, fairness mechanics, and pay-to-win impact.
+                  </p>
+                </div>
+                <div className="rounded-xl bg-slate-800/60 border border-purple-500/15 p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-semibold text-white text-sm">Player Experience</h3>
+                    <span className="text-xs font-bold text-purple-400 bg-purple-500/15 px-2 py-0.5 rounded-full">
+                      25%
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500">
+                    Player control over purchases and psychological design integrity.
+                  </p>
+                </div>
+              </div>
+
+              <Link
+                href="/methodology"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                Read our full methodology →
+              </Link>
+            </div>
+          </div>
+
+          {/* Quick links */}
+          <div className="container-main pb-12 text-center">
+            <p className="text-slate-500 text-sm">
+              Looking for raw data?{" "}
+              <Link
+                href="/drop-rates"
+                className="text-blue-400 font-medium hover:text-blue-300 transition-colors"
+              >
+                View the Drop Rate Database →
+              </Link>
+            </p>
           </div>
         </div>
       )}
 
-      {/* Hero (filtered views) */}
+      {/* ═══════════════════════════════════════════════
+          FILTERED VIEW — keeps existing functionality
+          ═══════════════════════════════════════════════ */}
       {typeFilter && (
-      <div className="mb-10">
-        <Link
-          href="/lootbox"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 mb-4 transition-colors"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          All Games
-        </Link>
-        <div className="flex items-center gap-3 mb-3">
-          <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${
-            typeMeta
-              ? `${typeMeta.accentBg} ${typeMeta.accentBorder} border`
-              : "bg-gradient-to-br from-blue-600 to-purple-600"
-          }`}>
-            {typeMeta ? (
-              <typeMeta.icon className={`w-5 h-5 ${typeMeta.accentColor}`} />
-            ) : (
-              <Zap className="w-5 h-5 text-white" />
-            )}
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            {typeMeta ? typeMeta.heading : "Loot Box Database"}
-          </h1>
-        </div>
-        <p className="text-lg text-gray-600 max-w-2xl">
-          {typeMeta ? typeMeta.subtitle : ""}
-        </p>
+        <div className="container-main py-8">
+          {/* Back link */}
+          <Link
+            href="/lootbox"
+            className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 mb-4 transition-colors"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            All Games
+          </Link>
 
-        {/* Stats (filtered views only) */}
-        <div className="flex flex-wrap gap-4 mt-6">
-          <div className={`flex items-center gap-2 rounded-lg px-4 py-2.5 border ${
-            typeMeta
-              ? `${typeMeta.accentBg} ${typeMeta.accentBorder}`
-              : "bg-blue-50 border-blue-100"
-          }`}>
-            <BarChart3 className={`w-4 h-4 ${typeMeta ? typeMeta.accentColor : "text-blue-600"}`} />
-            <span className={`text-sm font-semibold ${typeMeta ? "text-gray-900" : "text-blue-900"}`}>
-              {games.length} {typeMeta ? `${typeMeta.heading.replace(" Games", "")} Game${games.length !== 1 ? "s" : ""}` : "Games Analyzed"}
-            </span>
+          {/* Heading */}
+          <div className="flex items-center gap-3 mb-3">
+            <div
+              className={`h-10 w-10 rounded-xl flex items-center justify-center ${
+                typeMeta
+                  ? `${typeMeta.accentBg} ${typeMeta.accentBorder} ${typeMeta.darkAccentBg} border`
+                  : "bg-gradient-to-br from-blue-600 to-purple-600"
+              }`}
+            >
+              {typeMeta ? (
+                <typeMeta.icon className={`w-5 h-5 ${typeMeta.accentColor}`} />
+              ) : (
+                <Zap className="w-5 h-5 text-white" />
+              )}
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              {typeMeta ? typeMeta.heading : "Loot Box Database"}
+            </h1>
           </div>
-          <div className="flex items-center gap-2 bg-gray-50 rounded-lg px-4 py-2.5 border border-gray-200">
-            <span className="text-sm font-semibold text-gray-700">
-              Avg Score: {games.length > 0 ? (games.reduce((s, g) => s + (g.lootboxes_score || 0), 0) / games.length).toFixed(1) : "—"}
-            </span>
-          </div>
-        </div>
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
+            {typeMeta ? typeMeta.subtitle : ""}
+          </p>
 
-        {/* Type filter pills (shown on filtered pages) */}
+          {/* Stats */}
+          <div className="flex flex-wrap gap-4 mt-6">
+            <div
+              className={`flex items-center gap-2 rounded-lg px-4 py-2.5 border ${
+                typeMeta
+                  ? `${typeMeta.accentBg} ${typeMeta.accentBorder} ${typeMeta.darkAccentBg}`
+                  : "bg-blue-50 border-blue-100"
+              }`}
+            >
+              <BarChart3
+                className={`w-4 h-4 ${typeMeta ? typeMeta.accentColor : "text-blue-600"}`}
+              />
+              <span
+                className={`text-sm font-semibold ${
+                  typeMeta ? "text-gray-900 dark:text-white" : "text-blue-900"
+                }`}
+              >
+                {games.length}{" "}
+                {typeMeta
+                  ? `${typeMeta.heading.replace(" Games", "")} Game${
+                      games.length !== 1 ? "s" : ""
+                    }`
+                  : "Games Analyzed"}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-2.5 border border-gray-200 dark:border-gray-700">
+              <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                Avg Score: {avgScore}
+              </span>
+            </div>
+          </div>
+
+          {/* Type filter pills */}
           <div className="flex flex-wrap gap-2 mt-5">
-            {VALID_TYPES.filter(t => t !== "battle_pass").map((t) => {
+            {VALID_TYPES.filter((t) => t !== "battle_pass").map((t) => {
               const meta = SYSTEM_TYPE_META[t];
               const isActive = t === typeFilter;
               return (
@@ -302,8 +619,8 @@ export default async function LootboxHubPage({
                   href={`/lootbox?type=${t}`}
                   className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
                     isActive
-                      ? `${meta.accentBg} ${meta.accentBorder} ${meta.accentColor}`
-                      : "bg-white border-gray-200 text-gray-500 hover:border-gray-300"
+                      ? `${meta.accentBg} ${meta.accentBorder} ${meta.accentColor} ${meta.darkAccentBg}`
+                      : "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-gray-300"
                   }`}
                 >
                   {meta.heading.replace(" Games", "")}
@@ -312,248 +629,203 @@ export default async function LootboxHubPage({
             })}
             <Link
               href="/lootbox"
-              className="text-xs font-medium px-3 py-1.5 rounded-full border bg-white border-gray-200 text-gray-500 hover:border-gray-300 transition-colors"
+              className="text-xs font-medium px-3 py-1.5 rounded-full border bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-gray-300 transition-colors"
             >
               View All
             </Link>
           </div>
-      </div>
-      )}
 
-      {/* Rankings CTA */}
-      {!typeFilter && (
-        <div className="mb-8 flex items-center justify-between rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 px-6 py-4 dark:from-blue-950/30 dark:to-purple-950/30 dark:border-blue-900/30">
-          <div>
-            <h2 className="font-bold text-gray-900 dark:text-white">Loot Box Rankings</h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400">See every game ranked by monetization fairness — best to worst.</p>
-          </div>
-          <Link
-            href="/lootbox/rankings"
-            className="flex-shrink-0 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
-          >
-            View Rankings
-          </Link>
-        </div>
-      )}
+          {/* Type-specific stats cards */}
+          {games.length > 0 &&
+            (() => {
+              const contents = games
+                .map((g) => toContentArray(g.lootbox_content)[0])
+                .filter(Boolean);
+              const withPity = contents.filter((c) => c.has_pity_system).length;
+              const pityPct = Math.round((withPity / games.length) * 100);
+              const costs = contents
+                .map((c) => c.cost_per_pull)
+                .filter((c): c is number => c !== null && c > 0);
+              const avgCostVal =
+                costs.length > 0
+                  ? costs.reduce((a, b) => a + b, 0) / costs.length
+                  : null;
+              const bestGame = games.reduce(
+                (best, g) =>
+                  !best ||
+                  (g.lootboxes_score || 0) > (best.lootboxes_score || 0)
+                    ? g
+                    : best,
+                games[0]
+              );
+              const worstGame = games.reduce(
+                (worst, g) =>
+                  !worst ||
+                  (g.lootboxes_score || 0) < (worst.lootboxes_score || 0)
+                    ? g
+                    : worst,
+                games[0]
+              );
 
-      {/* Type-specific stats cards (shown on filtered pages) */}
-      {typeFilter && games.length > 0 && (() => {
-        const contents = games.map((g) => toContentArray(g.lootbox_content)[0]).filter(Boolean);
-        const withPity = contents.filter((c) => c.has_pity_system).length;
-        const pityPct = Math.round((withPity / games.length) * 100);
-        const costs = contents.map((c) => c.cost_per_pull).filter((c): c is number => c !== null && c > 0);
-        const avgCost = costs.length > 0 ? (costs.reduce((a, b) => a + b, 0) / costs.length) : null;
-        const scores = games.map((g) => g.lootboxes_score).filter((s): s is number => s !== null);
-        const bestGame = games.reduce((best, g) => (!best || (g.lootboxes_score || 0) > (best.lootboxes_score || 0) ? g : best), games[0]);
-        const worstGame = games.reduce((worst, g) => (!worst || (g.lootboxes_score || 0) < (worst.lootboxes_score || 0) ? g : worst), games[0]);
+              return (
+                <div className="mt-8 mb-8">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div
+                      className={`rounded-xl border p-4 ${typeMeta!.accentBg} ${typeMeta!.accentBorder} ${typeMeta!.darkAccentBg}`}
+                    >
+                      <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+                        Pity System Rate
+                      </p>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                        {pityPct}%
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {withPity} of {games.length} games
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
+                      <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+                        Avg Cost / Pull
+                      </p>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                        {avgCostVal ? `$${avgCostVal.toFixed(2)}` : "—"}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {costs.length} games with data
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-emerald-200 dark:border-emerald-900/40 bg-emerald-50 dark:bg-emerald-950/30 p-4">
+                      <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+                        Best Rated
+                      </p>
+                      <p className="text-lg font-bold text-gray-900 dark:text-white line-clamp-1">
+                        {bestGame.title}
+                      </p>
+                      <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
+                        {bestGame.lootboxes_score?.toFixed(1)} / 10
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-rose-200 dark:border-rose-900/40 bg-rose-50 dark:bg-rose-950/30 p-4">
+                      <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+                        Lowest Rated
+                      </p>
+                      <p className="text-lg font-bold text-gray-900 dark:text-white line-clamp-1">
+                        {worstGame.title}
+                      </p>
+                      <p className="text-xs text-rose-600 dark:text-rose-400 font-semibold">
+                        {worstGame.lootboxes_score?.toFixed(1)} / 10
+                      </p>
+                    </div>
+                  </div>
 
-        return (
-          <div className="mb-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <div className={`rounded-xl border p-4 ${typeMeta!.accentBg} ${typeMeta!.accentBorder}`}>
-                <p className="text-xs font-medium text-gray-500 mb-1">Pity System Rate</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{pityPct}%</p>
-                <p className="text-xs text-gray-500">{withPity} of {games.length} games</p>
-              </div>
-              <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
-                <p className="text-xs font-medium text-gray-500 mb-1">Avg Cost / Pull</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{avgCost ? `$${avgCost.toFixed(2)}` : "—"}</p>
-                <p className="text-xs text-gray-500">{costs.length} games with data</p>
-              </div>
-              <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
-                <p className="text-xs font-medium text-gray-500 mb-1">Best Rated</p>
-                <p className="text-lg font-bold text-gray-900 line-clamp-1">{bestGame.title}</p>
-                <p className="text-xs text-emerald-600 font-semibold">{bestGame.lootboxes_score?.toFixed(1)} / 10</p>
-              </div>
-              <div className="rounded-xl border border-rose-200 bg-rose-50 p-4">
-                <p className="text-xs font-medium text-gray-500 mb-1">Lowest Rated</p>
-                <p className="text-lg font-bold text-gray-900 line-clamp-1">{worstGame.title}</p>
-                <p className="text-xs text-rose-600 font-semibold">{worstGame.lootboxes_score?.toFixed(1)} / 10</p>
-              </div>
-            </div>
+                  <div className="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-5 py-3">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      See how these {games.length}{" "}
+                      {typeMeta!.heading.toLowerCase().replace(" games", "")} games
+                      compare to all{" "}
+                      {typeFilter === "gacha" ? "loot box" : "gacha"} games and more.
+                    </p>
+                    <Link
+                      href="/lootbox/rankings"
+                      className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline flex-shrink-0 ml-4"
+                    >
+                      Full Rankings →
+                    </Link>
+                  </div>
+                </div>
+              );
+            })()}
 
-            {/* Quick comparison link */}
-            <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-5 py-3 dark:border-gray-700 dark:bg-gray-900">
-              <p className="text-sm text-gray-600">
-                See how these {games.length} {typeMeta!.heading.toLowerCase().replace(" games", "")} games compare to all {typeFilter === "gacha" ? "loot box" : "gacha"} games and more.
+          {/* Empty state */}
+          {games.length === 0 && (
+            <div className="text-center py-16 mb-12">
+              <p className="text-gray-500 dark:text-gray-400 mb-4">
+                No {typeMeta?.heading.toLowerCase() || "games"} found yet.
               </p>
-              <Link href="/lootbox/rankings" className="text-sm font-medium text-blue-600 hover:underline flex-shrink-0 ml-4">
-                Full Rankings →
+              <Link
+                href="/lootbox"
+                className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                View all games →
               </Link>
             </div>
-          </div>
-        );
-      })()}
+          )}
 
-      {/* Games Grid */}
-      {games.length === 0 && typeFilter && (
-        <div className="text-center py-16 mb-12">
-          <p className="text-gray-500 mb-4">No {typeMeta?.heading.toLowerCase() || "games"} found yet.</p>
-          <Link href="/lootbox" className="text-sm font-medium text-blue-600 hover:underline">
-            View all games →
-          </Link>
-        </div>
-      )}
+          {/* Section heading for filtered views */}
+          {games.length > 0 && (
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+              All {typeMeta!.heading} ({games.length})
+            </h2>
+          )}
 
-      {/* Section heading for filtered views */}
-      {typeFilter && games.length > 0 && (
-        <h2 className="text-xl font-bold text-gray-900 mb-4 dark:text-white">All {typeMeta!.heading} ({games.length})</h2>
-      )}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-12">
-        {games.map((game) => {
-          const content = toContentArray(game.lootbox_content)[0];
-          const sys = systemLabel(game.loot_system_type);
-          const bannerImage = game.screenshot_image || game.cover_image;
-          return (
-            <Link
-              key={game.slug}
-              href={`/lootbox/${game.slug}`}
-              className="group rounded-xl border border-gray-200 bg-white overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all dark:border-gray-800 dark:bg-gray-900"
-            >
-              {/* Banner Section */}
-              <div className="relative h-20 overflow-hidden bg-gray-100">
-                {bannerImage ? (
-                  <img
-                    src={bannerImage}
-                    alt={game.title}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300"></div>
-                )}
-                {/* Dark overlay */}
-                <div className="absolute inset-0 bg-black/20"></div>
-
-                {/* Score Ring - positioned at top right */}
-                {game.lootboxes_score !== null && (
-                  <div
-                    className={`absolute top-3 right-3 ${scoreColor(
-                      game.lootboxes_score
-                    )} w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold border-2 border-white shadow-lg`}
-                  >
-                    {game.lootboxes_score.toFixed(1)}
+          {/* Game cards — 2 col grid for filtered view */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-12">
+            {games.map((game) => {
+              const content = toContentArray(game.lootbox_content)[0];
+              const sys = systemLabel(game.loot_system_type);
+              const bannerImage = game.screenshot_image || game.cover_image;
+              return (
+                <Link
+                  key={game.slug}
+                  href={`/lootbox/${game.slug}`}
+                  className="group rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all"
+                >
+                  <div className="relative h-20 overflow-hidden bg-gray-100 dark:bg-gray-800">
+                    {bannerImage ? (
+                      <img
+                        src={bannerImage}
+                        alt={game.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800" />
+                    )}
+                    <div className="absolute inset-0 bg-black/20" />
+                    {game.lootboxes_score !== null && (
+                      <div
+                        className={`absolute top-3 right-3 ${scoreColor(
+                          game.lootboxes_score
+                        )} w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold border-2 border-white shadow-lg`}
+                      >
+                        {game.lootboxes_score.toFixed(1)}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-
-              {/* Content Section */}
-              <div className="p-4">
-                <div className="mb-3">
-                  <h2 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2 text-base dark:text-white">
-                    {game.title}
-                  </h2>
-                </div>
-
-                {/* Badges */}
-                <div className="flex flex-wrap gap-2 mb-3">
-                  <span
-                    className={`text-xs font-medium px-2.5 py-1 rounded-full ${sys.color}`}
-                  >
-                    {sys.label}
-                  </span>
-                  {content?.has_pity_system && (
-                    <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700">
-                      Has Pity System
+                  <div className="p-4">
+                    <h2 className="font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 text-base">
+                      {game.title}
+                    </h2>
+                    <div className="flex flex-wrap gap-2 mt-3 mb-3">
+                      <span
+                        className={`text-xs font-medium px-2.5 py-1 rounded-full ${sys.color} ${sys.darkColor}`}
+                      >
+                        {sys.label}
+                      </span>
+                      {content?.has_pity_system && (
+                        <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+                          Has Pity System
+                        </span>
+                      )}
+                      {content?.cost_per_pull !== null &&
+                        content.cost_per_pull > 0 && (
+                          <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                            ${content.cost_per_pull.toFixed(2)}/pull
+                          </span>
+                        )}
+                    </div>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-2">
+                      {scoreVerdict(game.lootboxes_score)}
+                    </p>
+                    <span className="inline-block text-sm font-medium text-blue-600 dark:text-blue-400 group-hover:underline">
+                      View Full Analysis →
                     </span>
-                  )}
-                  {content?.cost_per_pull !== null && content.cost_per_pull > 0 && (
-                    <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-gray-100 text-gray-600">
-                      ${content.cost_per_pull.toFixed(2)}/pull
-                    </span>
-                  )}
-                </div>
-
-                {/* Verdict */}
-                <p className="text-sm text-gray-500 line-clamp-2 mb-2">
-                  {scoreVerdict(game.lootboxes_score)}
-                </p>
-
-                <span className="inline-block text-sm font-medium text-blue-600 group-hover:underline">
-                  View Full Analysis →
-                </span>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
-
-      {/* Methodology (only on main hub) */}
-      {!typeFilter && <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200 dark:bg-gray-900 dark:border-gray-800">
-        <div className="flex items-center gap-3 mb-5">
-          <Shield className="w-6 h-6 text-blue-600" />
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-            How We Rate Games
-          </h2>
-        </div>
-        <p className="text-sm text-gray-600 mb-6 max-w-2xl">
-          Every game receives a Lootboxes Score from 1-10 based on 8 criteria
-          across three weighted categories. Our methodology is transparent,
-          criteria-based, and open to scrutiny.
-        </p>
-
-        {/* Category cards */}
-        <div className="grid md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white rounded-xl border border-blue-200 p-4 dark:bg-gray-950 dark:border-blue-900/40">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="font-semibold text-gray-900 text-sm dark:text-white">
-                Consumer Protection
-              </h3>
-              <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
-                40%
-              </span>
-            </div>
-            <p className="text-xs text-gray-500">
-              Transparency, regulatory compliance, and spending safeguards.
-            </p>
-          </div>
-          <div className="bg-white rounded-xl border border-emerald-200 p-4 dark:bg-gray-950 dark:border-emerald-900/40">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="font-semibold text-gray-900 text-sm dark:text-white">
-                Value &amp; Fairness
-              </h3>
-              <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
-                35%
-              </span>
-            </div>
-            <p className="text-xs text-gray-500">
-              Value for money, fairness mechanics, and pay-to-win impact.
-            </p>
-          </div>
-          <div className="bg-white rounded-xl border border-purple-200 p-4 dark:bg-gray-950 dark:border-purple-900/40">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="font-semibold text-gray-900 text-sm dark:text-white">
-                Player Experience
-              </h3>
-              <span className="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">
-                25%
-              </span>
-            </div>
-            <p className="text-xs text-gray-500">
-              Player control over purchases and psychological design integrity.
-            </p>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
-
-        <Link
-          href="/methodology"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:underline"
-        >
-          Read our full methodology →
-        </Link>
-      </div>}
-
-      {/* Quick links */}
-      <div className="mt-8 text-center">
-        <p className="text-gray-500 mb-3">
-          Looking for raw data?{" "}
-          <Link
-            href="/drop-rates"
-            className="text-blue-600 font-medium hover:underline"
-          >
-            View the Drop Rate Database →
-          </Link>
-        </p>
-      </div>
+      )}
     </div>
   );
 }
