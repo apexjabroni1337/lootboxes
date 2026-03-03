@@ -82,10 +82,10 @@ const SYSTEM_LABELS: Record<string, string> = {
 };
 
 function scoreColor(score: number): string {
-  if (score >= 7) return "text-emerald-600";
-  if (score >= 5) return "text-amber-600";
-  if (score >= 3) return "text-orange-600";
-  return "text-red-600";
+  if (score >= 7) return "text-emerald-600 dark:text-emerald-400";
+  if (score >= 5) return "text-amber-600 dark:text-amber-400";
+  if (score >= 3) return "text-orange-600 dark:text-orange-400";
+  return "text-red-600 dark:text-red-400";
 }
 
 function scoreBg(score: number): string {
@@ -119,15 +119,15 @@ export default async function AnalyticsPage({
       : ARTICLES.filter((a) => a.type === activeType);
 
   return (
-    <div className="min-h-screen bg-white pb-12">
+    <div className="min-h-screen bg-white dark:bg-gray-950 pb-12">
       {/* Page hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 sm:py-10">
+      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 sm:py-10 dark:border-gray-800 dark:from-gray-900 dark:to-gray-950">
         <div className="container-main">
           <div className="flex items-center gap-2">
             <BarChart3 className="h-6 w-6 text-brand-600" />
-            <h1 className="text-3xl font-bold text-gray-900">Analytics</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Analytics</h1>
           </div>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             Data-driven analysis of loot boxes, battle passes, and in-game
             economies. Rated with our proprietary Lootboxes Score.
           </p>
@@ -143,8 +143,8 @@ export default async function AnalyticsPage({
               href={type.value === "all" ? "/analytics" : `/analytics?type=${type.value}`}
               className={`badge border transition-all ${
                 activeType === type.value
-                  ? "border-gray-900 bg-gray-900 text-white shadow-md"
-                  : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900"
+                  ? "border-gray-900 bg-gray-900 text-white shadow-md dark:border-brand-300 dark:bg-brand-50 dark:text-brand-700"
+                  : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:border-brand-300 dark:hover:bg-brand-50 dark:hover:text-brand-700"
               }`}
             >
               {type.label}
@@ -160,8 +160,8 @@ export default async function AnalyticsPage({
                 <AnalyticsCard key={article.id} article={article} />
               ))
             ) : (
-              <div className="rounded-2xl border border-gray-200 bg-gray-50 p-12 text-center">
-                <p className="text-gray-500">No articles in this category yet. Check back soon!</p>
+              <div className="rounded-2xl border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900 p-12 text-center">
+                <p className="text-gray-500 dark:text-gray-400">No articles in this category yet. Check back soon!</p>
                 <Link href="/analytics" className="mt-3 inline-block text-sm font-medium text-brand-600 hover:text-brand-700">
                   View all articles →
                 </Link>
@@ -172,17 +172,17 @@ export default async function AnalyticsPage({
           {/* Sidebar */}
           <div className="space-y-5">
             {/* Methodology link */}
-            <div className="overflow-hidden rounded-2xl border border-brand-200 bg-gradient-to-br from-brand-50 to-blue-50">
+            <div className="overflow-hidden rounded-2xl border border-brand-200 bg-gradient-to-br from-brand-50 to-blue-50 dark:border-brand-900 dark:from-brand-950 dark:to-blue-950">
               <div className="px-5 py-5">
                 <div className="flex items-center gap-2">
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600">
                     <Sparkles className="h-4 w-4 text-white" />
                   </div>
-                  <h3 className="font-bold text-brand-900">
+                  <h3 className="font-bold text-brand-900 dark:text-brand-300">
                     How We Score Games
                   </h3>
                 </div>
-                <p className="mt-3 text-sm leading-relaxed text-brand-700">
+                <p className="mt-3 text-sm leading-relaxed text-brand-700 dark:text-brand-400">
                   Our LootBoxes Score rates monetization on value, transparency,
                   fairness, and consumer practices.
                 </p>
@@ -197,16 +197,16 @@ export default async function AnalyticsPage({
             </div>
 
             {/* Recent scores — dynamic from DB */}
-            <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
-              <div className="border-b border-gray-100 bg-gray-50 px-5 py-3">
-                <h3 className="text-sm font-bold text-gray-900">
+            <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+              <div className="border-b border-gray-100 bg-gray-50 px-5 py-3 dark:border-gray-800 dark:bg-gray-800/50">
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white">
                   Recent Scores
                 </h3>
-                <p className="text-[11px] text-gray-500">
+                <p className="text-[11px] text-gray-500 dark:text-gray-400">
                   Latest games rated by our team
                 </p>
               </div>
-              <ul className="divide-y divide-gray-100">
+              <ul className="divide-y divide-gray-100 dark:divide-gray-800">
                 {recentScores.map((game: any) => {
                   const thumb =
                     game.cover_image || game.screenshot_image;
@@ -217,7 +217,7 @@ export default async function AnalyticsPage({
                     <li key={game.slug}>
                       <Link
                         href={`/lootbox/${game.slug}`}
-                        className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-gray-50"
+                        className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50"
                       >
                         {/* Game thumbnail */}
                         <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg shadow-sm">
@@ -240,7 +240,7 @@ export default async function AnalyticsPage({
 
                         {/* Game info */}
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900 truncate">
+                          <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
                             {game.title}
                           </p>
                           <p className="text-[11px] text-gray-400">
@@ -261,7 +261,7 @@ export default async function AnalyticsPage({
                   );
                 })}
               </ul>
-              <div className="border-t border-gray-100 px-5 py-3">
+              <div className="border-t border-gray-100 px-5 py-3 dark:border-gray-800">
                 <Link
                   href="/lootbox/rankings"
                   className="flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-700"
