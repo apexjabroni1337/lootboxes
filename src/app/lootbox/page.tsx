@@ -4,7 +4,7 @@ import { createServerClient } from "@/lib/supabase";
 import { Zap, Shield, BarChart3, ArrowLeft, Sparkles, Box, Layers, ShoppingBag, Trophy, ChevronRight } from "lucide-react";
 import GameAvatar from "@/components/ui/GameAvatar";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 /* ── System type metadata ── */
 const SYSTEM_TYPE_META: Record<
@@ -177,10 +177,16 @@ async function getAllGamesWithLootboxContent(): Promise<GameWithContent[]> {
     .not("loot_system_type", "is", null)
     .order("lootboxes_score", { ascending: false });
 
-  if (error || !data) return [];
-  return (data as GameWithContent[]).filter(
+  if (error || !data) {
+    console.error("[lootbox page] query error:", error?.message, "data:", data);
+    return [];
+  }
+  console.log("[lootbox page] raw query returned", data.length, "games");
+  const filtered = (data as GameWithContent[]).filter(
     (g) => g.lootbox_content !== null && (Array.isArray(g.lootbox_content) ? g.lootbox_content.length > 0 : true)
   );
+  console.log("[lootbox page] after filter:", filtered.length, "games");
+  return filtered;
 }
 
 /* ── Bento Game Card ── */
