@@ -523,12 +523,12 @@ export default async function RankingsPage() {
       {/* Bottom CTA */}
       <section className="container-main py-12 border-t border-gray-200 dark:border-gray-700">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Link href="/lootbox" className="p-6 rounded-xl border border-[#0074c5] bg-blue-50 hover:bg-blue-100 transition-colors">
+          <Link href="/lootbox" className="p-6 rounded-xl border border-[#0074c5] bg-blue-50 hover:bg-blue-100 transition-colors dark:bg-blue-950/40 dark:hover:bg-blue-950/60">
             <TrendingUp className="w-6 h-6 text-[#0074c5] mb-3" />
             <h3 className="font-bold text-gray-900 dark:text-white mb-2">Browse All Games</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Explore detailed loot box analyses for each game.</p>
           </Link>
-          <Link href="/methodology" className="p-6 rounded-xl border border-gray-200 bg-white hover:border-[#0074c5] transition-colors">
+          <Link href="/methodology" className="p-6 rounded-xl border border-gray-200 bg-white hover:border-[#0074c5] transition-colors dark:border-gray-700 dark:bg-gray-900 dark:hover:border-[#0074c5]">
             <Shield className="w-6 h-6 text-[#0074c5] mb-3" />
             <h3 className="font-bold text-gray-900 dark:text-white mb-2">Our Methodology</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Learn how we score and analyze loot box systems.</p>

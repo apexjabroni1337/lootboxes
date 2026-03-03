@@ -237,6 +237,13 @@ export default function Header() {
                 )}
               </div>
 
+              <Link
+                href="/analytics"
+                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white"
+              >
+                Analytics
+              </Link>
+
               {/* Hot Deals mega menu trigger */}
               <div
                 ref={megaRef}
@@ -346,12 +353,6 @@ export default function Header() {
               </div>
 
               <Link
-                href="/analytics"
-                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white"
-              >
-                Analytics
-              </Link>
-              <Link
                 href="/blog"
                 className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white"
               >
@@ -367,9 +368,6 @@ export default function Header() {
               >
                 <Search className="h-4 w-4 flex-shrink-0 text-gray-400" />
                 <span className="flex-1 text-left">Search games, deals, or analytics...</span>
-                <kbd className="hidden rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-medium text-gray-400 lg:inline dark:border-gray-700 dark:bg-gray-800">
-                  ⌘K
-                </kbd>
               </button>
             </div>
 

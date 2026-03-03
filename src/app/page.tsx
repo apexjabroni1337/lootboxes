@@ -48,27 +48,27 @@ async function getFeaturedGames() {
   );
 }
 
-/* ── Fetch dynamic site-wide stats ── */
+/* ── Fetch dynamic lootbox database stats ── */
 async function getSiteStats() {
   const supabase = createServerClient();
 
   const [
-    { count: totalGames },
-    { count: totalDeals },
-    { count: gamesWithDeals },
+    { count: lootboxGames },
+    { count: dropRatesTracked },
+    { count: analyticsArticles },
   ] = await Promise.all([
-    supabase.from("games").select("id", { count: "exact", head: true }),
-    supabase.from("deals").select("id", { count: "exact", head: true }),
     supabase
       .from("games")
       .select("id", { count: "exact", head: true })
-      .not("steam_app_id", "is", null),
+      .not("loot_system_type", "is", null),
+    supabase.from("drop_rates").select("id", { count: "exact", head: true }),
+    supabase.from("analytics").select("id", { count: "exact", head: true }),
   ]);
 
   return {
-    totalGames: totalGames || 0,
-    totalDeals: totalDeals || 0,
-    gamesWithDeals: gamesWithDeals || 0,
+    lootboxGames: lootboxGames || 0,
+    dropRatesTracked: dropRatesTracked || 0,
+    analyticsArticles: analyticsArticles || 0,
   };
 }
 
@@ -133,26 +133,46 @@ const SYSTEM_TYPES = [
   },
 ];
 
-/* ── Fetch system type counts from DB ── */
-async function getSystemTypeCounts(): Promise<Record<string, number>> {
+/* ── Fetch system type counts + representative images from DB ── */
+async function getSystemTypeCounts(): Promise<
+  Record<string, { count: number; image: string | null }>
+> {
   const supabase = createServerClient();
   const types = ["gacha", "loot_box", "card_pack", "cosmetic_shop", "battle_pass"];
-  const counts: Record<string, number> = {};
+  const result: Record<string, { count: number; image: string | null }> = {};
 
-  const results = await Promise.all(
-    types.map((type) =>
-      supabase
-        .from("games")
-        .select("id", { count: "exact", head: true })
-        .eq("loot_system_type", type)
-    )
-  );
+  const [counts, images] = await Promise.all([
+    Promise.all(
+      types.map((type) =>
+        supabase
+          .from("games")
+          .select("id", { count: "exact", head: true })
+          .eq("loot_system_type", type)
+      )
+    ),
+    Promise.all(
+      types.map((type) =>
+        supabase
+          .from("games")
+          .select("screenshot_image, cover_image")
+          .eq("loot_system_type", type)
+          .not("screenshot_image", "is", null)
+          .order("lootboxes_score", { ascending: false })
+          .limit(1)
+          .single()
+      )
+    ),
+  ]);
 
   types.forEach((type, i) => {
-    counts[type] = results[i].count || 0;
+    const img = images[i].data;
+    result[type] = {
+      count: counts[i].count || 0,
+      image: img?.screenshot_image || img?.cover_image || null,
+    };
   });
 
-  return counts;
+  return result;
 }
 
 /* ── Fetch analytics article cover images from DB ── */
@@ -259,7 +279,7 @@ export default async function HomePage() {
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-blue-200/80">
             Data-driven loot box analysis, drop rates, and monetization scores
-            for every major game. Plus compare prices across 13+ stores for {siteStats.totalGames > 1000 ? `${Math.round(siteStats.totalGames / 1000)}K+` : siteStats.totalGames} games.
+            for every major game. Exposing the real odds behind gacha, loot boxes, card packs, and battle passes.
           </p>
 
           {/* CTA buttons */}
@@ -291,33 +311,38 @@ export default async function HomePage() {
           <div className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-4">
             <div>
               <p className="text-4xl font-bold text-white sm:text-5xl">
-                {siteStats.totalGames > 1000 ? `${Math.round(siteStats.totalGames / 1000)}K+` : siteStats.totalGames}
+                {siteStats.lootboxGames}+
               </p>
-              <p className="mt-1 text-sm text-blue-200">Games Tracked</p>
+              <p className="mt-1 text-sm text-blue-200">Games Analyzed</p>
             </div>
             <div>
-              <p className="text-4xl font-bold text-white sm:text-5xl">{siteStats.totalDeals || "100"}+</p>
-              <p className="mt-1 text-sm text-blue-200">Active Deals</p>
+              <p className="text-4xl font-bold text-white sm:text-5xl">{siteStats.dropRatesTracked || "0"}+</p>
+              <p className="mt-1 text-sm text-blue-200">Drop Rates Tracked</p>
             </div>
             <div>
-              <p className="text-4xl font-bold text-white sm:text-5xl">13+</p>
-              <p className="mt-1 text-sm text-blue-200">Stores Compared</p>
+              <p className="text-4xl font-bold text-white sm:text-5xl">5</p>
+              <p className="mt-1 text-sm text-blue-200">System Types Covered</p>
             </div>
             <div>
-              <p className="text-4xl font-bold text-white sm:text-5xl">{analyzedCount}</p>
-              <p className="mt-1 text-sm text-blue-200">Loot Box Analyses</p>
+              <p className="text-4xl font-bold text-white sm:text-5xl">{siteStats.analyticsArticles || analyzedCount}</p>
+              <p className="mt-1 text-sm text-blue-200">Deep-Dive Articles</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* ─── Browse by System Type ─── */}
-      <section className="py-10 sm:py-12">
+      <section className="py-12 sm:py-16">
         <div className="container-main">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Browse by System Type
-            </h2>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                Browse by System Type
+              </h2>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                Explore loot box mechanics across every monetization model
+              </p>
+            </div>
             <Link
               href="/lootbox"
               className="flex items-center gap-1 text-sm font-medium text-brand-600 hover:text-brand-700"
@@ -326,33 +351,53 @@ export default async function HomePage() {
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {SYSTEM_TYPES.map((st) => {
-              const count = systemCounts[st.type] || 0;
+              const info = systemCounts[st.type] || { count: 0, image: null };
               return (
                 <Link
                   key={st.type}
                   href={`/lootbox?type=${st.type}`}
-                  className="group relative overflow-hidden rounded-xl shadow-md transition-all hover:shadow-xl hover:-translate-y-0.5"
+                  className="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.02]"
+                  style={{ minHeight: "220px" }}
                 >
+                  {/* Background game art */}
+                  {info.image && (
+                    <img
+                      src={info.image}
+                      alt=""
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                  )}
+                  {/* Gradient overlay */}
                   <div
-                    className={`bg-gradient-to-br ${st.gradient} px-6 py-7`}
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
-                      <st.icon className="h-5 w-5 text-white" />
+                    className={`absolute inset-0 bg-gradient-to-t ${st.gradient} ${
+                      info.image ? "opacity-80" : "opacity-100"
+                    } transition-opacity duration-300 group-hover:opacity-90`}
+                  />
+                  {/* Dark vignette for depth */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10" />
+                  {/* Content */}
+                  <div className="relative flex h-full flex-col justify-between px-5 py-6">
+                    <div>
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm ring-1 ring-white/10">
+                        <st.icon className="h-5 w-5 text-white drop-shadow" />
+                      </div>
+                      <h3 className="mt-3 text-lg font-bold text-white drop-shadow-sm">
+                        {st.label}
+                      </h3>
+                      <p className="mt-1 text-[13px] leading-snug text-white/80">
+                        {st.description}
+                      </p>
                     </div>
-                    <h3 className="mt-3 text-lg font-bold text-white">
-                      {st.label}
-                    </h3>
-                    <p className="mt-1 text-sm text-white/75">
-                      {st.description}
-                    </p>
-                    <div className="mt-3 flex items-center justify-between">
-                      <span className="text-xs font-medium text-white/60">
-                        {count} games
+                    <div className="mt-4 flex items-center justify-between border-t border-white/15 pt-3">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-white/70">
+                        {info.count} games
                       </span>
-                      <span className="text-sm font-medium text-white/90 group-hover:text-white">
-                        Explore →
+                      <span className="flex items-center gap-1 text-sm font-semibold text-white transition-transform duration-200 group-hover:translate-x-0.5">
+                        Explore
+                        <ArrowRight className="h-3.5 w-3.5" />
                       </span>
                     </div>
                   </div>
@@ -364,14 +409,14 @@ export default async function HomePage() {
       </section>
 
       {/* ─── Featured Games Grid ─── */}
-      <section className="border-y border-gray-100 bg-gray-50/50 py-10 sm:py-12 dark:border-gray-800 dark:bg-gray-900/50">
+      <section className="border-y border-gray-100 bg-gray-50/50 py-12 sm:py-16 dark:border-gray-800 dark:bg-gray-900/50">
         <div className="container-main">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                 Recently Analyzed
               </h2>
-              <p className="mt-1 text-sm text-gray-500">
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                 The latest games we&apos;ve scored for monetization fairness
               </p>
             </div>
@@ -384,7 +429,7 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {topGames.map((game) => {
               const bannerImage = game.screenshot_image || game.cover_image;
               const sys = systemLabel(game.loot_system_type);
@@ -392,51 +437,61 @@ export default async function HomePage() {
                 <Link
                   key={game.slug}
                   href={`/lootbox/${game.slug}`}
-                  className="group overflow-hidden rounded-xl border border-gray-200 bg-white transition-all hover:shadow-lg hover:-translate-y-0.5 dark:border-gray-800 dark:bg-gray-900"
+                  className="group relative overflow-hidden rounded-2xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01]"
+                  style={{ minHeight: "280px" }}
                 >
-                  {/* Banner */}
-                  <div className="relative h-24 overflow-hidden bg-gray-100">
-                    {bannerImage ? (
-                      <img
-                        src={bannerImage}
-                        alt={game.title}
-                        className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                        loading="lazy"
-                      />
-                    ) : (
+                  {/* Full-bleed background image */}
+                  {bannerImage ? (
+                    <img
+                      src={bannerImage}
+                      alt={game.title}
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="absolute inset-0">
                       <GameAvatar
                         gameName={game.title}
-                        size="sm"
+                        size="lg"
                         aspectRatio="video"
+                        className="h-full w-full rounded-none"
                       />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                    {/* Score ring */}
+                    </div>
+                  )}
+                  {/* Cinematic gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+                  {/* Top badges */}
+                  <div className="absolute top-3 left-3 right-3 flex items-start justify-between">
+                    <span
+                      className={`text-[11px] font-semibold px-2.5 py-1 rounded-full backdrop-blur-sm ${sys.color} ring-1 ring-black/5`}
+                    >
+                      {sys.label}
+                    </span>
+                    {/* Score badge */}
                     {game.lootboxes_score !== null && (
                       <div
-                        className={`absolute bottom-2 right-2 ${scoreColor(
+                        className={`${scoreColor(
                           game.lootboxes_score
-                        )} flex h-10 w-10 items-center justify-center rounded-full border-2 border-white text-sm font-bold text-white shadow-lg`}
+                        )} flex h-11 w-11 items-center justify-center rounded-full border-2 border-white/90 text-sm font-bold text-white shadow-xl backdrop-blur-sm`}
                       >
                         {game.lootboxes_score.toFixed(1)}
                       </div>
                     )}
                   </div>
-                  {/* Info */}
-                  <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 group-hover:text-brand-600 transition-colors line-clamp-1 dark:text-white">
+                  {/* Bottom content */}
+                  <div className="absolute bottom-0 left-0 right-0 p-5">
+                    <h3 className="text-lg font-bold text-white drop-shadow-lg line-clamp-1">
                       {game.title}
                     </h3>
-                    <div className="mt-2 flex items-center gap-2">
-                      <span
-                        className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${sys.color}`}
-                      >
-                        {sys.label}
+                    <div className="mt-2 flex items-center justify-between">
+                      <span className="text-sm text-white/70">
+                        Monetization Analysis
+                      </span>
+                      <span className="flex items-center gap-1 text-sm font-semibold text-white opacity-0 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0.5">
+                        View
+                        <ArrowRight className="h-3.5 w-3.5" />
                       </span>
                     </div>
-                    <span className="mt-3 inline-block text-sm font-medium text-brand-600 group-hover:underline">
-                      View Analysis →
-                    </span>
                   </div>
                 </Link>
               );
@@ -570,7 +625,7 @@ export default async function HomePage() {
                   Also Looking for Game Deals?
                 </h2>
                 <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                  Compare prices across 13+ stores for {siteStats.totalGames > 1000 ? `${Math.round(siteStats.totalGames / 1000)}K+` : siteStats.totalGames} games.
+                  Compare prices across 13+ stores for thousands of games.
                   Find historic lows, track price drops, and never overpay.
                 </p>
               </div>
@@ -634,15 +689,15 @@ export default async function HomePage() {
               <div className="hidden bg-gradient-to-br from-brand-500 to-brand-700 px-12 py-10 lg:flex lg:flex-col lg:items-center lg:justify-center">
                 <div className="text-center text-white">
                   <p className="text-5xl font-extrabold">
-                    {siteStats.totalGames > 1000 ? `${Math.round(siteStats.totalGames / 1000)}K+` : siteStats.totalGames}
+                    {siteStats.lootboxGames}+
                   </p>
                   <p className="mt-1 text-lg font-medium text-brand-100">
-                    Games tracked
+                    Games analyzed
                   </p>
                   <div className="mx-auto my-5 h-px w-20 bg-white/20" />
-                  <p className="text-5xl font-extrabold">13+</p>
+                  <p className="text-5xl font-extrabold">5</p>
                   <p className="mt-1 text-lg font-medium text-brand-100">
-                    Stores compared
+                    System types covered
                   </p>
                   <div className="mx-auto my-5 h-px w-20 bg-white/20" />
                   <p className="text-5xl font-extrabold">100%</p>
