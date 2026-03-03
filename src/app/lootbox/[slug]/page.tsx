@@ -276,14 +276,14 @@ export default async function LootboxGamePage({
       </div>
 
       {/* ─── MAIN CONTENT ─── */}
-      <div className="container-main">
+      <div className="container-main pt-10">
         <div className="space-y-10">
           {/* Section: Overview */}
           {content.overview_html && (
             <section>
               <SectionHeader icon={BookOpen} title="Monetization Overview" />
               <div
-                className="prose prose-gray max-w-none"
+                className="prose prose-gray max-w-none dark:prose-invert"
                 dangerouslySetInnerHTML={{ __html: content.overview_html }}
               />
             </section>
@@ -375,7 +375,7 @@ export default async function LootboxGamePage({
                 }
               />
               <div
-                className="prose prose-gray max-w-none"
+                className="prose prose-gray max-w-none dark:prose-invert"
                 dangerouslySetInnerHTML={{ __html: content.pity_explanation_html }}
               />
             </section>
@@ -406,7 +406,7 @@ export default async function LootboxGamePage({
             <section>
               <SectionHeader icon={History} title="Historical Changes" />
               <div
-                className="prose prose-gray max-w-none"
+                className="prose prose-gray max-w-none dark:prose-invert"
                 dangerouslySetInnerHTML={{ __html: content.history_html }}
               />
             </section>
@@ -441,7 +441,7 @@ export default async function LootboxGamePage({
                 title="Community Sentiment & Controversy"
               />
               <div
-                className="prose prose-gray max-w-none"
+                className="prose prose-gray max-w-none dark:prose-invert"
                 dangerouslySetInnerHTML={{ __html: content.controversy_html }}
               />
             </section>
@@ -453,7 +453,7 @@ export default async function LootboxGamePage({
               <SectionHeader icon={Lightbulb} title="Spending Tips & Advice" />
               <div className="bg-amber-50 rounded-xl border border-amber-200 p-6 dark:bg-amber-950/20 dark:border-amber-800">
                 <div
-                  className="prose prose-gray max-w-none"
+                  className="prose prose-gray max-w-none dark:prose-invert"
                   dangerouslySetInnerHTML={{ __html: content.tips_html }}
                 />
               </div>
@@ -466,7 +466,7 @@ export default async function LootboxGamePage({
               <SectionHeader icon={BookOpen} title="Our Verdict" />
               <div className="bg-gray-50 rounded-xl border border-gray-200 p-6 lg:p-8 dark:bg-gray-800 dark:border-gray-700">
                 <div
-                  className="prose prose-gray prose-lg max-w-none"
+                  className="prose prose-gray prose-lg max-w-none dark:prose-invert"
                   dangerouslySetInnerHTML={{ __html: content.editorial_html }}
                 />
               </div>
@@ -513,8 +513,10 @@ function SectionHeader({
   title: string;
 }) {
   return (
-    <div className="flex items-center gap-2.5 mb-4">
-      <Icon className="w-5 h-5 text-blue-600" />
+    <div className="flex items-center gap-3 mb-5 pb-3 border-b border-gray-200 dark:border-gray-700">
+      <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-500/15 flex items-center justify-center">
+        <Icon className="w-4.5 h-4.5 text-blue-600 dark:text-blue-400" />
+      </div>
       <h2 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h2>
     </div>
   );
