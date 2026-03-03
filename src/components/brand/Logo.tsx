@@ -83,9 +83,9 @@ export default function Logo({ size = "md", linked = true, className }: LogoProp
   const inner = (
     <span className={`flex items-center gap-2 ${className ?? ""}`}>
       <LootBoxIcon size={s.icon} />
-      <span className={`${s.text} font-extrabold tracking-tight text-gray-900`}>
+      <span className={`${s.text} font-extrabold tracking-tight text-gray-900 dark:text-white`}>
         Loot<span className="text-[#0074c5]">Boxes</span>
-        <span className="text-gray-400 font-semibold">.com</span>
+        <span className="text-gray-400 dark:text-gray-500 font-semibold">.com</span>
       </span>
     </span>
   );
