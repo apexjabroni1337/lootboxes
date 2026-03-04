@@ -984,8 +984,7 @@ export async function GET(request: NextRequest) {
       .from("games")
       .select("id, slug, title, loot_system_type, tags")
       .not("loot_system_type", "is", null)
-      .limit(batchSize)
-      .offset(offset);
+      .range(offset, offset + batchSize - 1);
 
     if (gamesError) {
       throw gamesError;
