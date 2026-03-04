@@ -19,7 +19,7 @@ import { searchGames } from "@/lib/itad";
 export const maxDuration = 300;
 
 const CONCURRENCY = 5;
-const SAFETY_MS = 55_000;
+const SAFETY_MS = 270_000;
 
 export async function GET(request: NextRequest) {
   const secret = request.nextUrl.searchParams.get("secret");
@@ -34,8 +34,8 @@ export async function GET(request: NextRequest) {
   }
 
   const batchSize = Math.min(
-    parseInt(request.nextUrl.searchParams.get("batch") || "50"),
-    100
+    parseInt(request.nextUrl.searchParams.get("batch") || "100"),
+    500
   );
 
   const supabase = createServerClient();
@@ -97,7 +97,11 @@ export async function GET(request: NextRequest) {
               }
             }
 
-            // No match found
+            // No match found — mark with sentinel so we don't retry
+            await supabase
+              .from("games")
+              .update({ itad_id: "NOT_FOUND" })
+              .eq("id", game.id);
             return { success: false, title: game.title };
           } catch (err: any) {
             return { success: false, title: game.title, error: err.message };
