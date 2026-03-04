@@ -226,12 +226,12 @@ export default async function AnalyticsPage({
               {/* Featured Article - Large Cinematic Card */}
               {featuredArticle && (
                 <div className="group relative overflow-hidden rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
-                  <div className="relative aspect-video overflow-hidden bg-gray-100 dark:bg-gray-800">
+                  <div className="relative h-56 sm:h-64 overflow-hidden bg-gray-100 dark:bg-gray-800">
                     {featuredArticle.cover_image ? (
                       <img
                         src={featuredArticle.cover_image}
                         alt={featuredArticle.title}
-                        className="h-full w-full object-contain bg-gray-100 dark:bg-gray-800 transition-transform duration-500 group-hover:scale-105"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         loading="lazy"
                       />
                     ) : (
