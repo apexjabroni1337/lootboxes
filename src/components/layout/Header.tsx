@@ -159,13 +159,13 @@ export default function Header() {
                 </button>
 
                 {lootboxMegaOpen && (
-                  <div className="absolute left-0 top-full z-50 mt-1 w-[640px] rounded-xl border border-gray-200 bg-white shadow-xl">
-                    {/* Featured links at top */}
-                    <div className="flex gap-2 border-b border-gray-100 p-4">
+                  <div className="absolute left-0 top-full z-50 mt-1 w-[480px] rounded-xl border border-gray-200 bg-white shadow-xl">
+                    {/* Button grid */}
+                    <div className="grid grid-cols-2 gap-2 p-4">
                       <Link
                         href="/lootbox"
                         onClick={() => setLootboxMegaOpen(false)}
-                        className="flex flex-1 items-center gap-3 rounded-lg bg-brand-50 px-4 py-3 transition-colors hover:bg-brand-100"
+                        className="flex items-center gap-3 rounded-lg bg-brand-50 px-4 py-3 transition-colors hover:bg-brand-100"
                       >
                         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white">
                           <Gamepad2 className="h-4.5 w-4.5" />
@@ -178,7 +178,7 @@ export default function Header() {
                       <Link
                         href="/lootbox/rankings"
                         onClick={() => setLootboxMegaOpen(false)}
-                        className="flex flex-1 items-center gap-3 rounded-lg bg-amber-50 px-4 py-3 transition-colors hover:bg-amber-100"
+                        className="flex items-center gap-3 rounded-lg bg-amber-50 px-4 py-3 transition-colors hover:bg-amber-100"
                       >
                         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500 text-white">
                           <Trophy className="h-4.5 w-4.5" />
@@ -188,136 +188,58 @@ export default function Header() {
                           <p className="text-[11px] text-gray-500">Best & worst rated</p>
                         </div>
                       </Link>
-                    </div>
-
-                    <div className="grid grid-cols-2 divide-x divide-gray-100">
-                      {/* LEFT COLUMN: Analyze */}
-                      <div className="p-5">
-                        <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                          Analyze
-                        </h4>
-
-                        {/* By System Type */}
-                        <div className="space-y-0.5">
-                          {LOOTBOX_TYPES.map((t) => (
-                            <Link
-                              key={t.label}
-                              href={t.href}
-                              onClick={() => setLootboxMegaOpen(false)}
-                              className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
-                            >
-                              <t.icon className="h-4 w-4 text-gray-400" />
-                              {t.label}
-                            </Link>
-                          ))}
-                        </div>
-
-                        {/* Popular Games */}
-                        <h4 className="mb-2 mt-4 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                          Popular Games
-                        </h4>
-                        <div className="space-y-0.5">
-                          {LOOTBOX_POPULAR.map((g) => (
-                            <Link
-                              key={g.label}
-                              href={g.href}
-                              onClick={() => setLootboxMegaOpen(false)}
-                              className="block rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
-                            >
-                              {g.label}
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* RIGHT COLUMN: Shop Deals */}
-                      <div className="p-5">
-                        <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-brand-500">
-                          Shop Lootbox Game Deals
-                        </h4>
-
-                        {/* Quick price filters */}
-                        <div className="space-y-1.5">
-                          {QUICK_LINKS.map((q) => {
-                            const lbHref = q.href.includes("?") ? q.href + "&has_lootbox=true" : q.href + "?has_lootbox=true";
-                            return (
-                              <Link
-                                key={q.label}
-                                href={lbHref}
-                                onClick={() => setLootboxMegaOpen(false)}
-                                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:opacity-80 ${q.color}`}
-                              >
-                                {q.label}
-                              </Link>
-                            );
-                          })}
-                        </div>
-
-                        {/* By Genre */}
-                        <h4 className="mb-2 mt-4 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                          By Genre
-                        </h4>
-                        <div className="space-y-0.5">
-                          {GENRES.map((g) => {
-                            const lbHref = g.href.includes("?") ? g.href + "&has_lootbox=true" : g.href + "?has_lootbox=true";
-                            return (
-                              <Link
-                                key={g.label}
-                                href={lbHref}
-                                onClick={() => setLootboxMegaOpen(false)}
-                                className="flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
-                              >
-                                <g.icon className="h-3.5 w-3.5 text-gray-400" />
-                                {g.label}
-                              </Link>
-                            );
-                          })}
-                        </div>
-
-                        {/* Price alerts card */}
-                        <div className="mt-4 rounded-lg border border-brand-100 bg-brand-50 p-3">
-                          <p className="text-xs font-semibold text-brand-700">
-                            Lootbox Price Alerts
-                          </p>
-                          <p className="mt-0.5 text-[11px] text-brand-600">
-                            Get notified when loot box games go on sale.
-                          </p>
-                          <Link
-                            href="/newsletter"
-                            onClick={() => setLootboxMegaOpen(false)}
-                            className="mt-2 inline-block text-xs font-semibold text-brand-700 hover:text-brand-800"
-                          >
-                            Sign up free →
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Bottom bar */}
-                    <div className="flex items-center justify-between border-t border-gray-100 px-5 py-3">
                       <Link
                         href="/deals?has_lootbox=true"
                         onClick={() => setLootboxMegaOpen(false)}
-                        className="text-sm font-medium text-brand-600 hover:text-brand-700"
+                        className="flex items-center gap-3 rounded-lg bg-green-50 px-4 py-3 transition-colors hover:bg-green-100"
                       >
-                        Browse all lootbox deals →
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-600 text-white">
+                          <Tag className="h-4.5 w-4.5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">Lootbox Deals</p>
+                          <p className="text-[11px] text-gray-500">Sales on lootbox games</p>
+                        </div>
                       </Link>
-                      <div className="flex gap-2">
-                        <Link
-                          href="/methodology"
-                          onClick={() => setLootboxMegaOpen(false)}
-                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
-                        >
-                          How We Rate
-                        </Link>
-                        <Link
-                          href="/drop-rates"
-                          onClick={() => setLootboxMegaOpen(false)}
-                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
-                        >
-                          Drop Rate Database
-                        </Link>
-                      </div>
+                      <Link
+                        href="/drop-rates"
+                        onClick={() => setLootboxMegaOpen(false)}
+                        className="flex items-center gap-3 rounded-lg bg-purple-50 px-4 py-3 transition-colors hover:bg-purple-100"
+                      >
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-600 text-white">
+                          <Layers className="h-4.5 w-4.5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">Drop Rates</p>
+                          <p className="text-[11px] text-gray-500">Official drop rate data</p>
+                        </div>
+                      </Link>
+                      <Link
+                        href="/methodology"
+                        onClick={() => setLootboxMegaOpen(false)}
+                        className="flex items-center gap-3 rounded-lg bg-gray-50 px-4 py-3 transition-colors hover:bg-gray-100"
+                      >
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-600 text-white">
+                          <Shield className="h-4.5 w-4.5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">How We Rate</p>
+                          <p className="text-[11px] text-gray-500">Our scoring methodology</p>
+                        </div>
+                      </Link>
+                      <Link
+                        href="/newsletter"
+                        onClick={() => setLootboxMegaOpen(false)}
+                        className="flex items-center gap-3 rounded-lg bg-red-50 px-4 py-3 transition-colors hover:bg-red-100"
+                      >
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-500 text-white">
+                          <Flame className="h-4.5 w-4.5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">Price Alerts</p>
+                          <p className="text-[11px] text-gray-500">Get deal notifications</p>
+                        </div>
+                      </Link>
                     </div>
                   </div>
                 )}
