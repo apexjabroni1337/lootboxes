@@ -7,6 +7,8 @@ export interface BlogPost {
   tags: string[];
   readTime: number;
   featured?: boolean;
+  coverImage?: string;
+  coverAlt?: string;
   content: string;
 }
 
@@ -20,6 +22,8 @@ export const BLOG_POSTS: BlogPost[] = [
     tags: ["Legal", "Valve", "CS2", "Regulation"],
     readTime: 12,
     featured: true,
+    coverImage: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=630&fit=crop",
+    coverAlt: "Lady Justice statue holding scales, representing the legal battle against Valve",
     content: `## New York's Historic Challenge to Valve: When Loot Boxes Meet Gambling Law
 
 The gaming industry just received a legal wake-up call. On February 25, 2026, New York Attorney General Letitia James filed a bombshell lawsuit against Valve Corporation, marking the first major state-level legal action in America to classify loot boxes as outright illegal gambling. The 52-page complaint\u2014filed in New York State Supreme Court\u2014doesn\u2019t mince words: it accuses Valve of operating an illegal gambling enterprise, violating the New York Constitution, and specifically targeting teenagers with what amounts to slot machines disguised as cosmetic rewards.
@@ -77,6 +81,8 @@ The gaming industry has long argued that loot boxes aren\u2019t gambling because
     author: "Lootboxes Team",
     tags: ["CS2", "Economy", "Valve", "Skins"],
     readTime: 10,
+    coverImage: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&h=630&fit=crop",
+    coverAlt: "Competitive esports gaming setup with monitor and headset",
     content: `## Counter-Strike 2's Earthquake: When Trade-Ups Made Knives Affordable
 
 On October 23, 2025, Valve released what might be the single most impactful Counter-Strike 2 update since the game\u2019s launch. In what\u2019s known as the \u201CRe-Retakes Update,\u201D the company introduced Trade-Up Contracts that allow players to craft knives and gloves from red-rarity (Covert) weapon skins. Within weeks, the competitive CS2 economy experienced seismic disruption\u2014and not everyone benefited equally.
@@ -135,6 +141,8 @@ Looking forward, expect more updates that continue adjusting the economic balanc
     author: "Lootboxes Team",
     tags: ["FTC", "Genshin Impact", "Regulation", "Gacha"],
     readTime: 11,
+    coverImage: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&h=630&fit=crop",
+    coverAlt: "Person signing official enforcement documents",
     content: `## The $20 Million Warning: How the FTC Cracked Down on Genshin Impact
 
 In January 2025, the Federal Trade Commission delivered a verdict that sent shockwaves through the gaming industry: HoYoverse, the developer behind the wildly popular gacha game Genshin Impact, would pay a $20 million fine for deceptively marketing loot boxes to children and illegally collecting their data. This wasn\u2019t just a slap on the wrist\u2014it was the FTC\u2019s first major enforcement action specifically targeting loot box sales to minors, and it established a template for how federal regulators view predatory gaming mechanics.
@@ -195,6 +203,8 @@ For players of similar games, this is a warning sign. Games using comparable gac
     author: "Lootboxes Team",
     tags: ["Overwatch 2", "Blizzard", "Loot Boxes", "Industry"],
     readTime: 10,
+    coverImage: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1200&h=630&fit=crop",
+    coverAlt: "Neon-lit arcade gaming machines in a dark room",
     content: `## Overwatch 2's Surprising Reversal: Loot Boxes Return Without the Gambling Problem
 
 In February 2026, Blizzard made a decision that contradicted years of industry direction: with Season 15\u2019s \u201CHonor & Glory\u201D launch, loot boxes returned to Overwatch 2. But this wasn\u2019t a return to the game\u2019s original monetization system. This was something intentionally different\u2014loot boxes designed without the gambling mechanics that make them controversial.
@@ -259,6 +269,8 @@ For the broader gaming industry, this is a blueprint. You can have engaging rand
     author: "Lootboxes Team",
     tags: ["Brazil", "Regulation", "Loot Boxes", "Policy"],
     readTime: 11,
+    coverImage: "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=1200&h=630&fit=crop",
+    coverAlt: "Aerial view of Rio de Janeiro with Sugarloaf Mountain",
     content: `## Brazil's Bold Move: Why a Nation Just Banned Loot Boxes for Everyone Under 18
 
 In September 2025, Brazilian President Lu\u00EDs In\u00E1cio Lula da Silva signed Lei 15.211/25 into law. On its surface, it\u2019s a comprehensive child online safety measure. But buried in this statute is something unprecedented: a complete prohibition on selling loot boxes to anyone under 18, effective March 2026.
@@ -319,6 +331,8 @@ Brazil just answered part of that question: they can legislate comprehensively a
     author: "Lootboxes Team",
     tags: ["US Congress", "Regulation", "Federal", "Legislation"],
     readTime: 10,
+    coverImage: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=1200&h=630&fit=crop",
+    coverAlt: "Legislative chamber filled with lawmakers in session",
     content: `## Washington Takes Aim: Bipartisan Senate Bill Could Ban Loot Boxes Nationwide
 
 Senators Josh Hawley (R-Missouri), Ed Markey (D-Massachusetts), and Richard Blumenthal (D-Connecticut) filed \u201CThe Protecting Children from Abusive Games Act\u201D\u2014federal legislation that would ban both loot boxes and pay-to-win microtransactions in any game accessible to minors. The bill\u2019s sponsors represent a genuine bipartisan coalition targeting what they characterize as manipulative gaming monetization designed to exploit children\u2019s developing brains and limited judgment.

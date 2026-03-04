@@ -133,9 +133,19 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <div className="pb-12">
-      {/* Cover gradient */}
-      <div className={`h-48 bg-gradient-to-br ${gradient} sm:h-56`}>
-        <div className="container-main flex h-full items-end pb-6">
+      {/* Cover image */}
+      <div className="relative h-48 sm:h-72 overflow-hidden">
+        {post.coverImage ? (
+          <img
+            src={post.coverImage}
+            alt={post.coverAlt || post.title}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className={`h-full w-full bg-gradient-to-br ${gradient}`} />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        <div className="container-main absolute inset-0 flex items-end pb-6">
           <Link
             href="/blog"
             className="inline-flex items-center gap-1 rounded-full bg-white/20 px-3 py-1 text-sm text-white backdrop-blur-sm hover:bg-white/30"

@@ -53,13 +53,17 @@ export default function BlogPage() {
           href={`/blog/${featured.slug}`}
           className="group block overflow-hidden rounded-2xl border border-gray-200 bg-white transition-shadow hover:shadow-lg"
         >
-          <div className="relative h-48 bg-gradient-to-br from-red-600 to-red-900 sm:h-64">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <Scale className="mx-auto h-10 w-10 text-white/30" />
-                <span className="mt-2 block text-sm font-medium text-white/40">Breaking News</span>
-              </div>
-            </div>
+          <div className="relative h-48 sm:h-64 overflow-hidden">
+            {featured.coverImage ? (
+              <img
+                src={featured.coverImage}
+                alt={featured.coverAlt || featured.title}
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+            ) : (
+              <div className="h-full w-full bg-gradient-to-br from-red-600 to-red-900" />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
             <div className="absolute left-4 top-4 flex gap-2">
               <span className="rounded-full bg-red-500 px-3 py-1 text-xs font-bold text-white shadow-lg">
                 FEATURED
@@ -100,10 +104,18 @@ export default function BlogPage() {
               href={`/blog/${post.slug}`}
               className="card group flex flex-col transition-shadow hover:shadow-md"
             >
-              <div className={`h-32 rounded-lg bg-gradient-to-br ${getPostGradient(post.slug)}`}>
-                <div className="flex h-full items-center justify-center">
-                  <BookOpen className="h-6 w-6 text-white/30" />
-                </div>
+              <div className="h-32 overflow-hidden rounded-lg">
+                {post.coverImage ? (
+                  <img
+                    src={post.coverImage}
+                    alt={post.coverAlt || post.title}
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className={`h-full w-full bg-gradient-to-br ${getPostGradient(post.slug)} flex items-center justify-center`}>
+                    <BookOpen className="h-6 w-6 text-white/30" />
+                  </div>
+                )}
               </div>
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {post.tags.slice(0, 2).map((t) => (
