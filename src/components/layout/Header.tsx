@@ -9,7 +9,7 @@ import {
   X,
   ChevronDown,
   Flame,
-  TrendingDown,
+
   Tag,
   Gamepad2,
   Swords,
@@ -81,13 +81,10 @@ export default function Header() {
   const [megaOpen, setMegaOpen] = useState(false);
 
   const [lootboxMegaOpen, setLootboxMegaOpen] = useState(false);
-  const [lootboxDealsOpen, setLootboxDealsOpen] = useState(false);
   const megaRef = useRef<HTMLDivElement>(null);
   const lootboxMegaRef = useRef<HTMLDivElement>(null);
-  const lootboxDealsRef = useRef<HTMLDivElement>(null);
   const megaTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lootboxTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const lootboxDealsTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Cmd+K / Ctrl+K shortcut to open search
   useEffect(() => {
@@ -110,9 +107,6 @@ export default function Header() {
       if (lootboxMegaRef.current && !lootboxMegaRef.current.contains(e.target as Node)) {
         setLootboxMegaOpen(false);
       }
-      if (lootboxDealsRef.current && !lootboxDealsRef.current.contains(e.target as Node)) {
-        setLootboxDealsOpen(false);
-      }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -122,7 +116,6 @@ export default function Header() {
     if (megaTimeout.current) clearTimeout(megaTimeout.current);
     setMegaOpen(true);
     setLootboxMegaOpen(false);
-    setLootboxDealsOpen(false);
   };
   const closeMega = () => {
     megaTimeout.current = setTimeout(() => setMegaOpen(false), 150);
@@ -131,19 +124,9 @@ export default function Header() {
     if (lootboxTimeout.current) clearTimeout(lootboxTimeout.current);
     setLootboxMegaOpen(true);
     setMegaOpen(false);
-    setLootboxDealsOpen(false);
   };
   const closeLootboxMega = () => {
     lootboxTimeout.current = setTimeout(() => setLootboxMegaOpen(false), 150);
-  };
-  const openLootboxDeals = () => {
-    if (lootboxDealsTimeout.current) clearTimeout(lootboxDealsTimeout.current);
-    setLootboxDealsOpen(true);
-    setMegaOpen(false);
-    setLootboxMegaOpen(false);
-  };
-  const closeLootboxDeals = () => {
-    lootboxDealsTimeout.current = setTimeout(() => setLootboxDealsOpen(false), 150);
   };
 
   return (
@@ -157,7 +140,7 @@ export default function Header() {
 
             {/* Desktop Nav */}
             <nav className="hidden items-center gap-1 lg:flex">
-              {/* Loot Box mega menu trigger */}
+              {/* Loot Boxes mega menu trigger */}
               <div
                 ref={lootboxMegaRef}
                 className="relative"
@@ -165,7 +148,7 @@ export default function Header() {
                 onMouseLeave={closeLootboxMega}
               >
                 <button
-                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white"
+                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
                   onClick={() => setLootboxMegaOpen(!lootboxMegaOpen)}
                 >
                   <Zap className="h-3.5 w-3.5 text-purple-500" />
@@ -176,7 +159,7 @@ export default function Header() {
                 </button>
 
                 {lootboxMegaOpen && (
-                  <div className="absolute left-0 top-full z-50 mt-1 w-[480px] rounded-xl border border-gray-200 bg-white shadow-xl">
+                  <div className="absolute left-0 top-full z-50 mt-1 w-[640px] rounded-xl border border-gray-200 bg-white shadow-xl">
                     {/* Featured links at top */}
                     <div className="flex gap-2 border-b border-gray-100 p-4">
                       <Link
@@ -207,12 +190,14 @@ export default function Header() {
                       </Link>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-6 p-5">
-                      {/* By System Type */}
-                      <div>
+                    <div className="grid grid-cols-2 divide-x divide-gray-100">
+                      {/* LEFT COLUMN: Analyze */}
+                      <div className="p-5">
                         <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                          By System Type
+                          Analyze
                         </h4>
+
+                        {/* By System Type */}
                         <div className="space-y-0.5">
                           {LOOTBOX_TYPES.map((t) => (
                             <Link
@@ -226,11 +211,9 @@ export default function Header() {
                             </Link>
                           ))}
                         </div>
-                      </div>
 
-                      {/* Popular Games */}
-                      <div>
-                        <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                        {/* Popular Games */}
+                        <h4 className="mb-2 mt-4 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
                           Popular Games
                         </h4>
                         <div className="space-y-0.5">
@@ -246,157 +229,101 @@ export default function Header() {
                           ))}
                         </div>
                       </div>
+
+                      {/* RIGHT COLUMN: Shop Deals */}
+                      <div className="p-5">
+                        <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-brand-500">
+                          Shop Lootbox Game Deals
+                        </h4>
+
+                        {/* Quick price filters */}
+                        <div className="space-y-1.5">
+                          {QUICK_LINKS.map((q) => {
+                            const lbHref = q.href.includes("?") ? q.href + "&has_lootbox=true" : q.href + "?has_lootbox=true";
+                            return (
+                              <Link
+                                key={q.label}
+                                href={lbHref}
+                                onClick={() => setLootboxMegaOpen(false)}
+                                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:opacity-80 ${q.color}`}
+                              >
+                                {q.label}
+                              </Link>
+                            );
+                          })}
+                        </div>
+
+                        {/* By Genre */}
+                        <h4 className="mb-2 mt-4 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                          By Genre
+                        </h4>
+                        <div className="space-y-0.5">
+                          {GENRES.map((g) => {
+                            const lbHref = g.href.includes("?") ? g.href + "&has_lootbox=true" : g.href + "?has_lootbox=true";
+                            return (
+                              <Link
+                                key={g.label}
+                                href={lbHref}
+                                onClick={() => setLootboxMegaOpen(false)}
+                                className="flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
+                              >
+                                <g.icon className="h-3.5 w-3.5 text-gray-400" />
+                                {g.label}
+                              </Link>
+                            );
+                          })}
+                        </div>
+
+                        {/* Price alerts card */}
+                        <div className="mt-4 rounded-lg border border-brand-100 bg-brand-50 p-3">
+                          <p className="text-xs font-semibold text-brand-700">
+                            Lootbox Price Alerts
+                          </p>
+                          <p className="mt-0.5 text-[11px] text-brand-600">
+                            Get notified when loot box games go on sale.
+                          </p>
+                          <Link
+                            href="/newsletter"
+                            onClick={() => setLootboxMegaOpen(false)}
+                            className="mt-2 inline-block text-xs font-semibold text-brand-700 hover:text-brand-800"
+                          >
+                            Sign up free →
+                          </Link>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Bottom bar */}
-                    <div className="flex items-center gap-2 border-t border-gray-100 px-5 py-3">
+                    <div className="flex items-center justify-between border-t border-gray-100 px-5 py-3">
                       <Link
-                        href="/methodology"
+                        href="/deals?has_lootbox=true"
                         onClick={() => setLootboxMegaOpen(false)}
-                        className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                        className="text-sm font-medium text-brand-600 hover:text-brand-700"
                       >
-                        How We Rate
+                        Browse all lootbox deals →
                       </Link>
-                      <Link
-                        href="/drop-rates"
-                        onClick={() => setLootboxMegaOpen(false)}
-                        className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
-                      >
-                        Drop Rate Database
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <Link
-                href="/analytics"
-                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white"
-              >
-                Analytics
-              </Link>
-
-              {/* Lootbox Deals mega menu trigger */}
-              <div
-                ref={lootboxDealsRef}
-                className="relative"
-                onMouseEnter={openLootboxDeals}
-                onMouseLeave={closeLootboxDeals}
-              >
-                <button
-                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
-                  onClick={() => setLootboxDealsOpen(!lootboxDealsOpen)}
-                >
-                  <Box className="h-3.5 w-3.5 text-purple-500" />
-                  Lootbox Deals
-                  <ChevronDown
-                    className={`h-3.5 w-3.5 transition-transform ${lootboxDealsOpen ? "rotate-180" : ""}`}
-                  />
-                </button>
-
-                {lootboxDealsOpen && (
-                  <div className="absolute left-0 top-full z-50 mt-1 w-[560px] rounded-xl border border-gray-200 bg-white shadow-xl">
-                    {/* Banner */}
-                    <div className="bg-purple-50 px-5 py-2 text-[11px] font-medium text-purple-600 border-b border-purple-100">
-                      Showing deals exclusively for games with loot box systems
-                    </div>
-
-                    <div className="p-5">
-                      <div className="grid grid-cols-2 gap-6">
-                        {/* Genres column */}
-                        <div>
-                          <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                            Browse by Genre
-                          </h4>
-                          <div className="space-y-0.5">
-                            {GENRES.map((g) => {
-                              const lbHref = g.href.includes("?") ? g.href + "&has_lootbox=true" : g.href + "?has_lootbox=true";
-                              return (
-                                <Link
-                                  key={g.label}
-                                  href={lbHref}
-                                  onClick={() => setLootboxDealsOpen(false)}
-                                  className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
-                                >
-                                  <g.icon className="h-4 w-4 text-gray-400" />
-                                  {g.label}
-                                </Link>
-                              );
-                            })}
-                          </div>
-                        </div>
-
-                        {/* Quick links */}
-                        <div>
-                          <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                            Quick Filters
-                          </h4>
-                          <div className="space-y-2">
-                            {QUICK_LINKS.map((q) => {
-                              const lbHref = q.href.includes("?") ? q.href + "&has_lootbox=true" : q.href + "?has_lootbox=true";
-                              return (
-                                <Link
-                                  key={q.label}
-                                  href={lbHref}
-                                  onClick={() => setLootboxDealsOpen(false)}
-                                  className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:opacity-80 ${q.color}`}
-                                >
-                                  {q.label}
-                                </Link>
-                              );
-                            })}
-                          </div>
-
-                          <div className="mt-5 rounded-lg border border-purple-100 bg-purple-50 p-3">
-                            <p className="text-xs font-semibold text-purple-700">
-                              Lootbox Price Alerts
-                            </p>
-                            <p className="mt-0.5 text-[11px] text-purple-600">
-                              Get notified when loot box games hit their lowest price.
-                            </p>
-                            <Link
-                              href="/newsletter"
-                              onClick={() => setLootboxDealsOpen(false)}
-                              className="mt-2 inline-block text-xs font-semibold text-purple-700 hover:text-purple-800"
-                            >
-                              Sign up free →
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Bottom bar */}
-                      <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
+                      <div className="flex gap-2">
                         <Link
-                          href="/games?has_lootbox=true"
-                          onClick={() => setLootboxDealsOpen(false)}
-                          className="text-sm font-medium text-purple-600 hover:text-purple-700"
+                          href="/methodology"
+                          onClick={() => setLootboxMegaOpen(false)}
+                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
                         >
-                          Browse all lootbox game deals →
+                          How We Rate
                         </Link>
-                        <div className="flex gap-2">
-                          <Link
-                            href="/games/new-releases?has_lootbox=true"
-                            onClick={() => setLootboxDealsOpen(false)}
-                            className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
-                          >
-                            New Releases
-                          </Link>
-                          <Link
-                            href="/deals?sort=trending&has_lootbox=true"
-                            onClick={() => setLootboxDealsOpen(false)}
-                            className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
-                          >
-                            Trending
-                          </Link>
-                        </div>
+                        <Link
+                          href="/drop-rates"
+                          onClick={() => setLootboxMegaOpen(false)}
+                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                        >
+                          Drop Rate Database
+                        </Link>
                       </div>
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Hot Deals mega menu trigger */}
+              {/* Game Deals dropdown */}
               <div
                 ref={megaRef}
                 className="relative"
@@ -404,7 +331,7 @@ export default function Header() {
                 onMouseLeave={closeMega}
               >
                 <button
-                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white"
+                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
                   onClick={() => setMegaOpen(!megaOpen)}
                 >
                   <Flame className="h-3.5 w-3.5 text-orange-500" />
@@ -414,97 +341,124 @@ export default function Header() {
                   />
                 </button>
 
-                {/* Mega menu dropdown */}
                 {megaOpen && (
-                  <div className="absolute left-0 top-full z-50 mt-1 w-[560px] rounded-xl border border-gray-200 bg-white shadow-xl">
+                  <div className="absolute left-0 top-full z-50 mt-1 w-[480px] rounded-xl border border-gray-200 bg-white shadow-xl">
                     {/* Banner */}
                     <div className="bg-orange-50 px-5 py-2 text-[11px] font-medium text-orange-600 border-b border-orange-100">
-                      Showing deals across all games and genres
+                      Browse deals across all games and genres
                     </div>
 
-                    <div className="p-5">
-                      <div className="grid grid-cols-2 gap-6">
-                        {/* Genres column */}
-                        <div>
-                          <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                            Browse by Genre
-                          </h4>
-                          <div className="space-y-0.5">
-                            {GENRES.map((g) => (
-                              <Link
-                                key={g.label}
-                                href={g.href}
-                                onClick={() => setMegaOpen(false)}
-                                className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
-                              >
-                                <g.icon className="h-4 w-4 text-gray-400" />
-                                {g.label}
-                              </Link>
-                            ))}
-                          </div>
+                    {/* Featured links */}
+                    <div className="flex gap-2 border-b border-gray-100 p-4">
+                      <Link
+                        href="/deals"
+                        onClick={() => setMegaOpen(false)}
+                        className="flex flex-1 items-center gap-3 rounded-lg bg-orange-50 px-4 py-3 transition-colors hover:bg-orange-100"
+                      >
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-500 text-white">
+                          <Flame className="h-4.5 w-4.5" />
                         </div>
-
-                        {/* Quick links + featured */}
                         <div>
-                          <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                            Quick Filters
-                          </h4>
-                          <div className="space-y-2">
-                            {QUICK_LINKS.map((q) => (
-                              <Link
-                                key={q.label}
-                                href={q.href}
-                                onClick={() => setMegaOpen(false)}
-                                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:opacity-80 ${q.color}`}
-                              >
-                                {q.label}
-                              </Link>
-                            ))}
-                          </div>
+                          <p className="text-sm font-semibold text-gray-900">Hot Deals</p>
+                          <p className="text-[11px] text-gray-500">Today&apos;s best prices</p>
+                        </div>
+                      </Link>
+                      <Link
+                        href="/games"
+                        onClick={() => setMegaOpen(false)}
+                        className="flex flex-1 items-center gap-3 rounded-lg bg-gray-50 px-4 py-3 transition-colors hover:bg-gray-100"
+                      >
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-600 text-white">
+                          <Gamepad2 className="h-4.5 w-4.5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">Browse All Games</p>
+                          <p className="text-[11px] text-gray-500">Full game catalog</p>
+                        </div>
+                      </Link>
+                    </div>
 
-                          <div className="mt-5 rounded-lg border border-brand-100 bg-brand-50 p-3 dark:border-brand-900 dark:bg-brand-950">
-                            <p className="text-xs font-semibold text-brand-700">
-                              Price Drop Alerts
-                            </p>
-                            <p className="mt-0.5 text-[11px] text-brand-600">
-                              Get notified when games hit their lowest price.
-                            </p>
+                    <div className="grid grid-cols-2 gap-6 p-5">
+                      {/* Genres column */}
+                      <div>
+                        <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                          By Genre
+                        </h4>
+                        <div className="space-y-0.5">
+                          {GENRES.map((g) => (
                             <Link
-                              href="/newsletter"
+                              key={g.label}
+                              href={g.href}
                               onClick={() => setMegaOpen(false)}
-                              className="mt-2 inline-block text-xs font-semibold text-brand-700 hover:text-brand-800"
+                              className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
                             >
-                              Sign up free →
+                              <g.icon className="h-4 w-4 text-gray-400" />
+                              {g.label}
                             </Link>
-                          </div>
+                          ))}
                         </div>
                       </div>
 
-                      {/* Bottom bar */}
-                      <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
-                        <Link
-                          href="/games"
-                          onClick={() => setMegaOpen(false)}
-                          className="text-sm font-medium text-orange-600 hover:text-orange-700"
-                        >
-                          Browse all game deals →
-                        </Link>
-                        <div className="flex gap-2">
+                      {/* Quick filters */}
+                      <div>
+                        <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                          Quick Filters
+                        </h4>
+                        <div className="space-y-1.5">
+                          {QUICK_LINKS.map((q) => (
+                            <Link
+                              key={q.label}
+                              href={q.href}
+                              onClick={() => setMegaOpen(false)}
+                              className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:opacity-80 ${q.color}`}
+                            >
+                              {q.label}
+                            </Link>
+                          ))}
+                        </div>
+
+                        <div className="mt-5 rounded-lg border border-brand-100 bg-brand-50 p-3">
+                          <p className="text-xs font-semibold text-brand-700">
+                            Price Drop Alerts
+                          </p>
+                          <p className="mt-0.5 text-[11px] text-brand-600">
+                            Get notified when games hit their lowest price.
+                          </p>
                           <Link
-                            href="/games/new-releases"
+                            href="/newsletter"
                             onClick={() => setMegaOpen(false)}
-                            className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                            className="mt-2 inline-block text-xs font-semibold text-brand-700 hover:text-brand-800"
                           >
-                            New Releases
-                          </Link>
-                          <Link
-                            href="/deals?sort=trending"
-                            onClick={() => setMegaOpen(false)}
-                            className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
-                          >
-                            Trending
+                            Sign up free →
                           </Link>
                         </div>
+                      </div>
+                    </div>
+
+                    {/* Bottom bar */}
+                    <div className="flex items-center justify-between border-t border-gray-100 px-5 py-3">
+                      <Link
+                        href="/games"
+                        onClick={() => setMegaOpen(false)}
+                        className="text-sm font-medium text-orange-600 hover:text-orange-700"
+                      >
+                        Browse all games →
+                      </Link>
+                      <div className="flex gap-2">
+                        <Link
+                          href="/games/new-releases"
+                          onClick={() => setMegaOpen(false)}
+                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                        >
+                          New Releases
+                        </Link>
+                        <Link
+                          href="/deals?sort=trending"
+                          onClick={() => setMegaOpen(false)}
+                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                        >
+                          Trending
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -512,8 +466,15 @@ export default function Header() {
               </div>
 
               <Link
+                href="/analytics"
+                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+              >
+                Analytics
+              </Link>
+
+              <Link
                 href="/blog"
-                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white"
+                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
               >
                 Blog
               </Link>
@@ -600,39 +561,88 @@ export default function Header() {
           {mobileOpen && (
             <div className="border-t border-gray-100 py-4 lg:hidden dark:border-gray-800">
               <nav className="flex flex-col gap-1">
+                {/* Loot Boxes section */}
+                <p className="px-3 pt-1 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                  Loot Boxes
+                </p>
                 <Link
                   href="/lootbox"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                 >
                   <Zap className="h-4 w-4 text-purple-500" />
-                  Loot Box Database
+                  All Analyzed Games
                 </Link>
+                <Link
+                  href="/lootbox/rankings"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <Trophy className="h-4 w-4 text-amber-500" />
+                  Rankings
+                </Link>
+                <Link
+                  href="/deals?has_lootbox=true"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <Tag className="h-4 w-4 text-brand-500" />
+                  Lootbox Game Deals
+                </Link>
+
+                {/* Game Deals section */}
+                <div className="mt-2 border-t border-gray-100 pt-3">
+                  <p className="px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                    Game Deals
+                  </p>
+                </div>
                 <Link
                   href="/deals"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                 >
                   <Flame className="h-4 w-4 text-orange-500" />
-                  Game Deals
+                  Hot Deals
                 </Link>
+                <Link
+                  href="/games"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <Gamepad2 className="h-4 w-4 text-gray-500" />
+                  Browse All Games
+                </Link>
+
+                {/* More section */}
+                <div className="mt-2 border-t border-gray-100 pt-3">
+                  <p className="px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                    More
+                  </p>
+                </div>
                 <Link
                   href="/analytics"
                   onClick={() => setMobileOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                 >
                   Analytics
                 </Link>
                 <Link
+                  href="/blog"
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  Blog
+                </Link>
+                <Link
                   href="/drop-rates"
                   onClick={() => setMobileOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                 >
                   Drop Rates
                 </Link>
 
                 {/* Mobile quick filters */}
-                <div className="mt-2 border-t border-gray-100 pt-3 dark:border-gray-800">
+                <div className="mt-2 border-t border-gray-100 pt-3">
                   <p className="px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
                     Quick Filters
                   </p>
