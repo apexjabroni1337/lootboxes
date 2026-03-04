@@ -75,9 +75,8 @@ export default function HeroCarousel({ deals }: HeroCarouselProps) {
           <div className="absolute inset-0 bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900" />
         )}
 
-        {/* Subtle overlay for text readability — images stay clearly visible */}
-        <div className="absolute inset-0 bg-gradient-to-r from-white/70 via-white/40 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-transparent to-transparent" />
+        {/* Minimal left-side scrim for text readability only */}
+        <div className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/30 to-transparent w-1/2" />
 
         {/* Content overlay */}
         <div className="container-main relative flex h-full items-center">

@@ -25,6 +25,9 @@ import {
   Layers,
   ShoppingBag,
   Shield,
+  Clock,
+  TrendingUp,
+  ArrowDownCircle,
 } from "lucide-react";
 import SearchDialog from "@/components/search/SearchDialog";
 import Logo from "@/components/brand/Logo";
@@ -270,25 +273,51 @@ export default function Header() {
                       Browse deals across all games and genres
                     </div>
 
-                    {/* Featured links */}
-                    <div className="flex gap-2 border-b border-gray-100 p-4">
+                    {/* Featured buttons — 2x2 grid */}
+                    <div className="grid grid-cols-2 gap-2 border-b border-gray-100 p-4">
                       <Link
-                        href="/deals"
+                        href="/games/new-releases"
                         onClick={() => setMegaOpen(false)}
-                        className="flex flex-1 items-center gap-3 rounded-lg bg-orange-50 px-4 py-3 transition-colors hover:bg-orange-100"
+                        className="flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 transition-colors hover:bg-blue-100"
                       >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-500 text-white">
-                          <Flame className="h-4.5 w-4.5" />
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500 text-white">
+                          <Clock className="h-4.5 w-4.5" />
                         </div>
                         <div>
-                          <p className="text-sm font-semibold text-gray-900">Hot Deals</p>
-                          <p className="text-[11px] text-gray-500">Today&apos;s best prices</p>
+                          <p className="text-sm font-semibold text-gray-900">New Releases</p>
+                          <p className="text-[11px] text-gray-500">Latest game launches</p>
+                        </div>
+                      </Link>
+                      <Link
+                        href="/deals?sort=trending"
+                        onClick={() => setMegaOpen(false)}
+                        className="flex items-center gap-3 rounded-lg bg-orange-50 px-4 py-3 transition-colors hover:bg-orange-100"
+                      >
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-500 text-white">
+                          <TrendingUp className="h-4.5 w-4.5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">Trending</p>
+                          <p className="text-[11px] text-gray-500">Most popular right now</p>
+                        </div>
+                      </Link>
+                      <Link
+                        href="/deals?filter=historic"
+                        onClick={() => setMegaOpen(false)}
+                        className="flex items-center gap-3 rounded-lg bg-amber-50 px-4 py-3 transition-colors hover:bg-amber-100"
+                      >
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500 text-white">
+                          <ArrowDownCircle className="h-4.5 w-4.5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">Historic Lows</p>
+                          <p className="text-[11px] text-gray-500">All-time lowest prices</p>
                         </div>
                       </Link>
                       <Link
                         href="/games"
                         onClick={() => setMegaOpen(false)}
-                        className="flex flex-1 items-center gap-3 rounded-lg bg-gray-50 px-4 py-3 transition-colors hover:bg-gray-100"
+                        className="flex items-center gap-3 rounded-lg bg-gray-50 px-4 py-3 transition-colors hover:bg-gray-100"
                       >
                         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-600 text-white">
                           <Gamepad2 className="h-4.5 w-4.5" />
@@ -360,28 +389,19 @@ export default function Header() {
                     {/* Bottom bar */}
                     <div className="flex items-center justify-between border-t border-gray-100 px-5 py-3">
                       <Link
-                        href="/games"
+                        href="/deals"
                         onClick={() => setMegaOpen(false)}
                         className="text-sm font-medium text-orange-600 hover:text-orange-700"
                       >
-                        Browse all games →
+                        View all deals →
                       </Link>
-                      <div className="flex gap-2">
-                        <Link
-                          href="/games/new-releases"
-                          onClick={() => setMegaOpen(false)}
-                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
-                        >
-                          New Releases
-                        </Link>
-                        <Link
-                          href="/deals?sort=trending"
-                          onClick={() => setMegaOpen(false)}
-                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
-                        >
-                          Trending
-                        </Link>
-                      </div>
+                      <Link
+                        href="/newsletter"
+                        onClick={() => setMegaOpen(false)}
+                        className="rounded-full bg-brand-50 px-3 py-1 text-[11px] font-semibold text-brand-600 hover:bg-brand-100"
+                      >
+                        Price Alerts
+                      </Link>
                     </div>
                   </div>
                 )}
