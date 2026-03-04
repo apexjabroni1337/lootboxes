@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Calendar, Clock, ArrowRight, Sparkles, BookOpen } from "lucide-react";
+import { Calendar, Clock, ArrowRight, Sparkles, BookOpen, Scale, Gamepad2, Shield } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { getAllBlogPosts } from "@/data/blog-posts";
 
-// Deterministic gradient for blog posts (similar to GameAvatar concept)
+// Deterministic gradient for blog posts
 const POST_GRADIENTS = [
   "from-brand-500 to-brand-700",
   "from-purple-500 to-indigo-700",
@@ -20,110 +21,52 @@ function getPostGradient(slug: string): string {
   return POST_GRADIENTS[Math.abs(hash) % POST_GRADIENTS.length];
 }
 
-// TODO: Replace with getAllPosts("blog") once MDX files exist
-const MOCK_POSTS = [
-  {
-    slug: "best-steam-summer-sale-deals-2026",
-    title: "The 25 Best Steam Summer Sale Deals You Shouldn't Miss",
-    excerpt: "We dug through thousands of discounts to find the ones actually worth your money. Here's our curated list of the best value picks this summer.",
-    date: "2026-02-20",
-    author: "Lootboxes Team",
-    tags: ["Steam", "Deals", "Guide"],
-    cover_image: null,
-    readTime: 8,
-  },
-  {
-    slug: "are-battlepasses-worth-it",
-    title: "Are Battle Passes Worth It? A Data-Driven Analysis",
-    excerpt: "We calculated the actual dollar-per-hour value of battle passes across 15 major games. The results might surprise you.",
-    date: "2026-02-15",
-    author: "Lootboxes Team",
-    tags: ["Analysis", "Battle Pass", "Value"],
-    cover_image: null,
-    readTime: 12,
-  },
-  {
-    slug: "humble-choice-february-2026-review",
-    title: "Humble Choice February 2026: Is It Worth Subscribing?",
-    excerpt: "Breaking down this month's Humble Choice bundle with price comparisons, review scores, and our verdict on overall value.",
-    date: "2026-02-05",
-    author: "Lootboxes Team",
-    tags: ["Humble Bundle", "Review", "Subscription"],
-    cover_image: null,
-    readTime: 6,
-  },
-  {
-    slug: "gacha-spending-calculator",
-    title: "How Much Does It Really Cost to Get a 5-Star in Genshin Impact?",
-    excerpt: "We built a Monte Carlo simulator to calculate the true cost of pulling a 5-star character, factoring in pity, soft pity, and 50/50 mechanics.",
-    date: "2026-01-28",
-    author: "Lootboxes Team",
-    tags: ["Genshin Impact", "Gacha", "Drop Rates"],
-    cover_image: null,
-    readTime: 15,
-  },
-  {
-    slug: "game-key-stores-ranked",
-    title: "Every PC Game Store Ranked: Where to Buy Your Games in 2026",
-    excerpt: "Steam, GOG, Epic, Humble, Fanatical, GMG — we ranked every legitimate PC game store by price, features, and consumer-friendliness.",
-    date: "2026-01-20",
-    author: "Lootboxes Team",
-    tags: ["Guide", "Stores", "PC Gaming"],
-    cover_image: null,
-    readTime: 10,
-  },
-  {
-    slug: "loot-box-legislation-tracker",
-    title: "Loot Box Laws Around the World: 2026 Status Tracker",
-    excerpt: "A country-by-country breakdown of where loot box regulation stands right now, from Belgium's ban to the FTC's latest proposals.",
-    date: "2026-01-10",
-    author: "Lootboxes Team",
-    tags: ["Regulation", "Loot Boxes", "Industry"],
-    cover_image: null,
-    readTime: 14,
-  },
-];
-
 export const metadata = {
-  title: "Blog — Game Deals Insights & Analysis",
+  title: "Blog — Loot Box News, Regulation & Industry Analysis",
   description:
-    "Expert analysis, deal guides, and industry insights about video game pricing, loot boxes, and getting the best value for your gaming dollar.",
+    "The latest news on loot box regulation, lawsuits, game monetization changes, and in-depth analysis of the gaming industry's most controversial practices.",
 };
 
 export default function BlogPage() {
-  const featured = MOCK_POSTS[0];
-  const rest = MOCK_POSTS.slice(1);
+  const posts = getAllBlogPosts();
+  const featured = posts.find((p) => p.featured) || posts[0];
+  const rest = posts.filter((p) => p.slug !== featured.slug);
 
   return (
     <div className="pb-12">
       {/* Page hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 sm:py-10 dark:border-gray-800 dark:from-gray-900 dark:to-gray-950">
+      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 sm:py-10">
         <div className="container-main">
           <div className="flex items-center gap-2">
             <BookOpen className="h-6 w-6 text-brand-600" />
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Blog</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Blog</h1>
           </div>
-          <p className="mt-1 text-gray-500 dark:text-gray-400">
-            Deal guides, industry analysis, and insights to help you game smarter.
+          <p className="mt-1 text-gray-500">
+            Loot box news, regulation updates, and in-depth industry analysis.
           </p>
         </div>
       </section>
 
       <div className="container-main mt-8">
-        {/* Featured post */}
+        {/* Featured post — large hero card */}
         <Link
           href={`/blog/${featured.slug}`}
-          className="group block overflow-hidden rounded-2xl border border-gray-200 bg-white transition-shadow hover:shadow-lg dark:border-gray-800 dark:bg-gray-900"
+          className="group block overflow-hidden rounded-2xl border border-gray-200 bg-white transition-shadow hover:shadow-lg"
         >
-          <div className={`relative h-48 bg-gradient-to-br ${getPostGradient(featured.slug)} sm:h-64`}>
+          <div className="relative h-48 bg-gradient-to-br from-red-600 to-red-900 sm:h-64">
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
-                <Sparkles className="mx-auto h-8 w-8 text-white/40" />
-                <span className="mt-2 block text-sm font-medium text-white/50">Featured</span>
+                <Scale className="mx-auto h-10 w-10 text-white/30" />
+                <span className="mt-2 block text-sm font-medium text-white/40">Breaking News</span>
               </div>
             </div>
-            <div className="absolute left-4 top-4">
-              <span className="badge-featured">Featured</span>
+            <div className="absolute left-4 top-4 flex gap-2">
+              <span className="rounded-full bg-red-500 px-3 py-1 text-xs font-bold text-white shadow-lg">
+                FEATURED
+              </span>
+              <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                Legal
+              </span>
             </div>
           </div>
           <div className="p-6">

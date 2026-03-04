@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Calendar, Clock, ArrowLeft, Share2 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { getBlogPost, getAllBlogPosts } from "@/data/blog-posts";
+import { notFound } from "next/navigation";
 import NewsletterForm from "@/components/newsletter/NewsletterForm";
 
 // Deterministic gradient for blog post covers
@@ -13,69 +15,126 @@ const POST_GRADIENTS = [
   "from-cyan-500 to-blue-700",
 ];
 
-function getPostGradient(title: string): string {
+function getPostGradient(slug: string): string {
   let hash = 0;
-  for (let i = 0; i < title.length; i++) {
-    hash = ((hash << 5) - hash + title.charCodeAt(i)) | 0;
+  for (let i = 0; i < slug.length; i++) {
+    hash = ((hash << 5) - hash + slug.charCodeAt(i)) | 0;
   }
   return POST_GRADIENTS[Math.abs(hash) % POST_GRADIENTS.length];
 }
 
-// TODO: Replace with getPost("blog", slug) + MDXRemote rendering
-const MOCK_POST = {
-  title: "The 25 Best Steam Summer Sale Deals You Shouldn't Miss",
-  excerpt: "We dug through thousands of discounts to find the ones actually worth your money.",
-  date: "2026-02-20",
-  author: "Lootboxes Team",
-  tags: ["Steam", "Deals", "Guide"],
-  readTime: 8,
-  content: `
-## Why Trust Our Picks?
+export async function generateStaticParams() {
+  return getAllBlogPosts().map((post) => ({ slug: post.slug }));
+}
 
-We don't just list every game on sale — we analyze price history across all major stores to find **genuinely good deals**. Every pick here is either at or near its all-time lowest price.
-
-## Our Selection Criteria
-
-Each game in this list was selected based on three factors: the depth of the discount relative to its price history, the game's overall quality (Metacritic, user reviews), and whether it represents good value at the sale price.
-
-## The Top Picks
-
-### Tier 1: Must-Buys (Historic Lows)
-
-These games are at their lowest prices ever. If you've been waiting to pull the trigger, now's the time.
-
-### Tier 2: Great Deals
-
-Not quite historic lows, but still excellent prices that we rarely see.
-
-### Tier 3: Solid Discounts
-
-Good games at good prices — worth it if they're on your wishlist.
-
-## How to Get Even Better Deals
-
-Stack your savings by checking Humble Bundle's store (often has additional coupons), using regional pricing where applicable, and waiting for flash deals during the event.
-
-## Final Thoughts
-
-This summer sale has some standout deals, particularly in the RPG and indie categories. The key is patience — not every deal is as good as it looks. Always check the price history before buying.
-  `,
-};
-
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const post = getBlogPost(slug);
+  if (!post) return { title: "Post Not Found" };
   return {
-    title: MOCK_POST.title,
-    description: MOCK_POST.excerpt,
+    title: `${post.title} — Lootboxes.com Blog`,
+    description: post.excerpt,
   };
 }
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
-  const post = MOCK_POST;
+function renderMarkdown(content: string) {
+  const lines = content.split("\n");
+  const elements: React.ReactNode[] = [];
+  let currentParagraph: string[] = [];
+  let inList = false;
+  let listItems: string[] = [];
+
+  const flushParagraph = () => {
+    if (currentParagraph.length > 0) {
+      const text = currentParagraph.join(" ").trim();
+      if (text) {
+        elements.push(
+          <p key={elements.length} dangerouslySetInnerHTML={{
+            __html: text
+              .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+              .replace(/\*(.+?)\*/g, "<em>$1</em>")
+              .replace(/\u201C/g, "\u201C")
+              .replace(/\u201D/g, "\u201D")
+          }} />
+        );
+      }
+      currentParagraph = [];
+    }
+  };
+
+  const flushList = () => {
+    if (listItems.length > 0) {
+      elements.push(
+        <ul key={elements.length}>
+          {listItems.map((item, i) => (
+            <li key={i} dangerouslySetInnerHTML={{
+              __html: item
+                .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+                .replace(/\*(.+?)\*/g, "<em>$1</em>")
+            }} />
+          ))}
+        </ul>
+      );
+      listItems = [];
+      inList = false;
+    }
+  };
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+
+    if (trimmed.startsWith("## ")) {
+      flushParagraph();
+      flushList();
+      elements.push(
+        <h2 key={elements.length}>{trimmed.replace("## ", "")}</h2>
+      );
+    } else if (trimmed.startsWith("### ")) {
+      flushParagraph();
+      flushList();
+      elements.push(
+        <h3 key={elements.length}>{trimmed.replace("### ", "")}</h3>
+      );
+    } else if (trimmed.startsWith("\u2022 ") || trimmed.startsWith("- ")) {
+      flushParagraph();
+      inList = true;
+      listItems.push(trimmed.replace(/^[\u2022\-]\s+/, ""));
+    } else if (trimmed === "") {
+      flushParagraph();
+      flushList();
+    } else {
+      if (inList) {
+        flushList();
+      }
+      currentParagraph.push(trimmed);
+    }
+  }
+  flushParagraph();
+  flushList();
+
+  return elements;
+}
+
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const post = getBlogPost(slug);
+
+  if (!post) {
+    notFound();
+  }
+
+  // Get related posts (excluding current)
+  const allPosts = getAllBlogPosts();
+  const related = allPosts.filter((p) => p.slug !== slug).slice(0, 3);
+
+  const gradient = post.featured
+    ? "from-red-600 to-red-900"
+    : getPostGradient(post.slug);
 
   return (
     <div className="pb-12">
-      {/* Cover image gradient */}
-      <div className={`h-48 bg-gradient-to-br ${getPostGradient(post.title)} sm:h-64`}>
+      {/* Cover gradient */}
+      <div className={`h-48 bg-gradient-to-br ${gradient} sm:h-56`}>
         <div className="container-main flex h-full items-end pb-6">
           <Link
             href="/blog"
@@ -100,6 +159,11 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
             {post.title}
           </h1>
 
+          {/* Excerpt */}
+          <p className="mt-3 text-lg text-gray-500">
+            {post.excerpt}
+          </p>
+
           {/* Meta */}
           <div className="mt-4 flex items-center gap-4 text-sm text-gray-500">
             <span>By {post.author}</span>
@@ -113,16 +177,9 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
             </span>
           </div>
 
-          {/* Article body — TODO: replace with MDXRemote */}
-          <article className="prose prose-gray mt-8 max-w-none prose-headings:text-gray-900 prose-a:text-brand-600 prose-a:no-underline hover:prose-a:underline">
-            {post.content.split("\n").map((line, i) => {
-              if (line.startsWith("## "))
-                return <h2 key={i}>{line.replace("## ", "")}</h2>;
-              if (line.startsWith("### "))
-                return <h3 key={i}>{line.replace("### ", "")}</h3>;
-              if (line.trim()) return <p key={i}>{line}</p>;
-              return null;
-            })}
+          {/* Article body */}
+          <article className="prose prose-gray mt-8 max-w-none prose-headings:text-gray-900 prose-a:text-brand-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-li:text-gray-600">
+            {renderMarkdown(post.content)}
           </article>
 
           {/* Share + nav */}
@@ -133,18 +190,41 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
             >
               <ArrowLeft className="h-4 w-4" /> More articles
             </Link>
-            <button className="btn-secondary flex items-center gap-1 text-sm">
-              <Share2 className="h-4 w-4" /> Share
-            </button>
           </div>
+
+          {/* Related articles */}
+          {related.length > 0 && (
+            <div className="mt-8">
+              <h3 className="text-lg font-bold text-gray-900">More from the Blog</h3>
+              <div className="mt-4 grid gap-4 sm:grid-cols-3">
+                {related.map((r) => (
+                  <Link
+                    key={r.slug}
+                    href={`/blog/${r.slug}`}
+                    className="group rounded-xl border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
+                  >
+                    <div className="flex flex-wrap gap-1.5">
+                      {r.tags.slice(0, 2).map((t) => (
+                        <span key={t} className="badge-type text-[10px]">{t}</span>
+                      ))}
+                    </div>
+                    <h4 className="mt-2 text-sm font-semibold text-gray-900 group-hover:text-brand-600 line-clamp-2">
+                      {r.title}
+                    </h4>
+                    <p className="mt-1 text-xs text-gray-400">{formatDate(r.date)}</p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Newsletter CTA */}
           <div className="mt-8 rounded-xl border border-brand-200 bg-brand-50 p-6 text-center">
             <h3 className="text-lg font-bold text-gray-900">
-              Get the best deals in your inbox
+              Stay informed on loot box news
             </h3>
             <p className="mt-1 text-sm text-gray-500">
-              Weekly curated deals, price drops, and analysis. No spam.
+              Get the latest regulation updates, industry analysis, and game monetization news. No spam.
             </p>
             <NewsletterForm variant="inline" className="mx-auto mt-4 max-w-md" />
           </div>
