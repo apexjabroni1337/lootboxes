@@ -60,18 +60,10 @@ export default function HeroCarousel({ deals }: HeroCarouselProps) {
       onMouseLeave={() => setIsPaused(false)}
     >
       {/* Background image with overlay */}
-      <div className="relative h-[340px] sm:h-[400px] lg:h-[460px]">
+      <div className="relative h-[220px] sm:h-[260px] lg:h-[300px]">
         {bgImage ? (
           <>
-            {/* Blurred background fill for portrait images */}
-            <img
-              key={`bg-${current}`}
-              src={bgImage}
-              alt=""
-              aria-hidden="true"
-              className="absolute inset-0 h-full w-full object-cover scale-110 blur-2xl opacity-60"
-            />
-            {/* Main image: centered, covers the container */}
+            {/* Main image: visible and prominent */}
             <img
               key={current}
               src={bgImage}
@@ -83,9 +75,9 @@ export default function HeroCarousel({ deals }: HeroCarouselProps) {
           <div className="absolute inset-0 bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900" />
         )}
 
-        {/* Light overlay for readability (keeps things bright) */}
-        <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/70 to-transparent dark:from-gray-950/90 dark:via-gray-950/70 dark:to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-transparent to-white/30 dark:from-gray-950/80 dark:via-transparent dark:to-gray-950/30" />
+        {/* Subtle overlay for text readability — images stay clearly visible */}
+        <div className="absolute inset-0 bg-gradient-to-r from-white/70 via-white/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-transparent to-transparent" />
 
         {/* Content overlay */}
         <div className="container-main relative flex h-full items-center">
@@ -99,36 +91,36 @@ export default function HeroCarousel({ deals }: HeroCarouselProps) {
             </span>
 
             {/* Game title */}
-            <h2 className="mt-3 text-3xl font-extrabold text-gray-900 sm:text-4xl lg:text-5xl drop-shadow-sm dark:text-white">
+            <h2 className="mt-2 text-2xl font-extrabold text-gray-900 sm:text-3xl drop-shadow-sm">
               {deal.game.title}
             </h2>
 
             {/* Pricing row */}
-            <div className="mt-4 flex items-center gap-3">
-              <span className="inline-flex items-center rounded-lg bg-success-600 px-3 py-1.5 text-lg font-bold text-white">
+            <div className="mt-3 flex items-center gap-3">
+              <span className="inline-flex items-center rounded-lg bg-success-600 px-2.5 py-1 text-sm font-bold text-white">
                 {formatDiscount(deal.discount_pct)}
               </span>
-              <span className="text-lg text-gray-400 line-through">
+              <span className="text-sm text-gray-400 line-through">
                 {formatPrice(deal.original_price)}
               </span>
-              <span className="text-2xl font-bold text-gray-900 dark:text-white">
+              <span className="text-xl font-bold text-gray-900">
                 {formatPrice(deal.price)}
               </span>
             </div>
 
             {/* CTA button */}
-            <div className="mt-5 flex gap-3">
+            <div className="mt-3 flex gap-3">
               <a
                 href={`/go/${deal.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-primary px-6 py-2.5 text-base"
+                className="btn-primary px-5 py-2 text-sm"
               >
                 Get Deal
               </a>
               <Link
                 href={`/games/${deal.game.slug}`}
-                className="btn-secondary px-6 py-2.5 text-base"
+                className="btn-secondary px-5 py-2 text-sm"
               >
                 View Game
               </Link>
