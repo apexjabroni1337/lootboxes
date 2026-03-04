@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/enrich-games",
       "schedule": "30 */6 * * *"
+    },
+    {
+      "path": "/api/cron/map-itad?batch=500",
+      "schedule": "*/5 * * * *"
     }
   ]
 }
