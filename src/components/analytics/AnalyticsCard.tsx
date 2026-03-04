@@ -32,12 +32,12 @@ export default function AnalyticsCard({ article }: AnalyticsCardProps) {
       className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 dark:border-gray-800 dark:bg-gray-900"
     >
       {/* Image container - top of card */}
-      <div className="relative h-48 sm:h-56 overflow-hidden bg-gray-100 dark:bg-gray-800">
+      <div className="relative aspect-video overflow-hidden bg-gray-100 dark:bg-gray-800">
         {article.cover_image ? (
           <img
             src={article.cover_image}
             alt={article.title}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-contain bg-gray-100 dark:bg-gray-800 transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
         ) : (
@@ -50,7 +50,7 @@ export default function AnalyticsCard({ article }: AnalyticsCardProps) {
         )}
 
         {/* Dark gradient overlay for text legibility */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
 
         {/* Score badge - overlaid on image, bottom-left */}
         {article.lootboxes_score && (
