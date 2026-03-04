@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter-Strike 2 - Report Card</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.8;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .report-card {
+            background: white;
+            border: 2px solid #2c3e50;
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .report-header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #2c3e50;
+        }
+
+        .report-header h2 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .report-header p {
+            margin: 5px 0 0 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        tr {
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:last-child {
+            border-bottom: none;
+        }
+
+        td {
+            padding: 20px;
+            border-right: 1px solid #ddd;
+        }
+
+        td:last-child {
+            border-right: none;
+        }
+
+        .category {
+            width: 40%;
+            font-weight: 600;
+            background: #f9f9f9;
+        }
+
+        .grade {
+            width: 20%;
+            text-align: center;
+            font-size: 32px;
+            font-weight: 900;
+        }
+
+        .score {
+            width: 20%;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .notes {
+            width: 20%;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .grade-a {
+            color: #27ae60;
+            background: rgba(39, 174, 96, 0.1);
+        }
+
+        .grade-b {
+            color: #f39c12;
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        .grade-c {
+            color: #e67e22;
+            background: rgba(230, 126, 34, 0.1);
+        }
+
+        .grade-d {
+            color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .grade-f {
+            color: #c0392b;
+            background: rgba(192, 57, 43, 0.1);
+        }
+
+        .gpa-section {
+            background: white;
+            border: 2px solid #2c3e50;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .gpa-label {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .gpa-value {
+            font-size: 64px;
+            font-weight: 900;
+            color: #c0392b;
+            margin-bottom: 10px;
+        }
+
+        .gpa-description {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .details-section {
+            background: white;
+            border: 2px solid #2c3e50;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .details-section h3 {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e74c3c;
+        }
+
+        .detail-item {
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f9f9f9;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .detail-value {
+            color: #555;
+            margin-top: 5px;
+        }
+
+        .recommendation {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+
+        .recommendation h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .recommendation p {
+            color: #856404;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            font-size: 12px;
+            border-top: 2px solid #2c3e50;
+        }
+
+        @media (max-width: 768px) {
+            table {
+                font-size: 12px;
+            }
+
+            td {
+                padding: 12px;
+            }
+
+            .grade {
+                font-size: 24px;
+            }
+
+            .gpa-value {
+                font-size: 48px;
+            }
+
+            header {
+                padding: 20px;
+            }
+
+            header h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Counter-Strike 2</h1>
+        <p>Loot Box Monetization Report Card</p>
+    </header>
+
+    <main>
+        <div class="gpa-section">
+            <div class="gpa-label">Overall Loot Box Rating (GPA)</div>
+            <div class="gpa-value grade-f">3.8</div>
+            <div class="gpa-description">Out of 10.0 | Below Average Protection</div>
+        </div>
+
+        <div class="report-card">
+            <div class="report-header">
+                <h2>Evaluation Report Card</h2>
+                <p>Comprehensive assessment of consumer protection mechanisms</p>
+            </div>
+
+            <tr>
+                <td class="category">Pity/Guarantee System</td>
+                <td class="grade grade-f">F</td>
+                <td class="score">0.5/10</td>
+                <td class="notes">No protection</td>
+            </tr>
+
+            <tr>
+                <td class="category">Drop Rate Fairness</td>
+                <td class="grade grade-d">D</td>
+                <td class="score">2.0/10</td>
+                <td class="notes">Extreme gaps</td>
+            </tr>
+
+            <tr>
+                <td class="category">Spending Transparency</td>
+                <td class="grade grade-c">C</td>
+                <td class="score">5.0/10</td>
+                <td class="notes">Adequate disclosure</td>
+            </tr>
+
+            <tr>
+                <td class="category">Cost Structure</td>
+                <td class="grade grade-d">D</td>
+                <td class="score">3.5/10</td>
+                <td class="notes">Expensive pulls</td>
+            </tr>
+
+            <tr>
+                <td class="category">Player Protections</td>
+                <td class="grade grade-f">F</td>
+                <td class="score">1.0/10</td>
+                <td class="notes">None implemented</td>
+            </tr>
+
+            <tr>
+                <td class="category">Age Restriction Enforcement</td>
+                <td class="grade grade-d">D</td>
+                <td class="score">3.0/10</td>
+                <td class="notes">Inadequate</td>
+            </tr>
+
+            <tr>
+                <td class="category">Community Sentiment</td>
+                <td class="grade grade-d">D</td>
+                <td class="score">2.5/10</td>
+                <td class="notes">Highly negative</td>
+            </tr>
+
+            <tr>
+                <td class="category">Expected Value Alignment</td>
+                <td class="grade grade-f">F</td>
+                <td class="score">1.5/10</td>
+                <td class="notes">Player unfavorable</td>
+            </tr>
+        </div>
+
+        <div class="details-section">
+            <h3>Key Metrics</h3>
+            <div class="detail-item">
+                <div class="detail-label">Cost Per Pull</div>
+                <div class="detail-value">$2.49</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Pity System</div>
+                <div class="detail-value">None - No guaranteed progression</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Highest Rarity Rate</div>
+                <div class="detail-value">Knife/Gloves: 0.26%</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Expected Cost to Rarest Item</div>
+                <div class="detail-value">$956.88 (384 pulls)</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Most Common Rate</div>
+                <div class="detail-value">Mil-Spec: 79.92%</div>
+            </div>
+        </div>
+
+        <div class="details-section">
+            <h3>Category Breakdown</h3>
+            <div class="detail-item">
+                <div class="detail-label">Pity/Guarantee System (F)</div>
+                <div class="detail-value">The complete absence of any pity or guarantee mechanism is the most critical failure. Players have zero protection against unlimited spending.</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Drop Rate Fairness (D)</div>
+                <div class="detail-value">Extreme disparity between common (79.92%) and rare items (0.26%) creates a manipulative progression system.</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Spending Transparency (C)</div>
+                <div class="detail-value">Drop rates are disclosed, but expected costs and psychological impact are not adequately communicated.</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Cost Structure (D)</div>
+                <div class="detail-value">$2.49 per pull with high variance and no guaranteed progression makes budgeting impossible.</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Player Protections (F)</div>
+                <div class="detail-value">No spending limits, no cooldowns, no age verification, no built-in warnings about expected costs.</div>
+            </div>
+        </div>
+
+        <div class="recommendation">
+            <h3>Recommendation</h3>
+            <p><strong>Rating: 3.8/10</strong> — BELOW AVERAGE PROTECTION</p>
+            <p>Counter-Strike 2's loot box system fails to meet minimum consumer protection standards. The absence of a pity system, combined with extreme rarity rates and high expected costs, makes this system fundamentally exploitative. Consumers should approach this monetization model with extreme caution.</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>Lootboxes.com Report Card System | Assessment Date: March 2026 | All grades based on consumer protection analysis</p>
+    </footer>
+</body>
+</html>

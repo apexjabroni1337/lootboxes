@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS2 Loot Box Analysis - Deep Ocean</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #03045e 0%, #0a1a2e 50%, #16213e 100%);
+            color: #e0f7ff;
+            overflow-x: hidden;
+        }
+
+        /* Floating bubble decorations */
+        .bubble {
+            position: fixed;
+            border: 2px solid rgba(0, 180, 216, 0.2);
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(144, 224, 239, 0.1), rgba(0, 180, 216, 0.05));
+            pointer-events: none;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .bubble1 { width: 300px; height: 300px; top: 5%; left: 5%; animation-delay: 0s; }
+        .bubble2 { width: 150px; height: 150px; top: 40%; right: 8%; animation-delay: 2s; }
+        .bubble3 { width: 200px; height: 200px; bottom: 15%; left: 3%; animation-delay: 4s; }
+        .bubble4 { width: 100px; height: 100px; top: 60%; right: 5%; animation-delay: 6s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            50% { transform: translateY(-30px) translateX(10px); }
+        }
+
+        /* Fixed floating score pill */
+        .score-pill {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 100;
+            background: rgba(0, 119, 182, 0.9);
+            border: 2px solid #00b4d8;
+            border-radius: 50px;
+            padding: 15px 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(0, 180, 216, 0.4),
+                        0 0 60px rgba(0, 119, 182, 0.2);
+            font-weight: bold;
+            font-size: 18px;
+            text-shadow: 0 0 10px rgba(144, 224, 239, 0.5);
+        }
+
+        .score-pill span {
+            color: #90e0ef;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Hero section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #03045e 0%, #0a1a2e 50%, #16213e 100%);
+            position: relative;
+            overflow: hidden;
+            border-bottom: 3px solid #00b4d8;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 400%;
+            height: 400%;
+            background: radial-gradient(circle at 30% 50%, rgba(0, 180, 216, 0.1), transparent 50%);
+            animation: wave 8s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(50px, 50px); }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #90e0ef;
+            text-shadow: 0 0 30px rgba(0, 180, 216, 0.6),
+                         0 0 60px rgba(0, 119, 182, 0.4);
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #00b4d8;
+            margin-bottom: 30px;
+            text-shadow: 0 0 15px rgba(0, 180, 216, 0.4);
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #0077b6, #00b4d8);
+            color: #fff;
+            border: 2px solid #00b4d8;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 0 30px rgba(0, 180, 216, 0.5);
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .cta-button:hover {
+            box-shadow: 0 0 50px rgba(0, 180, 216, 0.8);
+            transform: translateY(-3px);
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section:nth-child(odd) {
+            background: rgba(10, 26, 46, 0.7);
+            border-top: 2px solid rgba(0, 180, 216, 0.2);
+            border-bottom: 2px solid rgba(0, 180, 216, 0.2);
+        }
+
+        section:nth-child(even) {
+            background: rgba(3, 4, 94, 0.5);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #90e0ef;
+            text-align: center;
+            text-shadow: 0 0 20px rgba(0, 180, 216, 0.4);
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #00b4d8, transparent);
+            margin: 20px auto 0;
+        }
+
+        /* Bubble cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .stat-bubble {
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(144, 224, 239, 0.15), rgba(0, 119, 182, 0.1));
+            border: 2px solid #00b4d8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 180, 216, 0.3),
+                        inset 0 0 30px rgba(144, 224, 239, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .stat-bubble:hover {
+            box-shadow: 0 0 50px rgba(0, 180, 216, 0.6),
+                        inset 0 0 30px rgba(144, 224, 239, 0.2);
+            transform: scale(1.05);
+        }
+
+        .stat-bubble .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #90e0ef;
+            text-shadow: 0 0 20px rgba(0, 180, 216, 0.5);
+        }
+
+        .stat-bubble .label {
+            font-size: 0.95rem;
+            color: #0077b6;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Drop rates */
+        .drop-rate-item {
+            margin: 25px 0;
+            padding: 20px;
+            background: rgba(0, 119, 182, 0.1);
+            border-left: 4px solid #00b4d8;
+            border-radius: 5px;
+        }
+
+        .drop-rate-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #90e0ef;
+            font-weight: bold;
+        }
+
+        .drop-rate-bar {
+            width: 100%;
+            height: 30px;
+            background: rgba(0, 119, 182, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid #00b4d8;
+            position: relative;
+        }
+
+        .drop-rate-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0077b6, #00b4d8, #90e0ef);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 180, 216, 0.6);
+            transition: width 0.8s ease;
+        }
+
+        .expected-costs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .cost-card {
+            background: linear-gradient(135deg, rgba(0, 119, 182, 0.2), rgba(0, 180, 216, 0.1));
+            border: 2px solid #00b4d8;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 180, 216, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .cost-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 40px rgba(0, 180, 216, 0.4);
+        }
+
+        .cost-card h3 {
+            color: #90e0ef;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .cost-card .amount {
+            font-size: 2.5rem;
+            color: #00b4d8;
+            font-weight: bold;
+            text-shadow: 0 0 15px rgba(0, 180, 216, 0.5);
+        }
+
+        /* Verdict section */
+        .verdict-box {
+            background: linear-gradient(135deg, rgba(0, 119, 182, 0.3), rgba(144, 224, 239, 0.1));
+            border: 2px solid #00b4d8;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0, 180, 216, 0.3);
+        }
+
+        .verdict-box h3 {
+            color: #90e0ef;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .verdict-box p {
+            font-size: 1.1rem;
+            color: #0077b6;
+            line-height: 1.8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 2px solid rgba(0, 180, 216, 0.2);
+            background: rgba(3, 4, 94, 0.7);
+            color: #0077b6;
+            font-size: 0.9rem;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1rem; }
+            h2 { font-size: 1.8rem; }
+            section { padding: 50px 20px; }
+            .score-pill { top: 15px; right: 15px; padding: 10px 15px; font-size: 14px; }
+            .bubble { display: none; }
+            .stat-bubble .number { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bubble bubble1"></div>
+    <div class="bubble bubble2"></div>
+    <div class="bubble bubble3"></div>
+    <div class="bubble bubble4"></div>
+
+    <div class="score-pill">Score: <span>3.8</span>/10</div>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>CS2 Loot Box Analysis</h1>
+            <p>Dive Deep into the Abyss of Monetization</p>
+            <p style="font-size: 0.9rem; color: #0077b6; margin-top: 20px;">Pressure tested. Transparency guaranteed.</p>
+        </div>
+    </section>
+
+    <section id="quick-stats">
+        <h2>Quick Depth Gauge</h2>
+        <div class="stats-grid">
+            <div class="stat-bubble">
+                <div class="number">3.8/10</div>
+                <div class="label">Fairness Score</div>
+            </div>
+            <div class="stat-bubble">
+                <div class="number">$2.49</div>
+                <div class="label">Cost Per Pull</div>
+            </div>
+            <div class="stat-bubble">
+                <div class="number">None</div>
+                <div class="label">Pity System</div>
+            </div>
+            <div class="stat-bubble">
+                <div class="number">5</div>
+                <div class="label">Rarity Tiers</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="monetization">
+        <h2>Monetization Overview</h2>
+        <div style="padding: 30px; background: rgba(0, 119, 182, 0.1); border-radius: 10px; border: 2px solid #00b4d8;">
+            <p style="font-size: 1.1rem; line-height: 1.8; color: #90e0ef;">
+                Counter-Strike 2 employs a direct monetization model through weapon case openings. Each case requires a key (typically $2.49) and guarantees a weapon skin. While every pull yields a reward, the lack of a guaranteed pity system and heavily weighted distribution toward lower rarities creates significant pressure for collectors pursuing rare items. The bioluminescent appeal of knife and glove drops masks a system designed for extended engagement.
+            </p>
+        </div>
+    </section>
+
+    <section id="drop-rates">
+        <h2>Drop Rate Analysis: Pressure Depths</h2>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Mil-Spec (Blue)</span>
+                <span>79.92%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 79.92%;"></div>
+            </div>
+        </div>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Restricted (Light Blue)</span>
+                <span>15.98%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 15.98%;"></div>
+            </div>
+        </div>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Classified (Purple)</span>
+                <span>3.20%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 3.20%;"></div>
+            </div>
+        </div>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Covert (Red)</span>
+                <span>0.64%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 0.64%;"></div>
+            </div>
+        </div>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Knife / Gloves (Gold)</span>
+                <span>0.26%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 0.26%;"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="expected-costs">
+        <h2>Pressure Tolerance: Expected Costs</h2>
+        <div class="expected-costs">
+            <div class="cost-card">
+                <h3>Covert Item</h3>
+                <div class="amount">~$387.50</div>
+                <p style="margin-top: 15px; font-size: 0.9rem;">Approximately 156 opens to reach 0.64% rarity threshold</p>
+            </div>
+            <div class="cost-card">
+                <h3>Knife / Gloves</h3>
+                <div class="amount">~$956.88</div>
+                <p style="margin-top: 15px; font-size: 0.9rem;">Approximately 385 opens to reach the rarest treasures</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="verdict">
+        <h2>The Abyss Verdict</h2>
+        <div class="verdict-box">
+            <h3>Not Recommended for Value Seekers</h3>
+            <p>
+                CS2's loot box system operates at extreme depth with no pity mechanism to guide players toward their desired treasures. The concentration of value in 0.26% of drops means most players will experience the cold pressure of repeated lower-rarity pulls. While the system is transparent, the odds remain astronomically stacked against casual collectors. This is a pay-to-participate experience where whale behavior is required for rare drops.
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        Lootboxes.com | Gaming Monetization Transparency | March 2026
+    </footer>
+</body>
+</html>

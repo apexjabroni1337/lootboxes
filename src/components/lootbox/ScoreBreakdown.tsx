@@ -64,11 +64,11 @@ function SubScoreBar({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon className={`w-4 h-4 ${iconColor}`} />
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{name}</span>
+          <span className="text-sm font-medium text-gray-700">{name}</span>
         </div>
-        <span className="text-sm font-bold text-gray-900 dark:text-white">{score}/10</span>
+        <span className="text-sm font-bold text-gray-900">{score}/10</span>
       </div>
-      <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full transition-all duration-500 ${barColor}`}
           style={{ width: `${pct}%` }}
@@ -94,8 +94,8 @@ function CategoryCard({
     >
       {/* Header with category name and weight badge */}
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold text-gray-900 dark:text-white">{category.name}</h3>
-        <span className="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600">
+        <h3 className="font-semibold text-gray-900">{category.name}</h3>
+        <span className="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold text-gray-700 bg-white border border-gray-200">
           {weight}%
         </span>
       </div>
@@ -104,14 +104,14 @@ function CategoryCard({
       {categoryAvg !== null && (
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+            <span className="text-xs font-medium text-gray-600">
               Category Average
             </span>
-            <span className="text-sm font-bold text-gray-900 dark:text-white">
+            <span className="text-sm font-bold text-gray-900">
               {categoryAvg.toFixed(1)}/10
             </span>
           </div>
-          <div className="h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+          <div className="h-2.5 bg-gray-200 rounded-full overflow-hidden">
             <div
               className={`h-full rounded-full transition-all duration-500 ${getScoreBarColor(categoryAvg)}`}
               style={{ width: `${(categoryAvg / 10) * 100}%` }}
@@ -201,8 +201,8 @@ export default function ScoreBreakdown({
           {overall.toFixed(1)}
         </div>
         <div className="flex-1 pt-1">
-          <p className="font-semibold text-gray-900 dark:text-white">{scoreTier.label}</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-snug">{scoreInsight}</p>
+          <p className="font-semibold text-gray-900">{scoreTier.label}</p>
+          <p className="text-sm text-gray-600 leading-snug">{scoreInsight}</p>
         </div>
       </div>
 
@@ -230,16 +230,16 @@ export default function ScoreBreakdown({
       )}
 
       {/* Database Comparison */}
-      <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 text-sm text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700">
+      <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-600 border border-gray-200">
         <div className="flex items-center justify-between">
           <span>Sub-score average:</span>
-          <span className="font-semibold text-gray-900 dark:text-white">
+          <span className="font-semibold text-gray-900">
             {subScoreAverage.toFixed(1)}/10
           </span>
         </div>
         <div className="flex items-center justify-between mt-2">
           <span>Database average:</span>
-          <span className="font-semibold text-gray-900 dark:text-white">4.6/10</span>
+          <span className="font-semibold text-gray-900">4.6/10</span>
         </div>
       </div>
     </div>

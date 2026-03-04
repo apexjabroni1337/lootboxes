@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS2 Loot Box Analysis - Brutalist Gaming</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 80px;
+            border-bottom: 6px solid #fff;
+            padding-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 96px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            letter-spacing: 8px;
+            line-height: 1;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .subtitle-accent {
+            color: #ff0000;
+        }
+
+        .subtitle-secondary {
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 400;
+            margin-top: 15px;
+        }
+
+        .hero-section {
+            background: #fff;
+            border: 6px solid #000;
+            padding: 60px;
+            margin-bottom: 80px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: -6px;
+            right: -6px;
+            bottom: -6px;
+            background: #000;
+            z-index: -1;
+        }
+
+        .score-badge {
+            display: inline-block;
+            font-size: 128px;
+            font-weight: 900;
+            color: #ff0000;
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+
+        .badge-label {
+            font-size: 20px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 20px;
+            color: #000;
+        }
+
+        .hero-text {
+            font-size: 22px;
+            margin-top: 20px;
+            color: #000;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .verdict {
+            color: #ff0000;
+            font-weight: 900;
+            font-size: 20px;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border: 6px solid #ff0000;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: -6px;
+            right: -6px;
+            bottom: -6px;
+            background: #000;
+            z-index: -1;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            font-weight: 900;
+        }
+
+        .stat-value {
+            font-size: 60px;
+            font-weight: 900;
+            color: #ff0000;
+            line-height: 1;
+        }
+
+        .section-title {
+            font-size: 80px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            margin-top: 80px;
+            letter-spacing: 6px;
+            line-height: 1;
+            border-left: 6px solid #ff0000;
+            padding-left: 30px;
+        }
+
+        .monetization-box {
+            background: #000;
+            border: 6px solid #fff;
+            padding: 40px;
+            margin-bottom: 80px;
+        }
+
+        .model-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 25px 0;
+            border-bottom: 4px solid #fff;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .model-row:last-child {
+            border-bottom: none;
+        }
+
+        .model-label {
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .model-value {
+            color: #ff0000;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 900;
+        }
+
+        .drop-rates {
+            background: #fff;
+            border: 6px solid #ff0000;
+            padding: 40px;
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .drop-rates::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: -6px;
+            right: -6px;
+            bottom: -6px;
+            background: #000;
+            z-index: -1;
+        }
+
+        .drop-item {
+            margin-bottom: 30px;
+        }
+
+        .drop-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .drop-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .drop-name {
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .drop-percent {
+            color: #ff0000;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .drop-bar {
+            height: 20px;
+            background: #fff;
+            border: 3px solid #000;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .drop-fill {
+            height: 100%;
+            background: #000;
+        }
+
+        .fill-mil-spec { width: 79.92%; }
+        .fill-restricted { width: 15.98%; background: #666; }
+        .fill-classified { width: 3.20%; background: #333; }
+        .fill-covert { width: 0.64%; background: #111; }
+        .fill-knife { width: 0.26%; background: #000; border: 2px solid #ff0000; }
+
+        .expected-costs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+
+        .cost-item {
+            background: #ff0000;
+            border: 6px solid #000;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .cost-item::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: -6px;
+            right: -6px;
+            bottom: -6px;
+            background: #000;
+            z-index: -1;
+        }
+
+        .cost-label {
+            font-size: 16px;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            font-weight: 900;
+        }
+
+        .cost-value {
+            font-size: 52px;
+            font-weight: 900;
+            color: #000;
+            letter-spacing: 2px;
+        }
+
+        .verdict-section {
+            background: #fff;
+            border: 8px solid #ff0000;
+            padding: 60px;
+            text-align: left;
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .verdict-section::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
+            background: #000;
+            z-index: -1;
+        }
+
+        .verdict-title {
+            font-size: 56px;
+            font-weight: 900;
+            color: #ff0000;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            letter-spacing: 4px;
+            line-height: 1;
+        }
+
+        .verdict-text {
+            font-size: 18px;
+            color: #000;
+            line-height: 1.8;
+            font-weight: 500;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 6px solid #ff0000;
+            margin-top: 80px;
+            color: #fff;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            h1 {
+                font-size: 72px;
+            }
+
+            .section-title {
+                font-size: 60px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
+            }
+
+            h1 {
+                font-size: 48px;
+                letter-spacing: 4px;
+            }
+
+            .section-title {
+                font-size: 42px;
+                letter-spacing: 3px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .expected-costs {
+                grid-template-columns: 1fr;
+            }
+
+            .score-badge {
+                font-size: 84px;
+            }
+
+            .hero-section {
+                padding: 40px;
+            }
+
+            .stat-card {
+                padding: 30px;
+            }
+
+            .verdict-section {
+                padding: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="subtitle">COUNTER-STRIKE 2</div>
+            <h1>LOOT BOX<br>ANALYSIS</h1>
+            <div class="subtitle-secondary">MONETIZATION TRANSPARENCY REPORT</div>
+        </header>
+
+        <section class="hero-section">
+            <div class="score-badge">3.8</div>
+            <div class="badge-label">OUT OF 10</div>
+            <div class="hero-text">CS2 LOOT BOX TRANSPARENCY SCORE</div>
+            <div class="verdict">POOR HIGH COST NO PITY</div>
+        </section>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Cost Per Pull</div>
+                <div class="stat-value">$2.49</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Pity System</div>
+                <div class="stat-value">NONE</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Rarity Tiers</div>
+                <div class="stat-value">5</div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">MONETIZATION</h2>
+            <div class="monetization-box">
+                <div class="model-row">
+                    <span class="model-label">Purchase Method:</span>
+                    <span class="model-value">Direct Purchase</span>
+                </div>
+                <div class="model-row">
+                    <span class="model-label">Currency:</span>
+                    <span class="model-value">Steam Community Market / Key</span>
+                </div>
+                <div class="model-row">
+                    <span class="model-label">Guaranteed Rewards:</span>
+                    <span class="model-value">Yes (Minimum Mil-Spec)</span>
+                </div>
+                <div class="model-row">
+                    <span class="model-label">Duplicate Prevention:</span>
+                    <span class="model-value">None</span>
+                </div>
+                <div class="model-row">
+                    <span class="model-label">Trading Allowed:</span>
+                    <span class="model-value">Limited (7 Days)</span>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">DROP RATES</h2>
+            <div class="drop-rates">
+                <div class="drop-item">
+                    <div class="drop-label">
+                        <span class="drop-name">Mil-Spec</span>
+                        <span class="drop-percent">79.92%</span>
+                    </div>
+                    <div class="drop-bar">
+                        <div class="drop-fill fill-mil-spec"></div>
+                    </div>
+                </div>
+
+                <div class="drop-item">
+                    <div class="drop-label">
+                        <span class="drop-name">Restricted</span>
+                        <span class="drop-percent">15.98%</span>
+                    </div>
+                    <div class="drop-bar">
+                        <div class="drop-fill fill-restricted"></div>
+                    </div>
+                </div>
+
+                <div class="drop-item">
+                    <div class="drop-label">
+                        <span class="drop-name">Classified</span>
+                        <span class="drop-percent">3.20%</span>
+                    </div>
+                    <div class="drop-bar">
+                        <div class="drop-fill fill-classified"></div>
+                    </div>
+                </div>
+
+                <div class="drop-item">
+                    <div class="drop-label">
+                        <span class="drop-name">Covert</span>
+                        <span class="drop-percent">0.64%</span>
+                    </div>
+                    <div class="drop-bar">
+                        <div class="drop-fill fill-covert"></div>
+                    </div>
+                </div>
+
+                <div class="drop-item">
+                    <div class="drop-label">
+                        <span class="drop-name">Knife / Gloves</span>
+                        <span class="drop-percent">0.26%</span>
+                    </div>
+                    <div class="drop-bar">
+                        <div class="drop-fill fill-knife"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">EXPECTED COSTS</h2>
+            <div class="expected-costs">
+                <div class="cost-item">
+                    <div class="cost-label">For Covert Item</div>
+                    <div class="cost-value">$387.50</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">For Knife/Gloves</div>
+                    <div class="cost-value">$956.88</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="verdict-section">
+            <h2 class="verdict-title">VERDICT</h2>
+            <div class="verdict-text">
+                Counter-Strike 2's loot box system presents significant financial and transparency concerns. With no pity system in place and high variance in outcomes, players face unpredictable costs for desired items. The 79.92% drop rate for Mil-Spec weapons means most purchases yield low-value items. Expected costs for rare items like Covert skins (up to $387.50) and special knife/gloves (up to $956.88) position this system as predatory for casual players. The absence of duplicate prevention and restrictive trading windows compound these issues. Consider these costs and constraints carefully before investing any money into this system.
+            </div>
+        </section>
+
+        <footer>
+            LOOTBOXES.COM | GAMING MONETIZATION TRANSPARENCY | MARCH 2026
+        </footer>
+    </div>
+</body>
+</html>

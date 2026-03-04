@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS2 Loot Box Analysis - Red Alert Military</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1a1a1a;
+            color: #e0e0e0;
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: #1a1a1a;
+            padding: 40px 20px;
+            text-align: center;
+            border-top: 8px solid #ff2222;
+            border-bottom: 8px solid #ff2222;
+            position: relative;
+        }
+
+        header::before,
+        header::after {
+            content: '⚠';
+            position: absolute;
+            font-size: 2em;
+            color: #ff2222;
+            font-weight: bold;
+        }
+
+        header::before {
+            left: 20px;
+        }
+
+        header::after {
+            right: 20px;
+        }
+
+        h1 {
+            font-family: 'Arial', sans-serif;
+            font-size: 3em;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: #ff2222;
+            letter-spacing: 4px;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: #888888;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .hero-section {
+            background: #1a1a1a;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 3px solid #ff2222;
+            position: relative;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #ff2222;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            right: -15px;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #ff2222;
+        }
+
+        .score-badge {
+            display: inline-block;
+            background: #ff2222;
+            color: #1a1a1a;
+            font-size: 4em;
+            font-weight: 900;
+            padding: 30px 50px;
+            border: 3px solid #999999;
+            margin-right: 30px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .score-label {
+            font-size: 1.2em;
+            color: #ff2222;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .hero-text {
+            color: #ff2222;
+            font-size: 1.3em;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-top: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: #1a1a1a;
+            border: 2px solid #888888;
+            padding: 25px;
+            position: relative;
+        }
+
+        .stat-card::before,
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border: 2px solid #ff2222;
+        }
+
+        .stat-card::before {
+            top: -7px;
+            left: -7px;
+        }
+
+        .stat-card::after {
+            bottom: -7px;
+            right: -7px;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #ff2222;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            color: #e0e0e0;
+            font-weight: 900;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            color: #ff2222;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            border-bottom: 4px solid #ff2222;
+            padding-bottom: 15px;
+            font-weight: 900;
+        }
+
+        .model-box {
+            background: #1a1a1a;
+            border: 2px solid #ff2222;
+            padding: 25px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .model-box::before {
+            content: '[';
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            color: #ff2222;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .model-box::after {
+            content: ']';
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            color: #ff2222;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .model-title {
+            color: #ff2222;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .model-text {
+            color: #e0e0e0;
+            font-size: 0.95em;
+            line-height: 1.8;
+            padding-left: 20px;
+        }
+
+        .drop-rates {
+            margin-top: 20px;
+        }
+
+        .drop-item {
+            margin-bottom: 20px;
+        }
+
+        .drop-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .drop-name {
+            color: #ff2222;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .drop-percent {
+            color: #e0e0e0;
+            font-weight: 900;
+        }
+
+        .drop-bar {
+            height: 22px;
+            background: #333333;
+            border: 2px solid #888888;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .drop-fill {
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                #ff2222,
+                #ff2222 10px,
+                #cc0000 10px,
+                #cc0000 20px
+            );
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            transition: width 0.6s ease;
+            position: relative;
+        }
+
+        .costs-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .cost-box {
+            background: #1a1a1a;
+            border: 3px solid #ff2222;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .cost-box::before,
+        .cost-box::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ff2222;
+        }
+
+        .cost-box::before {
+            top: -10px;
+            left: -10px;
+        }
+
+        .cost-box::after {
+            bottom: -10px;
+            right: -10px;
+        }
+
+        .cost-label {
+            color: #ff2222;
+            font-size: 1em;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .cost-amount {
+            color: #e0e0e0;
+            font-size: 2.2em;
+            font-weight: 900;
+        }
+
+        .verdict-box {
+            background: #1a1a1a;
+            border: 4px solid #ff2222;
+            padding: 40px;
+            margin-top: 40px;
+            position: relative;
+        }
+
+        .verdict-box::before {
+            content: '⚠';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.5em;
+            color: #ff2222;
+        }
+
+        .verdict-title {
+            color: #ff2222;
+            font-size: 1.8em;
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .verdict-text {
+            color: #e0e0e0;
+            font-size: 1em;
+            line-height: 1.8;
+        }
+
+        footer {
+            background: #1a1a1a;
+            border-top: 8px solid #ff2222;
+            border-bottom: 8px solid #ff2222;
+            padding: 30px 20px;
+            text-align: center;
+            color: #888888;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+            margin-top: 60px;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .score-badge {
+                font-size: 2.5em;
+                padding: 20px 30px;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+
+            .hero-section {
+                padding: 25px;
+            }
+
+            h2 {
+                font-size: 1.4em;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .costs-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>RED ALERT: LOOT ANALYSIS</h1>
+        <p class="subtitle">Counter-Strike 2 Loot Box Report</p>
+    </header>
+
+    <div class="container">
+        <section class="hero-section">
+            <div class="score-badge">3.8</div>
+            <div>
+                <div class="score-label">Predatory Score</div>
+                <div class="hero-text">CRITICAL THREAT: POOR VALUE</div>
+            </div>
+        </section>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Cost Per Pull</div>
+                <div class="stat-value">$2.49</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Pity System</div>
+                <div class="stat-value">NONE</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Tiers</div>
+                <div class="stat-value">5</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Covert Rate</div>
+                <div class="stat-value">0.64%</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Monetization Model</h2>
+            <div class="model-box">
+                <div class="model-title">Drop System</div>
+                <div class="model-text">Counter-Strike 2 loot boxes operate on weighted random drops with zero pity protection. Each $2.49 pull generates independent random odds with absolutely no safety net against losing streaks.</div>
+            </div>
+            <div class="model-box">
+                <div class="model-title">Economic Impact</div>
+                <div class="model-text">Players face unlimited expected costs for rare items. The 0.64% covert rate combined with no pity creates extreme predatory structure. Completionists are systematically exploited through designed value destruction.</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Drop Rate Breakdown</h2>
+            <div class="drop-rates">
+                <div class="drop-item">
+                    <div class="drop-label">
+                        <span class="drop-name">Mil-Spec</span>
+                        <span class="drop-percent">79.92%</span>
+                    </div>
+                    <div class="drop-bar">
+                        <div class="drop-fill" style="width: 79.92%"></div>
+                    </div>
+                </div>
+
+                <div class="drop-item">
+                    <div class="drop-label">
+                        <span class="drop-name">Restricted</span>
+                        <span class="drop-percent">15.98%</span>
+                    </div>
+                    <div class="drop-bar">
+                        <div class="drop-fill" style="width: 15.98%"></div>
+                    </div>
+                </div>
+
+                <div class="drop-item">
+                    <div class="drop-label">
+                        <span class="drop-name">Classified</span>
+                        <span class="drop-percent">3.20%</span>
+                    </div>
+                    <div class="drop-bar">
+                        <div class="drop-fill" style="width: 3.20%"></div>
+                    </div>
+                </div>
+
+                <div class="drop-item">
+                    <div class="drop-label">
+                        <span class="drop-name">Covert</span>
+                        <span class="drop-percent">0.64%</span>
+                    </div>
+                    <div class="drop-bar">
+                        <div class="drop-fill" style="width: 0.64%"></div>
+                    </div>
+                </div>
+
+                <div class="drop-item">
+                    <div class="drop-label">
+                        <span class="drop-name">Knife / Gloves</span>
+                        <span class="drop-percent">0.26%</span>
+                    </div>
+                    <div class="drop-bar">
+                        <div class="drop-fill" style="width: 0.26%"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Expected Costs</h2>
+            <div class="costs-section">
+                <div class="cost-box">
+                    <div class="cost-label">Average Covert</div>
+                    <div class="cost-amount">$387.50</div>
+                </div>
+                <div class="cost-box">
+                    <div class="cost-label">Average Knife/Gloves</div>
+                    <div class="cost-amount">$956.88</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="verdict-box">
+            <div class="verdict-title">Verdict</div>
+            <div class="verdict-text">CS2 loot boxes present severe consumer risk. With a 0.64% covert drop rate, no pity system, and $2.49 per pull, players face astronomical expected costs to obtain target items. The 79.92% chance of low-value mil-spec drops ensures systematic value destruction. This system is engineered for maximum player spending with minimal guaranteed value return. AVOID UNLESS SPENDING LIMITS ARE STRICTLY ENFORCED.</div>
+        </section>
+    </div>
+
+    <footer>
+        Lootboxes.com | Gaming Monetization Transparency | March 2026
+    </footer>
+</body>
+</html>

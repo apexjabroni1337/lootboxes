@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter-Strike 2 - Analytics Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f1419;
+            color: #e4e6eb;
+            line-height: 1.6;
+        }
+
+        header {
+            background: #1a1e28;
+            border-bottom: 1px solid #2d3748;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            sticky: top 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .game-thumbnail {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00d9ff, #0099cc);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .game-info h1 {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .game-info p {
+            font-size: 12px;
+            color: #a0aec0;
+        }
+
+        .score-display {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .score-gauge {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gauge-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 6px solid #2d3748;
+        }
+
+        .gauge-fill {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 6px solid transparent;
+            border-top-color: #ff4444;
+            border-right-color: #ff4444;
+            border-bottom-color: #ffaa00;
+            transform: rotate(-45deg);
+        }
+
+        .gauge-text {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ff4444;
+            z-index: 10;
+        }
+
+        main {
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: #1a1e28;
+            border: 1px solid #2d3748;
+            border-radius: 8px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: #00d9ff;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #a0aec0;
+            letter-spacing: 0.5px;
+        }
+
+        .card-metric {
+            font-size: 32px;
+            font-weight: 700;
+            color: #00d9ff;
+            margin-bottom: 8px;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: #a0aec0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #2d3748;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d9ff, #0099cc);
+            width: 60%;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            color: #e4e6eb;
+            border-bottom: 1px solid #2d3748;
+            padding-bottom: 12px;
+        }
+
+        .drop-rates-container {
+            background: #1a1e28;
+            border: 1px solid #2d3748;
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .drop-rate-item {
+            margin-bottom: 20px;
+        }
+
+        .drop-rate-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .drop-rate-label {
+            font-weight: 500;
+            color: #e4e6eb;
+        }
+
+        .drop-rate-percent {
+            color: #00d9ff;
+            font-weight: 600;
+        }
+
+        .drop-rate-bar {
+            width: 100%;
+            height: 6px;
+            background: #2d3748;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .drop-rate-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d9ff, #0099cc);
+            border-radius: 3px;
+        }
+
+        .rarity-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .rarity-common {
+            background: rgba(0, 150, 136, 0.2);
+            color: #4db8a8;
+        }
+
+        .rarity-uncommon {
+            background: rgba(63, 81, 181, 0.2);
+            color: #9fa8da;
+        }
+
+        .rarity-rare {
+            background: rgba(233, 30, 99, 0.2);
+            color: #f48fb1;
+        }
+
+        .rarity-epic {
+            background: rgba(255, 152, 0, 0.2);
+            color: #ffcc80;
+        }
+
+        .rarity-legendary {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffe082;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            background: #1a1e28;
+            border: 1px solid #2d3748;
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            background: #0f1419;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #a0aec0;
+            border-bottom: 2px solid #2d3748;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #2d3748;
+        }
+
+        tr:hover {
+            background: #1a1e28;
+        }
+
+        .sparkline {
+            display: inline-block;
+            width: 60px;
+            height: 20px;
+            background: linear-gradient(to right, #ff4444, #ffaa00, #ff4444);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #a0aec0;
+            font-size: 12px;
+            border-top: 1px solid #2d3748;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            main {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <div class="game-thumbnail">CS2</div>
+            <div class="game-info">
+                <h1>Counter-Strike 2</h1>
+                <p>Loot Box System Analysis</p>
+            </div>
+        </div>
+        <div class="score-display">
+            <div class="score-gauge">
+                <div class="gauge-bg"></div>
+                <div class="gauge-fill"></div>
+                <div class="gauge-text">3.8</div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section>
+            <h2>Key Metrics</h2>
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Cost Per Pull</div>
+                    </div>
+                    <div class="card-metric">$2.49</div>
+                    <div class="card-subtitle">Primary monetization unit</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Pity System</div>
+                    </div>
+                    <div class="card-metric" style="color: #ff4444;">None</div>
+                    <div class="card-subtitle">No guaranteed protection</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Average to Knife</div>
+                    </div>
+                    <div class="card-metric">$956.88</div>
+                    <div class="card-subtitle">~384 pulls required</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Player Score</div>
+                    </div>
+                    <div class="card-metric" style="color: #ff4444;">3.8/10</div>
+                    <div class="card-subtitle">Below average protection</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Covert Drop Rate</div>
+                    </div>
+                    <div class="card-metric" style="color: #ffcc80;">0.64%</div>
+                    <div class="card-subtitle">Extremely limited access</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Total Inventory</div>
+                    </div>
+                    <div class="card-metric">2000+</div>
+                    <div class="card-subtitle">Items available</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Drop Rate Distribution</h2>
+            <div class="drop-rates-container">
+                <div class="drop-rate-item">
+                    <div class="drop-rate-header">
+                        <div>
+                            <span class="rarity-badge rarity-common">COMMON</span>
+                            <span class="drop-rate-label">Mil-Spec (Blue)</span>
+                        </div>
+                        <span class="drop-rate-percent">79.92%</span>
+                    </div>
+                    <div class="drop-rate-bar">
+                        <div class="drop-rate-fill" style="width: 79.92%; background: linear-gradient(90deg, #4db8a8, #26a69a);"></div>
+                    </div>
+                </div>
+
+                <div class="drop-rate-item">
+                    <div class="drop-rate-header">
+                        <div>
+                            <span class="rarity-badge rarity-uncommon">UNCOMMON</span>
+                            <span class="drop-rate-label">Restricted (Purple)</span>
+                        </div>
+                        <span class="drop-rate-percent">15.98%</span>
+                    </div>
+                    <div class="drop-rate-bar">
+                        <div class="drop-rate-fill" style="width: 15.98%; background: linear-gradient(90deg, #9fa8da, #7986cb);"></div>
+                    </div>
+                </div>
+
+                <div class="drop-rate-item">
+                    <div class="drop-rate-header">
+                        <div>
+                            <span class="rarity-badge rarity-rare">RARE</span>
+                            <span class="drop-rate-label">Classified (Pink)</span>
+                        </div>
+                        <span class="drop-rate-percent">3.20%</span>
+                    </div>
+                    <div class="drop-rate-bar">
+                        <div class="drop-rate-fill" style="width: 3.20%; background: linear-gradient(90deg, #f48fb1, #ec407a);"></div>
+                    </div>
+                </div>
+
+                <div class="drop-rate-item">
+                    <div class="drop-rate-header">
+                        <div>
+                            <span class="rarity-badge rarity-epic">EPIC</span>
+                            <span class="drop-rate-label">Covert (Red)</span>
+                        </div>
+                        <span class="drop-rate-percent">0.64%</span>
+                    </div>
+                    <div class="drop-rate-bar">
+                        <div class="drop-rate-fill" style="width: 0.64%; background: linear-gradient(90deg, #ffcc80, #ffb74d);"></div>
+                    </div>
+                </div>
+
+                <div class="drop-rate-item">
+                    <div class="drop-rate-header">
+                        <div>
+                            <span class="rarity-badge rarity-legendary">LEGENDARY</span>
+                            <span class="drop-rate-label">Knife/Gloves (Gold)</span>
+                        </div>
+                        <span class="drop-rate-percent">0.26%</span>
+                    </div>
+                    <div class="drop-rate-bar">
+                        <div class="drop-rate-fill" style="width: 0.26%; background: linear-gradient(90deg, #ffe082, #ffd54f);"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Summary Analytics</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rarity Tier</th>
+                            <th>Drop Rate</th>
+                            <th>Avg Cost</th>
+                            <th>Pulls Needed</th>
+                            <th>Trend</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="rarity-badge rarity-common">Mil-Spec</span></td>
+                            <td><span style="color: #4db8a8;">79.92%</span></td>
+                            <td>$3.12</td>
+                            <td>1-2</td>
+                            <td><div class="sparkline"></div></td>
+                        </tr>
+                        <tr>
+                            <td><span class="rarity-badge rarity-uncommon">Restricted</span></td>
+                            <td><span style="color: #9fa8da;">15.98%</span></td>
+                            <td>$15.61</td>
+                            <td>6-7</td>
+                            <td><div class="sparkline"></div></td>
+                        </tr>
+                        <tr>
+                            <td><span class="rarity-badge rarity-rare">Classified</span></td>
+                            <td><span style="color: #f48fb1;">3.20%</span></td>
+                            <td>$77.81</td>
+                            <td>31-32</td>
+                            <td><div class="sparkline"></div></td>
+                        </tr>
+                        <tr>
+                            <td><span class="rarity-badge rarity-epic">Covert</span></td>
+                            <td><span style="color: #ffcc80;">0.64%</span></td>
+                            <td>$389.06</td>
+                            <td>156-157</td>
+                            <td><div class="sparkline"></div></td>
+                        </tr>
+                        <tr>
+                            <td><span class="rarity-badge rarity-legendary">Knife</span></td>
+                            <td><span style="color: #ffe082;">0.26%</span></td>
+                            <td>$956.88</td>
+                            <td>384</td>
+                            <td><div class="sparkline"></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section>
+            <h2>Assessment</h2>
+            <div class="card">
+                <p style="margin-bottom: 12px;">Counter-Strike 2's monetization system presents significant consumer concerns. With no pity mechanics and extremely low drop rates for high-rarity items, players face substantial expected costs to obtain specific weapons.</p>
+                <p style="color: #a0aec0;">The lack of guaranteed progression combined with a $2.49 per-pull cost structure creates an unpredictable spending environment that can quickly become expensive for completionists.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Lootboxes.com Analytics Dashboard | Last Updated: March 2026</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter-Strike 2 - Timeline Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.7;
+        }
+
+        header {
+            background: linear-gradient(135deg, #d4af37, #f1d699);
+            padding: 60px 40px;
+            text-align: center;
+            color: #2c2c2c;
+        }
+
+        header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        header p {
+            font-size: 18px;
+            opacity: 0.85;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 40px;
+            position: relative;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 40px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #d4af37, #f1d699, #d4af37);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            margin-bottom: 50px;
+            position: relative;
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+        .timeline-item:nth-child(4) { animation-delay: 0.4s; }
+        .timeline-item:nth-child(5) { animation-delay: 0.5s; }
+
+        .timeline-item:nth-child(odd) {
+            padding-right: 52%;
+        }
+
+        .timeline-item:nth-child(even) {
+            padding-left: 52%;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 20px;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border: 3px solid #d4af37;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #d4af37;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            border-left: none;
+            border-right: 4px solid #d4af37;
+        }
+
+        .timeline-content:hover {
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .timeline-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c2c2c;
+            margin-bottom: 10px;
+        }
+
+        .timeline-date {
+            font-size: 12px;
+            color: #d4af37;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .timeline-description {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .stat-highlight {
+            background: #f9f3e6;
+            border-left: 4px solid #d4af37;
+            padding: 16px;
+            margin: 12px 0;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #2c2c2c;
+        }
+
+        .conclusion-section {
+            background: linear-gradient(135deg, #d4af37, #f1d699);
+            padding: 50px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 60px;
+            color: #2c2c2c;
+        }
+
+        .conclusion-score {
+            font-size: 64px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .conclusion-text {
+            font-size: 16px;
+            line-height: 1.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        footer {
+            background: #2c2c2c;
+            color: #d4af37;
+            padding: 40px;
+            text-align: center;
+            font-size: 12px;
+            margin-top: 80px;
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-item {
+                padding-left: 100px !important;
+                padding-right: 0 !important;
+            }
+
+            .timeline-dot {
+                left: 30px;
+            }
+
+            .timeline-content {
+                border-left: 4px solid #d4af37 !important;
+                border-right: none !important;
+            }
+
+            header {
+                padding: 40px 20px;
+            }
+
+            header h1 {
+                font-size: 32px;
+            }
+
+            main {
+                padding: 40px 20px;
+            }
+
+            .conclusion-score {
+                font-size: 48px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Counter-Strike 2</h1>
+        <p>A Historical Analysis of Loot Box Monetization</p>
+    </header>
+
+    <main>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <span class="timeline-date">2012 - Foundation</span>
+                    <div class="timeline-title">CS:GO Launches</div>
+                    <div class="timeline-description">
+                        Counter-Strike: Global Offensive introduces weapon cases and the loot box system to competitive shooters. Initial model establishes the foundation that would persist for over a decade.
+                    </div>
+                    <div class="stat-highlight">Early design: $2.49 per case, no pity system</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <span class="timeline-date">2016 - Criticism Emerges</span>
+                    <div class="timeline-title">Community Backlash Grows</div>
+                    <div class="timeline-description">
+                        Players begin documenting spending patterns and criticizing the lack of consumer protections. No pity system introduced despite criticism. Drop rates remain heavily weighted toward common items.
+                    </div>
+                    <div class="stat-highlight">Community rating drops below 4.0/10</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <span class="timeline-date">2020 - Stagnation</span>
+                    <div class="timeline-title">No Changes Implemented</div>
+                    <div class="timeline-description">
+                        Despite years of player feedback and comparison to other games' improved systems, Valve makes no substantive changes to the monetization model. Drop rates remain identical.
+                    </div>
+                    <div class="stat-highlight">Knife/Gloves rate still 0.26%, Covert still 0.64%</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <span class="timeline-date">2023 - CS2 Released</span>
+                    <div class="timeline-title">System Carries Forward</div>
+                    <div class="timeline-description">
+                        Counter-Strike 2 launches with the same loot box monetization system unchanged. No pity system. Drop rates identical to CS:GO. Opportunity for improvement is missed.
+                    </div>
+                    <div class="stat-highlight">Cost per pull: Still $2.49 after 11 years</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <span class="timeline-date">2026 - Current Assessment</span>
+                    <div class="timeline-title">Analysis & Verdict</div>
+                    <div class="timeline-description">
+                        CS2's loot box system receives a comprehensive analysis. Scoring reflects the complete absence of consumer protections and comparison to modern standards. The system ranks among the worst-protected in gaming.
+                    </div>
+                    <div class="stat-highlight">Score: 3.8/10 - Below Average Protection</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="conclusion-section">
+            <div class="conclusion-score">3.8/10</div>
+            <div class="conclusion-text">
+                <p><strong>Final Verdict:</strong> Counter-Strike 2's loot box system has remained fundamentally unchanged for over a decade, despite widespread criticism and the evolution of industry standards. The absence of a pity system, combined with extreme rarity rates and high expected costs, places this among the worst-protected loot box systems in modern gaming. Players deserve better protection.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Lootboxes.com | Timeline Analysis | March 2026</p>
+    </footer>
+</body>
+</html>

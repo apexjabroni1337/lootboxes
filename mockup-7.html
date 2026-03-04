@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter-Strike 2 - Community Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #36393f;
+            color: #dcddde;
+            line-height: 1.6;
+        }
+
+        header {
+            background: #2f3136;
+            padding: 20px 40px;
+            border-bottom: 1px solid #202225;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .game-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #7289da, #5865f2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 24px;
+        }
+
+        .game-info h1 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .game-info p {
+            font-size: 12px;
+            color: #b9bbbe;
+        }
+
+        .score-display {
+            background: #2f3136;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 24px;
+            color: #f04747;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ffffff;
+            border-bottom: 2px solid #5865f2;
+            padding-bottom: 12px;
+        }
+
+        .post {
+            background: #2f3136;
+            border: 1px solid #202225;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.2s;
+        }
+
+        .post:hover {
+            background: #36393f;
+            border-color: #5865f2;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .post-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7289da, #5865f2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .post-username {
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .post-time {
+            font-size: 12px;
+            color: #72767d;
+        }
+
+        .verified {
+            display: inline-block;
+            background: #5865f2;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .post-content {
+            color: #dcddde;
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            color: #72767d;
+        }
+
+        .reaction {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .reaction:hover {
+            background: rgba(88, 101, 242, 0.1);
+            color: #5865f2;
+        }
+
+        .stat-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #2f3136;
+            border: 1px solid #202225;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #b9bbbe;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #5865f2;
+        }
+
+        .tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 12px 0;
+        }
+
+        .tag {
+            background: rgba(88, 101, 242, 0.1);
+            border: 1px solid #5865f2;
+            color: #5865f2;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: default;
+        }
+
+        .alert-box {
+            background: rgba(240, 71, 71, 0.1);
+            border-left: 4px solid #f04747;
+            padding: 16px;
+            border-radius: 4px;
+            margin: 20px 0;
+            color: #dcddde;
+        }
+
+        .poll {
+            background: #2f3136;
+            border: 1px solid #202225;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px 0;
+        }
+
+        .poll-option {
+            margin-bottom: 12px;
+        }
+
+        .poll-bar {
+            width: 100%;
+            height: 24px;
+            background: #202225;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .poll-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #5865f2, #7289da);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .poll-label {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        footer {
+            background: #2f3136;
+            border-top: 1px solid #202225;
+            padding: 30px;
+            text-align: center;
+            color: #b9bbbe;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            main {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <div class="game-icon">CS2</div>
+            <div class="game-info">
+                <h1>Counter-Strike 2</h1>
+                <p>Community Analysis & Discussion</p>
+            </div>
+        </div>
+        <div class="score-display">3.8/10</div>
+    </header>
+
+    <main>
+        <section>
+            <h2>Community Summary</h2>
+            <div class="stat-cards">
+                <div class="stat-card">
+                    <div class="stat-label">Community Rating</div>
+                    <div class="stat-value">3.8/10</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Cost Per Pull</div>
+                    <div class="stat-value">$2.49</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Players Concerned</div>
+                    <div class="stat-value">94%</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Drop Rate Polling</h2>
+            <div class="poll">
+                <div class="poll-option">
+                    <div class="poll-label">Too high rates for common items (Mil-Spec 79.92%)</div>
+                    <div class="poll-bar">
+                        <div class="poll-fill" style="width: 73%;">73%</div>
+                    </div>
+                </div>
+                <div class="poll-option">
+                    <div class="poll-label">Unfair rarity gap (Covert 0.64%, Knife 0.26%)</div>
+                    <div class="poll-bar">
+                        <div class="poll-fill" style="width: 85%;">85%</div>
+                    </div>
+                </div>
+                <div class="poll-option">
+                    <div class="poll-label">Needs pity system implementation</div>
+                    <div class="poll-bar">
+                        <div class="poll-fill" style="width: 91%;">91%</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Recent Community Posts</h2>
+
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-avatar">JM</div>
+                    <div class="post-meta">
+                        <span class="post-username">JohnMarket</span>
+                        <span class="verified">VERIFIED</span>
+                        <span class="post-time">2 hours ago</span>
+                    </div>
+                </div>
+                <div class="post-content">
+                    I've spent $300 trying to get a single covert weapon. The 0.64% drop rate is insane. CS2 needs consumer protections like other games have implemented.
+                </div>
+                <div class="tags">
+                    <span class="tag">consumer-protection</span>
+                    <span class="tag">loot-boxes</span>
+                    <span class="tag">concerns</span>
+                </div>
+                <div class="post-actions">
+                    <div class="reaction">👍 427</div>
+                    <div class="reaction">💬 84</div>
+                    <div class="reaction">↗️ 23</div>
+                </div>
+            </div>
+
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-avatar">SC</div>
+                    <div class="post-meta">
+                        <span class="post-username">SarahCollins</span>
+                        <span class="post-time">4 hours ago</span>
+                    </div>
+                </div>
+                <div class="post-content">
+                    The absence of any pity system is the real problem. At least other games guarantee something after X pulls. CS2 just lets you keep spending indefinitely.
+                </div>
+                <div class="tags">
+                    <span class="tag">pity-system</span>
+                    <span class="tag">monetization</span>
+                </div>
+                <div class="post-actions">
+                    <div class="reaction">👍 312</div>
+                    <div class="reaction">💬 56</div>
+                    <div class="reaction">↗️ 18</div>
+                </div>
+            </div>
+
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-avatar">DG</div>
+                    <div class="post-meta">
+                        <span class="post-username">DavidG</span>
+                        <span class="verified">VERIFIED</span>
+                        <span class="post-time">6 hours ago</span>
+                    </div>
+                </div>
+                <div class="post-content">
+                    3.8/10 is a fair score. CS2's loot box system ranks among the worst I've analyzed. No pity, extreme rarity rates, $2.49 per pull - it's designed to maximize spending without protections.
+                </div>
+                <div class="tags">
+                    <span class="tag">analysis</span>
+                    <span class="tag">monetization-design</span>
+                    <span class="tag">lootboxes</span>
+                </div>
+                <div class="post-actions">
+                    <div class="reaction">👍 561</div>
+                    <div class="reaction">💬 128</div>
+                    <div class="reaction">↗️ 89</div>
+                </div>
+            </div>
+
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-avatar">EM</div>
+                    <div class="post-meta">
+                        <span class="post-username">EmmaReader</span>
+                        <span class="post-time">8 hours ago</span>
+                    </div>
+                </div>
+                <div class="post-content">
+                    The 0.26% knife rate is absolutely brutal. Expected cost of $956.88 per knife? That's whale territory. This system preys on collectors and completionists.
+                </div>
+                <div class="tags">
+                    <span class="tag">pricing-concerns</span>
+                    <span class="tag">rarity</span>
+                </div>
+                <div class="post-actions">
+                    <div class="reaction">👍 423</div>
+                    <div class="reaction">💬 71</div>
+                    <div class="reaction">↗️ 45</div>
+                </div>
+            </div>
+
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-avatar">MK</div>
+                    <div class="post-meta">
+                        <span class="post-username">MarcusK</span>
+                        <span class="post-time">10 hours ago</span>
+                    </div>
+                </div>
+                <div class="post-content">
+                    The gap between Mil-Spec (79.92%) and everything else is designed to make you feel like you need to spend more. Classic monetization manipulation.
+                </div>
+                <div class="tags">
+                    <span class="tag">dark-patterns</span>
+                    <span class="tag">ux</span>
+                </div>
+                <div class="post-actions">
+                    <div class="reaction">👍 298</div>
+                    <div class="reaction">💬 43</div>
+                    <div class="reaction">↗️ 21</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="alert-box">
+                <strong>Community Consensus:</strong> CS2's loot box system needs immediate consumer protection reforms. The community strongly supports implementation of a pity system and spending limits.
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Lootboxes.com Community Analysis | Based on verified user feedback | March 2026</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter-Strike 2 Review - Lootboxes.com</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --brand-50: #f0f7ff;
+            --brand-100: #e0effe;
+            --brand-200: #bae0fd;
+            --brand-400: #36adf6;
+            --brand-500: #0c93e7;
+            --brand-600: #0074c5;
+            --brand-700: #015da0;
+            --brand-950: #072a49;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --danger-500: #ef4444;
+            --danger-600: #dc2626;
+            --success-600: #16a34a;
+            --warning-500: #f59e0b;
+            --amber-50: #fffbeb;
+            --amber-700: #b45309;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ─── SITE HEADER (matches lootboxes.com) ─── */
+        .site-header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0 40px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .site-header .logo {
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--gray-900);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .site-header .logo .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--brand-600);
+            border-radius: 2px;
+            display: inline-block;
+        }
+
+        .site-header nav {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 24px;
+        }
+
+        .site-header nav a {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-600);
+            text-decoration: none;
+            transition: all 0.15s;
+        }
+
+        .site-header nav a:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .site-header .cta-btn {
+            margin-left: auto;
+            background: var(--brand-600);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+
+        .site-header .cta-btn:hover {
+            background: var(--brand-700);
+        }
+
+        /* ─── BREADCRUMB ─── */
+        .breadcrumb {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px 40px;
+            font-size: 13px;
+            color: var(--gray-400);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .breadcrumb a {
+            color: var(--gray-500);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--brand-600);
+        }
+
+        .breadcrumb .sep {
+            font-size: 10px;
+        }
+
+        .breadcrumb .current {
+            color: var(--gray-900);
+            font-weight: 600;
+        }
+
+        /* ─── HERO SECTION (compact) ─── */
+        header {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .hero-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 40px 28px;
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 28px;
+            align-items: center;
+        }
+
+        .hero-image {
+            width: 140px;
+            height: 180px;
+            background: linear-gradient(135deg, var(--brand-400), var(--brand-600));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 8px 24px rgba(0, 116, 197, 0.25);
+        }
+
+        .hero-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .hero-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .score-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--brand-600);
+            color: white;
+            width: 48px;
+            height: 48px;
+            font-size: 20px;
+            font-weight: 800;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 116, 197, 0.3);
+        }
+
+        .system-tag {
+            display: inline-block;
+            background: var(--danger-500);
+            color: white;
+            padding: 5px 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 11px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-text h1 {
+            font-size: 36px;
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 1.1;
+            color: var(--gray-900);
+            letter-spacing: -0.5px;
+        }
+
+        .hero-text .subtitle {
+            font-size: 14px;
+            color: var(--gray-500);
+            font-weight: 400;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 16px;
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--gray-400);
+        }
+
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ─── MAIN CONTENT ─── */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 40px 60px;
+        }
+
+        section {
+            margin-bottom: 48px;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            letter-spacing: -0.3px;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        h2 .icon {
+            width: 32px;
+            height: 32px;
+            background: var(--brand-50);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--brand-600);
+            flex-shrink: 0;
+        }
+
+        /* ─── STATS GRID ─── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-box {
+            background: white;
+            border: 1px solid var(--gray-200);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+
+        .stat-box:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-color: var(--brand-200);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--gray-400);
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--gray-900);
+        }
+
+        .stat-value.danger { color: var(--danger-600); }
+        .stat-value.brand { color: var(--brand-600); }
+        .stat-value.warning { color: var(--warning-500); }
+        .stat-value.success { color: var(--success-600); }
+
+        .stat-note {
+            font-size: 11px;
+            color: var(--gray-400);
+            margin-top: 2px;
+        }
+
+        /* ─── HIGHLIGHT BOX ─── */
+        .highlight-box {
+            background: var(--brand-50);
+            border-left: 4px solid var(--brand-600);
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--brand-700);
+            line-height: 1.6;
+        }
+
+        .highlight-box.warning {
+            background: #fef2f2;
+            border-left-color: var(--danger-500);
+            color: var(--danger-600);
+        }
+
+        .highlight-box.amber {
+            background: var(--amber-50);
+            border-left-color: var(--warning-500);
+            color: var(--amber-700);
+        }
+
+        /* ─── DROP RATES ─── */
+        .drop-rates {
+            background: white;
+            border: 1px solid var(--gray-200);
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .rate-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .rate-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .rate-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .rate-name {
+            color: var(--gray-700);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .rate-percent {
+            color: var(--brand-600);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .rate-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--gray-100);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .rate-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--brand-500), var(--brand-600));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .rate-fill.rare {
+            background: linear-gradient(90deg, var(--danger-500), var(--danger-600));
+        }
+
+        .rate-avg {
+            font-size: 11px;
+            color: var(--gray-400);
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        /* ─── SCORE BREAKDOWN ─── */
+        .score-breakdown {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .score-item {
+            background: white;
+            border: 1px solid var(--gray-200);
+            padding: 16px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .score-item .score-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--gray-400);
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .score-item .score-num {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .score-item .score-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--gray-100);
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .score-item .score-fill {
+            height: 100%;
+            border-radius: 2px;
+        }
+
+        /* ─── ARTICLE PROSE ─── */
+        article p {
+            margin-bottom: 16px;
+            font-size: 15px;
+            line-height: 1.75;
+            color: var(--gray-600);
+        }
+
+        article strong {
+            color: var(--gray-900);
+            font-weight: 700;
+        }
+
+        article ul {
+            margin: 12px 0 20px 20px;
+            color: var(--gray-600);
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        article ul li {
+            margin-bottom: 6px;
+        }
+
+        /* ─── VERDICT BOX ─── */
+        .verdict-box {
+            background: linear-gradient(135deg, var(--brand-600), var(--brand-700));
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 116, 197, 0.25);
+        }
+
+        .verdict-box .verdict-score {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .verdict-box .verdict-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            opacity: 0.7;
+            margin-bottom: 16px;
+        }
+
+        .verdict-box p {
+            font-size: 15px;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.9);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ─── TIPS BOX ─── */
+        .tips-box {
+            background: var(--amber-50);
+            border: 1px solid #fde68a;
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .tips-box p {
+            color: var(--amber-700);
+        }
+
+        .tips-box strong {
+            color: #92400e;
+        }
+
+        /* ─── HISTORY TIMELINE ─── */
+        .timeline {
+            position: relative;
+            padding-left: 24px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            bottom: 4px;
+            width: 2px;
+            background: var(--gray-200);
+        }
+
+        .timeline-entry {
+            position: relative;
+            margin-bottom: 16px;
+            padding-left: 16px;
+        }
+
+        .timeline-entry::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 8px;
+            width: 8px;
+            height: 8px;
+            background: var(--brand-600);
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px var(--brand-200);
+        }
+
+        .timeline-entry strong {
+            color: var(--brand-700);
+            font-size: 13px;
+        }
+
+        .timeline-entry span {
+            color: var(--gray-600);
+            font-size: 14px;
+        }
+
+        /* ─── RELATED LINKS ─── */
+        .related-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding-top: 32px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .related-links a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--brand-50);
+            color: var(--brand-700);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+
+        .related-links a:hover {
+            background: var(--brand-100);
+        }
+
+        .related-links a.secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .related-links a.secondary:hover {
+            background: var(--gray-200);
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            background: white;
+            border-top: 1px solid var(--gray-200);
+            padding: 24px 40px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--gray-400);
+        }
+
+        footer strong {
+            color: var(--gray-600);
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .hero-wrapper {
+                grid-template-columns: 100px 1fr;
+                gap: 16px;
+                padding: 16px 20px 20px;
+            }
+
+            .hero-image {
+                width: 100px;
+                height: 130px;
+                font-size: 24px;
+            }
+
+            .hero-text h1 {
+                font-size: 24px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .score-breakdown {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            main {
+                padding: 24px 20px 40px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            .breadcrumb, .site-header {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            .site-header nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Site Header -->
+    <div class="site-header">
+        <a href="#" class="logo">
+            <span class="dot"></span>
+            LootBoxes.com
+        </a>
+        <nav>
+            <a href="#">Loot Boxes</a>
+            <a href="#">Game Deals</a>
+            <a href="#">Analytics</a>
+            <a href="#">Drop Rates</a>
+        </nav>
+        <a href="#" class="cta-btn">Get Deal Alerts</a>
+    </div>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="#">Home</a>
+        <span class="sep">›</span>
+        <a href="#">Loot Box Database</a>
+        <span class="sep">›</span>
+        <span class="current">Counter-Strike 2</span>
+    </div>
+
+    <!-- Hero -->
+    <header>
+        <div class="hero-wrapper">
+            <div class="hero-image">CS2</div>
+            <div class="hero-text">
+                <div class="hero-badges">
+                    <div class="score-badge">3.8</div>
+                    <span class="system-tag">Loot Box</span>
+                </div>
+                <h1>Counter-Strike 2</h1>
+                <span class="subtitle">Full monetization analysis and consumer protection review.</span>
+                <div class="hero-meta">
+                    <span>Currency: <strong style="color:var(--gray-700)">Case Key</strong></span>
+                    <span>·</span>
+                    <span>Updated Mar 2026</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <article>
+            <!-- Quick Stats -->
+            <section>
+                <h2><span class="icon">⚡</span> Quick Stats</h2>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-label">Cost Per Pull</span>
+                        <div class="stat-value brand">$2.49</div>
+                        <div class="stat-note">Per case key</div>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Pity System</span>
+                        <div class="stat-value danger">None</div>
+                        <div class="stat-note">No guaranteed progression</div>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Avg. to Knife</span>
+                        <div class="stat-value warning">$956</div>
+                        <div class="stat-note">~384 case openings</div>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Lootboxes Score</span>
+                        <div class="stat-value brand">3.8<span style="font-size:16px;color:var(--gray-400)">/10</span></div>
+                        <div class="stat-note">Below average</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Monetization Overview -->
+            <section>
+                <h2><span class="icon">📖</span> Monetization Overview</h2>
+                <p>Counter-Strike 2 uses a traditional loot box model inherited from CS:GO. Players purchase weapon cases from the Steam Community Market (typically $0.03–$5.00 each) and then buy a key for $2.49 to open them. Each case contains a random weapon skin from a predetermined collection, with rarity tiers determining the probability of each outcome.</p>
+                <p>The system is purely cosmetic — skins have zero impact on gameplay. However, the secondary market on Steam creates real monetary value for rare items, with some knife skins selling for thousands of dollars. This dual economy of opening cases and trading skins makes CS2's loot box system one of the most financially significant in gaming.</p>
+                <div class="highlight-box">
+                    Valve was one of the first major publishers forced to disclose drop rates, doing so through their Chinese partner Perfect World in 2017. The rates have remained unchanged through the transition from CS:GO to CS2.
+                </div>
+            </section>
+
+            <!-- Drop Rates -->
+            <section>
+                <h2><span class="icon">📊</span> Drop Rate Breakdown</h2>
+                <div class="drop-rates">
+                    <div class="rate-item">
+                        <div class="rate-header">
+                            <span class="rate-name">Mil-Spec (Blue)</span>
+                            <span class="rate-percent">79.92%</span>
+                        </div>
+                        <div class="rate-bar">
+                            <div class="rate-fill" style="width: 79.92%"></div>
+                        </div>
+                        <div class="rate-avg">~1 in 1.25 opens</div>
+                    </div>
+
+                    <div class="rate-item">
+                        <div class="rate-header">
+                            <span class="rate-name">Restricted (Purple)</span>
+                            <span class="rate-percent">15.98%</span>
+                        </div>
+                        <div class="rate-bar">
+                            <div class="rate-fill" style="width: 15.98%"></div>
+                        </div>
+                        <div class="rate-avg">~1 in 6 opens</div>
+                    </div>
+
+                    <div class="rate-item">
+                        <div class="rate-header">
+                            <span class="rate-name">Classified (Pink)</span>
+                            <span class="rate-percent">3.20%</span>
+                        </div>
+                        <div class="rate-bar">
+                            <div class="rate-fill" style="width: 3.20%"></div>
+                        </div>
+                        <div class="rate-avg">~1 in 31 opens</div>
+                    </div>
+
+                    <div class="rate-item">
+                        <div class="rate-header">
+                            <span class="rate-name">Covert (Red)</span>
+                            <span class="rate-percent" style="color:var(--danger-500)">0.64%</span>
+                        </div>
+                        <div class="rate-bar">
+                            <div class="rate-fill rare" style="width: 2%"></div>
+                        </div>
+                        <div class="rate-avg">~1 in 156 opens · ~$388 expected</div>
+                    </div>
+
+                    <div class="rate-item">
+                        <div class="rate-header">
+                            <span class="rate-name">Knife / Gloves (Gold)</span>
+                            <span class="rate-percent" style="color:var(--danger-600)">0.26%</span>
+                        </div>
+                        <div class="rate-bar">
+                            <div class="rate-fill rare" style="width: 1%"></div>
+                        </div>
+                        <div class="rate-avg">~1 in 385 opens · ~$957 expected</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pity System -->
+            <section>
+                <h2><span class="icon">⚠️</span> No Pity System</h2>
+                <p>Counter-Strike 2 has <strong>no pity system whatsoever</strong>. Every case opening is an independent random event with fixed probabilities. You could theoretically open hundreds of cases without receiving a single Covert or Knife/Gloves item.</p>
+                <div class="highlight-box warning">
+                    The only "guarantee" is statistical probability: after approximately 385 case openings ($958 in keys alone), you have roughly a 63% chance of having received at least one knife or gloves. But that's just probability — not a guarantee.
+                </div>
+            </section>
+
+            <!-- Score Breakdown -->
+            <section>
+                <h2><span class="icon">⚖️</span> Score Breakdown</h2>
+                <div class="score-breakdown">
+                    <div class="score-item">
+                        <div class="score-label">Transparency</div>
+                        <div class="score-num" style="color:var(--warning-500)">6</div>
+                        <div class="score-bar"><div class="score-fill" style="width:60%;background:var(--warning-500)"></div></div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Value</div>
+                        <div class="score-num" style="color:var(--danger-500)">3</div>
+                        <div class="score-bar"><div class="score-fill" style="width:30%;background:var(--danger-500)"></div></div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Fairness</div>
+                        <div class="score-num" style="color:var(--danger-500)">3</div>
+                        <div class="score-bar"><div class="score-fill" style="width:30%;background:var(--danger-500)"></div></div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Player Control</div>
+                        <div class="score-num" style="color:var(--danger-600)">4</div>
+                        <div class="score-bar"><div class="score-fill" style="width:40%;background:var(--danger-600)"></div></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Expected Costs -->
+            <section>
+                <h2><span class="icon">💰</span> Expected Costs</h2>
+                <p><strong>To acquire a Covert weapon:</strong> Approximately $387.50 (155 pulls × $2.49). This is the average expected cost, but players should expect high variance in individual outcomes.</p>
+                <p><strong>To acquire a Knife/Gloves:</strong> Approximately $956.88 (384 pulls × $2.49). With only a 0.26% drop rate, even statistically lucky players will spend hundreds of dollars.</p>
+                <div class="highlight-box amber">
+                    These are mathematical expectations. Individual results vary wildly — some players may spend 2-3x this amount before obtaining rare items.
+                </div>
+            </section>
+
+            <!-- History -->
+            <section>
+                <h2><span class="icon">📅</span> Historical Changes</h2>
+                <div class="timeline">
+                    <div class="timeline-entry">
+                        <strong>2013:</strong> <span>Arms Deal Update introduces weapon cases and keys to CS:GO, creating the modern skin economy.</span>
+                    </div>
+                    <div class="timeline-entry">
+                        <strong>2017:</strong> <span>Valve discloses official drop rates through Perfect World in China, confirming long-suspected community estimates.</span>
+                    </div>
+                    <div class="timeline-entry">
+                        <strong>2018:</strong> <span>Belgium and Netherlands classify CS:GO loot boxes as gambling, leading to trade restrictions.</span>
+                    </div>
+                    <div class="timeline-entry">
+                        <strong>2023:</strong> <span>CS2 launches, inheriting the identical case/key system and drop rates from CS:GO.</span>
+                    </div>
+                    <div class="timeline-entry">
+                        <strong>2024:</strong> <span>Armory system introduced as a new way to earn cosmetics through gameplay, supplementing the case system.</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Community Sentiment -->
+            <section>
+                <h2><span class="icon">👥</span> Community Sentiment</h2>
+                <p>CS2's loot box system has been at the center of multiple legal and regulatory controversies. The existence of a real-money secondary market has led regulators in Belgium and the Netherlands to classify the system as a form of gambling.</p>
+                <p>Multiple class-action lawsuits have been filed against Valve, arguing that the case system constitutes illegal gambling, particularly because minors can participate. Community sentiment is mixed: many enjoy the trading economy, while others criticize the predatory odds.</p>
+            </section>
+
+            <!-- Spending Tips -->
+            <section>
+                <h2><span class="icon">💡</span> Spending Tips</h2>
+                <div class="tips-box">
+                    <p><strong>Don't open cases expecting profit.</strong> The expected value of opening a case is significantly below the $2.49 key cost. Statistically, you lose money on roughly 85% of openings.</p>
+                    <p><strong>Buy skins directly from the market.</strong> If you want a specific skin, buying it directly from the Steam Community Market or Buff163 is almost always cheaper than gambling on cases.</p>
+                    <p><strong>Stick to popular collections.</strong> Cases with in-demand knife finishes tend to have slightly better expected value due to higher prices for rare drops.</p>
+                    <p><strong>Consider the Armory system.</strong> The newer Armory system provides a way to earn cosmetics through gameplay milestones — a free alternative to case openings.</p>
+                </div>
+            </section>
+
+            <!-- Verdict -->
+            <section>
+                <h2><span class="icon">📝</span> Our Verdict</h2>
+                <p>Counter-Strike 2's loot box system is simultaneously one of the most transparent and one of the most financially punishing systems in the industry. Valve deserves credit for disclosing exact drop rates, but those rates tell a harsh story: a 0.26% chance at the most desirable items means the average player will spend nearly a thousand dollars before seeing a knife drop.</p>
+                <p>The absence of any pity system is the system's biggest weakness. Games like Genshin Impact guarantee a top-tier reward after a set number of pulls. CS2 offers no such safety net. A player could spend $10,000 on cases and still be at the mercy of pure probability.</p>
+
+                <div class="verdict-box">
+                    <div class="verdict-label">Lootboxes Score</div>
+                    <div class="verdict-score">3.8/10</div>
+                    <p>The transparency of disclosed rates and the existence of direct-purchase alternatives keep it from scoring worse, but the lack of pity, gambling-adjacent secondary market, and poor expected value per case opening drag it down significantly. Our recommendation: buy skins directly.</p>
+                </div>
+            </section>
+
+            <!-- Related Links -->
+            <div class="related-links">
+                <a href="#">View Deals for CS2 →</a>
+                <a href="#" class="secondary">Drop Rate Database →</a>
+                <a href="#" class="secondary">All Loot Box Analyses →</a>
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <strong>Lootboxes.com</strong> · Gaming Monetization Transparency · March 2026
+    </footer>
+</body>
+</html>

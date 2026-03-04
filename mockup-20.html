@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS2 Loot Box Analysis - Matrix Code</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', 'Courier', monospace;
+            background: #000;
+            color: #00ff41;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 255, 65, 0.03) 0px,
+                rgba(0, 255, 65, 0.03) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1;
+            animation: scan 8s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(10px); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-top: 2px solid #00ff41;
+            border-bottom: 2px solid #00ff41;
+            padding: 30px 0;
+            position: relative;
+        }
+
+        header::before {
+            content: '> SYSTEM.INIT';
+            position: absolute;
+            top: -25px;
+            left: 0;
+            font-size: 12px;
+            color: #00ff41;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.8);
+        }
+
+        .ascii-title {
+            font-size: 14px;
+            color: #00ff41;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            color: #00ff41;
+            letter-spacing: 4px;
+            text-shadow:
+                0 0 10px rgba(0, 255, 65, 0.8),
+                0 0 20px rgba(0, 255, 65, 0.4);
+            word-spacing: 10px;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            color: #00ff41;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 15px;
+            opacity: 0.8;
+        }
+
+        .hero-section {
+            background: #000;
+            border: 2px solid #00ff41;
+            padding: 40px;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+        }
+
+        .hero-section::before {
+            content: '[ ANALYSIS_REPORT ]';
+            position: absolute;
+            top: -25px;
+            left: 20px;
+            font-size: 12px;
+            color: #00ff41;
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.6);
+        }
+
+        .hero-section::after {
+            content: '[ END_REPORT ]';
+            position: absolute;
+            bottom: -25px;
+            right: 20px;
+            font-size: 12px;
+            color: #00ff41;
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.6);
+        }
+
+        .score-badge {
+            display: inline-block;
+            font-size: 72px;
+            font-weight: bold;
+            color: #00ff41;
+            margin-bottom: 20px;
+            text-shadow:
+                0 0 10px rgba(0, 255, 65, 0.8),
+                0 0 20px rgba(0, 255, 65, 0.4);
+            animation: glitch 3s ease-in-out infinite;
+        }
+
+        @keyframes glitch {
+            0%, 100% {
+                text-shadow:
+                    0 0 10px rgba(0, 255, 65, 0.8),
+                    0 0 20px rgba(0, 255, 65, 0.4);
+                transform: translate(0, 0);
+            }
+            25% {
+                text-shadow:
+                    0 0 10px rgba(255, 0, 0, 0.8),
+                    0 0 20px rgba(0, 255, 65, 0.2);
+                transform: translate(-2px, 2px);
+            }
+            50% {
+                text-shadow:
+                    0 0 10px rgba(0, 255, 65, 0.8),
+                    0 0 20px rgba(0, 255, 65, 0.4);
+                transform: translate(0, 0);
+            }
+            75% {
+                text-shadow:
+                    0 0 10px rgba(0, 255, 65, 0.8),
+                    0 0 20px rgba(255, 0, 0, 0.2);
+                transform: translate(2px, -2px);
+            }
+        }
+
+        .badge-label {
+            font-size: 12px;
+            color: #00ff41;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 15px;
+            opacity: 0.9;
+        }
+
+        .hero-text {
+            font-size: 14px;
+            margin-top: 20px;
+            color: #00ff41;
+            font-weight: bold;
+        }
+
+        .verdict {
+            color: #ff0000;
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.8);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .stat-card {
+            background: #000;
+            border: 2px solid #00ff41;
+            padding: 25px;
+            text-align: left;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '> ';
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            color: #00ff41;
+            font-weight: bold;
+            opacity: 0.5;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #00ff41;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            margin-left: 20px;
+            opacity: 0.8;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #00ff41;
+            margin-left: 20px;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.6);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            margin-top: 50px;
+            color: #00ff41;
+            letter-spacing: 2px;
+            position: relative;
+            padding: 15px 0;
+            border: 1px solid #00ff41;
+            border-left: 4px solid #00ff41;
+            padding-left: 15px;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+
+        .section-title::before {
+            content: '>> ';
+            color: #00ff41;
+            margin-right: 10px;
+        }
+
+        .monetization-box {
+            background: #000;
+            border: 2px solid #00ff41;
+            padding: 25px;
+            margin-bottom: 50px;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.25);
+        }
+
+        .model-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            font-size: 13px;
+            border-bottom: 1px dashed rgba(0, 255, 65, 0.2);
+        }
+
+        .model-row:last-child {
+            border-bottom: none;
+        }
+
+        .model-row::before {
+            content: '  ';
+        }
+
+        .model-label {
+            color: #00ff41;
+            opacity: 0.9;
+        }
+
+        .model-value {
+            color: #00ff41;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.4);
+        }
+
+        .drop-rates {
+            background: #000;
+            border: 2px solid #00ff41;
+            padding: 25px;
+            margin-bottom: 50px;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.25);
+        }
+
+        .drop-item {
+            margin-bottom: 25px;
+            font-size: 13px;
+        }
+
+        .drop-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .drop-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding-left: 10px;
+        }
+
+        .drop-name {
+            color: #00ff41;
+            opacity: 0.9;
+        }
+
+        .drop-percent {
+            color: #00ff41;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.4);
+        }
+
+        .drop-bar-container {
+            background: #0a2a0a;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            height: 16px;
+            overflow: hidden;
+            position: relative;
+            margin-left: 10px;
+        }
+
+        .drop-bar-label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            font-size: 10px;
+            font-weight: bold;
+            padding-left: 5px;
+            z-index: 2;
+        }
+
+        .drop-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff41, #00aa22);
+            position: relative;
+            box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+
+        .drop-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: matrix-scan 2s ease-in-out infinite;
+        }
+
+        @keyframes matrix-scan {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .fill-mil-spec { width: 79.92%; }
+        .fill-restricted { width: 15.98%; }
+        .fill-classified { width: 3.20%; }
+        .fill-covert { width: 0.64%; }
+        .fill-knife { width: 0.26%; }
+
+        .expected-costs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .cost-item {
+            background: #000;
+            border: 2px solid #00ff41;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+        }
+
+        .cost-item::before {
+            content: 'COST_';
+            display: block;
+            font-size: 10px;
+            color: #00ff41;
+            opacity: 0.6;
+            margin-bottom: 10px;
+        }
+
+        .cost-label {
+            font-size: 12px;
+            color: #00ff41;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            opacity: 0.9;
+        }
+
+        .cost-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #00ff41;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.6);
+        }
+
+        .verdict-section {
+            background: #000;
+            border: 3px solid #00ff41;
+            padding: 35px;
+            text-align: left;
+            margin-bottom: 40px;
+            box-shadow:
+                0 0 25px rgba(0, 255, 65, 0.4),
+                inset 0 0 15px rgba(0, 255, 65, 0.05);
+            position: relative;
+        }
+
+        .verdict-section::before {
+            content: 'VERDICT_ANALYSIS';
+            position: absolute;
+            top: -20px;
+            left: 10px;
+            font-size: 11px;
+            color: #00ff41;
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.6);
+        }
+
+        .verdict-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #00ff41;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+
+        .verdict-title::before {
+            content: '> ';
+            margin-right: 10px;
+        }
+
+        .verdict-text {
+            font-size: 13px;
+            color: #00ff41;
+            line-height: 1.8;
+        }
+
+        .verdict-text::before {
+            content: '| ';
+            color: #00ff41;
+            opacity: 0.5;
+            margin-right: 8px;
+        }
+
+        .verdict-line {
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 2px solid #00ff41;
+            border-bottom: 2px solid #00ff41;
+            margin-top: 50px;
+            color: #00ff41;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        footer::before {
+            content: '< ';
+            opacity: 0.5;
+        }
+
+        footer::after {
+            content: ' >';
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            .section-title {
+                font-size: 14px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .expected-costs {
+                grid-template-columns: 1fr;
+            }
+
+            .score-badge {
+                font-size: 48px;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="ascii-title">[ COUNTER-STRIKE 2 LOOTBOX ANALYSIS ]</div>
+            <h1>SYSTEM SCAN</h1>
+            <div class="subtitle">MONETIZATION TRANSPARENCY PROTOCOL v2.0</div>
+        </header>
+
+        <section class="hero-section">
+            <div class="score-badge">3.8</div>
+            <div class="badge-label">/ 10 TRANSPARENCY INDEX</div>
+            <div class="hero-text">> CS2 LOOT BOX INTEGRITY STATUS: COMPROMISED</div>
+            <div class="verdict">> WARNING: PREDATORY MONETIZATION DETECTED</div>
+        </section>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">COST_PER_UNIT</div>
+                <div class="stat-value">$2.49</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">PITY_SYSTEM</div>
+                <div class="stat-value">NULL</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">RARITY_TIERS</div>
+                <div class="stat-value">5</div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Monetization Model</h2>
+            <div class="monetization-box">
+                <div class="model-row">
+                    <span class="model-label">> purchase_method</span>
+                    <span class="model-value">DIRECT_PURCHASE</span>
+                </div>
+                <div class="model-row">
+                    <span class="model-label">> currency_type</span>
+                    <span class="model-value">STEAM_KEY</span>
+                </div>
+                <div class="model-row">
+                    <span class="model-label">> guaranteed_rewards</span>
+                    <span class="model-value">TRUE[MIN_MILSPEC]</span>
+                </div>
+                <div class="model-row">
+                    <span class="model-label">> duplicate_protection</span>
+                    <span class="model-value">DISABLED</span>
+                </div>
+                <div class="model-row">
+                    <span class="model-label">> trading_window</span>
+                    <span class="model-value">LIMITED_7DAYS</span>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Drop Rate Breakdown</h2>
+            <div class="drop-rates">
+                <div class="drop-item">
+                    <div class="drop-label">
+                        <span class="drop-name">> MIL_SPEC_SCANNING</span>
+                        <span class="drop-percent">79.92%</span>
+                    </div>
+                    <div class="drop-bar-container">
+                        <div class="drop-fill fill-mil-spec"></div>
+                    </div>
+                </div>
+
+                <div class="drop-item">
+                    <div class="drop-label">
+                        <span class="drop-name">> RESTRICTED_SCANNING</span>
+                        <span class="drop-percent">15.98%</span>
+                    </div>
+                    <div class="drop-bar-container">
+                        <div class="drop-fill fill-restricted"></div>
+                    </div>
+                </div>
+
+                <div class="drop-item">
+                    <div class="drop-label">
+                        <span class="drop-name">> CLASSIFIED_SCANNING</span>
+                        <span class="drop-percent">3.20%</span>
+                    </div>
+                    <div class="drop-bar-container">
+                        <div class="drop-fill fill-classified"></div>
+                    </div>
+                </div>
+
+                <div class="drop-item">
+                    <div class="drop-label">
+                        <span class="drop-name">> COVERT_SCANNING</span>
+                        <span class="drop-percent">0.64%</span>
+                    </div>
+                    <div class="drop-bar-container">
+                        <div class="drop-fill fill-covert"></div>
+                    </div>
+                </div>
+
+                <div class="drop-item">
+                    <div class="drop-label">
+                        <span class="drop-name">> KNIFE_GLOVES_SCANNING</span>
+                        <span class="drop-percent">0.26%</span>
+                    </div>
+                    <div class="drop-bar-container">
+                        <div class="drop-fill fill-knife"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Expected Cost Analysis</h2>
+            <div class="expected-costs">
+                <div class="cost-item">
+                    <div class="cost-label">FOR_COVERT_ITEM</div>
+                    <div class="cost-value">$387.50</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">FOR_KNIFE_GLOVES</div>
+                    <div class="cost-value">$956.88</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="verdict-section">
+            <h2 class="verdict-title">Final System Report</h2>
+            <div class="verdict-text">
+                <span class="verdict-line">> ANALYSIS COMPLETE: Counter-Strike 2 loot box system flagged as HIGH RISK</span>
+                <span class="verdict-line">> NO_PITY_SYSTEM detected: players face unlimited randomness</span>
+                <span class="verdict-line">> EXPECTED_COST for rare items: $387.50 (covert) to $956.88 (knife/gloves)</span>
+                <span class="verdict-line">> DUPLICATE_PROTECTION: INACTIVE - same items can be obtained repeatedly</span>
+                <span class="verdict-line">> MIL_SPEC_DROPRATE: 79.92% ensures most pulls return low-value items</span>
+                <span class="verdict-line">> TRADING_RESTRICTION: 7-day cooldown limits secondary market activity</span>
+                <span class="verdict-line">> CONCLUSION: System operates with predatory mechanics targeting casual players</span>
+                <span class="verdict-line">> RECOMMENDATION: PROCEED_WITH_CAUTION or AVOID_ENTIRELY</span>
+            </div>
+        </section>
+
+        <footer>
+            LOOTBOXES.COM | GAMING_MONETIZATION_TRANSPARENCY | MARCH_2026 | PROTOCOL_COMPLETE
+        </footer>
+    </div>
+</body>
+</html>

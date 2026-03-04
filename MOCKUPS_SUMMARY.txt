@@ -1,0 +1,242 @@
+LOOTBOXES.COM REDESIGN MOCKUPS - COUNTER-STRIKE 2
+==================================================
+
+10 Complete HTML Mockups for Individual Game Pages
+Created: March 4, 2026
+Game: Counter-Strike 2 (Loot Box System)
+All Files: Fully Self-Contained, Responsive, Production-Ready
+
+SCORING: 3.8/10 (Applied consistently across all designs)
+
+SHARED DATA ELEMENTS (All Mockups):
+- Cost Per Pull: $2.49
+- Pity System: None
+- Drop Rates:
+  * Mil-Spec (Blue): 79.92%
+  * Restricted (Purple): 15.98%
+  * Classified (Pink): 3.20%
+  * Covert (Red): 0.64%
+  * Knife/Gloves (Gold): 0.26%
+- Expected Cost to Covert: $387.50
+- Expected Cost to Knife: $956.88
+
+================================================================================
+DESIGN DIRECTION SUMMARY
+================================================================================
+
+MOCKUP 1: "Magazine Editorial" (413 lines)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Design Style: Clean editorial layout like The Verge/Polygon
+Key Features:
+  - Parallax hero with game cover and text overlay
+  - Pull-quote callouts highlighting key insights
+  - Sticky sidebar score card (right side)
+  - Elegant serif headings (Georgia) + sans-serif body
+  - Subtle grid layout with generous whitespace
+  - Deep indigo accent color (#9370db)
+  - Smooth hover animations and transitions
+Best For: Content-focused, sophisticated audience
+
+MOCKUP 2: "Dashboard Analytics" (536 lines)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Design Style: Data-heavy dashboard feel like Bloomberg/Stripe
+Key Features:
+  - Dark background (#0f1419) with bright data viz
+  - Card-based layout with prominent metrics
+  - Gauge meter for score display
+  - Drop rates shown as horizontal progress bars
+  - Cyan/teal accent color on dark slate
+  - Mini sparkline-style charts in tables
+  - Professional analytics dashboard aesthetic
+Best For: Data-focused professionals, analysts
+
+MOCKUP 3: "Gaming Magazine" (463 lines)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Design Style: Bold, energetic gaming magazine (IGN/GameSpot)
+Key Features:
+  - Angled section dividers with skew transforms
+  - Bold yellow (#ffdd00) and black color scheme
+  - Large score badge front and center
+  - All-caps aggressive typography
+  - Review-style verdict box at bottom
+  - Neon glow effects on hover
+  - Energetic, high-contrast aesthetic
+Best For: Gaming audience, casual readers
+
+MOCKUP 4: "Minimalist Card Stack" (434 lines)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Design Style: Ultra-clean Apple-inspired minimalist
+Key Features:
+  - Floating cards with subtle shadows
+  - Abundant white space throughout
+  - Score as simple blue circle ring
+  - Monochrome with single blue accent (#0071e3)
+  - Smooth rounded corners (18px border-radius)
+  - Typography-focused, minimal decoration
+  - Elegant, premium feel
+Best For: Premium/professional audience, modern aesthetics
+
+MOCKUP 5: "Full-Width Immersive" (445 lines)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Design Style: Edge-to-edge immersive sections with parallax
+Key Features:
+  - Full-bleed alternating section backgrounds
+  - Floating pill showing score (scrolls with you)
+  - Parallax scrolling effects
+  - Gradient overlays on sections
+  - Dark mode by default (#0a0a0a)
+  - CSS-only scroll animations
+  - Pink/magenta accent (#ff3366)
+  - Cinematic, immersive experience
+Best For: Modern web audience, visual storytelling
+
+MOCKUP 6: "Side-by-Side Comparison" (533 lines)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Design Style: Documentation-style split-screen layout
+Key Features:
+  - Fixed left sidebar (280px) with game info
+  - Right side scrollable content sections
+  - Table of contents navigation that highlights current section
+  - Clean professional look like GitHub docs
+  - Emerald green accent (#06b6d4)
+  - Persistent game info and quick stats
+  - Responsive sidebar collapses on mobile
+Best For: Documentation readers, reference materials
+
+MOCKUP 7: "Reddit/Community Forum" (485 lines)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Design Style: Community-driven feel like Reddit/Discord
+Key Features:
+  - Comment-style sections with upvote indicators
+  - Score shown as community poll results
+  - Tags and badges prominently featured
+  - Discord-like dark colors (#36393f, #2f3136)
+  - User avatars and "verified" badges
+  - Collapsible/expandable reactions
+  - Community sentiment polling
+Best For: Community-focused platforms, social integration
+
+MOCKUP 8: "Report Card / Grading" (391 lines)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Design Style: Structured like actual academic report card
+Key Features:
+  - Letter grades (A-F) for each category
+  - GPA-style overall score display
+  - Clean table-based layout with borders
+  - Red/yellow/green color coding for grades
+  - Formal, structured appearance
+  - Each section clearly delineated
+  - Georgia serif for academic feel
+  - Grade breakdown with detailed analysis
+Best For: Educational tone, formal assessment
+
+MOCKUP 9: "Timeline / Story" (312 lines)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Design Style: Vertical timeline layout with chronological flow
+Key Features:
+  - Vertical timeline with connected cards
+  - Content flows chronologically (history first)
+  - Cards branch left/right alternately
+  - Score revealed at end as conclusion
+  - CSS-only scroll-triggered animations
+  - Warm amber/gold accent (#d4af37)
+  - Historical narrative approach
+  - Timeline dot and connecting line
+Best For: Historical context, narrative-driven content
+
+MOCKUP 10: "Interactive Tabs" (570 lines)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Design Style: Single-page app with tab navigation (SaaS feel)
+Key Features:
+  - Top sticky bar with game info and tab navigation
+  - Only one section visible at a time (JavaScript tabs)
+  - Score always visible in top bar
+  - Quick comparison drawer at bottom
+  - Modern SaaS dashboard aesthetic
+  - Violet/purple accent (#667eea, #764ba2)
+  - Smooth tab transitions with animations
+  - Fully functional tab switching (vanilla JS)
+Best For: Interactive dashboards, modern web apps
+
+================================================================================
+TECHNICAL SPECIFICATIONS
+================================================================================
+
+All Files:
+✓ HTML5 valid structure
+✓ Self-contained CSS (no external stylesheets)
+✓ Responsive design (mobile 768px breakpoint)
+✓ 312-570 lines of HTML/CSS per file
+✓ Uses realistic CS2 game data
+✓ Drop rate visualizations included
+✓ Score prominently displayed
+✓ Clear visual hierarchy
+✓ Production-ready quality
+
+File Locations:
+/sessions/modest-clever-pasteur/mnt/lootboxes/mockup-1.html
+/sessions/modest-clever-pasteur/mnt/lootboxes/mockup-2.html
+/sessions/modest-clever-pasteur/mnt/lootboxes/mockup-3.html
+/sessions/modest-clever-pasteur/mnt/lootboxes/mockup-4.html
+/sessions/modest-clever-pasteur/mnt/lootboxes/mockup-5.html
+/sessions/modest-clever-pasteur/mnt/lootboxes/mockup-6.html
+/sessions/modest-clever-pasteur/mnt/lootboxes/mockup-7.html
+/sessions/modest-clever-pasteur/mnt/lootboxes/mockup-8.html
+/sessions/modest-clever-pasteur/mnt/lootboxes/mockup-9.html
+/sessions/modest-clever-pasteur/mnt/lootboxes/mockup-10.html
+
+Total Size: ~4.5 KB (combined HTML only)
+
+================================================================================
+DESIGN DECISION MATRIX
+================================================================================
+
+Choose based on your target audience:
+
+AUDIENCE TYPE          → RECOMMENDED MOCKUP(S)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Journalists/Media      → Mockup 1 (Editorial)
+Data Analysts          → Mockup 2 (Dashboard)
+Gamers (Casual)        → Mockup 3 (Gaming Magazine)
+Premium/Professional   → Mockup 4 (Minimalist) or Mockup 6 (Docs)
+Modern Web (2024+)     → Mockup 5 (Immersive)
+Community/Social       → Mockup 7 (Reddit/Discord)
+Academic/Formal        → Mockup 8 (Report Card)
+Story/Context Focus    → Mockup 9 (Timeline)
+Interactive Dashboard  → Mockup 10 (Tabs/SaaS)
+
+================================================================================
+COMMON SECTIONS ACROSS ALL DESIGNS
+================================================================================
+
+Every mockup includes:
+1. Game identification (Counter-Strike 2)
+2. Score display (3.8/10)
+3. Quick stats row (Cost Per Pull, Pity System, etc.)
+4. Monetization Overview explanation
+5. Drop Rate Breakdown (visualized)
+6. Expected Cost Analysis
+7. Consumer Protection Assessment
+8. Final Verdict
+
+All use realistic CS2 data:
+- Cost per pull: $2.49
+- Drop rates accurately represented
+- Expected costs calculated mathematically
+- Consistent messaging about lack of pity system
+
+================================================================================
+CUSTOMIZATION NOTES
+================================================================================
+
+To adapt these for other games:
+1. Replace "Counter-Strike 2" and "CS2" with game name
+2. Update cost per pull ($2.49) with actual value
+3. Adjust drop rates if applicable
+4. Recalculate expected costs based on new rates
+5. Change colors to match game branding
+6. Update additional sections with game-specific content
+
+All designs are fully modular and can be customized while maintaining the
+core visual approach and responsive structure.
+

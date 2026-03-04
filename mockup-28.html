@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS2 Loot Box Analysis - Electric Storm</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1c1917 0%, #2a2420 50%, #1c1917 100%);
+            color: #f0f0f0;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Lightning bolt decoration lines */
+        .lightning-line {
+            position: fixed;
+            background: linear-gradient(90deg, transparent, #eab308, transparent);
+            pointer-events: none;
+            opacity: 0.6;
+            z-index: 1;
+        }
+
+        .lightning-line1 {
+            width: 100%;
+            height: 2px;
+            top: 25%;
+            left: 0;
+            transform: skewY(-2deg);
+            animation: crackle 3s ease-in-out infinite;
+        }
+
+        .lightning-line2 {
+            width: 100%;
+            height: 2px;
+            top: 50%;
+            left: 0;
+            transform: skewY(2deg);
+            animation: crackle 4s ease-in-out infinite 1s;
+        }
+
+        .lightning-line3 {
+            width: 100%;
+            height: 2px;
+            top: 75%;
+            left: 0;
+            transform: skewY(-1.5deg);
+            animation: crackle 3.5s ease-in-out infinite 0.5s;
+        }
+
+        @keyframes crackle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Fixed floating score pill */
+        .score-pill {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 100;
+            background: rgba(147, 51, 234, 0.2);
+            border: 2px solid #9333ea;
+            border-radius: 50px;
+            padding: 15px 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(147, 51, 234, 0.5),
+                        0 0 60px rgba(234, 179, 8, 0.2);
+            font-weight: bold;
+            font-size: 18px;
+            text-shadow: 0 0 10px rgba(234, 179, 8, 0.5);
+            animation: electric-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes electric-pulse {
+            0%, 100% { box-shadow: 0 0 30px rgba(147, 51, 234, 0.5), 0 0 60px rgba(234, 179, 8, 0.2); }
+            50% { box-shadow: 0 0 50px rgba(147, 51, 234, 0.8), 0 0 100px rgba(234, 179, 8, 0.4); }
+        }
+
+        .score-pill span {
+            color: #eab308;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 0 15px #eab308;
+        }
+
+        /* Hero section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #1c1917 0%, #2a2420 50%, #1c1917 100%);
+            position: relative;
+            overflow: hidden;
+            border-bottom: 3px solid #9333ea;
+            box-shadow: 0 0 40px rgba(147, 51, 234, 0.3);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(90deg, transparent, rgba(234, 179, 8, 0.1), transparent) 0%,
+                linear-gradient(90deg, transparent, rgba(147, 51, 234, 0.1), transparent) 100%;
+            animation: electric-scan 4s ease-in-out infinite;
+        }
+
+        @keyframes electric-scan {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #eab308;
+            text-shadow:
+                0 0 10px #eab308,
+                0 0 20px #9333ea,
+                0 0 40px rgba(147, 51, 234, 0.5);
+            font-weight: 700;
+            letter-spacing: 3px;
+            animation: electric-flicker 0.15s ease-in-out infinite;
+        }
+
+        @keyframes electric-flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { text-shadow: 0 0 10px #eab308, 0 0 20px #9333ea, 0 0 40px rgba(147, 51, 234, 0.5); }
+            20%, 24%, 55% { text-shadow: 0 0 5px #eab308, 0 0 10px #9333ea; }
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #9333ea;
+            margin-bottom: 30px;
+            text-shadow: 0 0 15px #9333ea;
+            letter-spacing: 1px;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #9333ea, #6b1dd1);
+            color: #fff;
+            border: 2px solid #eab308;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 0 30px rgba(147, 51, 234, 0.6),
+                        0 0 20px rgba(234, 179, 8, 0.4);
+            transition: all 0.3s ease;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(234, 179, 8, 0.3), transparent);
+            animation: electric-strike 3s ease-in-out infinite;
+        }
+
+        @keyframes electric-strike {
+            0%, 100% { transform: translateX(-100%) translateY(-100%); }
+            50% { transform: translateX(100%) translateY(100%); }
+        }
+
+        .cta-button:hover {
+            box-shadow: 0 0 50px rgba(147, 51, 234, 0.9),
+                        0 0 40px rgba(234, 179, 8, 0.7);
+            transform: translateY(-3px);
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        section:nth-child(odd) {
+            background: rgba(28, 25, 23, 0.8);
+            border-top: 2px solid #9333ea;
+            border-bottom: 2px solid #9333ea;
+            box-shadow: 0 0 30px rgba(147, 51, 234, 0.1);
+        }
+
+        section:nth-child(even) {
+            background: rgba(42, 36, 32, 0.6);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #eab308;
+            text-align: center;
+            text-shadow:
+                0 0 10px #eab308,
+                0 0 20px #9333ea,
+                0 0 30px rgba(234, 179, 8, 0.3);
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, #9333ea, #eab308, #9333ea);
+            margin: 20px auto 0;
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.6);
+        }
+
+        /* Stats grid with animated borders */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .stat-card {
+            background: rgba(147, 51, 234, 0.08);
+            border: 2px solid #9333ea;
+            border-radius: 0px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent, rgba(234, 179, 8, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: #eab308;
+            box-shadow: 0 0 30px rgba(147, 51, 234, 0.5),
+                        0 0 20px rgba(234, 179, 8, 0.4),
+                        inset 0 0 20px rgba(234, 179, 8, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #eab308;
+            text-shadow: 0 0 15px #eab308;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-card .label {
+            font-size: 0.95rem;
+            color: #9333ea;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Drop rates */
+        .drop-rate-item {
+            margin: 25px 0;
+            padding: 20px;
+            background: rgba(147, 51, 234, 0.08);
+            border-left: 4px solid #eab308;
+            border-radius: 0px;
+        }
+
+        .drop-rate-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #eab308;
+            font-weight: bold;
+        }
+
+        .drop-rate-bar {
+            width: 100%;
+            height: 30px;
+            background: rgba(147, 51, 234, 0.2);
+            border-radius: 0px;
+            overflow: hidden;
+            border: 2px solid #9333ea;
+            position: relative;
+        }
+
+        .drop-rate-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #9333ea, #eab308, #6b1dd1);
+            border-radius: 0px;
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.6),
+                        inset 0 0 10px rgba(234, 179, 8, 0.3);
+            transition: width 0.8s ease;
+            position: relative;
+        }
+
+        .drop-rate-fill::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: electric-shimmer 2s ease-in-out infinite;
+        }
+
+        @keyframes electric-shimmer {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .expected-costs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .cost-card {
+            background: rgba(147, 51, 234, 0.12);
+            border: 2px solid #9333ea;
+            border-radius: 0px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(147, 51, 234, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .cost-card:hover {
+            border-color: #eab308;
+            box-shadow: 0 0 40px rgba(147, 51, 234, 0.4),
+                        0 0 25px rgba(234, 179, 8, 0.4);
+            transform: translateY(-10px);
+        }
+
+        .cost-card h3 {
+            color: #eab308;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px #eab308;
+        }
+
+        .cost-card .amount {
+            font-size: 2.5rem;
+            color: #eab308;
+            font-weight: bold;
+            text-shadow: 0 0 20px #eab308;
+        }
+
+        /* Verdict */
+        .verdict-box {
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), rgba(234, 179, 8, 0.1));
+            border: 2px solid #eab308;
+            border-radius: 0px;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(147, 51, 234, 0.3),
+                        0 0 25px rgba(234, 179, 8, 0.2);
+        }
+
+        .verdict-box h3 {
+            color: #eab308;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px #eab308;
+        }
+
+        .verdict-box p {
+            font-size: 1.1rem;
+            color: #f0f0f0;
+            line-height: 1.8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 2px solid #9333ea;
+            background: rgba(28, 25, 23, 0.95);
+            color: #9333ea;
+            font-size: 0.9rem;
+            margin-top: 60px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 0 30px rgba(147, 51, 234, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1rem; }
+            h2 { font-size: 1.8rem; }
+            section { padding: 50px 20px; }
+            .score-pill { top: 15px; right: 15px; padding: 10px 15px; font-size: 14px; }
+            .lightning-line { display: none; }
+            .stat-card .number { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="lightning-line lightning-line1"></div>
+    <div class="lightning-line lightning-line2"></div>
+    <div class="lightning-line lightning-line3"></div>
+
+    <div class="score-pill">Score: <span>3.8</span>/10</div>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>CS2 Loot Box Analysis</h1>
+            <p>Feel the Crackling Odds</p>
+            <p style="font-size: 0.9rem; color: #eab308; margin-top: 20px;">High voltage transparency. Raw power.</p>
+        </div>
+    </section>
+
+    <section id="quick-stats">
+        <h2>Electrifying Metrics</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="number">3.8/10</div>
+                <div class="label">Fairness Score</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">$2.49</div>
+                <div class="label">Cost Per Pull</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">None</div>
+                <div class="label">Pity System</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">5</div>
+                <div class="label">Rarity Tiers</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="monetization">
+        <h2>Monetization Overview</h2>
+        <div style="padding: 30px; background: rgba(147, 51, 234, 0.08); border: 2px solid #9333ea; border-radius: 0px;">
+            <p style="font-size: 1.1rem; line-height: 1.8; color: #f0f0f0;">
+                Counter-Strike 2 charges $2.49 per weapon case opening in a system devoid of mercy mechanics. Every pull electrifies with the possibility of value, yet the odds are ruthlessly stacked. With no pity system and a 79.92% concentration in common drops, this is raw, unfiltered casino mechanics disguised as cosmetic progression. The system operates at maximum voltage—intense pressure applied constantly without safety valves.
+            </p>
+        </div>
+    </section>
+
+    <section id="drop-rates">
+        <h2>Drop Rate Analysis: Voltage Distribution</h2>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Mil-Spec (Blue)</span>
+                <span>79.92%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 79.92%;"></div>
+            </div>
+        </div>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Restricted (Light Blue)</span>
+                <span>15.98%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 15.98%;"></div>
+            </div>
+        </div>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Classified (Purple)</span>
+                <span>3.20%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 3.20%;"></div>
+            </div>
+        </div>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Covert (Red)</span>
+                <span>0.64%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 0.64%;"></div>
+            </div>
+        </div>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Knife / Gloves (Gold)</span>
+                <span>0.26%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 0.26%;"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="expected-costs">
+        <h2>Strike Zone: Expected Costs</h2>
+        <div class="expected-costs">
+            <div class="cost-card">
+                <h3>Covert Item</h3>
+                <div class="amount">~$387.50</div>
+                <p style="margin-top: 15px; font-size: 0.9rem;">Approximately 156 strikes to hit rare territory</p>
+            </div>
+            <div class="cost-card">
+                <h3>Knife / Gloves</h3>
+                <div class="amount">~$956.88</div>
+                <p style="margin-top: 15px; font-size: 0.9rem;">Approximately 385 strikes to breach the legendary barrier</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="verdict">
+        <h2>The Storm Verdict</h2>
+        <div class="verdict-box">
+            <h3>Avoid Unless Risk Tolerant</h3>
+            <p>
+                This loot box system is a lightning storm of probability with no shelter. No pity system means continuous exposure to common drops. The mathematical storm only intensifies as you chase rarer items—expected costs reach hurricane levels for knives and gloves. Players pursuing any target rarity face astronomical odds. The transparency is admirable, but the underlying mechanics are brutal. Only enter this storm if you accept total financial loss as a possibility.
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        Lootboxes.com | Gaming Monetization Transparency | March 2026
+    </footer>
+</body>
+</html>

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS2 Loot Box Analysis - Minimal Luxe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Garamond', serif;
+            background: #faf5ef;
+            color: #1a1a1a;
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+
+        /* Fixed floating score pill */
+        .score-pill {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            z-index: 100;
+            background: #1a1a1a;
+            border: 1px solid #c4a35a;
+            border-radius: 50px;
+            padding: 18px 30px;
+            font-weight: 600;
+            font-size: 16px;
+            color: #c4a35a;
+            text-shadow: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .score-pill span {
+            color: #c4a35a;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        /* Hero section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #1a1a1a 0%, #2d2d2d 100%);
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid #c4a35a;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(196, 163, 90, 0.05), transparent);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+            max-width: 800px;
+            padding: 0 40px;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 30px;
+            color: #faf5ef;
+            font-weight: 300;
+            letter-spacing: 4px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #c4a35a;
+            margin-bottom: 20px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .hero p:last-of-type {
+            font-size: 0.95rem;
+            color: #999;
+            margin-top: 30px;
+            letter-spacing: 1px;
+        }
+
+        .cta-button {
+            background: transparent;
+            color: #c4a35a;
+            border: 1px solid #c4a35a;
+            padding: 16px 50px;
+            font-size: 1rem;
+            border-radius: 0px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: none;
+            transition: all 0.4s ease;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-top: 40px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .cta-button:hover {
+            background: #c4a35a;
+            color: #faf5ef;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Sections */
+        section {
+            padding: 120px 60px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        section:nth-child(odd) {
+            background: #faf5ef;
+            border-bottom: 1px solid #e8e0d0;
+        }
+
+        section:nth-child(even) {
+            background: #f5f0eb;
+            border-bottom: 1px solid #e8e0d0;
+        }
+
+        h2 {
+            font-size: 3rem;
+            margin-bottom: 50px;
+            color: #1a1a1a;
+            text-align: center;
+            font-weight: 300;
+            letter-spacing: 2px;
+            position: relative;
+            padding-bottom: 30px;
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 1px;
+            background: #c4a35a;
+            margin: 30px auto 0;
+        }
+
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 50px;
+            margin: 60px 0;
+        }
+
+        .stat-card {
+            background: #faf5ef;
+            border: 1px solid #c4a35a;
+            border-radius: 0px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            transition: all 0.4s ease;
+        }
+
+        section:nth-child(even) .stat-card {
+            background: #f5f0eb;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-color: #1a1a1a;
+        }
+
+        .stat-card .number {
+            font-size: 2.8rem;
+            font-weight: 300;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .stat-card .label {
+            font-size: 0.95rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: 500;
+        }
+
+        /* Monetization section text */
+        .monetization-text {
+            padding: 50px;
+            background: #f5f0eb;
+            border: 1px solid #c4a35a;
+            border-radius: 0px;
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: #333;
+        }
+
+        section:nth-child(even) .monetization-text {
+            background: #faf5ef;
+        }
+
+        /* Drop rates */
+        .drop-rate-item {
+            margin: 50px 0;
+            padding: 30px 40px;
+            background: #f5f0eb;
+            border-left: 1px solid #c4a35a;
+            border-radius: 0px;
+        }
+
+        section:nth-child(even) .drop-rate-item {
+            background: #faf5ef;
+        }
+
+        .drop-rate-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            color: #1a1a1a;
+            font-weight: 600;
+            font-size: 1.1rem;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .drop-rate-bar {
+            width: 100%;
+            height: 8px;
+            background: #e8e0d0;
+            border-radius: 0px;
+            overflow: hidden;
+            border: 1px solid #c4a35a;
+            position: relative;
+        }
+
+        .drop-rate-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #c4a35a, #d4b87a);
+            border-radius: 0px;
+            transition: width 1s cubic-bezier(0.4, 0.0, 0.2, 1);
+            box-shadow: inset 0 0 5px rgba(196, 163, 90, 0.3);
+        }
+
+        .expected-costs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 50px;
+            margin: 60px 0;
+        }
+
+        .cost-card {
+            background: #f5f0eb;
+            border: 1px solid #c4a35a;
+            border-radius: 0px;
+            padding: 45px 35px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            transition: all 0.4s ease;
+        }
+
+        section:nth-child(even) .cost-card {
+            background: #faf5ef;
+        }
+
+        .cost-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .cost-card h3 {
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        .cost-card .amount {
+            font-size: 3rem;
+            color: #c4a35a;
+            font-weight: 300;
+            margin: 20px 0;
+        }
+
+        .cost-card p {
+            font-size: 0.95rem;
+            color: #666;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* Verdict */
+        .verdict-box {
+            background: #f5f0eb;
+            border: 1px solid #c4a35a;
+            border-radius: 0px;
+            padding: 60px;
+            margin: 60px 0;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+
+        section:nth-child(even) .verdict-box {
+            background: #faf5ef;
+        }
+
+        .verdict-box h3 {
+            color: #1a1a1a;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        .verdict-box p {
+            font-size: 1.15rem;
+            color: #333;
+            line-height: 1.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px 40px;
+            border-top: 1px solid #c4a35a;
+            background: #faf5ef;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 80px;
+            font-family: 'Segoe UI', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+            section { padding: 60px 30px; }
+            .hero { height: 80vh; }
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.1rem; }
+            h2 { font-size: 2rem; }
+            .score-pill { top: 20px; right: 20px; padding: 12px 20px; font-size: 13px; }
+            .stats-grid { grid-template-columns: 1fr; gap: 30px; }
+            .stat-card { padding: 30px 20px; }
+            .stat-card .number { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="score-pill">Score: <span>3.8</span>/10</div>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>CS2 Loot Box Analysis</h1>
+            <p>A Study in Digital Monetization</p>
+            <p style="font-size: 0.95rem; color: #999; margin-top: 30px;">Transparency. Clarity. Restraint.</p>
+        </div>
+    </section>
+
+    <section id="quick-stats">
+        <h2>Key Metrics</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="number">3.8</div>
+                <div class="label">Fairness Score</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">$2.49</div>
+                <div class="label">Cost Per Pull</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">None</div>
+                <div class="label">Pity System</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">5</div>
+                <div class="label">Rarity Tiers</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="monetization">
+        <h2>Monetization Overview</h2>
+        <div class="monetization-text">
+            <p>
+                Counter-Strike 2 employs a direct monetization model through case openings. Each case requires a key purchase at $2.49, providing access to a single weapon skin draw. The system is refreshingly transparent: every pull guarantees a reward, with published drop rate distributions. However, the absence of pity systems or guaranteed progression mechanisms creates an experience designed for extended engagement. The concentration of value in lower rarities reflects the commercial reality of cosmetic monetization in competitive gaming.
+            </p>
+        </div>
+    </section>
+
+    <section id="drop-rates">
+        <h2>Distribution Analysis</h2>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Mil-Spec (Blue)</span>
+                <span style="color: #c4a35a;">79.92%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 79.92%;"></div>
+            </div>
+        </div>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Restricted (Light Blue)</span>
+                <span style="color: #c4a35a;">15.98%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 15.98%;"></div>
+            </div>
+        </div>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Classified (Purple)</span>
+                <span style="color: #c4a35a;">3.20%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 3.20%;"></div>
+            </div>
+        </div>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Covert (Red)</span>
+                <span style="color: #c4a35a;">0.64%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 0.64%;"></div>
+            </div>
+        </div>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Knife / Gloves (Gold)</span>
+                <span style="color: #c4a35a;">0.26%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 0.26%;"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="expected-costs">
+        <h2>Economic Analysis</h2>
+        <div class="expected-costs">
+            <div class="cost-card">
+                <h3>Covert Item</h3>
+                <div class="amount">~$387.50</div>
+                <p>Approximately 156 case openings required to reach a 0.64% rarity threshold</p>
+            </div>
+            <div class="cost-card">
+                <h3>Knife / Gloves</h3>
+                <div class="amount">~$956.88</div>
+                <p>Approximately 385 case openings required to reach the 0.26% rarity threshold</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="verdict">
+        <h2>Assessment</h2>
+        <div class="verdict-box">
+            <h3>Not Recommended for Value-Conscious Players</h3>
+            <p>
+                CS2's loot box system operates with admirable transparency but economically punitive mechanics. The absence of pity systems combined with heavily skewed distribution toward common rarities creates an environment where collecting specific items requires either extraordinary luck or substantial expenditure. The $387.50 average cost for Covert items and nearly $1,000 for knives positions this system as a premium cosmetic investment rather than a value proposition. Approach with deliberate intent and established financial boundaries.
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        Lootboxes.com | Gaming Monetization Transparency | March 2026
+    </footer>
+</body>
+</html>

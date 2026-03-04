@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS2 Loot Box Analysis - Cosmic Nebula</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #e0d5ff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Starfield background */
+        body::before {
+            content: '';
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-image:
+                radial-gradient(1px 1px at 20% 30%, #eee, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 60% 70%, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 50% 50%, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 80% 10%, #ddd, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 90% 60%, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 30% 80%, #eee, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 15% 60%, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 75% 45%, #ddd, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 40% 20%, #eee, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 85% 85%, #fff, rgba(0,0,0,0));
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            pointer-events: none;
+            z-index: 1;
+            animation: twinkle 8s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Nebula blobs */
+        .nebula {
+            position: fixed;
+            pointer-events: none;
+            filter: blur(80px);
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .nebula1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #e040fb, transparent);
+            top: 10%;
+            left: 10%;
+            animation: float-nebula 15s ease-in-out infinite;
+        }
+
+        .nebula2 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #304ffe, transparent);
+            bottom: 20%;
+            right: 15%;
+            animation: float-nebula 20s ease-in-out infinite reverse;
+        }
+
+        .nebula3 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, #7c4dff, transparent);
+            top: 50%;
+            left: 50%;
+            animation: float-nebula 18s ease-in-out infinite;
+        }
+
+        @keyframes float-nebula {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, -50px) scale(1.1); }
+        }
+
+        /* Fixed floating score pill */
+        .score-pill {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 100;
+            background: rgba(224, 64, 251, 0.15);
+            border: 2px solid #e040fb;
+            border-radius: 50px;
+            padding: 15px 25px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 30px rgba(224, 64, 251, 0.4),
+                        0 0 60px rgba(48, 79, 254, 0.2);
+            font-weight: bold;
+            font-size: 18px;
+            text-shadow: 0 0 15px rgba(224, 64, 251, 0.6);
+        }
+
+        .score-pill span {
+            color: #b366ff;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Hero section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(224, 64, 251, 0.1), rgba(48, 79, 254, 0.1));
+            border-bottom: 3px solid #e040fb;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(224, 64, 251, 0.3), transparent);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            filter: blur(60px);
+            animation: pulse-nebula 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse-nebula {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.3); }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #e040fb, #b366ff, #7c4dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-shadow: 0 0 50px rgba(224, 64, 251, 0.3);
+            animation: float-text 3s ease-in-out infinite;
+        }
+
+        @keyframes float-text {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #b366ff;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(224, 64, 251, 0.4);
+            letter-spacing: 1px;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #e040fb, #304ffe);
+            color: #fff;
+            border: 2px solid #e040fb;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 0 30px rgba(224, 64, 251, 0.5);
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .cta-button:hover {
+            box-shadow: 0 0 50px rgba(224, 64, 251, 0.8);
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        section:nth-child(odd) {
+            background: rgba(10, 10, 10, 0.8);
+            border-top: 2px solid rgba(224, 64, 251, 0.2);
+            border-bottom: 2px solid rgba(224, 64, 251, 0.2);
+        }
+
+        section:nth-child(even) {
+            background: rgba(48, 79, 254, 0.05);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #e040fb, #7c4dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            position: relative;
+            padding-bottom: 20px;
+            text-shadow: 0 0 30px rgba(224, 64, 251, 0.2);
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #e040fb, transparent);
+            margin: 20px auto 0;
+        }
+
+        /* Planet stat cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .stat-planet {
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(224, 64, 251, 0.2), rgba(48, 79, 254, 0.2));
+            border: 3px solid transparent;
+            border-image: linear-gradient(135deg, #e040fb, #304ffe) 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(224, 64, 251, 0.3),
+                        inset 0 0 30px rgba(124, 77, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-planet::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(224, 64, 251, 0.1), transparent 70%);
+            transform: translateX(-100%);
+        }
+
+        .stat-planet:hover {
+            box-shadow: 0 0 50px rgba(224, 64, 251, 0.6),
+                        inset 0 0 30px rgba(124, 77, 255, 0.2);
+            transform: scale(1.08) rotateZ(5deg);
+        }
+
+        .stat-planet .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #e040fb, #b366ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            z-index: 2;
+        }
+
+        .stat-planet .label {
+            font-size: 0.95rem;
+            color: #7c4dff;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+
+        /* Drop rates */
+        .drop-rate-item {
+            margin: 25px 0;
+            padding: 20px;
+            background: rgba(224, 64, 251, 0.08);
+            border-left: 4px solid #e040fb;
+            border-radius: 5px;
+        }
+
+        .drop-rate-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #b366ff;
+            font-weight: bold;
+        }
+
+        .drop-rate-bar {
+            width: 100%;
+            height: 30px;
+            background: rgba(224, 64, 251, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid #7c4dff;
+            position: relative;
+        }
+
+        .drop-rate-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e040fb, #304ffe, #7c4dff);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(224, 64, 251, 0.6);
+            transition: width 0.8s ease;
+        }
+
+        .expected-costs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .cost-card {
+            background: linear-gradient(135deg, rgba(224, 64, 251, 0.15), rgba(48, 79, 254, 0.15));
+            border: 2px solid #e040fb;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(224, 64, 251, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .cost-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 50px rgba(224, 64, 251, 0.5);
+        }
+
+        .cost-card h3 {
+            color: #b366ff;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .cost-card .amount {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #e040fb, #7c4dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+        }
+
+        /* Verdict */
+        .verdict-box {
+            background: linear-gradient(135deg, rgba(224, 64, 251, 0.2), rgba(48, 79, 254, 0.15));
+            border: 2px solid #e040fb;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(224, 64, 251, 0.3);
+        }
+
+        .verdict-box h3 {
+            color: #e040fb;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .verdict-box p {
+            font-size: 1.1rem;
+            color: #b366ff;
+            line-height: 1.8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 2px solid rgba(224, 64, 251, 0.2);
+            background: rgba(10, 10, 10, 0.9);
+            color: #7c4dff;
+            font-size: 0.9rem;
+            margin-top: 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1rem; }
+            h2 { font-size: 1.8rem; }
+            section { padding: 50px 20px; }
+            .score-pill { top: 15px; right: 15px; padding: 10px 15px; font-size: 14px; }
+            .nebula { display: none; }
+            .stat-planet .number { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nebula nebula1"></div>
+    <div class="nebula nebula2"></div>
+    <div class="nebula nebula3"></div>
+
+    <div class="score-pill">Score: <span>3.8</span>/10</div>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>CS2 Loot Box Analysis</h1>
+            <p>Navigate the Cosmic Odds</p>
+            <p style="font-size: 0.9rem; color: #7c4dff; margin-top: 20px;">A mission to quantify the unknown.</p>
+        </div>
+    </section>
+
+    <section id="quick-stats">
+        <h2>Planetary Stats</h2>
+        <div class="stats-grid">
+            <div class="stat-planet">
+                <div class="number">3.8/10</div>
+                <div class="label">Fairness Score</div>
+            </div>
+            <div class="stat-planet">
+                <div class="number">$2.49</div>
+                <div class="label">Cost Per Pull</div>
+            </div>
+            <div class="stat-planet">
+                <div class="number">None</div>
+                <div class="label">Pity System</div>
+            </div>
+            <div class="stat-planet">
+                <div class="number">5</div>
+                <div class="label">Rarity Tiers</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="monetization">
+        <h2>Monetization Overview</h2>
+        <div style="padding: 30px; background: rgba(224, 64, 251, 0.08); border-radius: 10px; border: 2px solid #7c4dff;">
+            <p style="font-size: 1.1rem; line-height: 1.8; color: #b366ff;">
+                Counter-Strike 2 operates a direct weapon case opening system requiring $2.49 keys in a cosmic lottery. Every pull yields a weapon skin, but the absence of pity mechanisms launches players into an infinite void of lower-rarity drops. The distribution heavily favors blue and light blue rarities, creating an event horizon where knife and glove drops exist in untouchable probability zones. This is a zero-guarantee system designed for extended commitment.
+            </p>
+        </div>
+    </section>
+
+    <section id="drop-rates">
+        <h2>Drop Rate Analysis: Orbital Mechanics</h2>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Mil-Spec (Blue)</span>
+                <span>79.92%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 79.92%;"></div>
+            </div>
+        </div>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Restricted (Light Blue)</span>
+                <span>15.98%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 15.98%;"></div>
+            </div>
+        </div>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Classified (Purple)</span>
+                <span>3.20%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 3.20%;"></div>
+            </div>
+        </div>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Covert (Red)</span>
+                <span>0.64%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 0.64%;"></div>
+            </div>
+        </div>
+        <div class="drop-rate-item">
+            <div class="drop-rate-header">
+                <span>Knife / Gloves (Gold)</span>
+                <span>0.26%</span>
+            </div>
+            <div class="drop-rate-bar">
+                <div class="drop-rate-fill" style="width: 0.26%;"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="expected-costs">
+        <h2>Interstellar Expenses: Expected Costs</h2>
+        <div class="expected-costs">
+            <div class="cost-card">
+                <h3>Covert Item</h3>
+                <div class="amount">~$387.50</div>
+                <p style="margin-top: 15px; font-size: 0.9rem;">Approximately 156 opens to reach rarity escapeVelocity</p>
+            </div>
+            <div class="cost-card">
+                <h3>Knife / Gloves</h3>
+                <div class="amount">~$956.88</div>
+                <p style="margin-top: 15px; font-size: 0.9rem;">Approximately 385 opens to breach the cosmic barrier</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="verdict">
+        <h2>The Void Verdict</h2>
+        <div class="verdict-box">
+            <h3>Not Recommended for Wise Travelers</h3>
+            <p>
+                CS2's loot box system exists in a probability void with no pity mechanism to guide your journey. Expect to orbit within common drops for extended durations while rare items remain cosmically distant. The transparency is commendable, but the mathematics are merciless. This system rewards persistent whales and punishes casual collectors with exponential cost growth. Enter with realistic expectations or seek alternative gaming investments.
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        Lootboxes.com | Gaming Monetization Transparency | March 2026
+    </footer>
+</body>
+</html>
