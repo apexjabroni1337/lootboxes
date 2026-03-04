@@ -81,10 +81,13 @@ export default function Header() {
   const [megaOpen, setMegaOpen] = useState(false);
   const [megaTab, setMegaTab] = useState<"lootbox" | "all">("all");
   const [lootboxMegaOpen, setLootboxMegaOpen] = useState(false);
+  const [lootboxDealsOpen, setLootboxDealsOpen] = useState(false);
   const megaRef = useRef<HTMLDivElement>(null);
   const lootboxMegaRef = useRef<HTMLDivElement>(null);
+  const lootboxDealsRef = useRef<HTMLDivElement>(null);
   const megaTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lootboxTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lootboxDealsTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Cmd+K / Ctrl+K shortcut to open search
   useEffect(() => {
@@ -107,6 +110,9 @@ export default function Header() {
       if (lootboxMegaRef.current && !lootboxMegaRef.current.contains(e.target as Node)) {
         setLootboxMegaOpen(false);
       }
+      if (lootboxDealsRef.current && !lootboxDealsRef.current.contains(e.target as Node)) {
+        setLootboxDealsOpen(false);
+      }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -116,6 +122,7 @@ export default function Header() {
     if (megaTimeout.current) clearTimeout(megaTimeout.current);
     setMegaOpen(true);
     setLootboxMegaOpen(false);
+    setLootboxDealsOpen(false);
   };
   const closeMega = () => {
     megaTimeout.current = setTimeout(() => setMegaOpen(false), 150);
@@ -124,9 +131,19 @@ export default function Header() {
     if (lootboxTimeout.current) clearTimeout(lootboxTimeout.current);
     setLootboxMegaOpen(true);
     setMegaOpen(false);
+    setLootboxDealsOpen(false);
   };
   const closeLootboxMega = () => {
     lootboxTimeout.current = setTimeout(() => setLootboxMegaOpen(false), 150);
+  };
+  const openLootboxDeals = () => {
+    if (lootboxDealsTimeout.current) clearTimeout(lootboxDealsTimeout.current);
+    setLootboxDealsOpen(true);
+    setMegaOpen(false);
+    setLootboxMegaOpen(false);
+  };
+  const closeLootboxDeals = () => {
+    lootboxDealsTimeout.current = setTimeout(() => setLootboxDealsOpen(false), 150);
   };
 
   return (
@@ -408,6 +425,126 @@ export default function Header() {
                   </div>
                   );
                 })()}
+              </div>
+
+              {/* Lootbox Deals mega menu trigger */}
+              <div
+                ref={lootboxDealsRef}
+                className="relative"
+                onMouseEnter={openLootboxDeals}
+                onMouseLeave={closeLootboxDeals}
+              >
+                <button
+                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                  onClick={() => setLootboxDealsOpen(!lootboxDealsOpen)}
+                >
+                  <Box className="h-3.5 w-3.5 text-purple-500" />
+                  Lootbox Deals
+                  <ChevronDown
+                    className={`h-3.5 w-3.5 transition-transform ${lootboxDealsOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {lootboxDealsOpen && (
+                  <div className="absolute left-0 top-full z-50 mt-1 w-[560px] rounded-xl border border-gray-200 bg-white shadow-xl">
+                    {/* Banner */}
+                    <div className="bg-purple-50 px-5 py-2 text-[11px] font-medium text-purple-600 border-b border-purple-100">
+                      Showing deals exclusively for games with loot box systems
+                    </div>
+
+                    <div className="p-5">
+                      <div className="grid grid-cols-2 gap-6">
+                        {/* Genres column */}
+                        <div>
+                          <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                            Browse by Genre
+                          </h4>
+                          <div className="space-y-0.5">
+                            {GENRES.map((g) => {
+                              const lbHref = g.href.includes("?") ? g.href + "&has_lootbox=true" : g.href + "?has_lootbox=true";
+                              return (
+                                <Link
+                                  key={g.label}
+                                  href={lbHref}
+                                  onClick={() => setLootboxDealsOpen(false)}
+                                  className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
+                                >
+                                  <g.icon className="h-4 w-4 text-gray-400" />
+                                  {g.label}
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {/* Quick links */}
+                        <div>
+                          <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                            Quick Filters
+                          </h4>
+                          <div className="space-y-2">
+                            {QUICK_LINKS.map((q) => {
+                              const lbHref = q.href.includes("?") ? q.href + "&has_lootbox=true" : q.href + "?has_lootbox=true";
+                              return (
+                                <Link
+                                  key={q.label}
+                                  href={lbHref}
+                                  onClick={() => setLootboxDealsOpen(false)}
+                                  className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:opacity-80 ${q.color}`}
+                                >
+                                  {q.label}
+                                </Link>
+                              );
+                            })}
+                          </div>
+
+                          <div className="mt-5 rounded-lg border border-purple-100 bg-purple-50 p-3">
+                            <p className="text-xs font-semibold text-purple-700">
+                              Lootbox Price Alerts
+                            </p>
+                            <p className="mt-0.5 text-[11px] text-purple-600">
+                              Get notified when loot box games hit their lowest price.
+                            </p>
+                            <Link
+                              href="/newsletter"
+                              onClick={() => setLootboxDealsOpen(false)}
+                              className="mt-2 inline-block text-xs font-semibold text-purple-700 hover:text-purple-800"
+                            >
+                              Sign up free →
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Bottom bar */}
+                      <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
+                        <Link
+                          href="/games?has_lootbox=true"
+                          onClick={() => setLootboxDealsOpen(false)}
+                          className="text-sm font-medium text-purple-600 hover:text-purple-700"
+                        >
+                          Browse all lootbox game deals →
+                        </Link>
+                        <div className="flex gap-2">
+                          <Link
+                            href="/games/new-releases?has_lootbox=true"
+                            onClick={() => setLootboxDealsOpen(false)}
+                            className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                          >
+                            New Releases
+                          </Link>
+                          <Link
+                            href="/deals?sort=trending&has_lootbox=true"
+                            onClick={() => setLootboxDealsOpen(false)}
+                            className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                          >
+                            Trending
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <Link
