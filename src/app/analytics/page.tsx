@@ -1,14 +1,158 @@
 import Link from "next/link";
 import AnalyticsCard from "@/components/analytics/AnalyticsCard";
-import ScoreBadge from "@/components/analytics/ScoreBadge";
-import GameAvatar from "@/components/ui/GameAvatar";
+import AnalyticsDashboard from "@/components/analytics/AnalyticsDashboard";
+import ScoreExplorerPreview from "@/components/analytics/ScoreExplorerPreview";
 import { AnalyticsMeta, Game } from "@/lib/types";
-import { BarChart3, Sparkles, ArrowRight } from "lucide-react";
+import { BarChart3, Sparkles, ArrowRight, Zap } from "lucide-react";
 import { createServerClient } from "@/lib/supabase";
 
 export const revalidate = 300;
 
-/* ── Fetch cover images from DB for analyzed games ── */
+/* ── Fetch all scored games for analytics ── */
+async function getAnalyticsData() {
+  const supabase = createServerClient();
+
+  const { data: scoredGames } = await supabase
+    .from("games")
+    .select("id, title, slug, cover_image, screenshot_image, lootboxes_score, loot_system_type, genres, platforms, metacritic")
+    .not("lootboxes_score", "is", null)
+    .not("loot_system_type", "is", null)
+    .order("lootboxes_score", { ascending: false });
+
+  const games = (scoredGames as any[]) || [];
+
+  const totalGamesAnalyzed = games.length;
+  const avgScore = games.length > 0
+    ? games.reduce((sum: number, g: any) => sum + (g.lootboxes_score || 0), 0) / games.length
+    : 0;
+
+  const bestGame = games.length > 0
+    ? { title: games[0].title, slug: games[0].slug, score: games[0].lootboxes_score }
+    : null;
+
+  const worstGame = games.length > 0
+    ? { title: games[games.length - 1].title, slug: games[games.length - 1].slug, score: games[games.length - 1].lootboxes_score }
+    : null;
+
+  // System breakdown
+  const systemMap = new Map<string, { count: number; totalScore: number }>();
+  for (const g of games) {
+    const type = g.loot_system_type || "unknown";
+    const existing = systemMap.get(type) || { count: 0, totalScore: 0 };
+    existing.count++;
+    existing.totalScore += g.lootboxes_score || 0;
+    systemMap.set(type, existing);
+  }
+  const systemBreakdown = Array.from(systemMap.entries()).map(([type, data]) => ({
+    type,
+    count: data.count,
+    avgScore: data.totalScore / data.count,
+  })).sort((a, b) => b.count - a.count);
+
+  // Score distribution
+  const ranges = [
+    { range: "8.0 — 10.0 (Great)", min: 8, max: 10.1, color: "#10b981" },
+    { range: "6.0 — 7.9 (Good)", min: 6, max: 8, color: "#f59e0b" },
+    { range: "4.0 — 5.9 (Average)", min: 4, max: 6, color: "#f97316" },
+    { range: "0 — 3.9 (Poor)", min: 0, max: 4, color: "#ef4444" },
+  ];
+  const scoreDistribution = ranges.map(r => ({
+    range: r.range,
+    count: games.filter((g: any) => g.lootboxes_score >= r.min && g.lootboxes_score < r.max).length,
+    color: r.color,
+  }));
+
+  // Top and bottom games
+  const topGames = games.slice(0, 5).map((g: any) => ({
+    title: g.title,
+    slug: g.slug,
+    score: g.lootboxes_score,
+    loot_system_type: g.loot_system_type,
+    cover_image: g.screenshot_image || g.cover_image,
+  }));
+  const bottomGames = [...games].reverse().slice(0, 5).map((g: any) => ({
+    title: g.title,
+    slug: g.slug,
+    score: g.lootboxes_score,
+    loot_system_type: g.loot_system_type,
+    cover_image: g.screenshot_image || g.cover_image,
+  }));
+
+  // All games for explorer
+  const allGamesForExplorer = games.map((g: any) => ({
+    title: g.title,
+    slug: g.slug,
+    score: g.lootboxes_score,
+    loot_system_type: g.loot_system_type,
+    cover_image: g.screenshot_image || g.cover_image,
+  }));
+
+  // Industry insights (computed from real data)
+  const gachaGames = games.filter((g: any) => g.loot_system_type === "gacha");
+  const avgGachaScore = gachaGames.length > 0
+    ? (gachaGames.reduce((s: number, g: any) => s + g.lootboxes_score, 0) / gachaGames.length).toFixed(1)
+    : "N/A";
+  const fairGames = games.filter((g: any) => g.lootboxes_score >= 7);
+  const aggressiveGames = games.filter((g: any) => g.lootboxes_score < 4);
+  const battlePassGames = games.filter((g: any) => g.loot_system_type === "battle_pass");
+  const avgBPScore = battlePassGames.length > 0
+    ? (battlePassGames.reduce((s: number, g: any) => s + g.lootboxes_score, 0) / battlePassGames.length).toFixed(1)
+    : "N/A";
+
+  const industryInsights = [
+    {
+      label: "Gacha Average Score",
+      value: avgGachaScore.toString(),
+      description: `Gacha systems across ${gachaGames.length} analyzed games tend to score lower due to randomized spending.`,
+      icon: "🎰",
+    },
+    {
+      label: "Consumer-Friendly Games",
+      value: `${fairGames.length}`,
+      description: `${fairGames.length} out of ${totalGamesAnalyzed} games scored 7.0 or above, indicating fair monetization.`,
+      icon: "🛡️",
+    },
+    {
+      label: "Aggressive Monetization",
+      value: `${aggressiveGames.length}`,
+      description: `${aggressiveGames.length} games scored below 4.0, signaling predatory or poor-value systems.`,
+      icon: "⚠️",
+    },
+    {
+      label: "Battle Pass Avg Score",
+      value: avgBPScore.toString(),
+      description: `Battle pass systems across ${battlePassGames.length} games — generally offer more transparent value.`,
+      icon: "🏆",
+    },
+    {
+      label: "Total Systems Tracked",
+      value: `${systemBreakdown.length}`,
+      description: `We track ${systemBreakdown.length} distinct monetization system types across the gaming industry.`,
+      icon: "📊",
+    },
+    {
+      label: "Industry Average",
+      value: avgScore.toFixed(1),
+      description: `The average LootBoxes Score across all ${totalGamesAnalyzed} analyzed games. Above 6 indicates fair value.`,
+      icon: "📈",
+    },
+  ];
+
+  return {
+    totalGamesAnalyzed,
+    avgScore,
+    bestGame,
+    worstGame,
+    systemBreakdown,
+    scoreDistribution,
+    topGames,
+    bottomGames,
+    allGamesForExplorer,
+    industryInsights,
+  };
+}
+
+/* ── Fetch cover images from DB for articles ── */
 async function getGameCovers(): Promise<Record<string, string | null>> {
   const supabase = createServerClient();
   const slugs = ["fortnite", "genshin-impact", "valorant", "overwatch-2", "diablo-iv", "ea-fc-25", "honkai-star-rail", "apex-legends", "call-of-duty-warzone", "league-of-legends", "destiny-2", "marvel-rivals", "counter-strike-2", "rocket-league", "pokemon-tcg-pocket", "path-of-exile-2", "the-finals", "rainbow-six-siege", "wuthering-waves", "dead-by-daylight", "zenless-zone-zero"];
@@ -24,23 +168,6 @@ async function getGameCovers(): Promise<Record<string, string | null>> {
   return map;
 }
 
-/* ── Fetch recently scored lootbox games dynamically ── */
-async function getRecentScores() {
-  const supabase = createServerClient();
-  const { data } = await supabase
-    .from("games")
-    .select(
-      "id, title, slug, cover_image, screenshot_image, lootboxes_score, loot_system_type, updated_at"
-    )
-    .not("lootboxes_score", "is", null)
-    .not("loot_system_type", "is", null)
-    .order("updated_at", { ascending: false })
-    .limit(8);
-
-  return (data as any[]) || [];
-}
-
-// Game data with cover images populated from DB
 function buildArticles(covers: Record<string, string | null>): AnalyticsMeta[] {
   const MOCK_GAMES: Record<string, Game> = {
     fortnite: { id: "3", title: "Fortnite", slug: "fortnite", cover_image: covers["fortnite"] || null, platforms: ["PC", "PS5", "Xbox", "Switch"], genres: ["Battle Royale"], release_date: "2017-07-21", metacritic: null, lootboxes_score: 7.2, created_at: "", updated_at: "" },
@@ -67,27 +194,27 @@ function buildArticles(covers: Record<string, string | null>): AnalyticsMeta[] {
   };
 
   return [
-    { id: "a1", game_id: "3", slug: "fortnite-chapter-6-season-1-battle-pass", title: "Fortnite Chapter 6 Season 1 Battle Pass — Is It Worth It?", excerpt: "We break down every tier, calculate the V-Buck value, and compare it to direct cosmetic purchases. This season's pass offers solid value for regular players.", type: "battlepass", lootboxes_score: 7.2, cover_image: covers["fortnite"] || null, published_at: "2026-02-20", updated_at: "2026-02-20", game: MOCK_GAMES.fortnite },
-    { id: "a2", game_id: "4", slug: "genshin-impact-gacha-analysis-2026", title: "Genshin Impact Gacha System — Complete Drop Rate Analysis", excerpt: "Official drop rates, pity system breakdown, and expected spending to pull featured characters. We calculated the average cost per 5-star.", type: "lootbox", lootboxes_score: 4.8, cover_image: covers["genshin-impact"] || null, published_at: "2026-02-18", updated_at: "2026-02-18", game: MOCK_GAMES.genshin },
+    { id: "a12", game_id: "15", slug: "marvel-rivals-battle-pass-season-2", title: "Marvel Rivals Season 2 Battle Pass — A Refreshingly Fair Monetization Model", excerpt: "We analyzed the hero unlock system, cosmetic earnings rates, and pricing.", type: "battlepass", lootboxes_score: 7.8, cover_image: covers["marvel-rivals"] || null, published_at: "2026-02-25", updated_at: "2026-02-25", game: MOCK_GAMES.rivals },
+    { id: "a15", game_id: "18", slug: "pokemon-tcg-pocket-pack-odds", title: "Pokémon TCG Pocket Pack Odds — Crown Rarity Drop Rates Analyzed", excerpt: "We analyzed 5,000+ digital card packs to calculate true crown rarity odds.", type: "droprates", lootboxes_score: 5.2, cover_image: covers["pokemon-tcg-pocket"] || null, published_at: "2026-02-28", updated_at: "2026-02-28", game: MOCK_GAMES.ptcgp },
+    { id: "a1", game_id: "3", slug: "fortnite-chapter-6-season-1-battle-pass", title: "Fortnite Chapter 6 Season 1 Battle Pass — Is It Worth It?", excerpt: "We break down every tier, calculate the V-Buck value, and compare it to direct cosmetic purchases.", type: "battlepass", lootboxes_score: 7.2, cover_image: covers["fortnite"] || null, published_at: "2026-02-20", updated_at: "2026-02-20", game: MOCK_GAMES.fortnite },
+    { id: "a2", game_id: "4", slug: "genshin-impact-gacha-analysis-2026", title: "Genshin Impact Gacha System — Complete Drop Rate Analysis", excerpt: "Official drop rates, pity system breakdown, and expected spending to pull featured characters.", type: "lootbox", lootboxes_score: 4.8, cover_image: covers["genshin-impact"] || null, published_at: "2026-02-18", updated_at: "2026-02-18", game: MOCK_GAMES.genshin },
     { id: "a3", game_id: "6", slug: "valorant-battle-pass-episode-10", title: "Valorant Episode 10 Battle Pass Review", excerpt: "New skins, gun buddies, and sprays — here's whether this pass delivers enough value for 1000 VP.", type: "battlepass", lootboxes_score: 5.5, cover_image: covers["valorant"] || null, published_at: "2026-02-15", updated_at: "2026-02-15", game: MOCK_GAMES.valorant },
-    { id: "a4", game_id: "7", slug: "overwatch-2-shop-analysis", title: "Overwatch 2 Shop & Battle Pass: A Monetization Deep-Dive", excerpt: "From the old loot box system to the new shop model — we analyze whether players are getting better or worse value.", type: "lootbox", lootboxes_score: 3.9, cover_image: covers["overwatch-2"] || null, published_at: "2026-02-12", updated_at: "2026-02-12", game: MOCK_GAMES.ow2 },
-    { id: "a5", game_id: "8", slug: "diablo-iv-shop-economy-breakdown", title: "Diablo IV Shop Economy — Are Cosmetics Fairly Priced?", excerpt: "We analyze Platinum pricing, bundle values, and how Diablo IV's cosmetic economy compares to other live-service ARPGs. The numbers tell an interesting story.", type: "economy", lootboxes_score: 7.5, cover_image: covers["diablo-iv"] || null, published_at: "2026-02-08", updated_at: "2026-02-08", game: MOCK_GAMES.diablo },
-    { id: "a6", game_id: "9", slug: "ea-fc-25-pack-drop-rates", title: "EA FC 25 Pack Drop Rates — What Are Your Real Odds?", excerpt: "We opened 1,000 packs and tracked every card. Here are the actual drop rates for Icons, TOTWs, and promo cards compared to EA's published odds.", type: "droprates", lootboxes_score: 3.2, cover_image: covers["ea-fc-25"] || null, published_at: "2026-02-05", updated_at: "2026-02-05", game: MOCK_GAMES.eafc },
-    { id: "a7", game_id: "10", slug: "honkai-star-rail-warp-economy", title: "Honkai: Star Rail — Warp Economy & Pity Analysis", excerpt: "How HoYoverse's second gacha game compares to Genshin Impact. We break down Stellar Jade income, banner pity, and the true cost of guaranteed 5-stars.", type: "economy", lootboxes_score: 5.8, cover_image: covers["honkai-star-rail"] || null, published_at: "2026-01-30", updated_at: "2026-01-30", game: MOCK_GAMES.honkai },
-    { id: "a8", game_id: "11", slug: "apex-legends-pack-drop-rates-heirloom", title: "Apex Legends Pack Odds — How Many Packs Until an Heirloom?", excerpt: "We crunched the numbers on Apex pack probabilities, tracked Heirloom shard drop rates, and calculated the expected cost to unlock one. Spoiler: it's not cheap.", type: "droprates", lootboxes_score: 4.5, cover_image: covers["apex-legends"] || null, published_at: "2026-01-25", updated_at: "2026-01-25", game: MOCK_GAMES.apex },
-    { id: "a9", game_id: "12", slug: "call-of-duty-warzone-store-economy", title: "Call of Duty: Warzone Store Economy — Premium Pricing, Premium Disappointment", excerpt: "We analyzed CoD Points pricing, bundle costs, and operator skin markups. Activision's monetization is among the most aggressive in the industry.", type: "economy", lootboxes_score: 4.2, cover_image: covers["call-of-duty-warzone"] || null, published_at: "2026-01-20", updated_at: "2026-01-20", game: MOCK_GAMES.warzone },
-    { id: "a10", game_id: "13", slug: "league-of-legends-skin-economy-2026", title: "League of Legends Skin Pricing & Hextech Economy — A Deep Analysis of Loot Inflation", excerpt: "We break down RP pricing, skin tier costs, Hextech crafting value, and gacha mechanics. Riot's skin pricing has only gotten more aggressive.", type: "economy", lootboxes_score: 6.5, cover_image: covers["league-of-legends"] || null, published_at: "2026-01-18", updated_at: "2026-01-18", game: MOCK_GAMES.lol },
-    { id: "a11", game_id: "14", slug: "destiny-2-eververse-monetization", title: "Destiny 2 Eververse Store — How Bungie's Seasonal Cosmetics Stack Up", excerpt: "We analyzed Silver pricing, seasonal eververse rotations, engram drop rates, and the season pass value. This deep-dive reveals surprising consumer-friendly elements.", type: "lootbox", lootboxes_score: 4.0, cover_image: covers["destiny-2"] || null, published_at: "2026-01-15", updated_at: "2026-01-15", game: MOCK_GAMES.destiny },
-    { id: "a12", game_id: "15", slug: "marvel-rivals-battle-pass-season-2", title: "Marvel Rivals Season 2 Battle Pass — A Refreshingly Fair Monetization Model", excerpt: "We analyzed the hero unlock system, cosmetic earnings rates, and pricing. Marvel Rivals shows how aggressive monetization can actually be player-friendly.", type: "battlepass", lootboxes_score: 7.8, cover_image: covers["marvel-rivals"] || null, published_at: "2026-02-25", updated_at: "2026-02-25", game: MOCK_GAMES.rivals },
-    { id: "a13", game_id: "16", slug: "counter-strike-2-case-drop-rates", title: "Counter-Strike 2 Case Opening — Odds, Knife Probabilities, and the Skin Economy", excerpt: "We logged 5,000 case openings, analyzed knife drop rates, and calculated the expected spend for premium skins. The numbers are worse than players think.", type: "droprates", lootboxes_score: 3.5, cover_image: covers["counter-strike-2"] || null, published_at: "2026-01-10", updated_at: "2026-01-10", game: MOCK_GAMES.cs2 },
-    { id: "a14", game_id: "17", slug: "rocket-league-item-shop-analysis", title: "Rocket League Item Shop & Rocket Pass — Two Years of Pricing Data Analyzed", excerpt: "We tracked 200+ item rotations, calculated Rocket Pass value, and analyzed blueprint crafting. This monetization model is deceptively expensive.", type: "economy", lootboxes_score: 6.0, cover_image: covers["rocket-league"] || null, published_at: "2026-01-05", updated_at: "2026-01-05", game: MOCK_GAMES.rl },
-    { id: "a15", game_id: "18", slug: "pokemon-tcg-pocket-pack-odds", title: "Pokémon TCG Pocket Pack Odds — Crown Rarity Drop Rates Analyzed", excerpt: "We analyzed 5,000+ digital card packs from Pokémon TCG Pocket to calculate true crown rarity odds, examine the pack points pity system, and break down whether the $1.99 starter pack offers genuine value.", type: "droprates", lootboxes_score: 5.2, cover_image: covers["pokemon-tcg-pocket"] || null, published_at: "2026-02-28", updated_at: "2026-02-28", game: MOCK_GAMES.ptcgp },
-    { id: "a16", game_id: "19", slug: "path-of-exile-2-cosmetic-pricing", title: "Path of Exile 2 Cosmetic Pricing — $30-65 Armor Sets in a F2P Game", excerpt: "We examined PoE2's cosmetic shop and found premium armor sets, supporter packs, and stash tabs creating a monetization model that rivals premium retail games. Is there actual value, or are cosmetics overpriced?", type: "economy", lootboxes_score: 5.0, cover_image: covers["path-of-exile-2"] || null, published_at: "2026-02-22", updated_at: "2026-02-22", game: MOCK_GAMES.poe2 },
-    { id: "a17", game_id: "20", slug: "the-finals-battle-pass-season-5", title: "THE FINALS Battle Pass Season 5 — A Fair Monetization Model Worth Celebrating", excerpt: "THE FINALS demonstrates that competitive shooters can monetize fairly. We analyze Season 5's battle pass value, cosmetic variety, and why THE FINALS scores higher than peers despite similar pricing.", type: "battlepass", lootboxes_score: 6.8, cover_image: covers["the-finals"] || null, published_at: "2026-02-15", updated_at: "2026-02-15", game: MOCK_GAMES.finals },
-    { id: "a18", game_id: "21", slug: "rainbow-six-siege-alpha-pack-odds", title: "Rainbow Six Siege Alpha Pack Odds — 2% Base Rate Deconstructed", excerpt: "We analyzed 10,000 Siege matches tracking Alpha Pack drops, examined the guaranteed percentage increase system, and calculated whether R6 Credits legendary skin prices justify the grind.", type: "droprates", lootboxes_score: 4.8, cover_image: covers["rainbow-six-siege"] || null, published_at: "2026-02-10", updated_at: "2026-02-10", game: MOCK_GAMES.r6 },
-    { id: "a19", game_id: "22", slug: "wuthering-waves-gacha-analysis", title: "Wuthering Waves Gacha Analysis — Astrite Income vs. Genshin & Honkai Star Rail", excerpt: "Wuthering Waves' Convene system looks generous compared to HoYoverse peers, but our analysis of Astrite income, hard pity costs, and 5-star rates reveals the true monetization picture.", type: "lootbox", lootboxes_score: 6.2, cover_image: covers["wuthering-waves"] || null, published_at: "2026-02-05", updated_at: "2026-02-05", game: MOCK_GAMES.ww },
-    { id: "a20", game_id: "23", slug: "dead-by-daylight-store-economy", title: "Dead by Daylight Store Economy — $10 Skins in a Paid Game", excerpt: "Dead by Daylight charges premium cosmetic prices despite being a $20 purchase. We analyze Auric Cell pricing, DLC character costs, and the Rift battle pass in the context of it being a console/PC retail game hybrid.", type: "economy", lootboxes_score: 4.5, cover_image: covers["dead-by-daylight"] || null, published_at: "2026-01-28", updated_at: "2026-01-28", game: MOCK_GAMES.dbd },
-    { id: "a21", game_id: "24", slug: "zenless-zone-zero-signal-search", title: "Zenless Zone Zero Signal Search System — HoYoverse Gacha Optimized", excerpt: "We analyzed ZZZ's signal search gacha rates, hard pity mechanics, and Polychrome income to understand how HoYoverse learned from Genshin & Honkai Star Rail monetization.", type: "lootbox", lootboxes_score: 5.5, cover_image: covers["zenless-zone-zero"] || null, published_at: "2026-01-22", updated_at: "2026-01-22", game: MOCK_GAMES.zzz },
+    { id: "a17", game_id: "20", slug: "the-finals-battle-pass-season-5", title: "THE FINALS Battle Pass Season 5 — A Fair Monetization Model", excerpt: "THE FINALS demonstrates that competitive shooters can monetize fairly.", type: "battlepass", lootboxes_score: 6.8, cover_image: covers["the-finals"] || null, published_at: "2026-02-15", updated_at: "2026-02-15", game: MOCK_GAMES.finals },
+    { id: "a4", game_id: "7", slug: "overwatch-2-shop-analysis", title: "Overwatch 2 Shop & Battle Pass: A Monetization Deep-Dive", excerpt: "From the old loot box system to the new shop model — we analyze player value.", type: "lootbox", lootboxes_score: 3.9, cover_image: covers["overwatch-2"] || null, published_at: "2026-02-12", updated_at: "2026-02-12", game: MOCK_GAMES.ow2 },
+    { id: "a18", game_id: "21", slug: "rainbow-six-siege-alpha-pack-odds", title: "Rainbow Six Siege Alpha Pack Odds — 2% Base Rate Deconstructed", excerpt: "We analyzed 10,000 Siege matches tracking Alpha Pack drops.", type: "droprates", lootboxes_score: 4.8, cover_image: covers["rainbow-six-siege"] || null, published_at: "2026-02-10", updated_at: "2026-02-10", game: MOCK_GAMES.r6 },
+    { id: "a5", game_id: "8", slug: "diablo-iv-shop-economy-breakdown", title: "Diablo IV Shop Economy — Are Cosmetics Fairly Priced?", excerpt: "We analyze Platinum pricing, bundle values, and how Diablo IV's economy compares to other ARPGs.", type: "economy", lootboxes_score: 7.5, cover_image: covers["diablo-iv"] || null, published_at: "2026-02-08", updated_at: "2026-02-08", game: MOCK_GAMES.diablo },
+    { id: "a6", game_id: "9", slug: "ea-fc-25-pack-drop-rates", title: "EA FC 25 Pack Drop Rates — What Are Your Real Odds?", excerpt: "We opened 1,000 packs and tracked every card. Here are the actual drop rates.", type: "droprates", lootboxes_score: 3.2, cover_image: covers["ea-fc-25"] || null, published_at: "2026-02-05", updated_at: "2026-02-05", game: MOCK_GAMES.eafc },
+    { id: "a19", game_id: "22", slug: "wuthering-waves-gacha-analysis", title: "Wuthering Waves Gacha Analysis — Astrite Income Comparison", excerpt: "Wuthering Waves' Convene system vs. HoYoverse peers.", type: "lootbox", lootboxes_score: 6.2, cover_image: covers["wuthering-waves"] || null, published_at: "2026-02-05", updated_at: "2026-02-05", game: MOCK_GAMES.ww },
+    { id: "a16", game_id: "19", slug: "path-of-exile-2-cosmetic-pricing", title: "Path of Exile 2 Cosmetic Pricing — $30-65 Armor Sets", excerpt: "PoE2's cosmetic shop creates an expensive monetization model.", type: "economy", lootboxes_score: 5.0, cover_image: covers["path-of-exile-2"] || null, published_at: "2026-02-22", updated_at: "2026-02-22", game: MOCK_GAMES.poe2 },
+    { id: "a7", game_id: "10", slug: "honkai-star-rail-warp-economy", title: "Honkai: Star Rail — Warp Economy & Pity Analysis", excerpt: "Stellar Jade income, banner pity, and the true cost of guaranteed 5-stars.", type: "economy", lootboxes_score: 5.8, cover_image: covers["honkai-star-rail"] || null, published_at: "2026-01-30", updated_at: "2026-01-30", game: MOCK_GAMES.honkai },
+    { id: "a20", game_id: "23", slug: "dead-by-daylight-store-economy", title: "Dead by Daylight Store Economy — $10 Skins in a Paid Game", excerpt: "Premium cosmetic prices in a $20 purchase game.", type: "economy", lootboxes_score: 4.5, cover_image: covers["dead-by-daylight"] || null, published_at: "2026-01-28", updated_at: "2026-01-28", game: MOCK_GAMES.dbd },
+    { id: "a8", game_id: "11", slug: "apex-legends-pack-drop-rates-heirloom", title: "Apex Legends Pack Odds — How Many Packs Until an Heirloom?", excerpt: "Heirloom shard drop rates and expected cost to unlock one.", type: "droprates", lootboxes_score: 4.5, cover_image: covers["apex-legends"] || null, published_at: "2026-01-25", updated_at: "2026-01-25", game: MOCK_GAMES.apex },
+    { id: "a21", game_id: "24", slug: "zenless-zone-zero-signal-search", title: "Zenless Zone Zero Signal Search System — HoYoverse Gacha Optimized", excerpt: "ZZZ's signal search rates, pity mechanics, and Polychrome income.", type: "lootbox", lootboxes_score: 5.5, cover_image: covers["zenless-zone-zero"] || null, published_at: "2026-01-22", updated_at: "2026-01-22", game: MOCK_GAMES.zzz },
+    { id: "a9", game_id: "12", slug: "call-of-duty-warzone-store-economy", title: "Call of Duty: Warzone Store Economy — Premium Pricing Analysis", excerpt: "CoD Points pricing, bundle costs, and operator skin markups.", type: "economy", lootboxes_score: 4.2, cover_image: covers["call-of-duty-warzone"] || null, published_at: "2026-01-20", updated_at: "2026-01-20", game: MOCK_GAMES.warzone },
+    { id: "a10", game_id: "13", slug: "league-of-legends-skin-economy-2026", title: "League of Legends Skin Pricing & Hextech Economy", excerpt: "RP pricing, skin tier costs, and gacha mechanics analysis.", type: "economy", lootboxes_score: 6.5, cover_image: covers["league-of-legends"] || null, published_at: "2026-01-18", updated_at: "2026-01-18", game: MOCK_GAMES.lol },
+    { id: "a11", game_id: "14", slug: "destiny-2-eververse-monetization", title: "Destiny 2 Eververse Store — How Bungie's Cosmetics Stack Up", excerpt: "Silver pricing, eververse rotations, and season pass value.", type: "lootbox", lootboxes_score: 4.0, cover_image: covers["destiny-2"] || null, published_at: "2026-01-15", updated_at: "2026-01-15", game: MOCK_GAMES.destiny },
+    { id: "a13", game_id: "16", slug: "counter-strike-2-case-drop-rates", title: "Counter-Strike 2 Case Opening — Knife Probabilities & Skin Economy", excerpt: "5,000 case openings analyzed with knife drop rates.", type: "droprates", lootboxes_score: 3.5, cover_image: covers["counter-strike-2"] || null, published_at: "2026-01-10", updated_at: "2026-01-10", game: MOCK_GAMES.cs2 },
+    { id: "a14", game_id: "17", slug: "rocket-league-item-shop-analysis", title: "Rocket League Item Shop & Rocket Pass — Pricing Data Analyzed", excerpt: "200+ item rotations tracked and Rocket Pass value analyzed.", type: "economy", lootboxes_score: 6.0, cover_image: covers["rocket-league"] || null, published_at: "2026-01-05", updated_at: "2026-01-05", game: MOCK_GAMES.rl },
   ];
 }
 
@@ -99,39 +226,19 @@ const TYPES = [
   { label: "Drop Rate Reports", value: "droprates" },
 ];
 
-const SYSTEM_LABELS: Record<string, string> = {
-  gacha: "Gacha",
-  loot_box: "Loot Box",
-  card_pack: "Card Pack",
-  cosmetic_shop: "Cosmetic Shop",
-  battle_pass: "Battle Pass",
-};
-
-const TYPE_LABELS: Record<string, string> = {
-  battlepass: "Battle Pass",
-  lootbox: "Loot Box",
-  economy: "Economy",
-  droprates: "Drop Rates",
-};
-
-function scoreColor(score: number): string {
-  if (score >= 7) return "text-emerald-600 dark:text-emerald-400";
-  if (score >= 5) return "text-amber-600 dark:text-amber-400";
-  if (score >= 3) return "text-orange-600 dark:text-orange-400";
-  return "text-red-600 dark:text-red-400";
-}
-
-function scoreBg(score: number): string {
-  if (score >= 7) return "bg-emerald-500";
-  if (score >= 5) return "bg-amber-500";
-  if (score >= 3) return "bg-orange-500";
-  return "bg-red-500";
-}
-
 export const metadata = {
-  title: "Loot Box Analytics & Battle Pass Reviews",
+  title: "Loot Box Analytics Hub — Scores, Trends & Deep Dives | LootBoxes",
   description:
-    "Data-driven analysis of loot boxes, battle passes, gacha systems, and in-game economies. Our LootBoxes Score rates every game's monetization.",
+    "Data-driven analytics on loot boxes, battle passes, gacha systems, and in-game economies. Interactive charts, score distributions, and the proprietary LootBoxes Score.",
+  openGraph: {
+    title: "Loot Box Analytics Hub — Scores, Trends & Deep Dives",
+    description: "Interactive analytics on gaming monetization. Score breakdowns, system comparisons, and in-depth reviews.",
+    url: "https://lootboxes.com/analytics",
+    type: "website",
+  },
+  alternates: {
+    canonical: "https://lootboxes.com/analytics",
+  },
 };
 
 export default async function AnalyticsPage({
@@ -139,9 +246,9 @@ export default async function AnalyticsPage({
 }: {
   searchParams: { type?: string };
 }) {
-  const [covers, recentScores] = await Promise.all([
+  const [analyticsData, covers] = await Promise.all([
+    getAnalyticsData(),
     getGameCovers(),
-    getRecentScores(),
   ]);
   const ARTICLES = buildArticles(covers);
 
@@ -151,18 +258,13 @@ export default async function AnalyticsPage({
       ? ARTICLES
       : ARTICLES.filter((a) => a.type === activeType);
 
-  // Get the featured article (first one in filtered list)
-  const featuredArticle = filteredArticles[0];
-  const otherArticles = filteredArticles.slice(1);
-
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
-      {/* Hero Section - Bold Gradient */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-700 dark:from-indigo-900 dark:via-purple-900 dark:to-indigo-950 py-16 sm:py-24">
-        {/* Decorative background elements */}
+    <div className="min-h-screen bg-white">
+      {/* ─── Hero Section ─── */}
+      <section className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900 py-14 sm:py-20">
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-white/10 blur-3xl" />
-          <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-indigo-400/10 blur-3xl" />
+          <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-brand-400/10 blur-3xl" />
         </div>
 
         <div className="container-main relative z-10">
@@ -175,234 +277,129 @@ export default async function AnalyticsPage({
             </div>
           </div>
 
-          <h1 className="mt-4 text-5xl sm:text-6xl font-black text-white tracking-tight">
-            Analytics & <span className="bg-gradient-to-r from-blue-200 to-indigo-100 bg-clip-text text-transparent">Reviews</span>
+          <h1 className="mt-4 text-4xl sm:text-5xl font-black text-white tracking-tight">
+            Analytics Hub
           </h1>
 
-          <p className="mt-6 max-w-2xl text-lg text-indigo-100 leading-relaxed">
-            Explore our comprehensive breakdown of monetization systems. We analyze loot boxes, battle passes, gacha mechanics, and in-game economies using the proprietary LootBoxes Score.
+          <p className="mt-4 max-w-2xl text-lg text-blue-100 leading-relaxed">
+            Interactive analytics on gaming monetization. Explore score distributions, compare monetization systems, and dive into our in-depth reviews — all powered by the proprietary LootBoxes Score.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
-            <div className="flex items-center gap-3 rounded-lg bg-white/10 backdrop-blur-sm px-4 py-2.5 text-white">
-              <Sparkles className="h-5 w-5 text-blue-200" />
-              <span className="text-sm font-medium">Transparent scoring methodology</span>
+            <div className="flex items-center gap-2 rounded-lg bg-white/15 backdrop-blur-sm px-4 py-2.5">
+              <Zap className="h-4 w-4 text-blue-200" />
+              <span className="text-sm font-medium text-white">{analyticsData.totalGamesAnalyzed} games analyzed</span>
             </div>
-            <div className="flex items-center gap-3 rounded-lg bg-white/10 backdrop-blur-sm px-4 py-2.5 text-white">
-              <BarChart3 className="h-5 w-5 text-blue-200" />
-              <span className="text-sm font-medium">{ARTICLES.length} in-depth analyses</span>
+            <div className="flex items-center gap-2 rounded-lg bg-white/15 backdrop-blur-sm px-4 py-2.5">
+              <BarChart3 className="h-4 w-4 text-blue-200" />
+              <span className="text-sm font-medium text-white">{analyticsData.systemBreakdown.length} system types</span>
+            </div>
+            <div className="flex items-center gap-2 rounded-lg bg-white/15 backdrop-blur-sm px-4 py-2.5">
+              <Sparkles className="h-4 w-4 text-blue-200" />
+              <span className="text-sm font-medium text-white">{ARTICLES.length} in-depth analyses</span>
             </div>
           </div>
         </div>
       </section>
 
-      <div className="container-main py-12">
-        {/* Filter Pills */}
-        <div className="mb-12">
-          <h2 className="text-sm font-bold text-gray-500 dark:text-gray-400 mb-4 uppercase tracking-wide">
-            Filter by Category
-          </h2>
-          <div className="flex flex-wrap gap-3">
-            {TYPES.map((type) => (
-              <Link
-                key={type.value}
-                href={type.value === "all" ? "/analytics" : `/analytics?type=${type.value}`}
-                className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200 ${
-                  activeType === type.value
-                    ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30 dark:from-indigo-500 dark:to-purple-500"
-                    : "border-2 border-gray-200 bg-white text-gray-700 hover:border-indigo-300 hover:bg-indigo-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-indigo-500 dark:hover:bg-gray-700"
-                }`}
-              >
-                {type.label}
-              </Link>
-            ))}
-          </div>
+      {/* ─── Analytics Dashboard ─── */}
+      <section className="py-10">
+        <div className="container-main">
+          <AnalyticsDashboard
+            totalGamesAnalyzed={analyticsData.totalGamesAnalyzed}
+            avgScore={analyticsData.avgScore}
+            bestGame={analyticsData.bestGame}
+            worstGame={analyticsData.worstGame}
+            systemBreakdown={analyticsData.systemBreakdown}
+            scoreDistribution={analyticsData.scoreDistribution}
+            topGames={analyticsData.topGames}
+            bottomGames={analyticsData.bottomGames}
+            industryInsights={analyticsData.industryInsights}
+          />
         </div>
+      </section>
 
-        {/* Content Grid */}
-        {filteredArticles.length > 0 ? (
+      {/* ─── Score Explorer + Articles ─── */}
+      <section className="border-t border-gray-100 bg-gray-50 py-10">
+        <div className="container-main">
           <div className="grid gap-8 lg:grid-cols-3">
-            <div className="space-y-8 lg:col-span-2">
-              {/* Featured Article - Large Cinematic Card */}
-              {featuredArticle && (
-                <div className="group relative overflow-hidden rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
-                  <div className="relative h-56 sm:h-64 overflow-hidden bg-gray-100 dark:bg-gray-800">
-                    {featuredArticle.cover_image ? (
-                      <img
-                        src={featuredArticle.cover_image}
-                        alt={featuredArticle.title}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <GameAvatar
-                        gameName={featuredArticle.game?.title || featuredArticle.title}
-                        size="lg"
-                        aspectRatio="video"
-                        className="h-full w-full rounded-none"
-                      />
-                    )}
+            {/* Main: Articles */}
+            <div className="lg:col-span-2">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">In-Depth Reviews & Analyses</h2>
 
-                    {/* Dark overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-
-                    {/* Featured badge */}
-                    <div className="absolute top-6 right-6 inline-flex rounded-full bg-yellow-400/90 backdrop-blur-sm px-4 py-2 text-xs font-bold text-gray-900 uppercase tracking-wide">
-                      Featured Analysis
-                    </div>
-
-                    {/* Score badge */}
-                    {featuredArticle.lootboxes_score && (
-                      <div className="absolute bottom-6 left-6">
-                        <ScoreBadge score={featuredArticle.lootboxes_score} size="md" />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Content below image */}
+              <div className="mb-6 flex flex-wrap gap-2">
+                {TYPES.map((type) => (
                   <Link
-                    href={`/analytics/${featuredArticle.slug}`}
-                    className="block px-8 py-8 transition-colors"
+                    key={type.value}
+                    href={type.value === "all" ? "/analytics" : `/analytics?type=${type.value}`}
+                    className={`rounded-lg px-4 py-2 text-sm font-semibold transition-all ${
+                      activeType === type.value
+                        ? "bg-brand-600 text-white shadow-sm"
+                        : "border border-gray-200 bg-white text-gray-700 hover:border-brand-300 hover:bg-brand-50"
+                    }`}
                   >
-                    <div className="inline-flex rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white mb-4">
-                      {TYPE_LABELS[featuredArticle.type] || featuredArticle.type}
-                    </div>
-                    <h2 className="mt-3 text-3xl font-black leading-tight tracking-tight text-gray-900 dark:text-white">
-                      {featuredArticle.title}
-                    </h2>
-                    <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl line-clamp-2">
-                      {featuredArticle.excerpt}
-                    </p>
-                    <div className="mt-6 flex items-center gap-2 font-semibold text-indigo-600 dark:text-indigo-400 group-hover:gap-3 transition-all">
-                      Read Full Analysis
-                      <ArrowRight className="h-5 w-5" />
-                    </div>
+                    {type.label}
                   </Link>
-                </div>
-              )}
+                ))}
+              </div>
 
-              {/* Articles Grid */}
-              {otherArticles.length > 0 && (
+              {filteredArticles.length > 0 ? (
                 <div className="grid gap-6 grid-cols-1 sm:grid-cols-2">
-                  {otherArticles.map((article) => (
+                  {filteredArticles.map((article) => (
                     <AnalyticsCard key={article.id} article={article} />
                   ))}
+                </div>
+              ) : (
+                <div className="rounded-xl border border-gray-200 bg-white p-12 text-center">
+                  <p className="text-gray-500">No articles in this category yet.</p>
+                  <Link href="/analytics" className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-600">
+                    View all articles
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
                 </div>
               )}
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-6 lg:col-span-1">
-              {/* How We Score Card */}
-              <div className="overflow-hidden rounded-2xl border border-indigo-200 bg-gradient-to-br from-indigo-50 to-blue-50 dark:border-indigo-900 dark:from-indigo-950/50 dark:to-blue-950/50 shadow-lg">
-                <div className="px-6 py-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600">
-                      <Sparkles className="h-5 w-5 text-white" />
-                    </div>
-                    <h3 className="text-lg font-bold text-indigo-900 dark:text-indigo-100">
-                      How We Score Games
-                    </h3>
+            <div className="lg:col-span-1 space-y-6">
+              <ScoreExplorerPreview games={analyticsData.allGamesForExplorer} />
+
+              <div className="rounded-xl border border-brand-200 bg-gradient-to-br from-brand-50 to-white p-6 shadow-sm">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-600">
+                    <Sparkles className="h-5 w-5 text-white" />
                   </div>
-                  <p className="text-sm leading-relaxed text-indigo-700 dark:text-indigo-300 mb-5">
-                    Our LootBoxes Score rates monetization on value, transparency, fairness, and consumer practices.
-                  </p>
-                  <Link
-                    href="/methodology"
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
-                  >
-                    Read our methodology
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
+                  <h3 className="text-lg font-bold text-gray-900">How We Score</h3>
                 </div>
+                <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                  Our LootBoxes Score rates monetization on value, transparency, fairness, and consumer practices on a 1-10 scale.
+                </p>
+                <Link
+                  href="/methodology"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-700"
+                >
+                  Read methodology
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
               </div>
 
-              {/* Recent Scores Card */}
-              <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900 shadow-md">
-                <div className="border-b border-gray-100 bg-gray-50 dark:border-gray-800 dark:bg-gray-800/50 px-6 py-4">
-                  <h3 className="text-sm font-bold text-gray-900 dark:text-white">
-                    Recent Scores
-                  </h3>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                    Latest games rated by our team
-                  </p>
-                </div>
-                <ul className="divide-y divide-gray-100 dark:divide-gray-800">
-                  {recentScores.map((game: any) => {
-                    const thumb = game.cover_image || game.screenshot_image;
-                    const sysLabel =
-                      SYSTEM_LABELS[game.loot_system_type] ||
-                      game.loot_system_type;
-                    return (
-                      <li key={game.slug}>
-                        <Link
-                          href={`/lootbox/${game.slug}`}
-                          className="flex items-center gap-3 px-6 py-3.5 transition-all hover:bg-gray-50 dark:hover:bg-gray-800/50 group"
-                        >
-                          {/* Game thumbnail */}
-                          <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 transition-transform group-hover:scale-105">
-                            {thumb ? (
-                              <img
-                                src={thumb}
-                                alt={game.title}
-                                className="h-full w-full object-cover"
-                                loading="lazy"
-                              />
-                            ) : (
-                              <GameAvatar
-                                gameName={game.title}
-                                size="sm"
-                                aspectRatio="square"
-                                className="h-full w-full"
-                              />
-                            )}
-                          </div>
-
-                          {/* Game info */}
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-semibold text-gray-900 truncate dark:text-white">
-                              {game.title}
-                            </p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                              {sysLabel}
-                            </p>
-                          </div>
-
-                          {/* Score */}
-                          <div
-                            className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full ${scoreBg(
-                              game.lootboxes_score
-                            )} text-xs font-bold text-white shadow-md`}
-                          >
-                            {game.lootboxes_score.toFixed(1)}
-                          </div>
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-                <div className="border-t border-gray-100 dark:border-gray-800 px-6 py-3">
-                  <Link
-                    href="/lootbox/rankings"
-                    className="flex items-center gap-1.5 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
-                  >
-                    See full rankings
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </div>
+              <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                <h3 className="font-bold text-gray-900 mb-2">Full Score Database</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  See every game we've analyzed with detailed scores, system types, and rankings.
+                </p>
+                <Link
+                  href="/analytics/scores"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-700"
+                >
+                  Open Score Explorer
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
               </div>
             </div>
           </div>
-        ) : (
-          <div className="rounded-2xl border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900 p-12 text-center">
-            <p className="text-gray-600 dark:text-gray-400 text-lg">No articles in this category yet. Check back soon!</p>
-            <Link href="/analytics" className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700">
-              View all articles
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        )}
-      </div>
+        </div>
+      </section>
     </div>
   );
 }
