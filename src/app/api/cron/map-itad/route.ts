@@ -50,89 +50,95 @@ export async function GET(request: NextRequest) {
   const startTime = Date.now();
 
   try {
-    // Fetch games that need ITAD mapping
-    const { data: unmapped, error: fetchErr } = await supabase
-      .from("games")
-      .select("id, title, slug")
-      .is("itad_id", null)
-      .order("metacritic", { ascending: false, nullsFirst: false })
-      .limit(batchSize);
+    // Auto-loop: keep fetching and processing batches until timeout
+    let done = false;
 
-    if (fetchErr) throw new Error(`Fetch unmapped: ${fetchErr.message}`);
-    if (!unmapped?.length) {
-      return NextResponse.json({ ok: true, ...stats, message: "All games mapped" });
+    while (!done && Date.now() - startTime < SAFETY_MS) {
+      // Fetch next batch of unmapped games
+      const { data: unmapped, error: fetchErr } = await supabase
+        .from("games")
+        .select("id, title, slug")
+        .is("itad_id", null)
+        .order("metacritic", { ascending: false, nullsFirst: false })
+        .limit(batchSize);
+
+      if (fetchErr) throw new Error(`Fetch unmapped: ${fetchErr.message}`);
+      if (!unmapped?.length) {
+        done = true;
+        break;
+      }
+
+      // Process in batches of CONCURRENCY
+      for (let i = 0; i < unmapped.length; i += CONCURRENCY) {
+        if (Date.now() - startTime > SAFETY_MS) break;
+
+        const batch = unmapped.slice(i, i + CONCURRENCY);
+        const results = await Promise.allSettled(
+          batch.map(async (game) => {
+            try {
+              const itadResults = await searchGames(game.title, 1);
+
+              if (itadResults.length > 0) {
+                const match = itadResults[0];
+                if (!match.type || match.type === "game") {
+                  await supabase
+                    .from("games")
+                    .update({ itad_id: match.id })
+                    .eq("id", game.id);
+                  return { success: true, title: game.title };
+                }
+              }
+
+              // No match or wrong type — mark so we don't retry
+              await supabase
+                .from("games")
+                .update({ itad_id: "NOT_FOUND" })
+                .eq("id", game.id);
+              return { success: false, title: game.title };
+            } catch (err: any) {
+              await supabase
+                .from("games")
+                .update({ itad_id: "NOT_FOUND" })
+                .eq("id", game.id);
+              return { success: false, title: game.title, error: err.message };
+            }
+          })
+        );
+
+        for (const r of results) {
+          if (r.status === "fulfilled") {
+            if (r.value.success) {
+              stats.mapped++;
+            } else {
+              stats.failed++;
+            }
+          } else {
+            stats.failed++;
+            stats.errors.push(r.reason?.message || "Unknown error");
+          }
+        }
+
+        // Respect ITAD rate limit: 200 req/min
+        if (i + CONCURRENCY < unmapped.length) {
+          await new Promise((r) => setTimeout(r, 1500));
+        }
+      }
     }
 
-    // Count total remaining (including this batch)
+    // Get final remaining count
     const { count } = await supabase
       .from("games")
       .select("id", { count: "exact", head: true })
       .is("itad_id", null);
-    stats.remaining = (count || 0) - batchSize;
-    if (stats.remaining < 0) stats.remaining = 0;
+    stats.remaining = count || 0;
 
-    // Process in batches of CONCURRENCY
-    for (let i = 0; i < unmapped.length; i += CONCURRENCY) {
-      if (Date.now() - startTime > SAFETY_MS) {
-        stats.errors.push(`Timeout at ${stats.mapped} mappings`);
-        break;
-      }
-
-      const batch = unmapped.slice(i, i + CONCURRENCY);
-      const results = await Promise.allSettled(
-        batch.map(async (game) => {
-          try {
-            // Search ITAD by exact title
-            const itadResults = await searchGames(game.title, 1);
-
-            if (itadResults.length > 0) {
-              const match = itadResults[0];
-              // Only accept if type is "game" (not DLC, bundle, etc.)
-              if (!match.type || match.type === "game") {
-                await supabase
-                  .from("games")
-                  .update({ itad_id: match.id })
-                  .eq("id", game.id);
-                return { success: true, title: game.title };
-              }
-            }
-
-            // No match found — mark with sentinel so we don't retry
-            await supabase
-              .from("games")
-              .update({ itad_id: "NOT_FOUND" })
-              .eq("id", game.id);
-            return { success: false, title: game.title };
-          } catch (err: any) {
-            return { success: false, title: game.title, error: err.message };
-          }
-        })
-      );
-
-      for (const r of results) {
-        if (r.status === "fulfilled") {
-          if (r.value.success) {
-            stats.mapped++;
-          } else {
-            stats.failed++;
-            stats.failedTitles.push(r.value.title);
-          }
-        } else {
-          stats.failed++;
-          stats.errors.push(r.reason?.message || "Unknown error");
-        }
-      }
-
-      // Respect ITAD rate limit: 200 req/min ≈ 3.3 req/sec
-      // With CONCURRENCY=5, wait 1.5s between batches
-      if (i + CONCURRENCY < unmapped.length) {
-        await new Promise((r) => setTimeout(r, 1500));
-      }
-    }
+    const elapsed = Math.round((Date.now() - startTime) / 1000);
 
     return NextResponse.json({
       ok: true,
       ...stats,
+      done,
+      elapsedSeconds: elapsed,
       timestamp: new Date().toISOString(),
     });
   } catch (err: any) {
