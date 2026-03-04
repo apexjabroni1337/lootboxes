@@ -159,8 +159,38 @@ export default function Header() {
                 </button>
 
                 {lootboxMegaOpen && (
-                  <div className="absolute left-0 top-full z-50 mt-1 w-[460px] rounded-xl border border-gray-200 bg-white p-5 shadow-xl dark:border-gray-700 dark:bg-gray-900">
-                    <div className="grid grid-cols-2 gap-6">
+                  <div className="absolute left-0 top-full z-50 mt-1 w-[480px] rounded-xl border border-gray-200 bg-white shadow-xl">
+                    {/* Featured links at top */}
+                    <div className="flex gap-2 border-b border-gray-100 p-4">
+                      <Link
+                        href="/lootbox"
+                        onClick={() => setLootboxMegaOpen(false)}
+                        className="flex flex-1 items-center gap-3 rounded-lg bg-brand-50 px-4 py-3 transition-colors hover:bg-brand-100"
+                      >
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white">
+                          <Gamepad2 className="h-4.5 w-4.5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">All Analyzed Games</p>
+                          <p className="text-[11px] text-gray-500">Browse 300+ games</p>
+                        </div>
+                      </Link>
+                      <Link
+                        href="/lootbox/rankings"
+                        onClick={() => setLootboxMegaOpen(false)}
+                        className="flex flex-1 items-center gap-3 rounded-lg bg-amber-50 px-4 py-3 transition-colors hover:bg-amber-100"
+                      >
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500 text-white">
+                          <Trophy className="h-4.5 w-4.5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">Rankings</p>
+                          <p className="text-[11px] text-gray-500">Best & worst rated</p>
+                        </div>
+                      </Link>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-6 p-5">
                       {/* By System Type */}
                       <div>
                         <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
@@ -172,7 +202,7 @@ export default function Header() {
                               key={t.label}
                               href={t.href}
                               onClick={() => setLootboxMegaOpen(false)}
-                              className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white"
+                              className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
                             >
                               <t.icon className="h-4 w-4 text-gray-400" />
                               {t.label}
@@ -192,7 +222,7 @@ export default function Header() {
                               key={g.label}
                               href={g.href}
                               onClick={() => setLootboxMegaOpen(false)}
-                              className="block rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white"
+                              className="block rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
                             >
                               {g.label}
                             </Link>
@@ -202,37 +232,21 @@ export default function Header() {
                     </div>
 
                     {/* Bottom bar */}
-                    <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3 dark:border-gray-800">
+                    <div className="flex items-center gap-2 border-t border-gray-100 px-5 py-3">
                       <Link
-                        href="/lootbox"
+                        href="/methodology"
                         onClick={() => setLootboxMegaOpen(false)}
-                        className="text-sm font-medium text-brand-600 hover:text-brand-700"
+                        className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
                       >
-                        View all analyzed games →
+                        How We Rate
                       </Link>
-                      <div className="flex items-center gap-2">
-                        <Link
-                          href="/lootbox/rankings"
-                          onClick={() => setLootboxMegaOpen(false)}
-                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
-                        >
-                          Rankings
-                        </Link>
-                        <Link
-                          href="/methodology"
-                          onClick={() => setLootboxMegaOpen(false)}
-                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
-                        >
-                          How We Rate
-                        </Link>
-                        <Link
-                          href="/drop-rates"
-                          onClick={() => setLootboxMegaOpen(false)}
-                          className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
-                        >
-                          Drop Rate Database
-                        </Link>
-                      </div>
+                      <Link
+                        href="/drop-rates"
+                        onClick={() => setLootboxMegaOpen(false)}
+                        className="rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 hover:bg-gray-200"
+                      >
+                        Drop Rate Database
+                      </Link>
                     </div>
                   </div>
                 )}
