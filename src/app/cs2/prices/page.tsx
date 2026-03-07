@@ -10,9 +10,10 @@ import {
   Star,
   ArrowUpDown,
   ChevronLeft,
+  Info,
 } from "lucide-react";
 
-/* ── Mock skin data (would come from API/DB in production) ── */
+/* ── Mock skin data (would come from PriceEmpire API in production) ── */
 const SKINS = [
   { id: "1", name: "AK-47 | Asiimov", collection: "Operation Phoenix", rarity: "Covert", image: null, wear: "Field-Tested", prices: { steam: 82.50, csfloat: 76.20, skinport: 74.99, buff163: 71.50, dmarket: 77.30 }, trend: 5.2 },
   { id: "2", name: "AWP | Dragon Lore", collection: "Cobblestone Collection", rarity: "Covert", image: null, wear: "Field-Tested", prices: { steam: 4250.00, csfloat: 3980.00, skinport: 3850.00, buff163: 3720.00, dmarket: 4100.00 }, trend: -2.1 },
@@ -28,12 +29,13 @@ const SKINS = [
   { id: "12", name: "USP-S | Kill Confirmed", collection: "Shadow Collection", rarity: "Covert", image: null, wear: "Factory New", prices: { steam: 88.00, csfloat: 81.00, skinport: 78.50, buff163: 74.00, dmarket: 83.00 }, trend: -1.2 },
 ];
 
+/* ── Marketplace key → affiliate deal ID mapping ── */
 const MARKETPLACES = [
-  { key: "steam" as const, name: "Steam", color: "#1b2838", fee: "15%", url: "https://steamcommunity.com/market" },
-  { key: "csfloat" as const, name: "CSFloat", color: "#4f8df0", fee: "2%", url: "https://csfloat.com" },
-  { key: "skinport" as const, name: "Skinport", color: "#eb4b98", fee: "5%", url: "https://skinport.com" },
-  { key: "buff163" as const, name: "Buff163", color: "#ff6b35", fee: "2.5%", url: "https://buff.163.com" },
-  { key: "dmarket" as const, name: "DMarket", color: "#00c9a7", fee: "3%", url: "https://dmarket.com" },
+  { key: "steam" as const, name: "Steam", color: "#1b2838", fee: "15%", dealId: "steam" },
+  { key: "csfloat" as const, name: "CSFloat", color: "#4f8df0", fee: "2%", dealId: "csfloat" },
+  { key: "skinport" as const, name: "Skinport", color: "#eb4b98", fee: "5%", dealId: "skinport" },
+  { key: "buff163" as const, name: "Buff163", color: "#ff6b35", fee: "2.5%", dealId: "buff163" },
+  { key: "dmarket" as const, name: "DMarket", color: "#00c9a7", fee: "3%", dealId: "dmarket" },
 ];
 
 type MarketKey = "steam" | "csfloat" | "skinport" | "buff163" | "dmarket";
@@ -62,7 +64,6 @@ export default function CS2PricesPage() {
     results.sort((a, b) => {
       if (sortBy === "name") return a.name.localeCompare(b.name);
       if (sortBy === "trend") return b.trend - a.trend;
-      // cheapest — sort by lowest available price
       const aMin = Math.min(...Object.values(a.prices));
       const bMin = Math.min(...Object.values(b.prices));
       return aMin - bMin;
@@ -130,14 +131,24 @@ export default function CS2PricesPage() {
 
       {/* Marketplace legend */}
       <section className="border-b border-gray-50 bg-gray-50/50">
-        <div className="container-main py-3 flex flex-wrap gap-4">
+        <div className="container-main py-3 flex flex-wrap items-center gap-4">
           {MARKETPLACES.map((mp) => (
-            <div key={mp.key} className="flex items-center gap-2 text-xs">
+            <a
+              key={mp.key}
+              href={`/go/cs2/${mp.dealId}?from=prices-legend`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-xs hover:opacity-75 transition-opacity"
+            >
               <div className="h-3 w-3 rounded-full" style={{ backgroundColor: mp.color }} />
               <span className="font-medium text-gray-700">{mp.name}</span>
               <span className="text-gray-400">(fee: {mp.fee})</span>
-            </div>
+            </a>
           ))}
+          <div className="flex items-center gap-1 text-[10px] text-gray-400 ml-auto">
+            <Info className="h-3 w-3" />
+            <span>Prices updated periodically</span>
+          </div>
         </div>
       </section>
 
@@ -149,6 +160,7 @@ export default function CS2PricesPage() {
           <div className="space-y-3">
             {filtered.map((skin) => {
               const cheapestKey = getCheapest(skin.prices);
+              const cheapestMarket = MARKETPLACES.find((m) => m.key === cheapestKey);
               const cheapestPrice = skin.prices[cheapestKey];
               const steamPrice = skin.prices.steam;
               const savings = steamPrice - cheapestPrice;
@@ -187,9 +199,16 @@ export default function CS2PricesPage() {
                         const price = skin.prices[mp.key];
                         const isCheapest = mp.key === cheapestKey;
                         return (
-                          <div
+                          <a
                             key={mp.key}
-                            className={`rounded-lg px-3 py-2 text-center ${isCheapest ? "bg-emerald-50 border border-emerald-200" : "bg-gray-50"}`}
+                            href={`/go/cs2/${mp.dealId}?from=prices`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`rounded-lg px-3 py-2 text-center transition-colors ${
+                              isCheapest
+                                ? "bg-emerald-50 border border-emerald-200 hover:bg-emerald-100"
+                                : "bg-gray-50 hover:bg-gray-100"
+                            }`}
                           >
                             <p className="text-[10px] font-medium text-gray-500 mb-1 hidden sm:block">{mp.name}</p>
                             <p className={`text-sm font-bold ${isCheapest ? "text-emerald-700" : "text-gray-900"}`}>
@@ -198,7 +217,7 @@ export default function CS2PricesPage() {
                             {isCheapest && (
                               <p className="text-[9px] font-semibold text-emerald-600 mt-0.5">BEST</p>
                             )}
-                          </div>
+                          </a>
                         );
                       })}
                     </div>
@@ -215,7 +234,7 @@ export default function CS2PricesPage() {
                         </span>
                       )}
                       <a
-                        href={MARKETPLACES.find((m) => m.key === cheapestKey)?.url || "#"}
+                        href={`/go/cs2/${cheapestMarket?.dealId || "csfloat"}?from=prices-buy`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-1 rounded-lg bg-gray-900 px-3 py-2 text-xs font-semibold text-white hover:bg-gray-800 transition-colors"
@@ -253,6 +272,17 @@ export default function CS2PricesPage() {
           </Link>
         </div>
       </section>
+
+      {/* Affiliate disclosure */}
+      <div className="border-t border-gray-100 bg-gray-50/70">
+        <div className="container-main py-4">
+          <p className="text-[11px] text-gray-400 leading-relaxed text-center">
+            <span className="font-semibold text-gray-500">Affiliate Disclosure:</span>{" "}
+            Some links on this page are affiliate links. LootBoxes.com may earn a commission
+            if you make a purchase, at no extra cost to you. We only recommend marketplaces we trust.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { ExternalLink, ChevronLeft, Star, CheckCircle, XCircle, ArrowRight } from "lucide-react";
+import { ExternalLink, ChevronLeft, Star, CheckCircle, XCircle, ArrowRight, Shield } from "lucide-react";
+import AffiliateDisclosure from "@/components/cs2/AffiliateDisclosure";
 
 const MARKETPLACES = [
   {
     name: "CSFloat",
-    url: "https://csfloat.com",
+    dealId: "csfloat",
     logo: "C",
     color: "#4f8df0",
     sellerFee: "2%",
@@ -18,10 +19,11 @@ const MARKETPLACES = [
     hasBargain: true,
     hasInspect: true,
     p2p: true,
+    editorPick: true,
   },
   {
     name: "Skinport",
-    url: "https://skinport.com",
+    dealId: "skinport",
     logo: "S",
     color: "#eb4b98",
     sellerFee: "5%",
@@ -35,10 +37,11 @@ const MARKETPLACES = [
     hasBargain: false,
     hasInspect: true,
     p2p: false,
+    editorPick: false,
   },
   {
     name: "Buff163",
-    url: "https://buff.163.com",
+    dealId: "buff163",
     logo: "B",
     color: "#ff6b35",
     sellerFee: "2.5%",
@@ -52,10 +55,11 @@ const MARKETPLACES = [
     hasBargain: true,
     hasInspect: true,
     p2p: true,
+    editorPick: false,
   },
   {
     name: "DMarket",
-    url: "https://dmarket.com",
+    dealId: "dmarket",
     logo: "D",
     color: "#00c9a7",
     sellerFee: "3%",
@@ -69,10 +73,83 @@ const MARKETPLACES = [
     hasBargain: false,
     hasInspect: true,
     p2p: true,
+    editorPick: false,
+  },
+  {
+    name: "Tradeit.gg",
+    dealId: "tradeit",
+    logo: "T",
+    color: "#5865F2",
+    sellerFee: "0-7%",
+    buyerFee: "0%",
+    payment: ["Crypto", "Skins"],
+    cashout: ["Crypto", "Skins"],
+    minCashout: "$1",
+    trustScore: 8.3,
+    highlight: "Instant skin-to-skin trading",
+    hasApi: true,
+    hasBargain: false,
+    hasInspect: true,
+    p2p: true,
+    editorPick: false,
+  },
+  {
+    name: "BitSkins",
+    dealId: "bitskins",
+    logo: "B",
+    color: "#f97316",
+    sellerFee: "5%",
+    buyerFee: "0%",
+    payment: ["Credit Card", "Crypto", "PayPal"],
+    cashout: ["PayPal", "Crypto", "Bank"],
+    minCashout: "$5",
+    trustScore: 8.2,
+    highlight: "Established since 2015",
+    hasApi: true,
+    hasBargain: false,
+    hasInspect: true,
+    p2p: false,
+    editorPick: false,
+  },
+  {
+    name: "Mannco.store",
+    dealId: "mannco",
+    logo: "M",
+    color: "#cf6a32",
+    sellerFee: "5%",
+    buyerFee: "0%",
+    payment: ["Credit Card", "Crypto"],
+    cashout: ["Crypto", "Bank Transfer"],
+    minCashout: "$10",
+    trustScore: 7.8,
+    highlight: "Best for TF2 + CS2 combined",
+    hasApi: false,
+    hasBargain: false,
+    hasInspect: false,
+    p2p: false,
+    editorPick: false,
+  },
+  {
+    name: "Waxpeer",
+    dealId: "waxpeer",
+    logo: "W",
+    color: "#7c3aed",
+    sellerFee: "5%",
+    buyerFee: "0%",
+    payment: ["Crypto", "Credit Card"],
+    cashout: ["Crypto"],
+    minCashout: "$5",
+    trustScore: 7.9,
+    highlight: "P2P with automated bot trading",
+    hasApi: true,
+    hasBargain: true,
+    hasInspect: true,
+    p2p: true,
+    editorPick: false,
   },
   {
     name: "Steam Market",
-    url: "https://steamcommunity.com/market",
+    dealId: "steam",
     logo: "V",
     color: "#1b2838",
     sellerFee: "15%",
@@ -86,6 +163,7 @@ const MARKETPLACES = [
     hasBargain: false,
     hasInspect: false,
     p2p: false,
+    editorPick: false,
   },
 ];
 
@@ -108,8 +186,29 @@ export default function ComparePage() {
             <h1 className="text-3xl font-bold text-gray-900">Marketplace Comparison</h1>
           </div>
           <p className="text-gray-600 max-w-2xl">
-            Side-by-side comparison of every major CS2 skin marketplace. Fees, cashout options, features, and trust ratings.
+            Side-by-side comparison of every major CS2 skin marketplace. Fees, cashout options, features, and trust ratings — updated for 2026.
           </p>
+        </div>
+      </section>
+
+      {/* Quick recommendation banner */}
+      <section className="border-b border-blue-100 bg-blue-50/60 py-4">
+        <div className="container-main flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
+          <div className="flex items-center gap-2">
+            <Shield className="h-5 w-5 text-blue-600" />
+            <span className="text-sm font-semibold text-blue-900">Our Pick:</span>
+          </div>
+          <p className="text-sm text-blue-800">
+            <strong>CSFloat</strong> offers the lowest seller fees (2%) with full P2P trading. Best overall for most users.
+          </p>
+          <a
+            href="/go/cs2/csfloat?from=compare-banner"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-auto flex items-center gap-1 rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-700 transition-colors whitespace-nowrap"
+          >
+            Visit CSFloat <ExternalLink className="h-3 w-3" />
+          </a>
         </div>
       </section>
 
@@ -117,14 +216,14 @@ export default function ComparePage() {
       <section className="py-10">
         <div className="container-main">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {MARKETPLACES.map((mp, idx) => (
+            {MARKETPLACES.map((mp) => (
               <div
                 key={mp.name}
                 className={`rounded-xl border bg-white p-6 shadow-sm relative ${
-                  idx === 0 ? "border-blue-300 ring-2 ring-blue-100" : "border-gray-200"
+                  mp.editorPick ? "border-blue-300 ring-2 ring-blue-100" : "border-gray-200"
                 }`}
               >
-                {idx === 0 && (
+                {mp.editorPick && (
                   <div className="absolute -top-3 left-4 inline-flex items-center gap-1 rounded-full bg-blue-600 px-3 py-1 text-[10px] font-bold text-white">
                     <Star className="h-3 w-3" /> EDITOR&apos;S PICK
                   </div>
@@ -158,7 +257,7 @@ export default function ComparePage() {
                 <div className="space-y-3 mb-4">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Seller Fee</span>
-                    <span className={`font-bold ${mp.sellerFee === "2%" ? "text-emerald-600" : mp.sellerFee === "15%" ? "text-red-500" : "text-gray-900"}`}>
+                    <span className={`font-bold ${parseFloat(mp.sellerFee) <= 2 ? "text-emerald-600" : parseFloat(mp.sellerFee) >= 10 ? "text-red-500" : "text-gray-900"}`}>
                       {mp.sellerFee}
                     </span>
                   </div>
@@ -196,10 +295,14 @@ export default function ComparePage() {
 
                 {/* CTA */}
                 <a
-                  href={mp.url}
+                  href={`/go/cs2/${mp.dealId}?from=compare`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors"
+                  className={`flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors ${
+                    mp.editorPick
+                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      : "border border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100"
+                  }`}
                 >
                   Visit {mp.name} <ExternalLink className="h-3.5 w-3.5" />
                 </a>
@@ -214,27 +317,40 @@ export default function ComparePage() {
         <div className="container-main">
           <h2 className="text-xl font-bold text-gray-900 mb-6">Quick Fee Comparison</h2>
           <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
-            <div className="grid grid-cols-3 gap-0 border-b border-gray-100 bg-gray-50 px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+            <div className="grid grid-cols-4 gap-0 border-b border-gray-100 bg-gray-50 px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">
               <span>Marketplace</span>
               <span>Seller Fee</span>
-              <span>You Keep (on $100 sale)</span>
+              <span>You Keep ($100)</span>
+              <span className="text-right">Visit</span>
             </div>
-            {MARKETPLACES.sort((a, b) => parseFloat(a.sellerFee) - parseFloat(b.sellerFee)).map((mp) => {
-              const feeNum = parseFloat(mp.sellerFee);
-              const keep = 100 - feeNum;
-              return (
-                <div key={mp.name} className="grid grid-cols-3 gap-0 border-b border-gray-50 px-5 py-3 items-center">
-                  <div className="flex items-center gap-2">
-                    <div className="h-6 w-6 rounded text-white text-[10px] font-bold flex items-center justify-center" style={{ backgroundColor: mp.color }}>
-                      {mp.logo}
+            {[...MARKETPLACES]
+              .sort((a, b) => parseFloat(a.sellerFee) - parseFloat(b.sellerFee))
+              .map((mp) => {
+                const feeNum = parseFloat(mp.sellerFee);
+                const keep = 100 - feeNum;
+                return (
+                  <div key={mp.name} className="grid grid-cols-4 gap-0 border-b border-gray-50 px-5 py-3 items-center">
+                    <div className="flex items-center gap-2">
+                      <div className="h-6 w-6 rounded text-white text-[10px] font-bold flex items-center justify-center" style={{ backgroundColor: mp.color }}>
+                        {mp.logo}
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">{mp.name}</span>
                     </div>
-                    <span className="text-sm font-medium text-gray-900">{mp.name}</span>
+                    <span className={`text-sm font-bold ${feeNum <= 3 ? "text-emerald-600" : feeNum >= 10 ? "text-red-500" : "text-amber-600"}`}>{mp.sellerFee}</span>
+                    <span className="text-sm font-bold text-gray-900">{isNaN(keep) ? "Varies" : `$${keep.toFixed(0)}`}</span>
+                    <div className="text-right">
+                      <a
+                        href={`/go/cs2/${mp.dealId}?from=compare-table`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-700"
+                      >
+                        Visit <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </div>
                   </div>
-                  <span className={`text-sm font-bold ${feeNum <= 3 ? "text-emerald-600" : feeNum >= 10 ? "text-red-500" : "text-amber-600"}`}>{mp.sellerFee}</span>
-                  <span className="text-sm font-bold text-gray-900">${keep.toFixed(0)}</span>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
 
           <div className="mt-8 text-center">
@@ -244,6 +360,9 @@ export default function ComparePage() {
           </div>
         </div>
       </section>
+
+      {/* Affiliate disclosure */}
+      <AffiliateDisclosure />
     </div>
   );
 }

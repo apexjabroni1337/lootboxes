@@ -9,6 +9,7 @@ import {
   DollarSign,
   TrendingUp,
   Sparkles,
+  ExternalLink,
 } from "lucide-react";
 
 /* ── Drop rate data (Valve's published odds) ── */
@@ -330,19 +331,31 @@ export default function CS2SimulatorPage() {
 
               {/* CTA */}
               <div className="mt-6 space-y-2">
+                <a
+                  href="/go/cs2/csfloat?from=simulator"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-center text-sm font-semibold text-white transition-colors"
+                  style={{ backgroundColor: "#4f8df0" }}
+                >
+                  Buy Real Skins on CSFloat <ExternalLink className="h-3 w-3" />
+                </a>
                 <Link
                   href="/cs2/prices"
                   className="block w-full rounded-lg bg-gray-900 px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-gray-800 transition-colors"
                 >
-                  Buy Skins Directly (Save Money)
+                  Compare Prices Across Markets
                 </Link>
                 <Link
                   href="/cs2/compare"
                   className="block w-full rounded-lg border border-gray-200 px-4 py-2.5 text-center text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
                 >
-                  Compare Marketplaces
+                  See All Marketplaces
                 </Link>
               </div>
+              <p className="mt-3 text-[10px] text-gray-400 text-center">
+                Affiliate link — we may earn a commission at no cost to you.
+              </p>
             </div>
           </div>
         </div>

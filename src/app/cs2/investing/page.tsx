@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { LineChart, ChevronLeft, ArrowRight, TrendingUp, Shield, AlertTriangle } from "lucide-react";
+import { LineChart, ChevronLeft, ArrowRight, TrendingUp, Shield, AlertTriangle, ExternalLink } from "lucide-react";
+import AffiliateDisclosure from "@/components/cs2/AffiliateDisclosure";
 
 const INVESTMENT_TIERS = [
   {
@@ -103,6 +104,46 @@ export default function CS2InvestingPage() {
         </div>
       </section>
 
+      {/* Where to buy */}
+      <section className="py-10 border-t border-gray-100">
+        <div className="container-main">
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Best Marketplaces for Investing</h2>
+          <p className="text-sm text-gray-600 mb-6">Low fees matter when you&apos;re buying to hold. These platforms keep your costs down.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              { name: "CSFloat", fee: "2%", reason: "Lowest fees, P2P trading", color: "#4f8df0", dealId: "csfloat" },
+              { name: "Buff163", fee: "2.5%", reason: "Largest volume, best liquidity", color: "#ff6b35", dealId: "buff163" },
+              { name: "DMarket", fee: "3%", reason: "Crypto cashout, instant trades", color: "#00c9a7", dealId: "dmarket" },
+            ].map((mp) => (
+              <a
+                key={mp.name}
+                href={`/go/cs2/${mp.dealId}?from=investing`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div
+                    className="flex h-10 w-10 items-center justify-center rounded-lg text-white text-sm font-bold"
+                    style={{ backgroundColor: mp.color }}
+                  >
+                    {mp.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">{mp.name}</p>
+                    <p className="text-xs text-emerald-600 font-medium">{mp.fee} seller fee</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-600">{mp.reason}</p>
+                <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand-600">
+                  Visit {mp.name} <ExternalLink className="h-3 w-3" />
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-10 border-t border-gray-100 bg-gray-50">
         <div className="container-main text-center">
@@ -113,11 +154,14 @@ export default function CS2InvestingPage() {
               Track Prices <ArrowRight className="h-4 w-4" />
             </Link>
             <Link href="/cs2/compare" className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
-              Compare Marketplaces
+              Compare All Marketplaces
             </Link>
           </div>
         </div>
       </section>
+
+      {/* Affiliate disclosure */}
+      <AffiliateDisclosure />
     </div>
   );
 }

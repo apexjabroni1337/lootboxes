@@ -10,7 +10,9 @@ import {
   Shield,
   ArrowRight,
   CheckCircle,
+  Star,
 } from "lucide-react";
+import AffiliateDisclosure from "@/components/cs2/AffiliateDisclosure";
 
 const TOOLS = [
   {
@@ -70,11 +72,11 @@ const TOOLS = [
 ];
 
 const MARKETPLACES = [
-  { name: "CSFloat", fee: "2%", color: "#4f8df0" },
-  { name: "Skinport", fee: "5%", color: "#eb4b98" },
-  { name: "Buff163", fee: "2.5%", color: "#ff6b35" },
-  { name: "DMarket", fee: "3%", color: "#00c9a7" },
-  { name: "Steam Market", fee: "15%", color: "#1b2838" },
+  { name: "CSFloat", fee: "2%", color: "#4f8df0", dealId: "csfloat", pick: true },
+  { name: "Skinport", fee: "5%", color: "#eb4b98", dealId: "skinport", pick: false },
+  { name: "Buff163", fee: "2.5%", color: "#ff6b35", dealId: "buff163", pick: false },
+  { name: "DMarket", fee: "3%", color: "#00c9a7", dealId: "dmarket", pick: false },
+  { name: "Tradeit.gg", fee: "0-7%", color: "#5865F2", dealId: "tradeit", pick: false },
 ];
 
 export default function CS2HubPage() {
@@ -180,18 +182,28 @@ export default function CS2HubPage() {
         </div>
       </section>
 
-      {/* Marketplace overview */}
+      {/* Marketplace overview — now with affiliate links */}
       <section className="py-12 border-t border-gray-100 bg-gray-50">
         <div className="container-main">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Supported Marketplaces</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Trusted Marketplaces</h2>
           <p className="text-gray-600 mb-8">We track prices and availability across all major CS2 skin platforms.</p>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             {MARKETPLACES.map((mp) => (
-              <div
+              <a
                 key={mp.name}
-                className="rounded-xl border border-gray-200 bg-white p-5 text-center shadow-sm"
+                href={`/go/cs2/${mp.dealId}?from=hub`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`rounded-xl border bg-white p-5 text-center shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5 ${
+                  mp.pick ? "border-blue-200 ring-1 ring-blue-100" : "border-gray-200"
+                } relative`}
               >
+                {mp.pick && (
+                  <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center gap-1 rounded-full bg-blue-600 px-2 py-0.5 text-[9px] font-bold text-white whitespace-nowrap">
+                    <Star className="h-2.5 w-2.5" /> OUR PICK
+                  </div>
+                )}
                 <div
                   className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full text-white text-sm font-bold"
                   style={{ backgroundColor: mp.color }}
@@ -200,7 +212,10 @@ export default function CS2HubPage() {
                 </div>
                 <p className="font-semibold text-gray-900">{mp.name}</p>
                 <p className="text-xs text-gray-500 mt-1">Seller fee: {mp.fee}</p>
-              </div>
+                <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-brand-600">
+                  Visit <ExternalLink className="h-2.5 w-2.5" />
+                </span>
+              </a>
             ))}
           </div>
 
@@ -209,7 +224,7 @@ export default function CS2HubPage() {
               href="/cs2/compare"
               className="inline-flex items-center gap-2 rounded-lg bg-gray-900 px-6 py-3 font-semibold text-white hover:bg-gray-800 transition-colors"
             >
-              Full Marketplace Comparison
+              Full Marketplace Comparison ({MARKETPLACES.length + 4} platforms)
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -245,6 +260,9 @@ export default function CS2HubPage() {
           </div>
         </div>
       </section>
+
+      {/* Affiliate disclosure */}
+      <AffiliateDisclosure />
     </div>
   );
 }
