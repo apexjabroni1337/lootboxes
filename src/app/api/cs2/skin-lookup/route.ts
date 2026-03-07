@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSkinPrices, SkinPrice } from "@/lib/pricempire";
 
+export const dynamic = "force-dynamic";
+
 /**
  * GET /api/cs2/skin-lookup
  *

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPartner } from "@/lib/affiliates";
 import { createServerClient } from "@/lib/supabase";
 
+export const dynamic = "force-dynamic";
+
 /**
  * GET /go/cs2/:partnerId
  *
