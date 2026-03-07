@@ -83,17 +83,27 @@ const StatCard = ({
   label,
   value,
   subtitle,
+  accent = "brand",
 }: {
   label: string;
   value: string | number;
   subtitle?: string;
-}) => (
-  <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-    <p className="text-sm font-medium text-gray-600">{label}</p>
-    <p className="mt-2 text-3xl font-bold text-gray-900">{value}</p>
-    {subtitle && <p className="mt-1 text-xs text-gray-500">{subtitle}</p>}
-  </div>
-);
+  accent?: "brand" | "emerald" | "amber" | "red";
+}) => {
+  const accentStyles: Record<string, string> = {
+    brand: "border-l-brand-500 bg-gradient-to-r from-brand-50/60 to-white",
+    emerald: "border-l-emerald-500 bg-gradient-to-r from-emerald-50/60 to-white",
+    amber: "border-l-amber-500 bg-gradient-to-r from-amber-50/60 to-white",
+    red: "border-l-red-500 bg-gradient-to-r from-red-50/60 to-white",
+  };
+  return (
+    <div className={`rounded-xl border border-gray-200 border-l-4 ${accentStyles[accent]} p-6 shadow-sm`}>
+      <p className="text-sm font-medium text-gray-600">{label}</p>
+      <p className="mt-2 text-3xl font-bold text-gray-900">{value}</p>
+      {subtitle && <p className="mt-1 text-xs text-gray-500">{subtitle}</p>}
+    </div>
+  );
+};
 
 const ScoreBadge = ({ score }: { score: number }) => {
   const color = getScoreColor(score);
@@ -121,11 +131,13 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
           <StatCard
             label="Total Games Analyzed"
             value={props.totalGamesAnalyzed}
+            accent="brand"
           />
           <StatCard
             label="Average Score"
             value={props.avgScore.toFixed(2)}
             subtitle="out of 10"
+            accent="amber"
           />
           <StatCard
             label="Consumer-Friendly"
@@ -135,6 +147,7 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
                 ? `Score: ${props.bestGame.score.toFixed(1)}`
                 : 'No data'
             }
+            accent="emerald"
           />
           <StatCard
             label="Most Aggressive"
@@ -144,6 +157,7 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
                 ? `Score: ${props.worstGame.score.toFixed(1)}`
                 : 'No data'
             }
+            accent="red"
           />
         </div>
       </section>
@@ -153,23 +167,23 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
         <h2 className="mb-6 text-2xl font-bold text-gray-900">
           Score Distribution
         </h2>
-        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="space-y-4">
+        <div className="rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-6 shadow-sm">
+          <div className="space-y-5">
             {props.scoreDistribution.map((dist) => (
-              <div key={dist.range}>
+              <div key={dist.range} className="rounded-lg bg-white p-4 border border-gray-100 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
                 <div className="mb-2 flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-sm font-semibold text-gray-800">
                     {dist.range}
                   </span>
-                  <span className="text-sm font-semibold text-gray-900">
+                  <span className="text-sm font-bold tabular-nums" style={{ color: dist.color }}>
                     {dist.count} games
                   </span>
                 </div>
-                <div className="h-8 w-full overflow-hidden rounded-lg bg-gray-100">
+                <div className="h-7 w-full overflow-hidden rounded-full bg-gray-100">
                   <div
-                    className="h-full transition-all duration-300"
+                    className="h-full rounded-full transition-all duration-300"
                     style={{
-                      width: `${maxDistCount > 0 ? (dist.count / maxDistCount) * 100 : 0}%`,
+                      width: `${maxDistCount > 0 ? Math.max((dist.count / maxDistCount) * 100, 2) : 0}%`,
                       backgroundColor: dist.color,
                     }}
                   />
@@ -189,17 +203,17 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
           {props.systemBreakdown.map((system) => (
             <div
               key={system.type}
-              className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
+              className="rounded-xl border border-gray-200 bg-gradient-to-br from-slate-50 to-white p-6 shadow-sm hover:shadow-md transition-shadow"
             >
-              <div className="mb-4 text-blue-600">
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
                 {getSystemIcon(system.type)}
               </div>
               <h3 className="font-semibold text-gray-900">{SYSTEM_LABELS[system.type] || system.type}</h3>
               <p className="mt-2 text-sm text-gray-600">
                 {system.count} game{system.count !== 1 ? 's' : ''}
               </p>
-              <div className="mt-4 flex items-center justify-between">
-                <span className="text-xs text-gray-600">Avg Score</span>
+              <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
+                <span className="text-xs font-medium text-gray-500">Avg Score</span>
                 <ScoreBadge score={system.avgScore} />
               </div>
             </div>
@@ -315,14 +329,14 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
             {props.industryInsights.map((insight, idx) => (
               <div
                 key={idx}
-                className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
+                className="rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-6 shadow-sm"
               >
-                <div className="mb-4 text-2xl">{insight.icon}</div>
-                <p className="text-sm text-gray-600">{insight.label}</p>
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 text-2xl">{insight.icon}</div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{insight.label}</p>
                 <p className="mt-2 text-2xl font-bold text-gray-900">
                   {insight.value}
                 </p>
-                <p className="mt-2 text-sm text-gray-600">{insight.description}</p>
+                <p className="mt-2 text-sm text-gray-600 leading-relaxed">{insight.description}</p>
               </div>
             ))}
           </div>

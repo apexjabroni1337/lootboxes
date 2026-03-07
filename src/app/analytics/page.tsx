@@ -51,10 +51,10 @@ async function getAnalyticsData() {
 
   // Score distribution
   const ranges = [
-    { range: "8.0 — 10.0 (Great)", min: 8, max: 10.1, color: "#10b981" },
-    { range: "6.0 — 7.9 (Good)", min: 6, max: 8, color: "#f59e0b" },
-    { range: "4.0 — 5.9 (Average)", min: 4, max: 6, color: "#f97316" },
-    { range: "0 — 3.9 (Poor)", min: 0, max: 4, color: "#ef4444" },
+    { range: "7.5 — 10.0 (Great)", min: 7.5, max: 10.1, color: "#10b981" },
+    { range: "5.5 — 7.4 (Good)", min: 5.5, max: 7.5, color: "#f59e0b" },
+    { range: "3.5 — 5.4 (Average)", min: 3.5, max: 5.5, color: "#f97316" },
+    { range: "0 — 3.4 (Poor)", min: 0, max: 3.5, color: "#ef4444" },
   ];
   const scoreDistribution = ranges.map(r => ({
     range: r.range,
