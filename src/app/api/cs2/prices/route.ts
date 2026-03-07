@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 /**
  * GET /api/cs2/prices
  *
- * Returns CS2 skin prices from PriceEmpire (cached 15min).
+ * Returns CS2 skin prices from Skinport (cached 15min, free API).
  *
  * Query params:
  *   ?q=<search>     — Filter by skin name

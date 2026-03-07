@@ -1,41 +1,43 @@
 /**
- * PriceEmpire API client with in-memory caching.
+ * CS2 skin price client using the FREE Skinport API.
  *
- * Fetches CS2 skin prices across 5 marketplaces: Steam, CSFloat, Skinport, Buff163, DMarket.
- * Caches the full item list for 15 minutes to stay well within the free tier (30k req/month).
+ * Endpoint: GET https://api.skinport.com/v1/items?app_id=730&currency=USD
+ * No authentication required.
  *
- * Prices from PriceEmpire are in CENTS (integers). We convert to dollars here.
+ * Caches the full item list for 15 minutes (only ~1 request every 15 min).
+ *
+ * We keep the same exported types/functions so existing API routes don't break.
+ * Prices from Skinport are already in dollars (not cents).
  */
 
-const API_BASE = "https://api.pricempire.com/v4/paid";
-const API_KEY = process.env.PRICEEMPIRE_API_KEY || "";
+const SKINPORT_API = "https://api.skinport.com/v1/items";
 const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
 
 /* ── Types ── */
 
-export interface PriceEntry {
-  price: number | null; // cents
-  count: number | null;
-  updated_at: string | null;
-  provider_key: string;
-}
-
-export interface PricempireItem {
+/** Raw Skinport API item */
+interface SkinportItem {
   market_hash_name: string;
-  image?: string;
-  liquidity?: number;
-  count?: number;
-  rank?: number;
-  prices: PriceEntry[];
+  currency: string;
+  suggested_price: number | null;
+  item_page: string;
+  market_page: string;
+  min_price: number | null;
+  max_price: number | null;
+  mean_price: number | null;
+  median_price: number | null;
+  quantity: number;
+  created_at: number;
+  updated_at: number;
 }
 
-/** Normalized skin price for our frontend */
+/** Normalized skin price for our frontend — kept compatible with existing code */
 export interface SkinPrice {
   name: string; // "AK-47 | Asiimov (Field-Tested)"
   weapon: string; // "AK-47"
   skin: string; // "Asiimov"
   wear: string; // "Field-Tested"
-  rarity: string; // We'll infer from name patterns or leave blank
+  rarity: string;
   image: string | null;
   prices: {
     steam: number | null;
@@ -55,29 +57,21 @@ export interface SkinPrice {
 let cachedData: SkinPrice[] | null = null;
 let cacheTimestamp = 0;
 
-/* ── Source keys for our 5 marketplaces ── */
-const SOURCES = "steam,csfloat,skinport,buff163,dmarket";
-const SOURCE_KEYS = ["steam", "csfloat", "skinport", "buff163", "dmarket"] as const;
-
 /* ── Rarity inference from market_hash_name patterns ── */
 function inferRarity(name: string): string {
   if (name.startsWith("★")) return "Covert"; // Knives/gloves
   if (name.includes("Contraband")) return "Contraband";
-  // Can't fully determine from name alone — return empty to let frontend fallback
   return "";
 }
 
 /* ── Parse market_hash_name into parts ── */
 function parseName(marketHashName: string): { weapon: string; skin: string; wear: string } {
-  // Remove ★ prefix for knives
   let name = marketHashName.replace(/^★\s*/, "").replace(/^StatTrak™\s*/, "");
 
-  // Extract wear from parentheses at end
   const wearMatch = name.match(/\(([^)]+)\)\s*$/);
   const wear = wearMatch ? wearMatch[1] : "";
   name = name.replace(/\s*\([^)]+\)\s*$/, "");
 
-  // Split by " | "
   const parts = name.split(" | ");
   const weapon = parts[0]?.trim() || "";
   const skin = parts[1]?.trim() || "";
@@ -85,71 +79,60 @@ function parseName(marketHashName: string): { weapon: string; skin: string; wear
   return { weapon, skin, wear };
 }
 
-/* ── Fetch from PriceEmpire API ── */
-async function fetchPrices(): Promise<PricempireItem[]> {
-  if (!API_KEY) {
-    console.warn("[PriceEmpire] No API key set — returning empty data");
-    return [];
-  }
-
-  const url = `${API_BASE}/items/prices?app_id=730&sources=${SOURCES}&currency=USD`;
+/* ── Fetch from Skinport API ── */
+async function fetchPrices(): Promise<SkinportItem[]> {
+  const url = `${SKINPORT_API}?app_id=730&currency=USD`;
 
   const res = await fetch(url, {
-    headers: { Authorization: `Bearer ${API_KEY}` },
+    headers: {
+      "Accept-Encoding": "br, gzip, deflate",
+    },
     cache: "no-store",
   });
 
   if (!res.ok) {
-    console.error(`[PriceEmpire] API error: ${res.status} ${res.statusText}`);
+    console.error(`[SkinPrices] API error: ${res.status} ${res.statusText}`);
     return [];
   }
 
-  const data: PricempireItem[] = await res.json();
+  const data: SkinportItem[] = await res.json();
   return data;
 }
 
 /* ── Convert raw API data to our SkinPrice format ── */
-function transformItem(item: PricempireItem): SkinPrice | null {
+function transformItem(item: SkinportItem): SkinPrice | null {
   const { weapon, skin, wear } = parseName(item.market_hash_name);
 
   // Skip items without a skin name (stickers, agents, cases, etc.)
   if (!skin || !wear) return null;
 
-  // Only include items that are actual weapon skins (not stickers, patches, etc.)
-  // Simple heuristic: must have weapon | skin format and a wear condition
   const validWears = ["Factory New", "Minimal Wear", "Field-Tested", "Well-Worn", "Battle-Scarred"];
   if (!validWears.includes(wear)) return null;
 
-  // Extract prices per marketplace (convert cents to dollars)
-  const prices: Record<string, number | null> = {};
-  for (const sourceKey of SOURCE_KEYS) {
-    const entry = item.prices.find((p) => p.provider_key === sourceKey);
-    prices[sourceKey] = entry?.price != null ? entry.price / 100 : null;
-  }
+  // Skinport gives us their prices — use suggested_price as a Steam-equivalent "reference" price
+  // and min_price as the actual Skinport listing price
+  const skinportPrice = item.min_price ?? item.suggested_price ?? null;
+  const suggestedPrice = item.suggested_price ?? item.min_price ?? 0;
 
-  // Find cheapest
-  let cheapestMarket = "steam";
-  let cheapestPrice = Infinity;
-  for (const key of SOURCE_KEYS) {
-    const p = prices[key];
-    if (p != null && p > 0 && p < cheapestPrice) {
-      cheapestPrice = p;
-      cheapestMarket = key;
-    }
-  }
-  if (cheapestPrice === Infinity) cheapestPrice = 0;
+  // We don't have per-marketplace data from the free API,
+  // so we set skinport as known and leave others null.
+  // The frontend gracefully handles null prices.
+  const prices = {
+    steam: suggestedPrice > 0 ? suggestedPrice : null, // suggested ≈ market value (Steam-like reference)
+    csfloat: null,
+    skinport: skinportPrice,
+    buff163: null,
+    dmarket: null,
+  };
 
-  const steamPrice = prices.steam ?? 0;
-  const savings = steamPrice > 0 && cheapestPrice > 0 ? steamPrice - cheapestPrice : 0;
+  // Cheapest is Skinport (the only real price we have)
+  const cheapestPrice = skinportPrice ?? suggestedPrice ?? 0;
+  const cheapestMarket = skinportPrice ? "skinport" : "steam";
+  const steamPrice = suggestedPrice;
+  const savings = steamPrice > 0 && cheapestPrice > 0 ? Math.max(steamPrice - cheapestPrice, 0) : 0;
 
-  // Get latest update time
-  const latestUpdate = item.prices
-    .filter((p) => p.updated_at)
-    .sort((a, b) => new Date(b.updated_at!).getTime() - new Date(a.updated_at!).getTime())[0];
-
-  // Build image URL
-  const imageUrl = item.image
-    ? `https://cs2-cdn.pricempire.com${item.image}`
+  const updatedAt = item.updated_at
+    ? new Date(item.updated_at * 1000).toISOString()
     : null;
 
   return {
@@ -158,19 +141,13 @@ function transformItem(item: PricempireItem): SkinPrice | null {
     skin,
     wear,
     rarity: inferRarity(item.market_hash_name),
-    image: imageUrl,
-    prices: {
-      steam: prices.steam ?? null,
-      csfloat: prices.csfloat ?? null,
-      skinport: prices.skinport ?? null,
-      buff163: prices.buff163 ?? null,
-      dmarket: prices.dmarket ?? null,
-    },
+    image: null, // Skinport API doesn't include image URLs in the items endpoint
+    prices,
     cheapestMarket,
     cheapestPrice,
     steamPrice,
     savings: Math.max(savings, 0),
-    updatedAt: latestUpdate?.updated_at || null,
+    updatedAt,
   };
 }
 
@@ -187,26 +164,24 @@ export async function getSkinPrices(): Promise<SkinPrice[]> {
     const rawItems = await fetchPrices();
 
     if (rawItems.length === 0 && cachedData) {
-      // API failed but we have stale cache — return stale data
-      console.warn("[PriceEmpire] API returned empty, using stale cache");
+      console.warn("[SkinPrices] API returned empty, using stale cache");
       return cachedData;
     }
 
     const skinPrices = rawItems
       .map(transformItem)
       .filter((item): item is SkinPrice => item !== null)
-      .filter((item) => item.cheapestPrice > 0) // Skip items with no prices
-      .sort((a, b) => b.cheapestPrice - a.cheapestPrice); // Sort by price desc
+      .filter((item) => item.cheapestPrice > 0)
+      .sort((a, b) => b.cheapestPrice - a.cheapestPrice);
 
     // Update cache
     cachedData = skinPrices;
     cacheTimestamp = now;
 
-    console.log(`[PriceEmpire] Fetched ${skinPrices.length} skin prices`);
+    console.log(`[SkinPrices] Fetched ${skinPrices.length} skin prices from Skinport`);
     return skinPrices;
   } catch (error) {
-    console.error("[PriceEmpire] Fetch error:", error);
-    // Return stale cache on error
+    console.error("[SkinPrices] Fetch error:", error);
     if (cachedData) return cachedData;
     return [];
   }

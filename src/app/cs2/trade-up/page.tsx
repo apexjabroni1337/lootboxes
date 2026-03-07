@@ -45,7 +45,7 @@ interface Skin {
   price: number; // Fallback price — overridden by live data
   minFloat: number;
   maxFloat: number;
-  livePrice?: number; // Live price from PriceEmpire
+  livePrice?: number; // Live price from Skinport API
 }
 
 const COLLECTIONS: Record<string, Skin[]> = {
@@ -260,7 +260,7 @@ export default function TradeUpPage() {
           </div>
           <p className="text-gray-600 max-w-2xl">
             Select 10 input skins, see all possible outcomes with probabilities, and know your expected profit before you commit.
-            {isLive && " Prices updated live from 5 marketplaces."}
+            {isLive && " Prices updated live from Skinport."}
           </p>
         </div>
       </section>
@@ -530,7 +530,7 @@ export default function TradeUpPage() {
                 <p><span className="font-semibold text-gray-800">Knives craftable:</span> Since Oct 2025, knives and gloves can appear as trade-up outcomes.</p>
                 <p><span className="font-semibold text-gray-800">EV tip:</span> Positive EV trade-ups are rare. Mix collections strategically to shift probabilities.</p>
                 {isLive && (
-                  <p className="text-emerald-600 font-medium">Prices are live from PriceEmpire across 5 marketplaces. Updated every 15 minutes.</p>
+                  <p className="text-emerald-600 font-medium">Prices are live from Skinport. Updated every 15 minutes.</p>
                 )}
               </div>
             </div>

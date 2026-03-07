@@ -64,7 +64,7 @@ interface LiveSkinData {
   savings: number;
 }
 
-/* ── Mock float listings (PriceEmpire doesn't provide per-listing float data) ── */
+/* ── Mock float listings (Skinport API doesn't provide per-listing float data) ── */
 interface SkinListing {
   id: string;
   weapon: string;
