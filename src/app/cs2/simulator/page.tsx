@@ -11,6 +11,7 @@ import {
   Sparkles,
   ExternalLink,
 } from "lucide-react";
+import CS2NewsletterCTA from "@/components/cs2/CS2NewsletterCTA";
 
 /* ── Drop rate data (Valve's published odds) ── */
 const RARITY_TIERS = [
@@ -358,6 +359,13 @@ export default function CS2SimulatorPage() {
               </p>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Newsletter */}
+      <div className="border-t border-gray-100 py-8">
+        <div className="container-main">
+          <CS2NewsletterCTA />
         </div>
       </div>
     </div>

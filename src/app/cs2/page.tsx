@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   TrendingUp,
@@ -13,6 +14,12 @@ import {
   Star,
 } from "lucide-react";
 import AffiliateDisclosure from "@/components/cs2/AffiliateDisclosure";
+
+export const metadata: Metadata = {
+  title: "CS2 Skins Hub — Track Prices, Simulate Cases, Compare Marketplaces",
+  description:
+    "The most comprehensive CS2 skin resource. Compare prices across 5+ marketplaces, simulate case openings with real Valve odds, check float values, and calculate trade-up contracts.",
+};
 
 const TOOLS = [
   {

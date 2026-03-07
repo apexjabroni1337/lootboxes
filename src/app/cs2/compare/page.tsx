@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ExternalLink, ChevronLeft, Star, CheckCircle, XCircle, ArrowRight, Shield } from "lucide-react";
 import AffiliateDisclosure from "@/components/cs2/AffiliateDisclosure";
+
+export const metadata: Metadata = {
+  title: "CS2 Marketplace Comparison — Fees, Trust Scores & Features",
+  description:
+    "Compare 9 CS2 skin marketplaces side-by-side. CSFloat, Skinport, Buff163, DMarket, Tradeit.gg and more — fees, payment methods, trust ratings, and features.",
+};
 
 const MARKETPLACES = [
   {

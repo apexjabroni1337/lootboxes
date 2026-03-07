@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { LineChart, ChevronLeft, ArrowRight, TrendingUp, Shield, AlertTriangle, ExternalLink } from "lucide-react";
 import AffiliateDisclosure from "@/components/cs2/AffiliateDisclosure";
+import CS2NewsletterCTA from "@/components/cs2/CS2NewsletterCTA";
+
+export const metadata: Metadata = {
+  title: "CS2 Skin Investment Guide — Strategies, Risk Tiers & ROI",
+  description:
+    "Data-driven CS2 skin investment strategies. Low, medium, and high-risk tiers with historical ROI analysis. Learn which skins appreciate and where to buy them cheapest.",
+};
 
 const INVESTMENT_TIERS = [
   {
@@ -157,6 +165,13 @@ export default function CS2InvestingPage() {
               Compare All Marketplaces
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Newsletter */}
+      <section className="py-10 border-t border-gray-100">
+        <div className="container-main">
+          <CS2NewsletterCTA />
         </div>
       </section>
 
