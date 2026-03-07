@@ -12,12 +12,6 @@ import {
 
   Tag,
   Gamepad2,
-  Swords,
-  Globe,
-  Crosshair,
-  Car,
-  Puzzle,
-  Users,
   Trophy,
   Zap,
   Box,
@@ -34,23 +28,6 @@ import Logo from "@/components/brand/Logo";
 import ThemeToggle from "@/components/theme/ThemeToggle";
 import { useWishlist } from "@/components/wishlist/WishlistProvider";
 
-const GENRES = [
-  { label: "Action", href: "/deals?genre=action", icon: Swords },
-  { label: "RPG", href: "/deals?genre=rpg", icon: Gamepad2 },
-  { label: "FPS", href: "/deals?genre=fps", icon: Crosshair },
-  { label: "Open World", href: "/deals?genre=open-world", icon: Globe },
-  { label: "Racing", href: "/deals?genre=racing", icon: Car },
-  { label: "Strategy", href: "/deals?genre=strategy", icon: Puzzle },
-  { label: "Multiplayer", href: "/deals?genre=multiplayer", icon: Users },
-  { label: "Sports", href: "/deals?genre=sports", icon: Trophy },
-];
-
-const QUICK_LINKS = [
-  { label: "Under $10", href: "/deals?max=10", color: "bg-success-50 text-success-700" },
-  { label: "Under $20", href: "/deals?max=20", color: "bg-brand-50 text-brand-700" },
-  { label: "Historic Lows", href: "/deals?filter=historic", color: "bg-amber-50 text-amber-700" },
-  { label: "50%+ Off", href: "/deals?min_discount=50", color: "bg-red-50 text-red-700" },
-];
 
 const LOOTBOX_TYPES = [
   { label: "Gacha", href: "/lootbox?type=gacha", icon: Sparkles },
@@ -325,47 +302,6 @@ export default function Header() {
                       </Link>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-6 p-5">
-                      {/* Genres column */}
-                      <div>
-                        <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                          By Genre
-                        </h4>
-                        <div className="space-y-0.5">
-                          {GENRES.map((g) => (
-                            <Link
-                              key={g.label}
-                              href={g.href}
-                              onClick={() => setMegaOpen(false)}
-                              className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
-                            >
-                              <g.icon className="h-4 w-4 text-gray-400" />
-                              {g.label}
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Quick filters */}
-                      <div>
-                        <h4 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                          Quick Filters
-                        </h4>
-                        <div className="space-y-1.5">
-                          {QUICK_LINKS.map((q) => (
-                            <Link
-                              key={q.label}
-                              href={q.href}
-                              onClick={() => setMegaOpen(false)}
-                              className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:opacity-80 ${q.color}`}
-                            >
-                              {q.label}
-                            </Link>
-                          ))}
-                        </div>
-
-                      </div>
-                    </div>
 
                     {/* Price alert bar */}
                     <Link
@@ -555,25 +491,6 @@ export default function Header() {
                 >
                   Drop Rates
                 </Link>
-
-                {/* Mobile quick filters */}
-                <div className="mt-2 border-t border-gray-100 pt-3">
-                  <p className="px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                    Quick Filters
-                  </p>
-                  <div className="mt-2 flex flex-wrap gap-2 px-3">
-                    {QUICK_LINKS.map((q) => (
-                      <Link
-                        key={q.label}
-                        href={q.href}
-                        onClick={() => setMobileOpen(false)}
-                        className={`rounded-full px-3 py-1.5 text-xs font-medium ${q.color}`}
-                      >
-                        {q.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
 
                 <Link
                   href="/newsletter"

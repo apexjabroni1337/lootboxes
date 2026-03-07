@@ -57,13 +57,17 @@ async function getGamesWithDeals() {
   return enriched;
 }
 
-export default async function GamesPage() {
+export default async function GamesPage({
+  searchParams,
+}: {
+  searchParams: { genre?: string };
+}) {
   const games = await getGamesWithDeals();
 
   return (
     <div className="py-8">
       <div className="container-main">
-        <GamesGrid games={games} />
+        <GamesGrid games={games} initialGenre={searchParams.genre || null} />
       </div>
     </div>
   );

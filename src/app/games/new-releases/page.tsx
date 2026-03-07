@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Calendar, Clock, Rocket, ArrowRight } from "lucide-react";
+import { Calendar, Clock, Rocket } from "lucide-react";
 import GameAvatar from "@/components/ui/GameAvatar";
+import GenreFilter from "@/components/games/GenreFilter";
 import { createServerClient } from "@/lib/supabase";
 import { formatDate } from "@/lib/utils";
 
@@ -103,11 +104,18 @@ function GameCard({ game }: { game: any }) {
   );
 }
 
-export default async function NewReleasesPage() {
+export default async function NewReleasesPage({
+  searchParams,
+}: {
+  searchParams: { genre?: string };
+}) {
   const [newReleases, comingSoon] = await Promise.all([
     getNewReleases(),
     getComingSoon(),
   ]);
+
+  const allGames = [...newReleases, ...comingSoon];
+  const initialGenre = searchParams.genre || null;
 
   return (
     <div className="pb-12">
@@ -127,60 +135,77 @@ export default async function NewReleasesPage() {
       </section>
 
       <div className="container-main mt-8">
-        {/* New Releases */}
-        {newReleases.length > 0 && (
-          <section>
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                New Releases
-              </h2>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                Last 90 days
-              </span>
-            </div>
-            <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {newReleases.map((game) => (
-                <GameCard key={game.id} game={game} />
-              ))}
-            </div>
-          </section>
-        )}
+        {/* Genre filter */}
+        <div className="mb-6">
+          <GenreFilter
+            games={allGames}
+            initialGenre={initialGenre}
+            renderGames={(filtered) => {
+              const newReleaseIds = new Set(newReleases.map((g: any) => g.id));
+              const filteredNew = filtered.filter((g: any) => newReleaseIds.has(g.id));
+              const filteredComing = filtered.filter((g: any) => !newReleaseIds.has(g.id));
 
-        {/* Coming Soon */}
-        {comingSoon.length > 0 && (
-          <section className="mt-12">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                Coming Soon
-              </h2>
-              <span className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
-                <Clock className="h-3.5 w-3.5" />
-                Upcoming titles
-              </span>
-            </div>
-            <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {comingSoon.map((game) => (
-                <GameCard key={game.id} game={game} />
-              ))}
-            </div>
-          </section>
-        )}
+              return (
+                <>
+                  {/* New Releases */}
+                  {filteredNew.length > 0 && (
+                    <section className="mt-6">
+                      <div className="flex items-center justify-between">
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                          New Releases
+                        </h2>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                          Last 90 days
+                        </span>
+                      </div>
+                      <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        {filteredNew.map((game: any) => (
+                          <GameCard key={game.id} game={game} />
+                        ))}
+                      </div>
+                    </section>
+                  )}
 
-        {/* Empty state */}
-        {newReleases.length === 0 && comingSoon.length === 0 && (
-          <div className="rounded-xl border border-gray-200 bg-white p-12 text-center dark:border-gray-800 dark:bg-gray-900">
-            <Rocket className="mx-auto h-12 w-12 text-gray-300 dark:text-gray-600" />
-            <h3 className="mt-4 text-lg font-semibold text-gray-900 dark:text-white">
-              No releases to show yet
-            </h3>
-            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-              We&apos;re building our release database. Check back soon!
-            </p>
-            <Link href="/deals" className="btn-primary mt-6 inline-flex">
-              Browse Deals Instead
-            </Link>
-          </div>
-        )}
+                  {/* Coming Soon */}
+                  {filteredComing.length > 0 && (
+                    <section className="mt-12">
+                      <div className="flex items-center justify-between">
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                          Coming Soon
+                        </h2>
+                        <span className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
+                          <Clock className="h-3.5 w-3.5" />
+                          Upcoming titles
+                        </span>
+                      </div>
+                      <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        {filteredComing.map((game: any) => (
+                          <GameCard key={game.id} game={game} />
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* Empty state */}
+                  {filteredNew.length === 0 && filteredComing.length === 0 && (
+                    <div className="mt-6 rounded-xl border border-gray-200 bg-white p-12 text-center dark:border-gray-800 dark:bg-gray-900">
+                      <Rocket className="mx-auto h-12 w-12 text-gray-300 dark:text-gray-600" />
+                      <h3 className="mt-4 text-lg font-semibold text-gray-900 dark:text-white">
+                        No releases found
+                      </h3>
+                      <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                        Try removing the genre filter or check back soon!
+                      </p>
+                      <Link href="/deals" className="btn-primary mt-6 inline-flex">
+                        Browse Deals Instead
+                      </Link>
+                    </div>
+                  )}
+                </>
+              );
+            }}
+          />
+        </div>
       </div>
     </div>
   );
