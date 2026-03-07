@@ -285,18 +285,36 @@ export default async function AnalyticsPage({
             Interactive analytics on gaming monetization. Explore score distributions, compare monetization systems, and dive into our in-depth reviews — all powered by the proprietary LootBoxes Score.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-4">
-            <div className="flex items-center gap-2 rounded-lg bg-white/15 backdrop-blur-sm px-4 py-2.5">
-              <Zap className="h-4 w-4 text-blue-200" />
-              <span className="text-sm font-medium text-white">{analyticsData.totalGamesAnalyzed} games analyzed</span>
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl">
+            <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-white/10 backdrop-blur-md px-5 py-4 transition-all hover:bg-white/20 hover:scale-[1.02]">
+              <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-400/20 mb-2">
+                  <Zap className="h-4.5 w-4.5 text-yellow-300" />
+                </div>
+                <p className="text-2xl font-black text-white tracking-tight">{analyticsData.totalGamesAnalyzed}</p>
+                <p className="text-xs font-medium text-blue-200 uppercase tracking-wider mt-0.5">Games Analyzed</p>
+              </div>
             </div>
-            <div className="flex items-center gap-2 rounded-lg bg-white/15 backdrop-blur-sm px-4 py-2.5">
-              <BarChart3 className="h-4 w-4 text-blue-200" />
-              <span className="text-sm font-medium text-white">{analyticsData.systemBreakdown.length} system types</span>
+            <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-white/10 backdrop-blur-md px-5 py-4 transition-all hover:bg-white/20 hover:scale-[1.02]">
+              <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-400/20 mb-2">
+                  <BarChart3 className="h-4.5 w-4.5 text-cyan-300" />
+                </div>
+                <p className="text-2xl font-black text-white tracking-tight">{analyticsData.systemBreakdown.length}</p>
+                <p className="text-xs font-medium text-blue-200 uppercase tracking-wider mt-0.5">System Types</p>
+              </div>
             </div>
-            <div className="flex items-center gap-2 rounded-lg bg-white/15 backdrop-blur-sm px-4 py-2.5">
-              <Sparkles className="h-4 w-4 text-blue-200" />
-              <span className="text-sm font-medium text-white">{ARTICLES.length} in-depth analyses</span>
+            <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-white/10 backdrop-blur-md px-5 py-4 transition-all hover:bg-white/20 hover:scale-[1.02]">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-400/20 mb-2">
+                  <Sparkles className="h-4.5 w-4.5 text-purple-300" />
+                </div>
+                <p className="text-2xl font-black text-white tracking-tight">{ARTICLES.length}</p>
+                <p className="text-xs font-medium text-blue-200 uppercase tracking-wider mt-0.5">Deep Analyses</p>
+              </div>
             </div>
           </div>
         </div>
