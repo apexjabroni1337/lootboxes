@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
   Search,
@@ -10,6 +10,9 @@ import {
   Sparkles,
   Target,
   Star,
+  Loader2,
+  Wifi,
+  WifiOff,
 } from "lucide-react";
 import AffiliateDisclosure from "@/components/cs2/AffiliateDisclosure";
 
@@ -38,7 +41,30 @@ const RARITY_COLORS: Record<string, string> = {
   Extraordinary: "#e4ae39",
 };
 
-/* ── Mock skin listings database ── */
+/* ── Types for API data ── */
+interface MarketPrices {
+  steam: number | null;
+  csfloat: number | null;
+  skinport: number | null;
+  buff163: number | null;
+  dmarket: number | null;
+}
+
+interface LiveSkinData {
+  name: string;
+  weapon: string;
+  skin: string;
+  wear: string;
+  rarity: string;
+  image: string | null;
+  prices: MarketPrices;
+  cheapestMarket: string;
+  cheapestPrice: number;
+  steamPrice: number;
+  savings: number;
+}
+
+/* ── Mock float listings (PriceEmpire doesn't provide per-listing float data) ── */
 interface SkinListing {
   id: string;
   weapon: string;
@@ -46,7 +72,7 @@ interface SkinListing {
   rarity: string;
   float: number;
   patternIndex: number;
-  price: number;
+  price: number; // fallback price
   marketplace: string;
   dealId: string;
 }
@@ -128,11 +154,27 @@ const UNIQUE_SKINS = Array.from(
   new Set(LISTINGS.map((l) => `${l.weapon} | ${l.skin}`))
 );
 
+const MARKETPLACES = [
+  { key: "steam", name: "Steam", dealId: "steam" },
+  { key: "csfloat", name: "CSFloat", dealId: "csfloat" },
+  { key: "skinport", name: "Skinport", dealId: "skinport" },
+  { key: "buff163", name: "Buff163", dealId: "buff163" },
+  { key: "dmarket", name: "DMarket", dealId: "dmarket" },
+] as const;
+
+function formatPrice(price: number | null): string {
+  if (price == null || price === 0) return "—";
+  return "$" + price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 export default function FloatCheckerPage() {
   const [query, setQuery] = useState("");
   const [selectedSkin, setSelectedSkin] = useState<string | null>(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [showWearRef, setShowWearRef] = useState(false);
+  const [liveData, setLiveData] = useState<LiveSkinData[]>([]);
+  const [livePriceLoading, setLivePriceLoading] = useState(false);
+  const [isLive, setIsLive] = useState(false);
 
   const suggestions = useMemo(() => {
     if (!query || query.length < 2) return [];
@@ -146,6 +188,44 @@ export default function FloatCheckerPage() {
       (l) => `${l.weapon} | ${l.skin}` === selectedSkin
     ).sort((a, b) => a.float - b.float);
   }, [selectedSkin]);
+
+  /* Fetch live prices when a skin is selected */
+  const fetchLivePrices = useCallback(async (skinName: string) => {
+    setLivePriceLoading(true);
+    try {
+      const parts = skinName.split(" | ");
+      const weapon = parts[0]?.trim() || "";
+      const skin = parts[1]?.trim() || "";
+      const q = encodeURIComponent(`${weapon} ${skin}`);
+      const res = await fetch(`/api/cs2/prices?q=${q}&limit=20`);
+      if (!res.ok) throw new Error("API error");
+      const data = await res.json();
+      const items: LiveSkinData[] = data.items || [];
+      // Filter to exact weapon|skin match
+      const matching = items.filter(
+        (item) =>
+          item.weapon.toLowerCase() === weapon.toLowerCase() &&
+          item.skin.toLowerCase() === skin.toLowerCase()
+      );
+      setLiveData(matching);
+      setIsLive(matching.length > 0);
+    } catch {
+      console.warn("Failed to fetch live prices for float checker");
+      setLiveData([]);
+      setIsLive(false);
+    } finally {
+      setLivePriceLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedSkin) {
+      fetchLivePrices(selectedSkin);
+    } else {
+      setLiveData([]);
+      setIsLive(false);
+    }
+  }, [selectedSkin, fetchLivePrices]);
 
   const handleSelect = (skinName: string) => {
     setSelectedSkin(skinName);
@@ -262,9 +342,71 @@ export default function FloatCheckerPage() {
                     {results[0].rarity}
                   </span>
                   <span className="text-sm text-gray-500">{results.length} listings found</span>
+                  {livePriceLoading ? (
+                    <span className="flex items-center gap-1 text-[10px] text-gray-400">
+                      <Loader2 className="h-3 w-3 animate-spin" /> Loading live prices...
+                    </span>
+                  ) : isLive ? (
+                    <span className="flex items-center gap-1 text-[10px] text-emerald-600 font-semibold">
+                      <Wifi className="h-3 w-3" /> LIVE PRICES
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1 text-[10px] text-gray-400">
+                      <WifiOff className="h-3 w-3" /> Estimated prices
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
+
+            {/* Live marketplace prices panel */}
+            {isLive && liveData.length > 0 && (
+              <div className="mb-6 rounded-xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50 p-5">
+                <h3 className="text-sm font-bold text-emerald-900 mb-3 flex items-center gap-2">
+                  <Wifi className="h-4 w-4 text-emerald-500" />
+                  Live Market Prices
+                </h3>
+                <div className="space-y-2">
+                  {liveData.map((item) => (
+                    <div key={item.name} className="flex flex-col sm:flex-row sm:items-center gap-2 rounded-lg bg-white/70 p-3">
+                      <div className="flex items-center gap-2 sm:w-40 flex-shrink-0">
+                        <span className="text-xs font-medium text-gray-600">{item.wear}</span>
+                      </div>
+                      <div className="flex-1 grid grid-cols-5 gap-2">
+                        {MARKETPLACES.map((mp) => {
+                          const price = item.prices[mp.key as keyof MarketPrices];
+                          const isCheapest = mp.key === item.cheapestMarket && price != null;
+                          return (
+                            <a
+                              key={mp.key}
+                              href={`/go/cs2/${mp.dealId}?from=float-checker`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={`rounded-lg px-2 py-1.5 text-center transition-colors ${
+                                isCheapest
+                                  ? "bg-emerald-100 border border-emerald-200"
+                                  : "bg-gray-50 hover:bg-gray-100"
+                              }`}
+                            >
+                              <p className="text-[9px] font-medium text-gray-500 hidden sm:block">{mp.name}</p>
+                              <p className={`text-xs font-bold ${isCheapest ? "text-emerald-700" : price != null ? "text-gray-900" : "text-gray-300"}`}>
+                                {formatPrice(price)}
+                              </p>
+                              {isCheapest && <p className="text-[8px] font-semibold text-emerald-600">BEST</p>}
+                            </a>
+                          );
+                        })}
+                      </div>
+                      {item.savings > 0.5 && (
+                        <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                          Save {formatPrice(item.savings)}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Lowest float highlight */}
             {lowestFloat && (

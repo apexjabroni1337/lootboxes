@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
   Calculator,
   ChevronLeft,
-  ArrowRight,
   ExternalLink,
   Plus,
   X,
@@ -13,7 +12,9 @@ import {
   TrendingUp,
   TrendingDown,
   Target,
-  Minus,
+  Loader2,
+  Wifi,
+  WifiOff,
 } from "lucide-react";
 import AffiliateDisclosure from "@/components/cs2/AffiliateDisclosure";
 
@@ -41,9 +42,10 @@ interface Skin {
   name: string;
   collection: string;
   rarity: Rarity;
-  price: number;
+  price: number; // Fallback price — overridden by live data
   minFloat: number;
   maxFloat: number;
+  livePrice?: number; // Live price from PriceEmpire
 }
 
 const COLLECTIONS: Record<string, Skin[]> = {
@@ -124,6 +126,54 @@ export default function TradeUpPage() {
   const [inputRarity, setInputRarity] = useState<Rarity>("Mil-Spec");
   const [selectedInputs, setSelectedInputs] = useState<Skin[]>([]);
   const [skinSearch, setSkinSearch] = useState("");
+  const [livePrices, setLivePrices] = useState<Record<string, number>>({});
+  const [pricesLoading, setPricesLoading] = useState(false);
+  const [isLive, setIsLive] = useState(false);
+
+  /* Fetch live prices for the current collection */
+  const fetchLivePrices = useCallback(async (collectionName: string) => {
+    const skins = COLLECTIONS[collectionName];
+    if (!skins) return;
+
+    setPricesLoading(true);
+    try {
+      const names = skins
+        .map((s) => `${s.weapon}|${s.name}`)
+        .filter((v, i, a) => a.indexOf(v) === i) // dedupe
+        .join(",");
+
+      const res = await fetch(`/api/cs2/skin-lookup?names=${encodeURIComponent(names)}`);
+      if (!res.ok) throw new Error("API error");
+
+      const data = await res.json();
+      const priceMap: Record<string, number> = {};
+
+      for (const [key, value] of Object.entries(data.results)) {
+        const v = value as { avgPrice: number };
+        if (v.avgPrice > 0) {
+          priceMap[key] = v.avgPrice;
+        }
+      }
+
+      setLivePrices(priceMap);
+      setIsLive(Object.keys(priceMap).length > 0);
+    } catch {
+      console.warn("Failed to fetch live prices for trade-up calculator");
+      setIsLive(false);
+    } finally {
+      setPricesLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchLivePrices(selectedCollection);
+  }, [selectedCollection, fetchLivePrices]);
+
+  /* Helper: get effective price for a skin (live or fallback) */
+  const getPrice = (skin: Skin): number => {
+    const key = `${skin.weapon}|${skin.name}`;
+    return livePrices[key] ?? skin.price;
+  };
 
   /* Available input skins = skins in selected collection at selected rarity */
   const availableSkins = useMemo(() => {
@@ -161,15 +211,15 @@ export default function TradeUpPage() {
 
   const clearAll = () => setSelectedInputs([]);
 
-  /* Calculations */
-  const totalInputCost = selectedInputs.reduce((sum, s) => sum + s.price, 0);
+  /* Calculations — using live prices when available */
+  const totalInputCost = selectedInputs.reduce((sum, s) => sum + getPrice(s), 0);
   const avgInputFloat = selectedInputs.length > 0
     ? selectedInputs.reduce((sum, s) => sum + (s.minFloat + s.maxFloat) / 2, 0) / selectedInputs.length
     : 0;
 
   const probPerOutcome = possibleOutcomes.length > 0 ? 1 / possibleOutcomes.length : 0;
   const expectedValue = possibleOutcomes.reduce(
-    (sum, o) => sum + probPerOutcome * o.price,
+    (sum, o) => sum + probPerOutcome * getPrice(o),
     0
   );
   const profit = expectedValue - totalInputCost;
@@ -189,9 +239,28 @@ export default function TradeUpPage() {
               <Calculator className="h-5 w-5" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900">Trade-Up Calculator</h1>
+            <div className="flex items-center gap-1.5 text-[10px] ml-3">
+              {isLive ? (
+                <>
+                  <Wifi className="h-3 w-3 text-emerald-500" />
+                  <span className="text-emerald-600 font-semibold">LIVE PRICES</span>
+                </>
+              ) : pricesLoading ? (
+                <>
+                  <Loader2 className="h-3 w-3 animate-spin text-gray-400" />
+                  <span className="text-gray-400">Loading prices...</span>
+                </>
+              ) : (
+                <>
+                  <WifiOff className="h-3 w-3 text-gray-400" />
+                  <span className="text-gray-400">Estimated prices</span>
+                </>
+              )}
+            </div>
           </div>
           <p className="text-gray-600 max-w-2xl">
             Select 10 input skins, see all possible outcomes with probabilities, and know your expected profit before you commit.
+            {isLive && " Prices updated live from 5 marketplaces."}
           </p>
         </div>
       </section>
@@ -258,6 +327,8 @@ export default function TradeUpPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {availableSkins.map((skin, idx) => {
                     const canAdd = selectedInputs.length < 10;
+                    const price = getPrice(skin);
+                    const hasLive = livePrices[`${skin.weapon}|${skin.name}`] != null;
                     return (
                       <button
                         key={`${skin.weapon}-${skin.name}-${idx}`}
@@ -277,7 +348,12 @@ export default function TradeUpPage() {
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="text-sm font-medium text-gray-900 truncate">{skin.weapon} | {skin.name}</p>
-                          <p className="text-xs text-gray-500">${skin.price.toFixed(2)}</p>
+                          <div className="flex items-center gap-1.5">
+                            <p className="text-xs text-gray-500">${price.toFixed(2)}</p>
+                            {hasLive && (
+                              <span className="text-[9px] font-semibold text-emerald-600">LIVE</span>
+                            )}
+                          </div>
                         </div>
                         <Plus className="h-4 w-4 text-gray-400 flex-shrink-0" />
                       </button>
@@ -305,7 +381,7 @@ export default function TradeUpPage() {
                         {skin.weapon.charAt(0)}
                       </div>
                       <span className="text-sm text-gray-700 flex-1 truncate">{skin.weapon} | {skin.name}</span>
-                      <span className="text-xs font-medium text-gray-500">${skin.price.toFixed(2)}</span>
+                      <span className="text-xs font-medium text-gray-500">${getPrice(skin).toFixed(2)}</span>
                       <button onClick={() => removeSkin(idx)} className="text-gray-400 hover:text-red-500">
                         <X className="h-3.5 w-3.5" />
                       </button>
@@ -333,7 +409,7 @@ export default function TradeUpPage() {
 
               <div className="space-y-3 mb-5">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Input Cost (×{selectedInputs.length})</span>
+                  <span className="text-gray-500">Input Cost ({"\u00D7"}{selectedInputs.length})</span>
                   <span className="font-bold text-gray-900">${totalInputCost.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
@@ -413,39 +489,49 @@ export default function TradeUpPage() {
                 <p className="text-sm text-gray-500 text-center py-4">No outcomes at this rarity tier.</p>
               ) : (
                 <div className="space-y-2">
-                  {possibleOutcomes.map((outcome, idx) => (
-                    <div key={idx} className="flex items-center gap-3 rounded-lg bg-gray-50 p-3">
-                      <div
-                        className="h-8 w-8 rounded flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                        style={{ backgroundColor: RARITY_COLORS[outcome.rarity] }}
-                      >
-                        {outcome.weapon.charAt(0)}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-gray-900 truncate">{outcome.weapon} | {outcome.name}</p>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-xs font-semibold text-gray-900">${outcome.price.toFixed(2)}</span>
-                          <span className="text-[10px] text-gray-400">({(probPerOutcome * 100).toFixed(1)}% chance)</span>
+                  {possibleOutcomes.map((outcome, idx) => {
+                    const outcomePrice = getPrice(outcome);
+                    const hasLive = livePrices[`${outcome.weapon}|${outcome.name}`] != null;
+                    return (
+                      <div key={idx} className="flex items-center gap-3 rounded-lg bg-gray-50 p-3">
+                        <div
+                          className="h-8 w-8 rounded flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
+                          style={{ backgroundColor: RARITY_COLORS[outcome.rarity] }}
+                        >
+                          {outcome.weapon.charAt(0)}
                         </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium text-gray-900 truncate">{outcome.weapon} | {outcome.name}</p>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span className="text-xs font-semibold text-gray-900">${outcomePrice.toFixed(2)}</span>
+                            {hasLive && (
+                              <span className="text-[9px] font-semibold text-emerald-600">LIVE</span>
+                            )}
+                            <span className="text-[10px] text-gray-400">({(probPerOutcome * 100).toFixed(1)}% chance)</span>
+                          </div>
+                        </div>
+                        {totalInputCost > 0 && (
+                          <span className={`text-xs font-bold ${outcomePrice > totalInputCost ? "text-emerald-600" : "text-red-500"}`}>
+                            {outcomePrice > totalInputCost ? "+" : ""}${(outcomePrice - totalInputCost).toFixed(2)}
+                          </span>
+                        )}
                       </div>
-                      {totalInputCost > 0 && (
-                        <span className={`text-xs font-bold ${outcome.price > totalInputCost ? "text-emerald-600" : "text-red-500"}`}>
-                          {outcome.price > totalInputCost ? "+" : ""}${(outcome.price - totalInputCost).toFixed(2)}
-                        </span>
-                      )}
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
 
-            {/* Key insights (collapsed) */}
+            {/* Key insights */}
             <div className="rounded-xl border border-gray-200 bg-white p-5">
               <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">Key Insights</h2>
               <div className="space-y-2 text-xs text-gray-600">
-                <p><span className="font-semibold text-gray-800">Float formula:</span> Output float = avg input float × (max - min) + min of output skin range.</p>
+                <p><span className="font-semibold text-gray-800">Float formula:</span> Output float = avg input float {"\u00D7"} (max - min) + min of output skin range.</p>
                 <p><span className="font-semibold text-gray-800">Knives craftable:</span> Since Oct 2025, knives and gloves can appear as trade-up outcomes.</p>
                 <p><span className="font-semibold text-gray-800">EV tip:</span> Positive EV trade-ups are rare. Mix collections strategically to shift probabilities.</p>
+                {isLive && (
+                  <p className="text-emerald-600 font-medium">Prices are live from PriceEmpire across 5 marketplaces. Updated every 15 minutes.</p>
+                )}
               </div>
             </div>
           </div>
