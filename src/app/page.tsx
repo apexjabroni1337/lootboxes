@@ -19,8 +19,36 @@ import {
   Award,
   Flame,
 } from "lucide-react";
+import type { Metadata } from "next";
 import { AnalyticsMeta } from "@/lib/types";
 import { createServerClient } from "@/lib/supabase";
+
+export const metadata: Metadata = {
+  title: "LootBoxes.com — Gaming Deals, Drop Rates & In-Game Value Analysis",
+  description:
+    "Find the best gaming deals across every store. Get data-driven loot box analysis, battle pass reviews, and drop rates for every major game.",
+  openGraph: {
+    title: "LootBoxes.com — Gaming Deals, Drop Rates & In-Game Value Analysis",
+    description:
+      "Compare game deals across 30+ stores. Transparent loot box analysis, drop rates, and monetization reviews.",
+    url: "https://lootboxes.com",
+    images: [
+      {
+        url: "https://lootboxes.com/og-default.png",
+        width: 1200,
+        height: 630,
+        alt: "LootBoxes.com — Gaming Deals, Drop Rates & In-Game Value Analysis",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "LootBoxes.com — Gaming Deals & Loot Box Analysis",
+    description:
+      "Data-driven loot box analysis, drop rates, and gaming deals across every store.",
+    images: ["https://lootboxes.com/og-default.png"],
+  },
+};
 
 export const revalidate = 300;
 

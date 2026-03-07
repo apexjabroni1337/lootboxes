@@ -1,0 +1,26 @@
+{
+  "name": "LootBoxes.com — Gaming Deals & Loot Box Analysis",
+  "short_name": "LootBoxes",
+  "description": "Data-driven loot box analysis, drop rates, and gaming deals across every store.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0074C5",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["games", "entertainment"]
+}

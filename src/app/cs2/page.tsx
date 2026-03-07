@@ -14,12 +14,42 @@ import {
   Star,
 } from "lucide-react";
 import AffiliateDisclosure from "@/components/cs2/AffiliateDisclosure";
+import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
+import FAQSchema from "@/components/seo/FAQSchema";
 
 export const metadata: Metadata = {
   title: "CS2 Skins Hub — Track Prices, Simulate Cases, Compare Marketplaces",
   description:
     "The most comprehensive CS2 skin resource. Compare prices across 5+ marketplaces, simulate case openings with real Valve odds, check float values, and calculate trade-up contracts.",
 };
+
+const CS2_FAQS = [
+  {
+    question: "What is the cheapest CS2 skin marketplace?",
+    answer:
+      "CSFloat typically has the lowest seller fees at 2%, making it one of the cheapest options. However, prices vary per skin — use our Price Tracker to compare prices across CSFloat, Skinport, Buff163, DMarket, and Steam Market in real time.",
+  },
+  {
+    question: "How often are CS2 skin prices updated?",
+    answer:
+      "Our Price Tracker updates prices every 15 minutes using live marketplace data. This ensures you always see current prices when comparing across marketplaces.",
+  },
+  {
+    question: "What is a CS2 skin float value?",
+    answer:
+      "A float value is a decimal number between 0 and 1 that determines the visual wear of a CS2 skin. Lower float values mean less wear (cleaner appearance). Float values are permanent and cannot be changed. Use our Float Checker to look up any skin's float value.",
+  },
+  {
+    question: "How do CS2 trade-up contracts work?",
+    answer:
+      "Trade-up contracts let you exchange 10 skins of the same rarity for 1 skin of the next higher rarity from the same collection. The output float is calculated from the average float of inputs. Use our Trade-Up Calculator to analyze expected value before committing.",
+  },
+  {
+    question: "Are CS2 skins a good investment?",
+    answer:
+      "CS2 skins can appreciate in value, especially rare items, discontinued skins, and items from limited collections. However, skin investing carries risk — prices can drop due to game updates, new case releases, or market trends. Check our Investment Guide for data-driven analysis.",
+  },
+];
 
 const TOOLS = [
   {
@@ -89,6 +119,13 @@ const MARKETPLACES = [
 export default function CS2HubPage() {
   return (
     <div className="min-h-screen bg-white">
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://lootboxes.com" },
+          { name: "CS2 Skins", url: "https://lootboxes.com/cs2" },
+        ]}
+      />
+      <FAQSchema faqs={CS2_FAQS} />
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-br from-gray-900 via-gray-800 to-yellow-900 py-16 sm:py-24">
         <div className="absolute inset-0 overflow-hidden">

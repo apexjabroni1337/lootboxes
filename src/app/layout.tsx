@@ -23,12 +23,21 @@ export const metadata: Metadata = {
     title: "LootBoxes.com — Gaming Deals, Drop Rates & In-Game Value Analysis",
     description:
       "Find the best gaming deals across every store. Get data-driven loot box analysis, battle pass reviews, and drop rates for every major game.",
+    images: [
+      {
+        url: "https://lootboxes.com/og-default.png",
+        width: 1200,
+        height: 630,
+        alt: "LootBoxes.com — Gaming Deals, Drop Rates & In-Game Value Analysis",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "LootBoxes.com",
     description:
       "Gaming deals, drop rates, and in-game value analysis. Save smarter. Spend wiser.",
+    images: ["https://lootboxes.com/og-default.png"],
   },
   robots: {
     index: true,
@@ -96,6 +105,8 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#0074C5" />
       </head>
       <body className="flex min-h-screen flex-col bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
         <ThemeProvider>
