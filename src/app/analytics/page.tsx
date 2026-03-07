@@ -49,12 +49,36 @@ async function getAnalyticsData() {
     avgScore: data.totalScore / data.count,
   })).sort((a, b) => b.count - a.count);
 
-  // Score distribution
+  // Score distribution — "Great" tier is dynamic: top 7 games max, ensuring
+  // at least 2 loot_box type games qualify. We find the cutoff score from the
+  // sorted list, then build the remaining tiers around it.
+  const MAX_GREAT = 7;
+  const sorted = [...games].sort((a: any, b: any) => b.lootboxes_score - a.lootboxes_score);
+  // Walk down the sorted list: include up to MAX_GREAT, but keep going if
+  // we haven't yet captured 2 loot_box games (up to a reasonable limit).
+  let greatCutoff = 10.1; // default if no games
+  if (sorted.length > 0) {
+    let lootboxCount = 0;
+    let idx = 0;
+    for (; idx < Math.min(sorted.length, 12); idx++) {
+      const g = sorted[idx] as any;
+      if (g.loot_system_type === "loot_box") lootboxCount++;
+      if (idx >= MAX_GREAT - 1 && lootboxCount >= 2) break;
+    }
+    // Cutoff is the score of the last included game (floored to 1 decimal)
+    greatCutoff = Math.floor(sorted[idx].lootboxes_score * 10) / 10;
+  }
+  const greatMin = greatCutoff;
+  // Build tiers: spread remaining range evenly into 3 buckets
+  const tierSize = greatMin / 3;
+  const goodMin = Math.round((greatMin - tierSize) * 10) / 10;
+  const avgMin = Math.round((greatMin - tierSize * 2) * 10) / 10;
+
   const ranges = [
-    { range: "7.5 — 10.0 (Great)", min: 7.5, max: 10.1, color: "#10b981" },
-    { range: "5.5 — 7.4 (Good)", min: 5.5, max: 7.5, color: "#f59e0b" },
-    { range: "3.5 — 5.4 (Average)", min: 3.5, max: 5.5, color: "#f97316" },
-    { range: "0 — 3.4 (Poor)", min: 0, max: 3.5, color: "#ef4444" },
+    { range: `${greatMin.toFixed(1)} — 10.0 (Great)`, min: greatMin, max: 10.1, color: "#10b981" },
+    { range: `${goodMin.toFixed(1)} — ${(greatMin - 0.1).toFixed(1)} (Good)`, min: goodMin, max: greatMin, color: "#f59e0b" },
+    { range: `${avgMin.toFixed(1)} — ${(goodMin - 0.1).toFixed(1)} (Average)`, min: avgMin, max: goodMin, color: "#f97316" },
+    { range: `0 — ${(avgMin - 0.1).toFixed(1)} (Poor)`, min: 0, max: avgMin, color: "#ef4444" },
   ];
   const scoreDistribution = ranges.map(r => ({
     range: r.range,
