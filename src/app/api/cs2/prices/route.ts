@@ -14,8 +14,6 @@ export const dynamic = "force-dynamic";
  *   ?wear=<wear>    — Filter by wear (Factory New, Minimal Wear, etc.)
  *   ?sort=<key>     — Sort by: cheapest, name, expensive (default: expensive)
  *   ?minPrice=<n>   — Minimum price filter (dollars)
- *
- * Returns { items: SkinPrice[], total: number, cached: boolean }
  */
 export async function GET(request: NextRequest) {
   try {
@@ -33,7 +31,7 @@ export async function GET(request: NextRequest) {
       items = items.filter((s) => s.wear === wear);
     }
 
-    // Filter by min price (useful for hiding penny skins)
+    // Filter by min price
     if (minPrice > 0) {
       items = items.filter((s) => s.cheapestPrice >= minPrice);
     }
@@ -44,7 +42,6 @@ export async function GET(request: NextRequest) {
     } else if (sort === "name") {
       items.sort((a, b) => a.name.localeCompare(b.name));
     } else {
-      // Default: most expensive first (interesting skins first)
       items.sort((a, b) => b.cheapestPrice - a.cheapestPrice);
     }
 

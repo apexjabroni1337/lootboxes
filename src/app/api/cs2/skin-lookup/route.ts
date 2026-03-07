@@ -11,8 +11,6 @@ export const dynamic = "force-dynamic";
  *
  * Query params:
  *   ?names=AK-47|Asiimov,M4A1-S|Printstream,...
- *
- * Returns { results: Record<string, { minPrice: number, maxPrice: number, avgPrice: number, prices: SkinPrice[] }> }
  */
 export async function GET(request: NextRequest) {
   try {
@@ -36,7 +34,7 @@ export async function GET(request: NextRequest) {
         minPrice: number;
         maxPrice: number;
         avgPrice: number;
-        wears: { wear: string; cheapestPrice: number; prices: SkinPrice["prices"] }[];
+        wears: { wear: string; cheapestPrice: number; skinportPrice: number | null; marketValue: number | null }[];
       }
     > = {};
 
@@ -57,7 +55,8 @@ export async function GET(request: NextRequest) {
           wears: matches.map((m) => ({
             wear: m.wear,
             cheapestPrice: m.cheapestPrice,
-            prices: m.prices,
+            skinportPrice: m.skinportPrice,
+            marketValue: m.marketValue,
           })),
         };
       }

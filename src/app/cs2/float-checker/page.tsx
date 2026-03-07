@@ -42,14 +42,6 @@ const RARITY_COLORS: Record<string, string> = {
 };
 
 /* ── Types for API data ── */
-interface MarketPrices {
-  steam: number | null;
-  csfloat: number | null;
-  skinport: number | null;
-  buff163: number | null;
-  dmarket: number | null;
-}
-
 interface LiveSkinData {
   name: string;
   weapon: string;
@@ -57,10 +49,12 @@ interface LiveSkinData {
   wear: string;
   rarity: string;
   image: string | null;
-  prices: MarketPrices;
-  cheapestMarket: string;
+  skinportPrice: number | null;
+  marketValue: number | null;
+  medianPrice: number | null;
+  quantity: number;
+  itemPage: string | null;
   cheapestPrice: number;
-  steamPrice: number;
   savings: number;
 }
 
@@ -154,12 +148,10 @@ const UNIQUE_SKINS = Array.from(
   new Set(LISTINGS.map((l) => `${l.weapon} | ${l.skin}`))
 );
 
-const MARKETPLACES = [
-  { key: "steam", name: "Steam", dealId: "steam" },
-  { key: "csfloat", name: "CSFloat", dealId: "csfloat" },
-  { key: "skinport", name: "Skinport", dealId: "skinport" },
-  { key: "buff163", name: "Buff163", dealId: "buff163" },
-  { key: "dmarket", name: "DMarket", dealId: "dmarket" },
+const COMPARE_MARKETS = [
+  { name: "CSFloat", dealId: "csfloat", color: "#4f8df0" },
+  { name: "Buff163", dealId: "buff163", color: "#ff6b35" },
+  { name: "DMarket", dealId: "dmarket", color: "#00c9a7" },
 ] as const;
 
 function formatPrice(price: number | null): string {
@@ -359,49 +351,65 @@ export default function FloatCheckerPage() {
               </div>
             </div>
 
-            {/* Live marketplace prices panel */}
+            {/* Live prices panel */}
             {isLive && liveData.length > 0 && (
               <div className="mb-6 rounded-xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50 p-5">
                 <h3 className="text-sm font-bold text-emerald-900 mb-3 flex items-center gap-2">
                   <Wifi className="h-4 w-4 text-emerald-500" />
-                  Live Market Prices
+                  Live Prices by Wear
                 </h3>
                 <div className="space-y-2">
                   {liveData.map((item) => (
                     <div key={item.name} className="flex flex-col sm:flex-row sm:items-center gap-2 rounded-lg bg-white/70 p-3">
-                      <div className="flex items-center gap-2 sm:w-40 flex-shrink-0">
+                      <div className="flex items-center gap-2 sm:w-36 flex-shrink-0">
                         <span className="text-xs font-medium text-gray-600">{item.wear}</span>
                       </div>
-                      <div className="flex-1 grid grid-cols-5 gap-2">
-                        {MARKETPLACES.map((mp) => {
-                          const price = item.prices[mp.key as keyof MarketPrices];
-                          const isCheapest = mp.key === item.cheapestMarket && price != null;
-                          return (
-                            <a
-                              key={mp.key}
-                              href={`/go/cs2/${mp.dealId}?from=float-checker`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className={`rounded-lg px-2 py-1.5 text-center transition-colors ${
-                                isCheapest
-                                  ? "bg-emerald-100 border border-emerald-200"
-                                  : "bg-gray-50 hover:bg-gray-100"
-                              }`}
-                            >
-                              <p className="text-[9px] font-medium text-gray-500 hidden sm:block">{mp.name}</p>
-                              <p className={`text-xs font-bold ${isCheapest ? "text-emerald-700" : price != null ? "text-gray-900" : "text-gray-300"}`}>
-                                {formatPrice(price)}
-                              </p>
-                              {isCheapest && <p className="text-[8px] font-semibold text-emerald-600">BEST</p>}
-                            </a>
-                          );
-                        })}
+                      <div className="flex-1 flex items-center gap-4">
+                        {/* Skinport Price */}
+                        <div className="text-center">
+                          <p className="text-[9px] font-medium text-gray-500">Skinport</p>
+                          <p className="text-sm font-bold text-gray-900">{formatPrice(item.skinportPrice)}</p>
+                          {item.quantity > 0 && (
+                            <p className="text-[9px] text-gray-400">{item.quantity} listed</p>
+                          )}
+                        </div>
+                        {/* Market Value */}
+                        <div className="text-center">
+                          <p className="text-[9px] font-medium text-gray-500">Market Value</p>
+                          <p className="text-sm font-medium text-gray-500">{formatPrice(item.marketValue)}</p>
+                        </div>
+                        {/* Savings */}
+                        {item.savings > 0.5 && (
+                          <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                            Save {formatPrice(item.savings)}
+                          </span>
+                        )}
                       </div>
-                      {item.savings > 0.5 && (
-                        <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
-                          Save {formatPrice(item.savings)}
-                        </span>
-                      )}
+                      <div className="flex items-center gap-1.5 flex-shrink-0">
+                        {item.itemPage && (
+                          <a
+                            href={item.itemPage}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="rounded-lg px-2.5 py-1.5 text-[10px] font-semibold text-white transition-colors"
+                            style={{ backgroundColor: "#eb4b98" }}
+                          >
+                            Buy on Skinport
+                          </a>
+                        )}
+                        {COMPARE_MARKETS.map((mp) => (
+                          <a
+                            key={mp.dealId}
+                            href={`/go/cs2/${mp.dealId}?from=float-checker`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hidden sm:flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-[9px] font-medium text-gray-500 hover:bg-gray-50 transition-colors"
+                          >
+                            <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: mp.color }} />
+                            {mp.name}
+                          </a>
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>
