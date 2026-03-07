@@ -221,6 +221,20 @@ export default function Header() {
                 )}
               </div>
 
+              <Link
+                href="/analytics"
+                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+              >
+                Analytics
+              </Link>
+
+              <Link
+                href="/blog"
+                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+              >
+                Blog
+              </Link>
+
               {/* Game Deals dropdown */}
               <div
                 ref={megaRef}
@@ -315,20 +329,6 @@ export default function Header() {
                   </div>
                 )}
               </div>
-
-              <Link
-                href="/analytics"
-                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
-              >
-                Analytics
-              </Link>
-
-              <Link
-                href="/blog"
-                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
-              >
-                Blog
-              </Link>
             </nav>
 
             {/* Prominent search bar (desktop) */}
