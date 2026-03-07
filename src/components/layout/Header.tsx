@@ -22,6 +22,11 @@ import {
   Clock,
   TrendingUp,
   ArrowDownCircle,
+  Crosshair,
+  Dices,
+  LineChart,
+  Calculator,
+  ExternalLink,
 } from "lucide-react";
 import SearchDialog from "@/components/search/SearchDialog";
 import Logo from "@/components/brand/Logo";
@@ -61,10 +66,13 @@ export default function Header() {
   const [megaOpen, setMegaOpen] = useState(false);
 
   const [lootboxMegaOpen, setLootboxMegaOpen] = useState(false);
+  const [cs2MegaOpen, setCs2MegaOpen] = useState(false);
   const megaRef = useRef<HTMLDivElement>(null);
   const lootboxMegaRef = useRef<HTMLDivElement>(null);
+  const cs2MegaRef = useRef<HTMLDivElement>(null);
   const megaTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lootboxTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cs2Timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Cmd+K / Ctrl+K shortcut to open search
   useEffect(() => {
@@ -87,6 +95,9 @@ export default function Header() {
       if (lootboxMegaRef.current && !lootboxMegaRef.current.contains(e.target as Node)) {
         setLootboxMegaOpen(false);
       }
+      if (cs2MegaRef.current && !cs2MegaRef.current.contains(e.target as Node)) {
+        setCs2MegaOpen(false);
+      }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -96,6 +107,7 @@ export default function Header() {
     if (megaTimeout.current) clearTimeout(megaTimeout.current);
     setMegaOpen(true);
     setLootboxMegaOpen(false);
+    setCs2MegaOpen(false);
   };
   const closeMega = () => {
     megaTimeout.current = setTimeout(() => setMegaOpen(false), 150);
@@ -104,9 +116,19 @@ export default function Header() {
     if (lootboxTimeout.current) clearTimeout(lootboxTimeout.current);
     setLootboxMegaOpen(true);
     setMegaOpen(false);
+    setCs2MegaOpen(false);
   };
   const closeLootboxMega = () => {
     lootboxTimeout.current = setTimeout(() => setLootboxMegaOpen(false), 150);
+  };
+  const openCs2Mega = () => {
+    if (cs2Timeout.current) clearTimeout(cs2Timeout.current);
+    setCs2MegaOpen(true);
+    setMegaOpen(false);
+    setLootboxMegaOpen(false);
+  };
+  const closeCs2Mega = () => {
+    cs2Timeout.current = setTimeout(() => setCs2MegaOpen(false), 150);
   };
 
   return (
@@ -234,6 +256,115 @@ export default function Header() {
               >
                 Blog
               </Link>
+
+              {/* CS2 Skins dropdown */}
+              <div
+                ref={cs2MegaRef}
+                className="relative"
+                onMouseEnter={openCs2Mega}
+                onMouseLeave={closeCs2Mega}
+              >
+                <button
+                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                  onClick={() => setCs2MegaOpen(!cs2MegaOpen)}
+                >
+                  <Crosshair className="h-3.5 w-3.5 text-yellow-500" />
+                  CS2 Skins
+                  <ChevronDown
+                    className={`h-3.5 w-3.5 transition-transform ${cs2MegaOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {cs2MegaOpen && (
+                  <div className="absolute left-0 top-full z-50 mt-1 w-[480px] rounded-xl border border-gray-200 bg-white shadow-xl">
+                    {/* Banner */}
+                    <div className="bg-yellow-50 px-5 py-2 text-[11px] font-medium text-yellow-700 border-b border-yellow-100">
+                      The #1 CS2 skin economy resource — prices, tools & guides
+                    </div>
+
+                    {/* 2x2 grid */}
+                    <div className="grid grid-cols-2 gap-2 p-4">
+                      <Link
+                        href="/cs2/prices"
+                        onClick={() => setCs2MegaOpen(false)}
+                        className="flex items-center gap-3 rounded-lg bg-orange-50 px-4 py-3 transition-colors hover:bg-orange-100"
+                      >
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-500 text-white">
+                          <TrendingUp className="h-4.5 w-4.5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">Skin Price Tracker</p>
+                          <p className="text-[11px] text-gray-500">Live prices across markets</p>
+                        </div>
+                      </Link>
+                      <Link
+                        href="/cs2/simulator"
+                        onClick={() => setCs2MegaOpen(false)}
+                        className="flex items-center gap-3 rounded-lg bg-purple-50 px-4 py-3 transition-colors hover:bg-purple-100"
+                      >
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-600 text-white">
+                          <Dices className="h-4.5 w-4.5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">Case Simulator</p>
+                          <p className="text-[11px] text-gray-500">Open cases with real odds</p>
+                        </div>
+                      </Link>
+                      <Link
+                        href="/cs2/investing"
+                        onClick={() => setCs2MegaOpen(false)}
+                        className="flex items-center gap-3 rounded-lg bg-emerald-50 px-4 py-3 transition-colors hover:bg-emerald-100"
+                      >
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-600 text-white">
+                          <LineChart className="h-4.5 w-4.5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">Investment Guide</p>
+                          <p className="text-[11px] text-gray-500">ROI data & skin trends</p>
+                        </div>
+                      </Link>
+                      <Link
+                        href="/cs2/float-checker"
+                        onClick={() => setCs2MegaOpen(false)}
+                        className="flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 transition-colors hover:bg-blue-100"
+                      >
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500 text-white">
+                          <Search className="h-4.5 w-4.5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">Float Checker</p>
+                          <p className="text-[11px] text-gray-500">Wear values & patterns</p>
+                        </div>
+                      </Link>
+                      <Link
+                        href="/cs2/trade-up"
+                        onClick={() => setCs2MegaOpen(false)}
+                        className="col-span-2 flex items-center gap-3 rounded-lg bg-amber-50 px-4 py-3 transition-colors hover:bg-amber-100"
+                      >
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500 text-white">
+                          <Calculator className="h-4.5 w-4.5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">Trade-Up Calculator</p>
+                          <p className="text-[11px] text-gray-500">Calculate expected value of trade-up contracts</p>
+                        </div>
+                      </Link>
+                    </div>
+
+                    {/* Affiliate CTA bar */}
+                    <Link
+                      href="/cs2/compare"
+                      onClick={() => setCs2MegaOpen(false)}
+                      className="flex items-center justify-between border-t border-yellow-100 bg-yellow-50 px-5 py-2 transition-colors hover:bg-yellow-100 rounded-b-xl"
+                    >
+                      <span className="text-xs font-semibold text-yellow-800">Compare prices across 5+ skin marketplaces</span>
+                      <span className="flex items-center gap-1 text-xs font-semibold text-yellow-700">
+                        Compare now <ExternalLink className="h-3 w-3" />
+                      </span>
+                    </Link>
+                  </div>
+                )}
+              </div>
 
               {/* Game Deals dropdown */}
               <div
@@ -462,6 +593,37 @@ export default function Header() {
                 >
                   <Gamepad2 className="h-4 w-4 text-gray-500" />
                   Browse All Games
+                </Link>
+
+                {/* CS2 Skins section */}
+                <div className="mt-2 border-t border-gray-100 pt-3">
+                  <p className="px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                    CS2 Skins
+                  </p>
+                </div>
+                <Link
+                  href="/cs2/prices"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <TrendingUp className="h-4 w-4 text-orange-500" />
+                  Skin Price Tracker
+                </Link>
+                <Link
+                  href="/cs2/simulator"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <Dices className="h-4 w-4 text-purple-500" />
+                  Case Simulator
+                </Link>
+                <Link
+                  href="/cs2/compare"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <Crosshair className="h-4 w-4 text-yellow-500" />
+                  Compare Marketplaces
                 </Link>
 
                 {/* More section */}
