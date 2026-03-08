@@ -8,7 +8,6 @@ const nextConfig = {
       { protocol: 'https', hostname: 'images.igdb.com' },
       { protocol: 'https', hostname: 'raw.githubusercontent.com', pathname: '/ByMykel/**' },
       { protocol: 'https', hostname: 'steamcdn-a.akamaihd.net' },
-      { protocol: 'https', hostname: 'community.akamai.steamstatic.com' },
     ],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 3600,

@@ -10,7 +10,7 @@
 
 const SKINPORT_API = "https://api.skinport.com/v1/items";
 const BYMYKEL_SKINS_API =
-  "https://raw.githubusercontent.com/ByMykel/CSGO-API/main/public/api/en/skins.json";
+  "https://bymykel.github.io/CSGO-API/api/en/skins.json";
 const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
 const IMAGE_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours (images rarely change)
 
@@ -55,9 +55,8 @@ export interface SkinPrice {
 
 /** Minimal ByMykel skin item (only fields we need) */
 interface ByMykelSkin {
-  name?: string;       // e.g. "AK-47 | Case Hardened" or "★ Butterfly Knife | Doppler"
-  image?: string;      // Steam CDN URL
-  stattrak?: boolean;
+  market_hash_name?: string;
+  image?: string;
 }
 
 /* ── In-memory caches ── */
@@ -68,21 +67,7 @@ let cacheTimestamp = 0;
 let imageMap: Map<string, string> | null = null;
 let imageMapTimestamp = 0;
 
-/**
- * Fetch skin images from ByMykel CSGO API.
- *
- * ByMykel `name` field uses base skin names like "AK-47 | Case Hardened"
- * (no wear, no "StatTrak™" prefix). ★ IS included for knives/gloves.
- * The same image applies regardless of wear or StatTrak status.
- *
- * Skinport `market_hash_name` looks like:
- *   "AK-47 | Case Hardened (Field-Tested)"
- *   "StatTrak™ AK-47 | Case Hardened (Field-Tested)"
- *   "★ Butterfly Knife | Doppler (Factory New)"
- *   "★ StatTrak™ Butterfly Knife | Doppler (Factory New)"
- *
- * To match, we strip wear "(…)" and "StatTrak™ " from Skinport names.
- */
+/* ── Fetch skin images from ByMykel CSGO API ── */
 async function fetchImageMap(): Promise<Map<string, string>> {
   const now = Date.now();
   if (imageMap && now - imageMapTimestamp < IMAGE_CACHE_TTL_MS) {
@@ -104,9 +89,18 @@ async function fetchImageMap(): Promise<Map<string, string>> {
     const map = new Map<string, string>();
 
     for (const skin of skins) {
-      if (!skin.name || !skin.image) continue;
-      // Key by the ByMykel name lowercased (e.g. "ak-47 | case hardened")
-      map.set(skin.name.toLowerCase(), skin.image);
+      if (!skin.market_hash_name || !skin.image) continue;
+
+      // Exact match key (includes wear)
+      map.set(skin.market_hash_name.toLowerCase(), skin.image);
+
+      // Also store by base name (without wear) for fallback matching
+      const baseName = skin.market_hash_name
+        .replace(/\s*\([^)]+\)\s*$/, "")
+        .toLowerCase();
+      if (!map.has(baseName)) {
+        map.set(baseName, skin.image);
+      }
     }
 
     imageMap = map;
@@ -119,28 +113,19 @@ async function fetchImageMap(): Promise<Map<string, string>> {
   }
 }
 
-/**
- * Normalize a Skinport market_hash_name to match ByMykel's `name` field.
- *
- * "StatTrak™ AK-47 | Asiimov (Field-Tested)" → "ak-47 | asiimov"
- * "★ Butterfly Knife | Doppler (Factory New)" → "★ butterfly knife | doppler"
- * "★ StatTrak™ Butterfly Knife | Doppler (FN)" → "★ butterfly knife | doppler"
- */
-function normalizeForImageLookup(marketHashName: string): string {
-  return marketHashName
-    .replace(/\s*\([^)]+\)\s*$/, "")   // strip wear "(Field-Tested)"
-    .replace(/StatTrak™\s*/g, "")       // strip "StatTrak™ "
-    .trim()
-    .toLowerCase();
-}
-
-/** Look up image URL for a Skinport market_hash_name */
+/** Look up image URL for a market_hash_name */
 function lookupImage(
   map: Map<string, string>,
   marketHashName: string
 ): string | null {
-  const key = normalizeForImageLookup(marketHashName);
-  return map.get(key) ?? null;
+  const key = marketHashName.toLowerCase();
+  // Try exact match first (e.g. "AK-47 | Asiimov (Field-Tested)")
+  const exact = map.get(key);
+  if (exact) return exact;
+
+  // Fallback: try base name without wear condition
+  const baseName = key.replace(/\s*\([^)]+\)\s*$/, "");
+  return map.get(baseName) ?? null;
 }
 
 /* ── Rarity inference from market_hash_name patterns ── */
