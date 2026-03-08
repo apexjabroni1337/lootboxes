@@ -18,6 +18,7 @@ import {
   ShoppingBag,
   Shield,
 } from "lucide-react";
+import GameAvatar from "@/components/ui/GameAvatar";
 import { getGuideBySlug, SPENDING_GUIDES, type SpendingGuide } from "@/data/spending-guides";
 
 const SYSTEM_LABELS: Record<string, string> = {
@@ -179,13 +180,19 @@ export default async function SpendingGuidePage({ params }: Props) {
             <ChevronLeft className="h-4 w-4" /> All Spending Guides
           </Link>
 
-          <div className="flex items-center gap-3 mb-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-500/20 backdrop-blur-sm">
-              <Wallet className="h-6 w-6 text-amber-400" />
+          <div className="flex items-center gap-4 mb-4">
+            <div className="flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden ring-2 ring-white/20">
+              <GameAvatar
+                gameName={guide.gameName}
+                size="sm"
+                aspectRatio="square"
+              />
             </div>
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-amber-300">
-              <SystemIcon className="h-3.5 w-3.5" />
-              {SYSTEM_LABELS[guide.systemType] || guide.systemType}
+            <div>
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-amber-300 mb-1">
+                <SystemIcon className="h-3.5 w-3.5" />
+                {SYSTEM_LABELS[guide.systemType] || guide.systemType}
+              </div>
             </div>
           </div>
 
@@ -445,13 +452,20 @@ export default async function SpendingGuidePage({ params }: Props) {
                     href={`/lootbox/spending-guides/${related.gameSlug}`}
                     className="group rounded-xl border border-gray-200 bg-white p-5 hover:shadow-lg transition-all hover:border-amber-200"
                   >
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-bold text-gray-900 group-hover:text-amber-700 transition-colors">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="flex-shrink-0 w-8 h-8 rounded-lg overflow-hidden">
+                        <GameAvatar
+                          gameName={related.gameName}
+                          size="sm"
+                          aspectRatio="square"
+                        />
+                      </div>
+                      <h3 className="flex-1 font-bold text-gray-900 group-hover:text-amber-700 transition-colors">
                         {related.gameName}
                       </h3>
-                      <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-amber-500 transition-colors" />
+                      <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-amber-500 transition-colors flex-shrink-0" />
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div className="flex items-center gap-2 text-xs text-gray-500 ml-11">
                       <RelIcon className="h-3 w-3" />
                       <span>{SYSTEM_LABELS[related.systemType] || related.systemType}</span>
                       <span className="text-gray-300">•</span>

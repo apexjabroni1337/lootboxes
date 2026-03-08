@@ -19,6 +19,7 @@ import {
   Info,
   RefreshCw,
 } from "lucide-react";
+import GameAvatar from "@/components/ui/GameAvatar";
 
 interface GameOption {
   id: string;
@@ -244,9 +245,12 @@ export default function OddsComparisonPage() {
               return (
                 <div
                   key={id}
-                  className="flex items-center gap-2 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-sm"
+                  className="flex items-center gap-2 rounded-full border border-gray-300 bg-white px-1.5 py-1 text-sm"
                   style={{ borderLeftColor: COMPARE_COLORS[idx], borderLeftWidth: 3 }}
                 >
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full overflow-hidden">
+                    <GameAvatar gameName={game.title} size="sm" aspectRatio="square" />
+                  </div>
                   <span className="font-medium text-gray-800 truncate max-w-[140px]">
                     {game.title}
                   </span>
@@ -394,7 +398,12 @@ export default function OddsComparisonPage() {
                             className="px-4 py-3 text-center text-xs font-bold uppercase tracking-wide min-w-[140px]"
                             style={{ color: COMPARE_COLORS[idx] }}
                           >
-                            {game.title}
+                            <div className="flex flex-col items-center gap-1.5">
+                              <div className="w-8 h-8 rounded-lg overflow-hidden mx-auto">
+                                <GameAvatar gameName={game.title} size="sm" aspectRatio="square" />
+                              </div>
+                              {game.title}
+                            </div>
                           </th>
                         ))}
                       </tr>
@@ -522,10 +531,9 @@ export default function OddsComparisonPage() {
                       className="rounded-xl border border-gray-200 p-5"
                     >
                       <div className="flex items-center gap-2 mb-1">
-                        <div
-                          className="h-3 w-3 rounded-full flex-shrink-0"
-                          style={{ backgroundColor: COMPARE_COLORS[idx] }}
-                        />
+                        <div className="flex-shrink-0 w-8 h-8 rounded-lg overflow-hidden" style={{ boxShadow: `0 0 0 2px ${COMPARE_COLORS[idx]}` }}>
+                          <GameAvatar gameName={game.title} size="sm" aspectRatio="square" />
+                        </div>
                         <h3 className="font-bold text-gray-900">{game.title}</h3>
                       </div>
                       <p className="text-[11px] text-gray-400 mb-4">

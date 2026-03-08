@@ -517,6 +517,569 @@ export const SPENDING_GUIDES: SpendingGuide[] = [
     ],
     updatedAt: "2026-02-01",
   },
+  {
+    gameSlug: "honkai-star-rail",
+    gameName: "Honkai: Star Rail",
+    systemType: "gacha",
+    freeToPlay: {
+      tips: [
+        "Save all Stellar Jades for limited 5-star banners you truly want",
+        "Daily missions, events, and Simulated Universe provide steady jade income",
+        "4-star characters like Tingyun and Pela are strong enough for all content",
+        "Standard banner gives free pulls via Undying Starlight — never spend jades on it",
+      ],
+      rating: "Very Viable",
+    },
+    lowSpend: {
+      budget: "$5–15/month",
+      tips: [
+        "Express Supply Pass ($5/month) is the best jade-per-dollar value in the game",
+        "Nameless Honor Battle Pass ($10) adds pulls, credits, and a Light Cone",
+        "At this budget, you can soft-pity a limited 5-star roughly every 2–3 patches",
+      ],
+    },
+    moderate: {
+      budget: "$30–60/month",
+      tips: [
+        "Express Pass + Battle Pass + occasional top-up for must-have characters",
+        "First-time top-up bonuses are doubled — use the higher tiers once",
+        "Target specific characters rather than pulling on every banner",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "E6 (max Eidolons) on a limited character costs roughly $1,000–1,500+",
+        "S5 signature Light Cones add another $500+ on top of character pulls",
+      ],
+      warnings: [
+        "E1 or E2 is the sweet spot for most characters — E6 is overkill for all content",
+        "Light Cone banner has same pity as character banner but is less impactful",
+      ],
+    },
+    bestValue: [
+      "Express Supply Pass ($5/month) — best jade/dollar ratio",
+      "Nameless Honor ($10/month) — structured rewards + Light Cone",
+      "First-time Oneiric Shard top-up (doubled)",
+    ],
+    avoid: [
+      "Never use Stellar Jades for stamina refills unless you're a whale",
+      "Don't pull on the standard Departure Warp with premium currency",
+      "Avoid pulling just because you're close to pity — pull intentionally",
+    ],
+    updatedAt: "2026-02-01",
+  },
+  {
+    gameSlug: "marvel-snap",
+    gameName: "Marvel Snap",
+    systemType: "card_pack",
+    freeToPlay: {
+      tips: [
+        "Season Pass free track gives gold, credits, and boosters every month",
+        "Complete daily and weekly missions for steady gold income",
+        "Collection Level determines which cards you unlock — play consistently to progress",
+        "Many top-tier decks use Pool 1 and Pool 2 cards that unlock early",
+      ],
+      rating: "Very Viable",
+    },
+    lowSpend: {
+      budget: "$10/month",
+      tips: [
+        "Gold Season Pass ($10) is the single best purchase — includes a variant, gold, credits, and boosters",
+        "Gold earned from the pass helps you buy cards from the Token Shop when they appear",
+        "Completing the pass gives enough value to sustain month-over-month progress",
+      ],
+    },
+    moderate: {
+      budget: "$20–40/month",
+      tips: [
+        "Season Pass + occasional bundle with a must-have card variant or gold",
+        "Save gold for cards in the Token Shop rather than buying random bundles",
+        "Spotlight Caches give targeted card access — focus your keys here",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "Buying gold in bulk to fast-track Series 4/5 cards through the Token Shop",
+        "Variant collecting is the main whale activity — purely cosmetic",
+      ],
+      warnings: [
+        "Spotlight Cache odds can be brutal without enough keys saved up",
+        "Card acquisition through random means is inefficient — always target-buy from the Token Shop",
+      ],
+    },
+    bestValue: [
+      "Gold Season Pass ($10/month) — best value by far",
+      "Token Shop purchases for specific cards you need",
+      "Spotlight Caches when you have 4 keys saved for a guaranteed pull",
+    ],
+    avoid: [
+      "Random gold bundles when you don't have a specific card to buy",
+      "Chasing variants purely for cosmetic reasons",
+      "Buying credits directly — they're earned faster through gameplay",
+    ],
+    updatedAt: "2026-02-01",
+  },
+  {
+    gameSlug: "pokemon-go",
+    gameName: "Pokémon GO",
+    systemType: "gacha",
+    freeToPlay: {
+      tips: [
+        "Community Days give guaranteed shinies and rare spawns for free",
+        "Daily free raid pass lets you do one raid per day at no cost",
+        "Walking and catching is the core loop — spending is optional for collection",
+        "Research tasks give free encounters with rare and legendary Pokémon",
+      ],
+      rating: "Very Viable",
+    },
+    lowSpend: {
+      budget: "$5–15/month",
+      tips: [
+        "Buy Remote Raid Passes when they're on sale — usually 3 for ~$3",
+        "Community Day tickets ($1–2) give bonus research and extra shinies",
+        "Incubators during events with boosted egg pools are decent value",
+      ],
+    },
+    moderate: {
+      budget: "$15–40/month",
+      tips: [
+        "Remote raids for every 5-star legendary you want to collect",
+        "Event tickets during major events (GO Fest, Safari Zone) are worth it",
+        "Lucky Eggs and Star Pieces during double-XP events maximize returns",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "Shiny hunting through raids can cost $50+ per shiny legendary at bad luck",
+        "GO Fest live events are $25–35 per ticket but offer exclusive Pokémon",
+      ],
+      warnings: [
+        "Egg hatching is the closest thing to loot boxes — incubator purchases are low-value gambling",
+        "Remote Raid Pass price increases have made raiding significantly more expensive",
+      ],
+    },
+    bestValue: [
+      "Community Day tickets ($1–2) — huge value for shiny hunters",
+      "Remote Raid Passes on sale (3-pack)",
+      "GO Battle League rewards (free legendary encounters)",
+    ],
+    avoid: [
+      "Buying incubators in bulk — egg hatching is essentially gambling",
+      "Paying full price for single Remote Raid Passes",
+      "PokeCoins for cosmetic avatar items — they don't affect gameplay",
+    ],
+    updatedAt: "2026-02-01",
+  },
+  {
+    gameSlug: "destiny-2",
+    gameName: "Destiny 2",
+    systemType: "cosmetic_shop",
+    freeToPlay: {
+      tips: [
+        "Core playlists (Strikes, Crucible, Gambit) are free with random legendary drops",
+        "Seasonal events give free cosmetics through gameplay challenges",
+        "Xur sells exotic gear each weekend for in-game currency",
+        "Free-to-play has access to a meaningful amount of content",
+      ],
+      rating: "Viable with Limits",
+    },
+    lowSpend: {
+      budget: "$10–15/season",
+      tips: [
+        "Season Pass ($10) gives the seasonal story content and an exotic weapon",
+        "Annual expansion + Season Pass bundle is the best per-dollar value",
+        "Bright Dust (free earned currency) can buy most Eververse items on rotation",
+      ],
+    },
+    moderate: {
+      budget: "$20–40/season",
+      tips: [
+        "Season Pass + 1–2 Eververse ornament sets you really want",
+        "Dungeon keys ($10 each) give access to 2-person endgame content with exclusive loot",
+        "Buy Silver during bonus Silver promotions for better value",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "Eververse store has $10–15 ornament sets that make your Guardian look unique",
+        "Full expansion + all seasons + dungeon bundle costs ~$100/year",
+      ],
+      warnings: [
+        "Destiny 2 has vaulted paid content before — your purchases may not last forever",
+        "Eververse pricing is high for what amounts to reskins in many cases",
+      ],
+    },
+    bestValue: [
+      "Annual expansion + Season Pass bundle at launch",
+      "Bright Dust weekly purchases from Eververse",
+      "Season Pass ($10) for seasonal exotic + story",
+    ],
+    avoid: [
+      "Buying Silver just for Eververse cosmetics — earn Bright Dust instead",
+      "Purchasing old seasons/expansions at full price (wait for sales)",
+      "Transmog currency purchases when you can earn it for free",
+    ],
+    updatedAt: "2026-02-01",
+  },
+  {
+    gameSlug: "clash-royale",
+    gameName: "Clash Royale",
+    systemType: "card_pack",
+    freeToPlay: {
+      tips: [
+        "Ladder progression earns chests with cards and gold automatically",
+        "Clan Wars 2 provides free rewards for participating",
+        "Magic Items earned from challenges can upgrade specific cards for free",
+        "Challenges (especially Global Tournaments) are the best F2P progression source",
+      ],
+      rating: "Viable with Patience",
+    },
+    lowSpend: {
+      budget: "$5–10/month",
+      tips: [
+        "Pass Royale ($5/month) is the best purchase in the game by far",
+        "Includes unlimited challenge retries, a tower skin, and bonus rewards",
+        "The gold and Magic Items from the pass dramatically speed up card progression",
+      ],
+    },
+    moderate: {
+      budget: "$10–30/month",
+      tips: [
+        "Pass Royale + occasional emote offers or special challenge entries",
+        "Save gems for Grand Challenges — 12-win payouts are the best value",
+        "Special offers during new card releases sometimes include good deals",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "Maxing all cards takes years of play or thousands of dollars",
+        "Tournament-standard gameplay (capped levels) is where competitive play lives",
+      ],
+      warnings: [
+        "Card level advantages in ladder are massive — spending doesn't buy skill",
+        "The game frequently releases new cards, constantly moving the upgrade goalpost",
+      ],
+    },
+    bestValue: [
+      "Pass Royale ($5/month) — unlocks the best rewards track",
+      "Grand Challenges (100 gems) at 12 wins",
+      "Magic Items for targeted card upgrades",
+    ],
+    avoid: [
+      "Buying chests from the shop — terrible value per card",
+      "Spending gems on anything other than challenges",
+      "Gold purchases at shop prices — earn it through gameplay",
+    ],
+    updatedAt: "2026-02-01",
+  },
+  {
+    gameSlug: "path-of-exile-2",
+    gameName: "Path of Exile 2",
+    systemType: "cosmetic_shop",
+    freeToPlay: {
+      tips: [
+        "The entire game is free — all endgame content accessible without spending",
+        "No pay-to-win mechanics whatsoever; all purchases are cosmetic",
+        "Stash tabs are the one semi-essential purchase for serious players",
+        "Challenge leagues give free cosmetic rewards for playing",
+      ],
+      rating: "Fully Viable",
+    },
+    lowSpend: {
+      budget: "$20–30 one-time",
+      tips: [
+        "First Supporter Pack includes points + cosmetics — best initial purchase",
+        "Use points for a Currency Tab, Map Tab, and a Premium Tab bundle",
+        "These 3 purchases cover all essential QoL needs for a long time",
+      ],
+    },
+    moderate: {
+      budget: "$60–120/year",
+      tips: [
+        "One Supporter Pack per league (~$30–60) gives points + league-exclusive armor set",
+        "Use points for additional specialty tabs and one big MTX set you love",
+        "Mystery Boxes during events are gambling — avoid unless you're okay with random results",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "High-tier Supporter Packs ($240+) come with exclusive cloaks and weapon effects",
+        "Full MTX sets (armor + weapon + portal + hideout) run $40–80 each",
+      ],
+      warnings: [
+        "Mystery Boxes are actual loot boxes with bad duplicate rates",
+        "Individual MTX pieces are very expensive compared to supporter pack points",
+      ],
+    },
+    bestValue: [
+      "Core Supporter Pack — cosmetics + points for stash tabs",
+      "Currency Tab + Map Tab + Premium Tab bundle (essential QoL)",
+      "Challenge league cosmetics (free from gameplay)",
+    ],
+    avoid: [
+      "Mystery Boxes — random results with duplicate risk",
+      "Buying individual MTX pieces at full price without points",
+      "Extra stash tabs beyond what you actually need",
+    ],
+    updatedAt: "2026-02-01",
+  },
+  {
+    gameSlug: "wuthering-waves",
+    gameName: "Wuthering Waves",
+    systemType: "gacha",
+    freeToPlay: {
+      tips: [
+        "Generous launch rewards give enough pulls for an early 5-star character",
+        "Exploration rewards (Astrite from chests, puzzles, quests) are abundant",
+        "Standard banner has a beginner guarantee within 50 pulls",
+        "4-star characters are competitively viable for all content",
+      ],
+      rating: "Very Viable",
+    },
+    lowSpend: {
+      budget: "$5–15/month",
+      tips: [
+        "Monthly Lunite Subscription is the highest Astrite-per-dollar purchase",
+        "Battle Pass adds pulls, upgrade materials, and a 4-star weapon",
+        "Combined monthly + pass gives roughly one 5-star every 2–3 patches",
+      ],
+    },
+    moderate: {
+      budget: "$30–60/month",
+      tips: [
+        "Monthly sub + Battle Pass + occasional crystal top-up for must-have resonators",
+        "First-time top-up gives double crystals — use the bigger tiers once",
+        "Target limited resonators that fill a gap in your team comp",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "Full sequence (S6) on a limited resonator costs roughly $800–1,200+",
+        "Signature 5-star weapons add $200–400 on top of character investment",
+      ],
+      warnings: [
+        "S1 is the most impactful constellation for most resonators — diminishing returns after",
+        "Weapon banner pity does not carry over between weapon banners",
+      ],
+    },
+    bestValue: [
+      "Monthly Lunite Subscription — best Astrite per dollar",
+      "Battle Pass for pulls + materials",
+      "First-time crystal top-up bonus (doubled)",
+    ],
+    avoid: [
+      "Pulling on the weapon banner without enough for a guaranteed weapon",
+      "Using Astrite for stamina refreshes — time-gated naturally",
+      "Chasing high sequences on characters who don't benefit much from them",
+    ],
+    updatedAt: "2026-02-01",
+  },
+  {
+    gameSlug: "zenless-zone-zero",
+    gameName: "Zenless Zone Zero",
+    systemType: "gacha",
+    freeToPlay: {
+      tips: [
+        "Inter-Knot exploration and events give steady Polychrome income",
+        "HIA challenges provide free pulls through earned currency",
+        "A-rank agents are strong and easier to build than S-ranks",
+        "TV mode events give free materials and occasional limited rewards",
+      ],
+      rating: "Very Viable",
+    },
+    lowSpend: {
+      budget: "$5–15/month",
+      tips: [
+        "Inter-Knot Membership ($5/month) is the best Polychrome value",
+        "Growth Fund (one-time) pays out over time as you level — great early purchase",
+        "At this budget, target one S-rank per 2–3 patches",
+      ],
+    },
+    moderate: {
+      budget: "$30–60/month",
+      tips: [
+        "Membership + Battle Pass + occasional top-up for favorite characters",
+        "First top-up gives doubled Monochrome — save for a character you want",
+        "W-Engine (weapon) banner shares pity type but has its own counter",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "Cinema-level (max) dupes on an S-rank agent costs roughly $1,000+",
+        "Signature W-Engines are important for max damage but expensive to guarantee",
+      ],
+      warnings: [
+        "M1 (first dupe) is usually the biggest power spike — M6 is overkill",
+        "The game is PvE only — you never need max investment to clear content",
+      ],
+    },
+    bestValue: [
+      "Inter-Knot Membership ($5/month) — best Polychrome per dollar",
+      "Growth Fund (one-time purchase, long-term value)",
+      "First-time top-up bonus (doubled Monochrome)",
+    ],
+    avoid: [
+      "Stamina (Battery) refreshes with premium currency",
+      "Pulling on W-Engine banner without guaranteed path planned",
+      "Chasing high Mindscape levels on characters that don't need them",
+    ],
+    updatedAt: "2026-02-01",
+  },
+  {
+    gameSlug: "fifa-mobile",
+    gameName: "EA Sports FC Mobile",
+    systemType: "card_pack",
+    freeToPlay: {
+      tips: [
+        "Daily activities and league matches give free player packs",
+        "Season campaigns provide free high-rated players through gameplay",
+        "VSA and H2H seasons reward free players at tier milestones",
+        "Events always have a free path with solid rewards — play consistently",
+      ],
+      rating: "Viable with Grind",
+    },
+    lowSpend: {
+      budget: "$5–15/month",
+      tips: [
+        "Star Pass ($10/month) is the single best purchase — premium track rewards are massive",
+        "Event passes during major promos (TOTY, TOTS) give extra event currency",
+        "Save FIFA Points for guaranteed player packs rather than random ones",
+      ],
+    },
+    moderate: {
+      budget: "$20–50/month",
+      tips: [
+        "Star Pass + event passes during major promos for accelerated progression",
+        "Bundle purchases during major events offer better value than direct pack buys",
+        "Focus on building a cohesive team chemistry rather than chasing individual cards",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "Maxing a squad with all event-exclusive cards requires $100+ per major event",
+        "Season resets mean your investment depreciates annually",
+      ],
+      warnings: [
+        "Pack odds on mobile are even worse than console — lower hit rates for top cards",
+        "Annual reset makes all spending essentially temporary",
+        "Pay-to-win is significant in competitive PvP modes",
+      ],
+    },
+    bestValue: [
+      "Star Pass ($10/month) — best rewards-per-dollar",
+      "Free event paths (always complete these first)",
+      "Event passes during TOTY/TOTS promos",
+    ],
+    avoid: [
+      "Random player packs — terrible odds for targeting specific players",
+      "Buying FIFA Points outside of promotions",
+      "Spending heavily early in the season when cards will be outclassed quickly",
+    ],
+    updatedAt: "2026-02-01",
+  },
+  {
+    gameSlug: "roblox",
+    gameName: "Roblox",
+    systemType: "cosmetic_shop",
+    freeToPlay: {
+      tips: [
+        "Thousands of games are completely free to play",
+        "Many games give free items, pets, and cosmetics through gameplay",
+        "Daily login rewards in popular games give free in-game currency",
+        "UGC (user-generated content) avatar items include many free options",
+      ],
+      rating: "Fully Viable",
+    },
+    lowSpend: {
+      budget: "$5–10/month",
+      tips: [
+        "Roblox Premium ($5–10/month) gives monthly Robux allowance + marketplace fee discounts",
+        "Premium also includes exclusive items and early access to features",
+        "Buy Robux during bonus events for extra value",
+      ],
+    },
+    moderate: {
+      budget: "$10–25/month",
+      tips: [
+        "Premium + occasional game-specific passes for your favorite games",
+        "Game Passes are one-time purchases that permanently unlock features",
+        "Avatar items from the UGC catalog are usually cheaper than official items",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "Limited items can cost hundreds or thousands of Robux",
+        "Some games have extremely expensive VIP servers and game passes ($50+)",
+      ],
+      warnings: [
+        "Many Roblox games target young players with manipulative spending mechanics",
+        "Limited items are speculative — values fluctuate wildly",
+        "Individual game currencies are not transferable between games",
+      ],
+    },
+    bestValue: [
+      "Roblox Premium ($5/month tier) — monthly Robux + perks",
+      "Permanent Game Passes for your most-played games",
+      "Free UGC avatar items from the catalog",
+    ],
+    avoid: [
+      "Buying Robux without Premium (worse exchange rate)",
+      "Limited item speculation — prices are volatile and unpredictable",
+      "In-game gambling mechanics (pet hatching, crate opening) in individual games",
+    ],
+    updatedAt: "2026-02-01",
+  },
+  {
+    gameSlug: "marvel-rivals",
+    gameName: "Marvel Rivals",
+    systemType: "cosmetic_shop",
+    freeToPlay: {
+      tips: [
+        "All heroes are free to play — no unlocking required",
+        "Free Battle Pass track includes sprays, nameplates, and basic cosmetics",
+        "Gameplay is fully skill-based with zero pay-to-win elements",
+        "Events give free limited-time cosmetics through challenges",
+      ],
+      rating: "Fully Viable",
+    },
+    lowSpend: {
+      budget: "$10/season",
+      tips: [
+        "Luxury Battle Pass ($10) includes premium skins, emotes, and bonus Units",
+        "Complete the pass to earn back enough Units for future passes",
+        "Season-themed skins are exclusive to their pass and may not return",
+      ],
+    },
+    moderate: {
+      budget: "$20–40/season",
+      tips: [
+        "Battle Pass + one featured skin bundle from the rotating store",
+        "Gallery skins for your main heroes are the best targeted purchases",
+        "Wait for sales and bundle deals rather than buying individual items",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "Legendary and Mythic skins range from $15–25 each with unique VFX",
+        "Full hero skin collections require $100+ across multiple seasons",
+      ],
+      warnings: [
+        "Store rotation means FOMO pressure — most skins return eventually",
+        "Individual skin prices are on the higher end for a hero shooter",
+      ],
+    },
+    bestValue: [
+      "Luxury Battle Pass ($10/season) — self-sustaining if completed",
+      "Free event cosmetics from seasonal challenges",
+      "Bundle deals over individual skin purchases",
+    ],
+    avoid: [
+      "Buying Units just to skip Battle Pass tiers — play to earn them",
+      "FOMO-purchasing every store rotation skin",
+      "Spending on sprays and nameplates when skins are better value",
+    ],
+    updatedAt: "2026-02-01",
+  },
 ];
 
 export function getGuideBySlug(slug: string): SpendingGuide | undefined {

@@ -22,6 +22,7 @@ import {
   Info,
   Wallet,
 } from "lucide-react";
+import GameAvatar from "@/components/ui/GameAvatar";
 
 interface GameOption {
   id: string;
@@ -274,7 +275,10 @@ export default function ValueCalculatorPage() {
                     <div className="flex flex-wrap justify-center gap-2">
                       {allGames.slice(0, 6).map((g) => (
                         <button key={g.id} onClick={() => setSelectedId(g.id)}
-                          className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700 transition-colors">
+                          className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white pl-1.5 pr-3 py-1 text-sm font-medium text-gray-700 hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700 transition-colors">
+                          <div className="flex-shrink-0 w-6 h-6 rounded-full overflow-hidden">
+                            <GameAvatar gameName={g.title} size="sm" aspectRatio="square" />
+                          </div>
                           {g.title}
                         </button>
                       ))}
@@ -289,12 +293,17 @@ export default function ValueCalculatorPage() {
                   {/* Game header */}
                   <div className="rounded-xl border border-gray-200 p-6">
                     <div className="flex items-center justify-between mb-2">
-                      <div>
-                        <h2 className="text-2xl font-black text-gray-900">{selected.title}</h2>
-                        <p className="text-sm text-gray-500 flex items-center gap-1">
-                          <Gamepad2 className="h-3.5 w-3.5" />
-                          {SYSTEM_LABELS[selected.loot_system_type] || selected.loot_system_type} System
-                        </p>
+                      <div className="flex items-center gap-3">
+                        <div className="flex-shrink-0 w-12 h-12 rounded-xl overflow-hidden">
+                          <GameAvatar gameName={selected.title} size="sm" aspectRatio="square" />
+                        </div>
+                        <div>
+                          <h2 className="text-2xl font-black text-gray-900">{selected.title}</h2>
+                          <p className="text-sm text-gray-500 flex items-center gap-1">
+                            <Gamepad2 className="h-3.5 w-3.5" />
+                            {SYSTEM_LABELS[selected.loot_system_type] || selected.loot_system_type} System
+                          </p>
+                        </div>
                       </div>
                       <div className="text-right">
                         <span className={`text-4xl font-black ${scoreColor(selected.lootboxes_score)}`}>
