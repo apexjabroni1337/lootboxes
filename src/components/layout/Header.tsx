@@ -27,6 +27,10 @@ import {
   LineChart,
   Calculator,
   ExternalLink,
+  BarChart3,
+  Scale,
+  Wallet,
+  Eye,
 } from "lucide-react";
 import SearchDialog from "@/components/search/SearchDialog";
 import Logo from "@/components/brand/Logo";
@@ -161,74 +165,63 @@ export default function Header() {
                 </button>
 
                 {lootboxMegaOpen && (
-                  <div className="absolute left-0 top-full z-50 mt-1 w-[480px] rounded-xl border border-gray-200 bg-white shadow-xl">
-                    {/* Button grid */}
-                    <div className="grid grid-cols-2 gap-2 p-4">
-                      <Link
-                        href="/lootbox"
-                        onClick={() => setLootboxMegaOpen(false)}
-                        className="flex items-center gap-3 rounded-lg bg-brand-50 px-4 py-3 transition-colors hover:bg-brand-100"
-                      >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white">
-                          <Gamepad2 className="h-4.5 w-4.5" />
+                  <div className="absolute left-0 top-full z-50 mt-1 w-[600px] rounded-xl border border-gray-200 bg-white shadow-xl">
+                    {/* 3-column categorized layout */}
+                    <div className="grid grid-cols-3 gap-0 divide-x divide-gray-100 p-4">
+                      {/* BROWSE column */}
+                      <div className="pr-4">
+                        <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-gray-400">Browse</p>
+                        <div className="space-y-1">
+                          <Link href="/lootbox" onClick={() => setLootboxMegaOpen(false)} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-700 hover:bg-brand-50 hover:text-brand-700 transition-colors">
+                            <Gamepad2 className="h-4 w-4 text-brand-500" />
+                            All Games
+                          </Link>
+                          <Link href="/lootbox/rankings" onClick={() => setLootboxMegaOpen(false)} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-700 transition-colors">
+                            <Trophy className="h-4 w-4 text-amber-500" />
+                            Rankings
+                          </Link>
+                          <Link href="/lootbox/regulations" onClick={() => setLootboxMegaOpen(false)} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors">
+                            <Scale className="h-4 w-4 text-blue-500" />
+                            Regulations
+                          </Link>
                         </div>
-                        <div>
-                          <p className="text-sm font-semibold text-gray-900">All Analyzed Games</p>
-                          <p className="text-[11px] text-gray-500">Browse 300+ games</p>
+                      </div>
+                      {/* TOOLS column */}
+                      <div className="px-4">
+                        <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-gray-400">Tools</p>
+                        <div className="space-y-1">
+                          <Link href="/lootbox/odds-comparison" onClick={() => setLootboxMegaOpen(false)} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-colors">
+                            <BarChart3 className="h-4 w-4 text-purple-500" />
+                            Odds Compare
+                          </Link>
+                          <Link href="/lootbox/value-calculator" onClick={() => setLootboxMegaOpen(false)} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                            <Calculator className="h-4 w-4 text-emerald-500" />
+                            Value Calc
+                          </Link>
+                          <Link href="/lootbox/spending-guides" onClick={() => setLootboxMegaOpen(false)} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-700 transition-colors">
+                            <Wallet className="h-4 w-4 text-amber-500" />
+                            Spending Guides
+                          </Link>
                         </div>
-                      </Link>
-                      <Link
-                        href="/lootbox/rankings"
-                        onClick={() => setLootboxMegaOpen(false)}
-                        className="flex items-center gap-3 rounded-lg bg-amber-50 px-4 py-3 transition-colors hover:bg-amber-100"
-                      >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500 text-white">
-                          <Trophy className="h-4.5 w-4.5" />
+                      </div>
+                      {/* DATA column */}
+                      <div className="pl-4">
+                        <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-gray-400">Data</p>
+                        <div className="space-y-1">
+                          <Link href="/drop-rates" onClick={() => setLootboxMegaOpen(false)} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-colors">
+                            <Layers className="h-4 w-4 text-purple-500" />
+                            Drop Rates
+                          </Link>
+                          <Link href="/lootbox/transparency-report" onClick={() => setLootboxMegaOpen(false)} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors">
+                            <Eye className="h-4 w-4 text-indigo-500" />
+                            Transparency
+                          </Link>
+                          <Link href="/methodology" onClick={() => setLootboxMegaOpen(false)} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                            <Shield className="h-4 w-4 text-gray-500" />
+                            How We Rate
+                          </Link>
                         </div>
-                        <div>
-                          <p className="text-sm font-semibold text-gray-900">Rankings</p>
-                          <p className="text-[11px] text-gray-500">Best & worst rated</p>
-                        </div>
-                      </Link>
-                      <Link
-                        href="/deals?has_lootbox=true"
-                        onClick={() => setLootboxMegaOpen(false)}
-                        className="flex items-center gap-3 rounded-lg bg-green-50 px-4 py-3 transition-colors hover:bg-green-100"
-                      >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-600 text-white">
-                          <Tag className="h-4.5 w-4.5" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-gray-900">Lootbox Deals</p>
-                          <p className="text-[11px] text-gray-500">Sales on lootbox games</p>
-                        </div>
-                      </Link>
-                      <Link
-                        href="/drop-rates"
-                        onClick={() => setLootboxMegaOpen(false)}
-                        className="flex items-center gap-3 rounded-lg bg-purple-50 px-4 py-3 transition-colors hover:bg-purple-100"
-                      >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-600 text-white">
-                          <Layers className="h-4.5 w-4.5" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-gray-900">Drop Rates</p>
-                          <p className="text-[11px] text-gray-500">Official drop rate data</p>
-                        </div>
-                      </Link>
-                      <Link
-                        href="/methodology"
-                        onClick={() => setLootboxMegaOpen(false)}
-                        className="col-span-2 flex items-center gap-3 rounded-lg bg-gray-50 px-4 py-3 transition-colors hover:bg-gray-100"
-                      >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-600 text-white">
-                          <Shield className="h-4.5 w-4.5" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-gray-900">How We Rate</p>
-                          <p className="text-[11px] text-gray-500">Our scoring methodology — transparency, fairness, value & more</p>
-                        </div>
-                      </Link>
+                      </div>
                     </div>
                     {/* Price alert bar */}
                     <Link
@@ -543,7 +536,7 @@ export default function Header() {
           {mobileOpen && (
             <div className="border-t border-gray-100 py-4 lg:hidden dark:border-gray-800">
               <nav className="flex flex-col gap-1">
-                {/* Loot Boxes section */}
+                {/* Loot Boxes — Browse */}
                 <p className="px-3 pt-1 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
                   Loot Boxes
                 </p>
@@ -564,12 +557,36 @@ export default function Header() {
                   Rankings
                 </Link>
                 <Link
-                  href="/deals?has_lootbox=true"
+                  href="/lootbox/regulations"
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                 >
-                  <Tag className="h-4 w-4 text-brand-500" />
-                  Lootbox Game Deals
+                  <Scale className="h-4 w-4 text-blue-500" />
+                  Regulations Tracker
+                </Link>
+                <Link
+                  href="/lootbox/odds-comparison"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <BarChart3 className="h-4 w-4 text-purple-500" />
+                  Odds Comparison
+                </Link>
+                <Link
+                  href="/lootbox/value-calculator"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <Calculator className="h-4 w-4 text-emerald-500" />
+                  Value Calculator
+                </Link>
+                <Link
+                  href="/lootbox/spending-guides"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <Wallet className="h-4 w-4 text-amber-500" />
+                  Spending Guides
                 </Link>
 
                 {/* Game Deals section */}
