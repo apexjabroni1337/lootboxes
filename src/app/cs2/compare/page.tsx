@@ -211,7 +211,7 @@ export default function ComparePage() {
           <a
             href="/go/cs2/csfloat?from=compare-banner"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener noreferrer nofollow"
             className="ml-auto flex items-center gap-1 rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-700 transition-colors whitespace-nowrap"
           >
             Visit CSFloat <ExternalLink className="h-3 w-3" />
@@ -304,7 +304,7 @@ export default function ComparePage() {
                 <a
                   href={`/go/cs2/${mp.dealId}?from=compare`}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
                   className={`flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors ${
                     mp.editorPick
                       ? "bg-blue-600 text-white hover:bg-blue-700"
@@ -349,7 +349,7 @@ export default function ComparePage() {
                       <a
                         href={`/go/cs2/${mp.dealId}?from=compare-table`}
                         target="_blank"
-                        rel="noopener noreferrer"
+                        rel="noopener noreferrer nofollow"
                         className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-700"
                       >
                         Visit <ExternalLink className="h-3 w-3" />

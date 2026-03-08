@@ -97,7 +97,7 @@ export default function WhatsHot({ deals }: WhatsHotProps) {
                     <a
                       href={`/go/${deal.id}`}
                       target="_blank"
-                      rel="noopener noreferrer"
+                      rel="noopener noreferrer nofollow"
                       className="rounded-lg bg-brand-600 px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-brand-700"
                     >
                       Get Deal

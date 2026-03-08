@@ -20,7 +20,7 @@ import FAQSchema from "@/components/seo/FAQSchema";
 export const metadata: Metadata = {
   title: "CS2 Skins Hub — Track Prices, Simulate Cases, Compare Marketplaces",
   description:
-    "The most comprehensive CS2 skin resource. Compare prices across 5+ marketplaces, simulate case openings with real Valve odds, check float values, and calculate trade-up contracts.",
+    "Compare CS2 skin prices across 5+ marketplaces. Simulate case openings with real Valve odds, check float values, and calculate trade-ups.",
 };
 
 const CS2_FAQS = [
@@ -238,7 +238,7 @@ export default function CS2HubPage() {
                 key={mp.name}
                 href={`/go/cs2/${mp.dealId}?from=hub`}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer nofollow"
                 className={`rounded-xl border bg-white p-5 text-center shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5 ${
                   mp.pick ? "border-blue-200 ring-1 ring-blue-100" : "border-gray-200"
                 } relative`}

@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Search,
   TrendingUp,
@@ -201,7 +202,7 @@ export default function CS2PricesPage() {
                 key={mp.dealId}
                 href={`/go/cs2/${mp.dealId}?from=prices-bar`}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer nofollow"
                 className="flex items-center gap-1 hover:text-gray-600 transition-colors"
               >
                 <div className="h-2 w-2 rounded-full" style={{ backgroundColor: mp.color }} />
@@ -249,12 +250,28 @@ export default function CS2PricesPage() {
                       <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4">
                         {/* Skin info */}
                         <div className="flex items-center gap-3 lg:w-80 flex-shrink-0">
-                          <div
-                            className="h-12 w-12 rounded-lg flex items-center justify-center text-white font-bold text-lg flex-shrink-0"
-                            style={{ backgroundColor: RARITY_COLORS[skin.rarity] || "#666" }}
-                          >
-                            {skin.weapon.charAt(0)}
-                          </div>
+                          {skin.image ? (
+                            <div
+                              className="h-12 w-12 rounded-lg flex-shrink-0 overflow-hidden border"
+                              style={{ borderColor: RARITY_COLORS[skin.rarity] || "#ddd" }}
+                            >
+                              <Image
+                                src={skin.image}
+                                alt={`${skin.weapon} | ${skin.skin}`}
+                                width={48}
+                                height={48}
+                                className="h-full w-full object-contain"
+                                unoptimized
+                              />
+                            </div>
+                          ) : (
+                            <div
+                              className="h-12 w-12 rounded-lg flex items-center justify-center text-white font-bold text-lg flex-shrink-0"
+                              style={{ backgroundColor: RARITY_COLORS[skin.rarity] || "#666" }}
+                            >
+                              {skin.weapon.charAt(0)}
+                            </div>
+                          )}
                           <div className="min-w-0">
                             <p className="font-semibold text-gray-900 truncate text-sm">{skin.weapon} | {skin.skin}</p>
                             <div className="flex items-center gap-2 mt-0.5">
@@ -324,7 +341,7 @@ export default function CS2PricesPage() {
                             <a
                               href={skin.itemPage}
                               target="_blank"
-                              rel="noopener noreferrer"
+                              rel="noopener noreferrer nofollow"
                               className="flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-semibold text-white transition-colors"
                               style={{ backgroundColor: "#eb4b98" }}
                             >
@@ -336,7 +353,7 @@ export default function CS2PricesPage() {
                               key={mp.dealId}
                               href={`/go/cs2/${mp.dealId}?from=prices`}
                               target="_blank"
-                              rel="noopener noreferrer"
+                              rel="noopener noreferrer nofollow"
                               className="flex items-center gap-1 rounded-lg border border-gray-200 px-2.5 py-1.5 text-[10px] font-medium text-gray-600 hover:bg-gray-50 transition-colors"
                             >
                               <div className="h-2 w-2 rounded-full flex-shrink-0" style={{ backgroundColor: mp.color }} />
@@ -396,7 +413,7 @@ export default function CS2PricesPage() {
             <span className="font-semibold text-gray-500">Affiliate Disclosure:</span>{" "}
             Some links on this page are affiliate links. LootBoxes.com may earn a commission
             if you make a purchase, at no extra cost to you. Prices powered by{" "}
-            <a href="https://skinport.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-600">Skinport</a>.
+            <a href="https://skinport.com" target="_blank" rel="noopener noreferrer nofollow" className="underline hover:text-gray-600">Skinport</a>.
           </p>
         </div>
       </div>

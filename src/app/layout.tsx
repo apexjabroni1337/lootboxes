@@ -107,6 +107,12 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#0074C5" />
+        {/* Preconnect to external domains for faster resource loading */}
+        <link rel="preconnect" href="https://cdn.cloudflare.steamstatic.com" />
+        <link rel="preconnect" href="https://images.igdb.com" />
+        <link rel="dns-prefetch" href="https://cdn.akamai.steamstatic.com" />
+        <link rel="dns-prefetch" href="https://api.skinport.com" />
+        <link rel="dns-prefetch" href="https://bymykel.github.io" />
       </head>
       <body className="flex min-h-screen flex-col bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
         <ThemeProvider>

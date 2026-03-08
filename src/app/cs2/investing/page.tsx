@@ -127,7 +127,7 @@ export default function CS2InvestingPage() {
                 key={mp.name}
                 href={`/go/cs2/${mp.dealId}?from=investing`}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer nofollow"
                 className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
               >
                 <div className="flex items-center gap-3 mb-3">

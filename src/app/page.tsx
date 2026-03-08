@@ -407,7 +407,7 @@ export default async function HomePage() {
                   {info.image && (
                     <img
                       src={info.image}
-                      alt=""
+                      alt={`${st.label} games — browse ${st.type} loot systems`}
                       className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                       loading="lazy"
                     />

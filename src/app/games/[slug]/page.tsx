@@ -374,7 +374,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
                 <a
                   href={`/go/${bestDeal.id}`}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
                   className="flex items-center justify-center gap-1.5 rounded-lg bg-success-600 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-success-700"
                 >
                   Get Best Deal
@@ -444,7 +444,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
                               <a
                                 href={`/go/${deal.id}`}
                                 target="_blank"
-                                rel="noopener noreferrer"
+                                rel="noopener noreferrer nofollow"
                                 className={`btn inline-flex items-center gap-1 py-1.5 text-xs ${i === 0 ? "bg-success-600 text-white hover:bg-success-700" : "btn-secondary"}`}
                               >
                                 {i === 0 ? "Best Deal" : "Get Deal"}

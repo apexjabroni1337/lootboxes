@@ -390,7 +390,7 @@ export default function FloatCheckerPage() {
                           <a
                             href={item.itemPage}
                             target="_blank"
-                            rel="noopener noreferrer"
+                            rel="noopener noreferrer nofollow"
                             className="rounded-lg px-2.5 py-1.5 text-[10px] font-semibold text-white transition-colors"
                             style={{ backgroundColor: "#eb4b98" }}
                           >
@@ -402,7 +402,7 @@ export default function FloatCheckerPage() {
                             key={mp.dealId}
                             href={`/go/cs2/${mp.dealId}?from=float-checker`}
                             target="_blank"
-                            rel="noopener noreferrer"
+                            rel="noopener noreferrer nofollow"
                             className="hidden sm:flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-[9px] font-medium text-gray-500 hover:bg-gray-50 transition-colors"
                           >
                             <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: mp.color }} />
@@ -438,7 +438,7 @@ export default function FloatCheckerPage() {
                     <a
                       href={`/go/cs2/${lowestFloat.dealId}?from=float-checker`}
                       target="_blank"
-                      rel="noopener noreferrer"
+                      rel="noopener noreferrer nofollow"
                       className="flex items-center gap-1 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
                     >
                       View on {lowestFloat.marketplace} <ExternalLink className="h-3 w-3" />
@@ -539,7 +539,7 @@ export default function FloatCheckerPage() {
                         <a
                           href={`/go/cs2/${listing.dealId}?from=float-checker`}
                           target="_blank"
-                          rel="noopener noreferrer"
+                          rel="noopener noreferrer nofollow"
                           className="flex items-center gap-1 rounded-lg bg-gray-900 px-3 py-2 text-xs font-semibold text-white hover:bg-gray-800 transition-colors"
                         >
                           Buy <ExternalLink className="h-3 w-3" />

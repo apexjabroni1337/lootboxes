@@ -119,7 +119,7 @@ export default function FeaturedDeals({ deals }: FeaturedDealsProps) {
                     <a
                       href={`/go/${deal.id}`}
                       target="_blank"
-                      rel="noopener noreferrer"
+                      rel="noopener noreferrer nofollow"
                       className="btn-primary flex items-center gap-1 py-2 text-sm"
                     >
                       Get Deal

@@ -89,7 +89,7 @@ export default function DealCard({ deal }: DealCardProps) {
         <a
           href={`/go/${deal.id}`}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener noreferrer nofollow"
           className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
         >
           Get Deal

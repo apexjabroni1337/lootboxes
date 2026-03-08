@@ -9,7 +9,10 @@
  */
 
 const SKINPORT_API = "https://api.skinport.com/v1/items";
+const BYMYKEL_SKINS_API =
+  "https://bymykel.github.io/CSGO-API/api/en/skins.json";
 const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
+const IMAGE_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours (images rarely change)
 
 /* ── Types ── */
 
@@ -50,9 +53,80 @@ export interface SkinPrice {
   updatedAt: string | null;
 }
 
-/* ── In-memory cache ── */
+/** Minimal ByMykel skin item (only fields we need) */
+interface ByMykelSkin {
+  market_hash_name?: string;
+  image?: string;
+}
+
+/* ── In-memory caches ── */
 let cachedData: SkinPrice[] | null = null;
 let cacheTimestamp = 0;
+
+/** Map of market_hash_name → image URL (and base name → image for fallback) */
+let imageMap: Map<string, string> | null = null;
+let imageMapTimestamp = 0;
+
+/* ── Fetch skin images from ByMykel CSGO API ── */
+async function fetchImageMap(): Promise<Map<string, string>> {
+  const now = Date.now();
+  if (imageMap && now - imageMapTimestamp < IMAGE_CACHE_TTL_MS) {
+    return imageMap;
+  }
+
+  try {
+    const res = await fetch(BYMYKEL_SKINS_API, {
+      cache: "no-store",
+      headers: { Accept: "application/json" },
+    });
+
+    if (!res.ok) {
+      console.error(`[SkinImages] ByMykel API error: ${res.status}`);
+      return imageMap ?? new Map();
+    }
+
+    const skins: ByMykelSkin[] = await res.json();
+    const map = new Map<string, string>();
+
+    for (const skin of skins) {
+      if (!skin.market_hash_name || !skin.image) continue;
+
+      // Exact match key (includes wear)
+      map.set(skin.market_hash_name.toLowerCase(), skin.image);
+
+      // Also store by base name (without wear) for fallback matching
+      const baseName = skin.market_hash_name
+        .replace(/\s*\([^)]+\)\s*$/, "")
+        .toLowerCase();
+      if (!map.has(baseName)) {
+        map.set(baseName, skin.image);
+      }
+    }
+
+    imageMap = map;
+    imageMapTimestamp = now;
+    console.log(`[SkinImages] Loaded ${map.size} image mappings from ByMykel`);
+    return map;
+  } catch (error) {
+    console.error("[SkinImages] ByMykel fetch error:", error);
+    return imageMap ?? new Map();
+  }
+}
+
+/** Look up image URL for a market_hash_name */
+function lookupImage(
+  map: Map<string, string>,
+  marketHashName: string
+): string | null {
+  const key = marketHashName.toLowerCase();
+  // Try exact match first (e.g. "AK-47 | Asiimov (Field-Tested)")
+  const exact = map.get(key);
+  if (exact) return exact;
+
+  // Fallback: try base name without wear condition
+  const baseName = key.replace(/\s*\([^)]+\)\s*$/, "");
+  return map.get(baseName) ?? null;
+}
 
 /* ── Rarity inference from market_hash_name patterns ── */
 function inferRarity(name: string): string {
@@ -142,7 +216,11 @@ export async function getSkinPrices(): Promise<SkinPrice[]> {
   }
 
   try {
-    const rawItems = await fetchPrices();
+    // Fetch prices and images in parallel
+    const [rawItems, imgMap] = await Promise.all([
+      fetchPrices(),
+      fetchImageMap(),
+    ]);
 
     if (rawItems.length === 0 && cachedData) {
       console.warn("[SkinPrices] API returned empty, using stale cache");
@@ -155,10 +233,22 @@ export async function getSkinPrices(): Promise<SkinPrice[]> {
       .filter((item) => item.cheapestPrice > 0)
       .sort((a, b) => b.cheapestPrice - a.cheapestPrice);
 
+    // Merge images from ByMykel
+    let imagesFound = 0;
+    for (const skin of skinPrices) {
+      const img = lookupImage(imgMap, skin.name);
+      if (img) {
+        skin.image = img;
+        imagesFound++;
+      }
+    }
+
     cachedData = skinPrices;
     cacheTimestamp = now;
 
-    console.log(`[SkinPrices] Fetched ${skinPrices.length} skin prices from Skinport`);
+    console.log(
+      `[SkinPrices] Fetched ${skinPrices.length} skin prices from Skinport, ${imagesFound} with images`
+    );
     return skinPrices;
   } catch (error) {
     console.error("[SkinPrices] Fetch error:", error);

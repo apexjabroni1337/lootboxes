@@ -335,7 +335,7 @@ export default function CS2SimulatorPage() {
                 <a
                   href="/go/cs2/csfloat?from=simulator"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
                   className="flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-center text-sm font-semibold text-white transition-colors"
                   style={{ backgroundColor: "#4f8df0" }}
                 >

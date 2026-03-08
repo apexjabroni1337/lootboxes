@@ -112,7 +112,7 @@ export default function HeroCarousel({ deals }: HeroCarouselProps) {
               <a
                 href={`/go/${deal.id}`}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer nofollow"
                 className="btn-primary px-5 py-2 text-sm"
               >
                 Get Deal
