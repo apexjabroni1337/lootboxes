@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
   Calculator,
@@ -12,6 +12,15 @@ import {
   AlertTriangle,
   CheckCircle,
   ArrowRight,
+  RefreshCw,
+  AlertCircle,
+  Eye,
+  Star,
+  Target,
+  Brain,
+  Gamepad2,
+  Info,
+  Wallet,
 } from "lucide-react";
 
 interface GameOption {
@@ -34,20 +43,35 @@ const SYSTEM_LABELS: Record<string, string> = {
   cosmetic_shop: "Cosmetic Shop",
 };
 
+const SYSTEM_TIPS: Record<string, string> = {
+  gacha: "Gacha games typically require many pulls to get a specific character or item. Pity systems help guarantee results after a set number of pulls.",
+  loot_box: "Loot box systems give randomized rewards per purchase. Some allow direct purchase of items, which is almost always better value than gambling on boxes.",
+  card_pack: "Card pack games simulate physical card collecting. Pack odds are usually known but individual card targeting is difficult.",
+  battle_pass: "Battle passes offer structured rewards for a fixed price. They generally offer the best value-per-dollar in gaming monetization.",
+  cosmetic_shop: "Cosmetic shops sell items directly. While prices can be high, what you see is what you get — no randomization involved.",
+};
+
 function scoreColor(score: number): string {
   if (score >= 7) return "text-emerald-600";
   if (score >= 5) return "text-amber-600";
   return "text-red-600";
 }
 
-function getVerdict(score: number): {
+function scoreBarColor(score: number): string {
+  if (score >= 7) return "bg-emerald-500";
+  if (score >= 5) return "bg-amber-500";
+  return "bg-red-500";
+}
+
+function getVerdict(overallScore: number): {
   label: string;
   description: string;
   color: string;
   bgColor: string;
   icon: typeof CheckCircle;
+  tips: string[];
 } {
-  if (score >= 7)
+  if (overallScore >= 7)
     return {
       label: "Worth It",
       description:
@@ -55,15 +79,25 @@ function getVerdict(score: number): {
       color: "text-emerald-700",
       bgColor: "bg-emerald-50 border-emerald-200",
       icon: CheckCircle,
+      tips: [
+        "The monetization is player-friendly — spending here is generally rewarding",
+        "Look for battle pass or subscription options for the best sustained value",
+        "Check our spending guide for optimal purchase strategies",
+      ],
     };
-  if (score >= 5)
+  if (overallScore >= 5)
     return {
       label: "Proceed With Caution",
       description:
-        "Monetization is a mixed bag. Some aspects are fair, but watch for specific pain points. Set a budget and stick to it.",
+        "Monetization is a mixed bag. Some aspects are fair, but watch out for specific pain points. Set a budget and stick to it.",
       color: "text-amber-700",
       bgColor: "bg-amber-50 border-amber-200",
       icon: AlertTriangle,
+      tips: [
+        "Set a strict monthly budget before you start spending",
+        "Focus only on the best-value purchases (battle passes, subscriptions)",
+        "Avoid chasing specific rare items — the odds are designed to make that expensive",
+      ],
     };
   return {
     label: "Avoid Spending",
@@ -72,48 +106,88 @@ function getVerdict(score: number): {
     color: "text-red-700",
     bgColor: "bg-red-50 border-red-200",
     icon: AlertTriangle,
+    tips: [
+      "Consider playing free-to-play only if the core gameplay is enjoyable",
+      "If you must spend, limit yourself to the absolute minimum (e.g., a single battle pass)",
+      "Be aware that the game is designed to encourage more spending over time",
+    ],
   };
+}
+
+function estimatedPulls(hasPity: boolean): { pulls: number; note: string } {
+  if (hasPity) {
+    return { pulls: 75, note: "With pity system (worst case ~90, avg ~75)" };
+  }
+  return { pulls: 100, note: "No pity — pure RNG, could take 100+ pulls" };
 }
 
 export default function ValueCalculatorPage() {
   const [allGames, setAllGames] = useState<GameOption[]>([]);
   const [selectedId, setSelectedId] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [monthlyBudget, setMonthlyBudget] = useState<number>(20);
 
   useEffect(() => {
     fetch("/api/lootbox/games")
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
       .then((data) => {
-        setAllGames(data.games || []);
+        if (!Array.isArray(data.games)) throw new Error("Invalid response");
+        setAllGames(data.games);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((err) => {
+        setError(err.message || "Failed to load games");
+        setLoading(false);
+      });
   }, []);
 
   const selected = allGames.find((g) => g.id === selectedId);
 
-  // Calculate derived metrics
-  const costPerRare = selected?.cost_per_pull
-    ? selected.cost_per_pull * 10
-    : null; // ~10 pulls average for a rare
-  const avgScore =
-    allGames.length > 0
-      ? allGames.reduce((sum, g) => sum + g.lootboxes_score, 0) /
-        allGames.length
-      : 5;
+  const avgScore = useMemo(
+    () =>
+      allGames.length > 0
+        ? allGames.reduce((sum, g) => sum + g.lootboxes_score, 0) / allGames.length
+        : 0,
+    [allGames]
+  );
+
+  const percentile = useMemo(() => {
+    if (!selected || allGames.length === 0) return 0;
+    const below = allGames.filter((g) => g.lootboxes_score < selected.lootboxes_score).length;
+    return Math.round((below / allGames.length) * 100);
+  }, [selected, allGames]);
+
+  const pullEstimate = selected ? estimatedPulls(selected.has_pity_system) : null;
+  const costForRare = selected?.cost_per_pull && pullEstimate
+    ? selected.cost_per_pull * pullEstimate.pulls
+    : null;
+  const monthlyPulls = selected?.cost_per_pull && monthlyBudget > 0
+    ? Math.floor(monthlyBudget / selected.cost_per_pull)
+    : null;
+  const monthsToRare = costForRare && monthlyBudget > 0
+    ? Math.ceil(costForRare / monthlyBudget)
+    : null;
+
+  const scoreMetrics = selected
+    ? [
+        { label: "Overall Score", score: selected.lootboxes_score, desc: "Combined rating across all dimensions", icon: Star },
+        { label: "Transparency", score: selected.score_transparency, desc: "How openly are drop rates disclosed?", icon: Eye },
+        { label: "Value", score: selected.score_value, desc: "What you get relative to cost", icon: DollarSign },
+      ]
+    : [];
 
   return (
     <div className="min-h-screen bg-white">
       {/* Hero */}
       <section className="border-b border-gray-100 bg-gradient-to-br from-slate-900 via-emerald-900 to-slate-800 py-16">
         <div className="container-main">
-          <Link
-            href="/lootbox"
-            className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-200 mb-4"
-          >
+          <Link href="/lootbox" className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-200 mb-4">
             <ChevronLeft className="h-4 w-4" /> Loot Boxes
           </Link>
-
           <div className="flex items-center gap-3 mb-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/20 backdrop-blur-sm">
               <Calculator className="h-6 w-6 text-emerald-400" />
@@ -122,17 +196,14 @@ export default function ValueCalculatorPage() {
               Value Tool
             </div>
           </div>
-
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">
             Is It Worth It?
           </h1>
-          <p className="mt-2 text-lg text-emerald-300 font-semibold">
-            Loot box value calculator
-          </p>
+          <p className="mt-2 text-lg text-emerald-300 font-semibold">Loot box value calculator</p>
           <p className="mt-4 max-w-2xl text-gray-300 leading-relaxed">
-            Pick a game and we&apos;ll break down the real cost of its loot box
-            system — from cost per pull to expected spending for rare items, plus
-            our overall value verdict.
+            Pick any game from our database and we&apos;ll break down the real cost of its monetization
+            system — cost per pull, estimated spending for rare items, a budget simulator, and our
+            overall verdict on whether it&apos;s worth your money.
           </p>
         </div>
       </section>
@@ -141,281 +212,353 @@ export default function ValueCalculatorPage() {
       <section className="border-b border-gray-100 bg-gray-50 sticky top-16 z-30">
         <div className="container-main py-4">
           <div className="flex items-center gap-3">
-            <label className="text-sm font-semibold text-gray-700">
-              Select a game:
-            </label>
+            <label className="text-sm font-semibold text-gray-700 flex-shrink-0">Select a game:</label>
             <select
               value={selectedId}
               onChange={(e) => setSelectedId(e.target.value)}
               className="flex-1 max-w-md rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm focus:border-emerald-400 focus:outline-none"
-              disabled={loading}
+              disabled={loading || !!error}
             >
               <option value="">
-                {loading ? "Loading games..." : "Choose a game to analyze..."}
+                {loading ? "Loading games..." : error ? "Failed to load — try refreshing" : "Choose a game to analyze..."}
               </option>
               {allGames.map((g) => (
-                <option key={g.id} value={g.id}>
-                  {g.title} — {g.lootboxes_score.toFixed(1)}/10
-                </option>
+                <option key={g.id} value={g.id}>{g.title} — {g.lootboxes_score.toFixed(1)}/10</option>
               ))}
             </select>
           </div>
         </div>
       </section>
 
-      {/* Results */}
-      <section className="py-8">
-        <div className="container-main">
-          {!selected ? (
-            <div className="rounded-2xl border-2 border-dashed border-gray-200 p-16 text-center">
-              <DollarSign className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-              <h2 className="text-xl font-bold text-gray-900 mb-2">
-                Pick a game above
-              </h2>
-              <p className="text-gray-500 max-w-md mx-auto">
-                Select any game from our database to see its value breakdown,
-                cost analysis, and our spending verdict.
-              </p>
+      {/* Error state */}
+      {error && !loading && (
+        <section className="py-8">
+          <div className="container-main">
+            <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center">
+              <AlertCircle className="h-10 w-10 text-red-400 mx-auto mb-3" />
+              <h2 className="text-lg font-bold text-red-800 mb-2">Failed to Load Games</h2>
+              <p className="text-sm text-red-600 mb-4">{error}</p>
+              <button onClick={() => window.location.reload()} className="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">
+                <RefreshCw className="h-4 w-4" /> Retry
+              </button>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Left: Score breakdown */}
-              <div className="lg:col-span-2 space-y-6">
-                {/* Game header */}
-                <div className="rounded-xl border border-gray-200 p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <h2 className="text-2xl font-black text-gray-900">
-                        {selected.title}
-                      </h2>
-                      <p className="text-sm text-gray-500">
-                        {SYSTEM_LABELS[selected.loot_system_type] ||
-                          selected.loot_system_type}{" "}
-                        System
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <span
-                        className={`text-4xl font-black ${scoreColor(selected.lootboxes_score)}`}
-                      >
-                        {selected.lootboxes_score.toFixed(1)}
-                      </span>
-                      <p className="text-xs text-gray-400">/10 overall</p>
+          </div>
+        </section>
+      )}
+
+      {/* Loading state */}
+      {loading && (
+        <section className="py-16">
+          <div className="container-main text-center">
+            <Loader2 className="h-8 w-8 animate-spin text-emerald-400 mx-auto mb-3" />
+            <p className="text-gray-500">Loading game database...</p>
+          </div>
+        </section>
+      )}
+
+      {/* Results */}
+      {!loading && !error && (
+        <section className="py-8">
+          <div className="container-main">
+            {!selected ? (
+              <div className="rounded-2xl border-2 border-dashed border-gray-200 p-16 text-center">
+                <DollarSign className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                <h2 className="text-xl font-bold text-gray-900 mb-2">Pick a game above</h2>
+                <p className="text-gray-500 max-w-md mx-auto mb-6">
+                  Select any game from our database of {allGames.length}+ analyzed titles to see its
+                  value breakdown, budget simulation, and our spending verdict.
+                </p>
+                {allGames.length > 0 && (
+                  <div>
+                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Popular Picks</p>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {allGames.slice(0, 6).map((g) => (
+                        <button key={g.id} onClick={() => setSelectedId(g.id)}
+                          className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700 transition-colors">
+                          {g.title}
+                        </button>
+                      ))}
                     </div>
                   </div>
-
-                  {/* Score bars */}
-                  <div className="space-y-3">
-                    {[
-                      {
-                        label: "Transparency",
-                        score: selected.score_transparency,
-                        desc: "How openly are drop rates published?",
-                      },
-                      {
-                        label: "Value",
-                        score: selected.score_value,
-                        desc: "Cost relative to what you get",
-                      },
-                    ].map((metric) => (
-                      <div key={metric.label}>
-                        <div className="flex items-center justify-between text-sm mb-1">
-                          <span className="font-medium text-gray-700">
-                            {metric.label}
-                          </span>
-                          <span
-                            className={`font-bold ${scoreColor(metric.score)}`}
-                          >
-                            {metric.score}/10
-                          </span>
-                        </div>
-                        <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-                          <div
-                            className={`h-full rounded-full transition-all duration-500 ${
-                              metric.score >= 7
-                                ? "bg-emerald-500"
-                                : metric.score >= 5
-                                  ? "bg-amber-500"
-                                  : "bg-red-500"
-                            }`}
-                            style={{ width: `${metric.score * 10}%` }}
-                          />
-                        </div>
-                        <p className="text-[11px] text-gray-400 mt-0.5">
-                          {metric.desc}
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Left column */}
+                <div className="lg:col-span-2 space-y-6">
+                  {/* Game header */}
+                  <div className="rounded-xl border border-gray-200 p-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <h2 className="text-2xl font-black text-gray-900">{selected.title}</h2>
+                        <p className="text-sm text-gray-500 flex items-center gap-1">
+                          <Gamepad2 className="h-3.5 w-3.5" />
+                          {SYSTEM_LABELS[selected.loot_system_type] || selected.loot_system_type} System
                         </p>
                       </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Cost breakdown */}
-                <div className="rounded-xl border border-gray-200 p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4">
-                    Cost Breakdown
-                  </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    <div className="rounded-lg bg-gray-50 p-4 text-center">
-                      <DollarSign className="h-5 w-5 text-gray-400 mx-auto mb-1" />
-                      <p className="text-2xl font-black text-gray-900">
-                        {selected.cost_per_pull
-                          ? `$${selected.cost_per_pull.toFixed(2)}`
-                          : "—"}
-                      </p>
-                      <p className="text-xs text-gray-500">Cost Per Pull</p>
-                    </div>
-                    <div className="rounded-lg bg-gray-50 p-4 text-center">
-                      <TrendingUp className="h-5 w-5 text-gray-400 mx-auto mb-1" />
-                      <p className="text-2xl font-black text-gray-900">
-                        {costPerRare ? `~$${costPerRare.toFixed(0)}` : "—"}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Est. Cost Per Rare
-                      </p>
-                    </div>
-                    <div className="rounded-lg bg-gray-50 p-4 text-center">
-                      <Shield className="h-5 w-5 text-gray-400 mx-auto mb-1" />
-                      <p className="text-2xl font-black text-gray-900">
-                        {selected.has_pity_system ? (
-                          <span className="text-emerald-600">Yes</span>
-                        ) : (
-                          <span className="text-red-500">No</span>
-                        )}
-                      </p>
-                      <p className="text-xs text-gray-500">Pity System</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* vs Average */}
-                <div className="rounded-xl border border-gray-200 p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">
-                    Compared to Average
-                  </h3>
-                  <div className="flex items-center gap-4">
-                    <div className="flex-1">
-                      <p className="text-sm text-gray-600 mb-2">
-                        Average loot box score across{" "}
-                        <span className="font-semibold">
-                          {allGames.length} games
-                        </span>{" "}
-                        in our database:
-                      </p>
-                      <div className="flex items-center gap-3">
-                        <span className="text-3xl font-black text-gray-400">
-                          {avgScore.toFixed(1)}
-                        </span>
-                        <span className="text-gray-300">vs</span>
-                        <span
-                          className={`text-3xl font-black ${scoreColor(selected.lootboxes_score)}`}
-                        >
+                      <div className="text-right">
+                        <span className={`text-4xl font-black ${scoreColor(selected.lootboxes_score)}`}>
                           {selected.lootboxes_score.toFixed(1)}
                         </span>
+                        <p className="text-xs text-gray-400">/10 overall</p>
                       </div>
-                      <p className="text-xs text-gray-400 mt-1">
-                        {selected.lootboxes_score > avgScore
-                          ? `${(selected.lootboxes_score - avgScore).toFixed(1)} points above average`
-                          : selected.lootboxes_score < avgScore
-                            ? `${(avgScore - selected.lootboxes_score).toFixed(1)} points below average`
-                            : "Right at average"}
+                    </div>
+                    <div className="rounded-lg bg-gray-50 border border-gray-100 p-3 mb-4">
+                      <p className="text-xs text-gray-600 flex items-start gap-2">
+                        <Info className="h-3.5 w-3.5 text-gray-400 mt-0.5 flex-shrink-0" />
+                        {SYSTEM_TIPS[selected.loot_system_type] || "This game uses a monetization system we analyze across multiple dimensions."}
                       </p>
                     </div>
+                    <div className="space-y-3">
+                      {scoreMetrics.map((metric) => {
+                        const MetricIcon = metric.icon;
+                        return (
+                          <div key={metric.label}>
+                            <div className="flex items-center justify-between text-sm mb-1">
+                              <span className="font-medium text-gray-700 flex items-center gap-1.5">
+                                <MetricIcon className="h-3.5 w-3.5 text-gray-400" /> {metric.label}
+                              </span>
+                              <span className={`font-bold ${scoreColor(metric.score)}`}>{metric.score}/10</span>
+                            </div>
+                            <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+                              <div className={`h-full rounded-full transition-all duration-500 ${scoreBarColor(metric.score)}`} style={{ width: `${metric.score * 10}%` }} />
+                            </div>
+                            <p className="text-[11px] text-gray-400 mt-0.5">{metric.desc}</p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Cost breakdown */}
+                  <div className="rounded-xl border border-gray-200 p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <DollarSign className="h-5 w-5 text-gray-400" /> Cost Breakdown
+                    </h3>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                      <div className="rounded-lg bg-gray-50 p-4 text-center">
+                        <DollarSign className="h-5 w-5 text-gray-400 mx-auto mb-1" />
+                        <p className="text-2xl font-black text-gray-900">
+                          {selected.cost_per_pull != null ? `$${selected.cost_per_pull.toFixed(2)}` : <span className="text-gray-400 text-lg">N/A</span>}
+                        </p>
+                        <p className="text-xs text-gray-500">Cost Per Pull</p>
+                      </div>
+                      <div className="rounded-lg bg-gray-50 p-4 text-center">
+                        <Target className="h-5 w-5 text-gray-400 mx-auto mb-1" />
+                        <p className="text-2xl font-black text-gray-900">
+                          {costForRare != null ? `~$${costForRare.toFixed(0)}` : <span className="text-gray-400 text-lg">N/A</span>}
+                        </p>
+                        <p className="text-xs text-gray-500">Est. Cost Per Rare</p>
+                        {pullEstimate && <p className="text-[10px] text-gray-400 mt-0.5">{pullEstimate.note}</p>}
+                      </div>
+                      <div className="rounded-lg bg-gray-50 p-4 text-center">
+                        <Shield className="h-5 w-5 text-gray-400 mx-auto mb-1" />
+                        <p className="text-2xl font-black">
+                          {selected.has_pity_system ? <span className="text-emerald-600">Yes</span> : <span className="text-red-500">No</span>}
+                        </p>
+                        <p className="text-xs text-gray-500">Pity System</p>
+                      </div>
+                      <div className="rounded-lg bg-gray-50 p-4 text-center">
+                        <Brain className="h-5 w-5 text-gray-400 mx-auto mb-1" />
+                        <p className="text-2xl font-black text-gray-900">
+                          {percentile > 0 ? `Top ${100 - percentile}%` : <span className="text-gray-400 text-lg">—</span>}
+                        </p>
+                        <p className="text-xs text-gray-500">vs All Games</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Budget simulator */}
+                  <div className="rounded-xl border border-gray-200 p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2">
+                      <Wallet className="h-5 w-5 text-gray-400" /> Budget Simulator
+                    </h3>
+                    <p className="text-sm text-gray-500 mb-4">
+                      Set your monthly budget to see how far your money goes in this game.
+                    </p>
+                    <div className="flex items-center gap-4 mb-6">
+                      <label className="text-sm font-medium text-gray-700 flex-shrink-0">Monthly budget:</label>
+                      <div className="flex items-center gap-2 flex-1 max-w-xs">
+                        <span className="text-sm text-gray-500">$</span>
+                        <input type="range" min={0} max={200} step={5} value={monthlyBudget}
+                          onChange={(e) => setMonthlyBudget(Number(e.target.value))}
+                          className="flex-1 accent-emerald-500" />
+                        <span className="text-lg font-bold text-gray-900 w-14 text-right">${monthlyBudget}</span>
+                      </div>
+                    </div>
+                    {selected.cost_per_pull != null && monthlyBudget > 0 ? (
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-4 text-center">
+                          <p className="text-3xl font-black text-emerald-700">{monthlyPulls}</p>
+                          <p className="text-xs text-emerald-600 font-medium">Pulls Per Month</p>
+                        </div>
+                        <div className="rounded-lg bg-blue-50 border border-blue-200 p-4 text-center">
+                          <p className="text-3xl font-black text-blue-700">{monthsToRare != null ? monthsToRare : "∞"}</p>
+                          <p className="text-xs text-blue-600 font-medium">Months to Rare Item</p>
+                          <p className="text-[10px] text-blue-400">at ${monthlyBudget}/mo</p>
+                        </div>
+                        <div className="rounded-lg bg-amber-50 border border-amber-200 p-4 text-center">
+                          <p className="text-3xl font-black text-amber-700">${(monthlyBudget * 12).toLocaleString()}</p>
+                          <p className="text-xs text-amber-600 font-medium">Yearly Spending</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="rounded-lg bg-gray-50 border border-gray-200 p-6 text-center">
+                        <p className="text-sm text-gray-500">
+                          {selected.cost_per_pull == null
+                            ? "Cost per pull data isn't available for this game yet."
+                            : "Set a budget above $0 to see the simulation."}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* vs Average */}
+                  <div className="rounded-xl border border-gray-200 p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+                      <TrendingUp className="h-5 w-5 text-gray-400" /> Compared to Average
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-3">
+                      Average score across <span className="font-semibold">{allGames.length} games</span> in our database:
+                    </p>
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="text-center">
+                        <span className="text-3xl font-black text-gray-400">{avgScore.toFixed(1)}</span>
+                        <p className="text-[10px] text-gray-400">DB Average</p>
+                      </div>
+                      <span className="text-gray-300 text-lg">vs</span>
+                      <div className="text-center">
+                        <span className={`text-3xl font-black ${scoreColor(selected.lootboxes_score)}`}>{selected.lootboxes_score.toFixed(1)}</span>
+                        <p className="text-[10px] text-gray-400">{selected.title}</p>
+                      </div>
+                    </div>
+                    <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden relative">
+                      <div className="absolute h-full bg-gray-300 rounded-full" style={{ width: `${avgScore * 10}%` }} />
+                      <div className={`absolute h-full rounded-full ${scoreBarColor(selected.lootboxes_score)}`} style={{ width: `${selected.lootboxes_score * 10}%` }} />
+                    </div>
+                    <p className="text-xs text-gray-400 mt-2">
+                      {selected.lootboxes_score > avgScore
+                        ? `${(selected.lootboxes_score - avgScore).toFixed(1)} points above average — better than ${percentile}% of games`
+                        : selected.lootboxes_score < avgScore
+                          ? `${(avgScore - selected.lootboxes_score).toFixed(1)} points below average — only better than ${percentile}% of games`
+                          : "Right at the database average"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Right: Verdict */}
+                <div className="space-y-6">
+                  {(() => {
+                    const verdict = getVerdict(selected.lootboxes_score);
+                    const VerdictIcon = verdict.icon;
+                    return (
+                      <div className={`rounded-xl border p-6 ${verdict.bgColor}`}>
+                        <div className="flex items-center gap-2 mb-3">
+                          <VerdictIcon className={`h-6 w-6 ${verdict.color}`} />
+                          <h3 className={`text-xl font-black ${verdict.color}`}>{verdict.label}</h3>
+                        </div>
+                        <p className="text-sm text-gray-700 leading-relaxed mb-4">{verdict.description}</p>
+                        <div className="border-t border-gray-200/50 pt-3">
+                          <p className="text-xs font-bold text-gray-600 mb-2">Our Tips:</p>
+                          <ul className="space-y-1.5">
+                            {verdict.tips.map((tip, i) => (
+                              <li key={i} className="flex items-start gap-2 text-xs text-gray-600">
+                                <span className="text-gray-400 mt-0.5">•</span> {tip}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Quick facts */}
+                  <div className="rounded-xl border border-gray-200 p-6">
+                    <h3 className="text-sm font-bold text-gray-900 mb-3">Quick Facts</h3>
+                    <dl className="space-y-3 text-sm">
+                      {[
+                        { label: "System Type", value: SYSTEM_LABELS[selected.loot_system_type] || selected.loot_system_type },
+                        { label: "Pity System", value: selected.has_pity_system ? "Yes" : "No", color: selected.has_pity_system ? "text-emerald-600" : "text-red-500" },
+                        { label: "Cost Per Pull", value: selected.cost_per_pull != null ? `$${selected.cost_per_pull.toFixed(2)}` : "N/A" },
+                        { label: "Transparency", value: `${selected.score_transparency}/10`, color: scoreColor(selected.score_transparency) },
+                        { label: "Value Score", value: `${selected.score_value}/10`, color: scoreColor(selected.score_value) },
+                        { label: "Percentile", value: `Better than ${percentile}% of games` },
+                      ].map((item) => (
+                        <div key={item.label} className="flex justify-between">
+                          <dt className="text-gray-500">{item.label}</dt>
+                          <dd className={`font-semibold ${item.color || "text-gray-900"}`}>{item.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Link href={`/lootbox/${selected.slug}`}
+                      className="flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700 transition-colors w-full">
+                      Full Analysis <ArrowRight className="h-4 w-4" />
+                    </Link>
+                    <Link href={`/lootbox/spending-guides/${selected.slug}`}
+                      className="flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors w-full">
+                      Spending Guide <Wallet className="h-4 w-4" />
+                    </Link>
                   </div>
                 </div>
               </div>
+            )}
+          </div>
+        </section>
+      )}
 
-              {/* Right: Verdict */}
-              <div className="space-y-6">
-                {(() => {
-                  const verdict = getVerdict(selected.score_value);
-                  const VerdictIcon = verdict.icon;
-                  return (
-                    <div
-                      className={`rounded-xl border p-6 ${verdict.bgColor}`}
-                    >
-                      <div className="flex items-center gap-2 mb-3">
-                        <VerdictIcon className={`h-6 w-6 ${verdict.color}`} />
-                        <h3
-                          className={`text-xl font-black ${verdict.color}`}
-                        >
-                          {verdict.label}
-                        </h3>
-                      </div>
-                      <p className="text-sm text-gray-700 leading-relaxed">
-                        {verdict.description}
-                      </p>
-                    </div>
-                  );
-                })()}
-
-                {/* Quick facts */}
-                <div className="rounded-xl border border-gray-200 p-6">
-                  <h3 className="text-sm font-bold text-gray-900 mb-3">
-                    Quick Facts
-                  </h3>
-                  <dl className="space-y-3 text-sm">
-                    <div className="flex justify-between">
-                      <dt className="text-gray-500">System Type</dt>
-                      <dd className="font-semibold text-gray-900">
-                        {SYSTEM_LABELS[selected.loot_system_type] ||
-                          selected.loot_system_type}
-                      </dd>
-                    </div>
-                    <div className="flex justify-between">
-                      <dt className="text-gray-500">Pity System</dt>
-                      <dd
-                        className={`font-semibold ${selected.has_pity_system ? "text-emerald-600" : "text-red-500"}`}
-                      >
-                        {selected.has_pity_system ? "Yes" : "No"}
-                      </dd>
-                    </div>
-                    <div className="flex justify-between">
-                      <dt className="text-gray-500">Transparency</dt>
-                      <dd
-                        className={`font-semibold ${scoreColor(selected.score_transparency)}`}
-                      >
-                        {selected.score_transparency}/10
-                      </dd>
-                    </div>
-                    <div className="flex justify-between">
-                      <dt className="text-gray-500">Value Score</dt>
-                      <dd
-                        className={`font-semibold ${scoreColor(selected.score_value)}`}
-                      >
-                        {selected.score_value}/10
-                      </dd>
-                    </div>
-                  </dl>
-                </div>
-
-                <Link
-                  href={`/lootbox/${selected.slug}`}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700 transition-colors w-full"
-                >
-                  Full Analysis <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-            </div>
-          )}
+      {/* How it works */}
+      <section className="border-t border-gray-100 bg-gray-50 py-10">
+        <div className="container-main max-w-3xl">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">How the Value Calculator Works</h2>
+          <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
+            <p>
+              Our value calculator combines multiple data points from each game&apos;s monetization analysis
+              to give you a quick, actionable verdict. Here&apos;s what goes into the calculation:
+            </p>
+            <p>
+              <strong>Transparency Score</strong> measures how openly a game discloses its drop rates, pity
+              mechanics, and pricing structures. Games that publish exact percentages score higher than those
+              that hide their odds.
+            </p>
+            <p>
+              <strong>Value Score</strong> assesses whether what you receive is proportional to what you pay.
+              A game with a $2.50 pull cost, 0.6% legendary rate, and no pity system scores much lower than
+              one with a similar cost but guaranteed results.
+            </p>
+            <p>
+              <strong>Budget Simulation</strong> uses cost-per-pull data and estimated pull counts (based on
+              whether the game has a pity system) to show how your real monthly budget translates into in-game
+              progress. Pity games average ~75 pulls per rare; non-pity games average ~100+.
+            </p>
+            <p>
+              The overall verdict (&ldquo;Worth It&rdquo; / &ldquo;Proceed With Caution&rdquo; / &ldquo;Avoid
+              Spending&rdquo;) is based on the combined overall score, which factors in all dimensions of our
+              analysis including fairness, player control, and psychological design patterns.
+            </p>
+          </div>
         </div>
       </section>
 
       {/* CTA */}
       <section className="border-t border-gray-100 bg-gradient-to-r from-emerald-50 to-teal-50 py-10">
         <div className="container-main text-center">
-          <h2 className="text-xl font-bold text-gray-900">
-            Want to compare multiple games?
-          </h2>
+          <h2 className="text-xl font-bold text-gray-900">Want to compare multiple games?</h2>
           <p className="text-sm text-gray-600 mt-2 mb-6 max-w-md mx-auto">
-            Use our odds comparison tool to see drop rates side-by-side across
-            up to 4 games.
+            Use our odds comparison tool to see drop rates side-by-side across up to 4 games.
           </p>
-          <Link
-            href="/lootbox/odds-comparison"
-            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700 transition-colors"
-          >
-            Compare Games <ArrowRight className="h-4 w-4" />
-          </Link>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link href="/lootbox/odds-comparison"
+              className="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-6 py-3 font-semibold text-white hover:bg-purple-700 transition-colors">
+              Compare Games <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link href="/lootbox/spending-guides"
+              className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
+              Spending Guides <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </section>
     </div>
