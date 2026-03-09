@@ -7,12 +7,19 @@ import NewsletterForm from "@/components/newsletter/NewsletterForm";
 
 // Deterministic accent color for blog post covers
 const POST_ACCENTS = [
-  { bg: "from-brand-600 to-indigo-700", light: "bg-brand-50 border-brand-200 text-brand-700" },
-  { bg: "from-purple-600 to-violet-800", light: "bg-purple-50 border-purple-200 text-purple-700" },
-  { bg: "from-emerald-600 to-teal-800", light: "bg-emerald-50 border-emerald-200 text-emerald-700" },
-  { bg: "from-amber-500 to-orange-700", light: "bg-amber-50 border-amber-200 text-amber-700" },
-  { bg: "from-rose-500 to-pink-700", light: "bg-rose-50 border-rose-200 text-rose-700" },
-  { bg: "from-cyan-500 to-blue-700", light: "bg-cyan-50 border-cyan-200 text-cyan-700" },
+  { bg: "from-brand-600 to-indigo-700", bar: "from-blue-500 to-cyan-400", tag: "bg-blue-50 text-blue-700" },
+  { bg: "from-purple-600 to-violet-800", bar: "from-purple-500 to-violet-400", tag: "bg-purple-50 text-purple-700" },
+  { bg: "from-emerald-600 to-teal-800", bar: "from-emerald-500 to-teal-400", tag: "bg-emerald-50 text-emerald-700" },
+  { bg: "from-amber-500 to-orange-700", bar: "from-amber-500 to-orange-400", tag: "bg-amber-50 text-amber-700" },
+  { bg: "from-rose-500 to-pink-700", bar: "from-rose-500 to-pink-400", tag: "bg-rose-50 text-rose-700" },
+  { bg: "from-cyan-500 to-blue-700", bar: "from-cyan-500 to-blue-400", tag: "bg-cyan-50 text-cyan-700" },
+];
+
+// Card color accents for related articles
+const CARD_ACCENTS = [
+  { bar: "from-blue-500 to-cyan-400", tag: "bg-blue-50 text-blue-700" },
+  { bar: "from-rose-500 to-pink-400", tag: "bg-rose-50 text-rose-700" },
+  { bar: "from-amber-500 to-orange-400", tag: "bg-amber-50 text-amber-700" },
 ];
 
 function getPostAccent(slug: string) {
@@ -126,14 +133,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const allPosts = getAllBlogPosts();
   const related = allPosts.filter((p) => p.slug !== slug).slice(0, 3);
   const accent = post.featured
-    ? { bg: "from-red-600 to-red-900", light: "bg-red-50 border-red-200 text-red-700" }
+    ? { bg: "from-red-600 to-red-900", bar: "from-red-500 to-rose-400", tag: "bg-red-50 text-red-700" }
     : getPostAccent(post.slug);
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* ─── Hero Cover ─── */}
       <div className="relative overflow-hidden">
-        {/* Background image or gradient */}
         <div className="h-64 sm:h-80 md:h-96 relative">
           {post.coverImage ? (
             <>
@@ -162,7 +168,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           {/* Title overlay on hero */}
           <div className="absolute bottom-0 left-0 right-0">
             <div className="container-main pb-8 md:pb-10">
-              {/* Tags */}
               <div className="flex flex-wrap gap-2 mb-4">
                 {post.tags.map((t) => (
                   <span
@@ -179,6 +184,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </div>
           </div>
         </div>
+        {/* Bottom gradient bar matching blog listing style */}
+        <div className={`h-1 bg-gradient-to-r ${accent.bar}`} />
       </div>
 
       {/* ─── Article Body ─── */}
@@ -241,54 +248,50 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </Link>
           </div>
 
-          {/* ─── Related Articles ─── */}
+          {/* ─── Related Articles (Magazine + Bottom Color Bar style) ─── */}
           {related.length > 0 && (
             <div className="mt-10">
               <h3 className="text-lg font-bold text-gray-900 mb-4">Keep Reading</h3>
               <div className="grid gap-4 sm:grid-cols-3">
-                {related.map((r) => {
-                  const rAccent = r.featured
-                    ? { bg: "from-red-600 to-red-900", light: "bg-red-50 border-red-200 text-red-700" }
-                    : getPostAccent(r.slug);
+                {related.map((r, idx) => {
+                  const rAccent = CARD_ACCENTS[idx % CARD_ACCENTS.length];
+                  const rGradient = getPostAccent(r.slug);
                   return (
                     <Link
                       key={r.slug}
                       href={`/blog/${r.slug}`}
-                      className="group overflow-hidden rounded-xl border border-gray-200 bg-white transition-all hover:shadow-lg hover:-translate-y-0.5"
+                      className="group flex flex-col overflow-hidden rounded-xl bg-white border border-gray-100 shadow-sm transition-all hover:shadow-lg hover:-translate-y-0.5"
                     >
-                      {/* Mini cover */}
                       <div className="relative h-28 overflow-hidden">
                         {r.coverImage ? (
-                          <>
-                            <img
-                              src={r.coverImage}
-                              alt={r.coverAlt || r.title}
-                              className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                              loading="lazy"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                          </>
+                          <img
+                            src={r.coverImage}
+                            alt={r.coverAlt || r.title}
+                            className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                            loading="lazy"
+                          />
                         ) : (
-                          <div className={`h-full w-full bg-gradient-to-br ${rAccent.bg}`} />
+                          <div className={`h-full w-full bg-gradient-to-br ${rGradient.bg}`} />
                         )}
-                        <div className="absolute bottom-2 left-2 flex gap-1">
-                          {r.tags.slice(0, 1).map((t) => (
-                            <span key={t} className="rounded-full bg-white/25 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
+                      </div>
+                      <div className="p-3 flex-1 flex flex-col">
+                        <div className="flex gap-1.5 mb-1.5">
+                          {r.tags.slice(0, 2).map((t) => (
+                            <span key={t} className={`text-[9px] font-semibold px-2 py-0.5 rounded-full ${rAccent.tag}`}>
                               {t}
                             </span>
                           ))}
                         </div>
-                      </div>
-                      <div className="p-3">
-                        <h4 className="text-sm font-semibold text-gray-900 group-hover:text-brand-600 line-clamp-2 leading-snug">
+                        <h4 className="text-sm font-serif font-bold text-gray-900 group-hover:text-[#0074C5] line-clamp-2 leading-snug transition-colors">
                           {r.title}
                         </h4>
-                        <div className="mt-2 flex items-center gap-2 text-xs text-gray-400">
+                        <div className="mt-auto pt-2 flex items-center gap-2 text-[10px] text-gray-400">
                           <span>{formatDate(r.date)}</span>
                           <span>&middot;</span>
                           <span>{r.readTime} min</span>
                         </div>
                       </div>
+                      <div className={`h-1 bg-gradient-to-r ${rAccent.bar}`} />
                     </Link>
                   );
                 })}
