@@ -24,7 +24,7 @@ export default function SteamGameRow({ game, rank }: SteamGameRowProps) {
     <div className="group/row relative">
       <Link
         href={`/games/${game.slug}`}
-        className="flex h-[45px] items-center rounded-sm bg-[#1b2838]/60 hover:bg-[#415a76] transition-colors duration-100 overflow-hidden"
+        className="flex h-[45px] items-center rounded-sm bg-[#1b2838] hover:bg-[#415a76] transition-colors duration-100 overflow-hidden"
       >
         {/* Left: Small capsule banner */}
         <div className="w-[120px] h-[45px] flex-shrink-0 overflow-hidden bg-[#1b2838]">
@@ -58,17 +58,17 @@ export default function SteamGameRow({ game, rank }: SteamGameRowProps) {
               {rank != null && (
                 <span className="flex-shrink-0 text-[9px] font-bold text-blue-300/50">#{rank}</span>
               )}
-              <h3 className="text-[13px] text-[#c7d5e0] truncate">{game.title}</h3>
+              <h3 className="text-[13px] font-medium text-white truncate">{game.title}</h3>
             </div>
             <div className="flex items-center gap-1 mt-px">
-              <Monitor className="h-2.5 w-2.5 text-[#556772] flex-shrink-0" />
+              <Monitor className="h-2.5 w-2.5 text-[#8f98a0] flex-shrink-0" />
               {genres.length > 0 && (
-                <span className="text-[10px] text-[#556772] truncate">
+                <span className="text-[10px] text-[#8f98a0] truncate">
                   {genres.join(", ")}
                 </span>
               )}
               {game.release_date && (
-                <span className="flex-shrink-0 text-[10px] text-[#556772] ml-1">
+                <span className="flex-shrink-0 text-[10px] text-[#8f98a0] ml-1">
                   {formatDate(game.release_date)}
                 </span>
               )}
