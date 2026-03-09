@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { createServerClient } from "@/lib/supabase";
-import { Zap, Shield, BarChart3, ArrowLeft, Sparkles, Box, Layers, ShoppingBag, Trophy, ChevronRight } from "lucide-react";
-import GameAvatar from "@/components/ui/GameAvatar";
+import { Sparkles, Box, Layers, ShoppingBag, Shield, Trophy, ChevronRight } from "lucide-react";
+import LootboxDatabaseClient, { GameWithContent } from "./LootboxDatabaseClient";
 
 export const dynamic = "force-dynamic";
 
@@ -119,59 +119,13 @@ interface LootboxContentRow {
   overview_html: string | null;
 }
 
-interface GameWithContent {
-  id: string;
-  title: string;
-  slug: string;
-  cover_image: string | null;
-  screenshot_image: string | null;
-  lootboxes_score: number | null;
-  loot_system_type: string | null;
-  tags: string[] | null;
-  lootbox_content: LootboxContentRow | LootboxContentRow[] | null;
-}
-
-function toContentArray(
-  content: LootboxContentRow | LootboxContentRow[] | null
-): LootboxContentRow[] {
-  if (!content) return [];
-  return Array.isArray(content) ? content : [content];
-}
-
-function systemLabel(type: string | null): { label: string; color: string; darkColor: string } {
-  const map: Record<string, { label: string; color: string; darkColor: string }> = {
-    gacha: { label: "Gacha", color: "bg-purple-100 text-purple-700", darkColor: "dark:bg-purple-900/40 dark:text-purple-300" },
-    loot_box: { label: "Loot Box", color: "bg-red-100 text-red-700", darkColor: "dark:bg-red-900/40 dark:text-red-300" },
-    card_pack: { label: "Card Pack", color: "bg-blue-100 text-blue-700", darkColor: "dark:bg-blue-900/40 dark:text-blue-300" },
-    cosmetic_shop: { label: "Cosmetic Shop", color: "bg-emerald-100 text-emerald-700", darkColor: "dark:bg-emerald-900/40 dark:text-emerald-300" },
-    battle_pass: { label: "Battle Pass", color: "bg-amber-100 text-amber-700", darkColor: "dark:bg-amber-900/40 dark:text-amber-300" },
-  };
-  return type && map[type] ? map[type] : { label: type || "Unknown", color: "bg-gray-100 text-gray-600", darkColor: "dark:bg-gray-800 dark:text-gray-400" };
-}
-
-function scoreColor(score: number | null): string {
-  if (score === null) return "bg-gray-400";
-  if (score >= 7) return "bg-emerald-500";
-  if (score >= 5) return "bg-amber-500";
-  if (score >= 3) return "bg-orange-500";
-  return "bg-red-500";
-}
-
-function scoreVerdict(score: number | null): string {
-  if (score === null) return "";
-  if (score >= 7) return "Good value — fair monetization";
-  if (score >= 5) return "Average — mixed practices";
-  if (score >= 3) return "Below average — concerning practices";
-  return "Poor value — predatory monetization";
-}
-
 async function getAllGamesWithLootboxContent(): Promise<GameWithContent[]> {
   const supabase = createServerClient();
 
   const { data, error } = await supabase
     .from("games")
     .select(
-      `id, title, slug, cover_image, screenshot_image, lootboxes_score, loot_system_type, tags,
+      `id, title, slug, cover_image, screenshot_image, lootboxes_score, loot_system_type, tags, genres,
        lootbox_content (cost_per_pull, has_pity_system, overview_html)`
     )
     .not("loot_system_type", "is", null)
@@ -181,115 +135,10 @@ async function getAllGamesWithLootboxContent(): Promise<GameWithContent[]> {
     console.error("[lootbox page] query error:", error?.message, "data:", data);
     return [];
   }
-  console.log("[lootbox page] raw query returned", data.length, "games");
   const filtered = (data as GameWithContent[]).filter(
     (g) => g.lootbox_content !== null && (Array.isArray(g.lootbox_content) ? g.lootbox_content.length > 0 : true)
   );
-  console.log("[lootbox page] after filter:", filtered.length, "games");
   return filtered;
-}
-
-/* ── Bento Game Card ── */
-function BentoGameCard({
-  game,
-  featured = false,
-}: {
-  game: GameWithContent;
-  featured?: boolean;
-}) {
-  const content = toContentArray(game.lootbox_content)[0];
-  const sys = systemLabel(game.loot_system_type);
-  const tags = game.tags || [];
-  const bannerImage = game.screenshot_image || game.cover_image;
-
-  return (
-    <Link
-      href={`/lootbox/${game.slug}`}
-      className={`group relative block rounded-2xl overflow-hidden ${
-        featured ? "h-full" : "h-full min-h-[200px]"
-      }`}
-    >
-      {/* Background Image */}
-      {bannerImage ? (
-        <img
-          src={bannerImage}
-          alt={game.title}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-          style={{ filter: featured ? "brightness(0.6)" : "brightness(0.55)" }}
-        />
-      ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-900" />
-      )}
-
-      {/* Gradient overlays */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-      {/* Score Badge */}
-      {game.lootboxes_score !== null && (
-        <div
-          className={`absolute top-3 right-3 ${
-            featured ? "w-14 h-14 text-lg" : "w-10 h-10 text-sm"
-          } ${scoreColor(
-            game.lootboxes_score
-          )} rounded-full flex items-center justify-center text-white font-extrabold border-2 border-white/90 shadow-lg shadow-black/30`}
-        >
-          {game.lootboxes_score.toFixed(1)}
-        </div>
-      )}
-
-      {/* Content at bottom */}
-      <div className={`absolute bottom-0 left-0 right-0 ${featured ? "p-6" : "p-4"}`}>
-        {featured && (
-          <span className="inline-block text-[10px] font-bold uppercase tracking-widest text-emerald-400 bg-emerald-500/20 border border-emerald-400/30 rounded-full px-3 py-1 mb-3">
-            Top Rated
-          </span>
-        )}
-
-        <h3
-          className={`font-extrabold text-white leading-tight ${
-            featured ? "text-2xl md:text-3xl" : "text-sm md:text-base"
-          }`}
-          style={{ textShadow: "0 2px 8px rgba(0,0,0,0.5)" }}
-        >
-          {game.title}
-        </h3>
-
-        <div className={`flex items-center gap-1.5 flex-wrap ${featured ? "mt-3" : "mt-2"}`}>
-          <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-white/15 text-white/80 backdrop-blur-sm">
-            {sys.label}
-          </span>
-          {tags.includes("mobile") && (
-            <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 backdrop-blur-sm">
-              Mobile
-            </span>
-          )}
-          {tags.includes("multi_system") && (
-            <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-orange-500/20 text-orange-300 backdrop-blur-sm">
-              Multi-System
-            </span>
-          )}
-          {featured && content?.has_pity_system && (
-            <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 backdrop-blur-sm">
-              Pity System
-            </span>
-          )}
-          {featured && (
-            <span className="text-xs text-white/50 ml-auto group-hover:text-white/70 transition-colors">
-              View Analysis <ChevronRight className="w-3 h-3 inline" />
-            </span>
-          )}
-        </div>
-
-        {featured && (
-          <p className="text-sm text-white/50 mt-2 line-clamp-2">
-            {scoreVerdict(game.lootboxes_score)}
-            {content?.cost_per_pull ? ` • $${content.cost_per_pull.toFixed(2)}/pull` : ""}
-          </p>
-        )}
-      </div>
-    </Link>
-  );
 }
 
 export default async function LootboxHubPage({
@@ -299,15 +148,12 @@ export default async function LootboxHubPage({
 }) {
   const sp = await searchParams;
   const typeFilter =
-    sp.type && VALID_TYPES.includes(sp.type)
-      ? sp.type
-      : undefined;
+    sp.type && VALID_TYPES.includes(sp.type) ? sp.type : undefined;
   const typeMeta = typeFilter ? SYSTEM_TYPE_META[typeFilter] : undefined;
 
-  /* Fetch ALL games — we need totals for the pills regardless of filter */
   const allGames = await getAllGamesWithLootboxContent();
 
-  /* Count system types from ALL games (not filtered) */
+  /* Count system types from ALL games */
   const typeCounts: Record<string, number> = {};
   allGames.forEach((g) => {
     if (g.loot_system_type) {
@@ -315,22 +161,16 @@ export default async function LootboxHubPage({
     }
   });
 
-  /* Apply filter for display */
+  /* Apply system type filter */
   const games = typeFilter
     ? allGames.filter((g) => g.loot_system_type === typeFilter)
     : allGames;
 
-  const totalDropRates = games.length * 6;
+  /* Stats for info bar */
   const avgScore =
     games.length > 0
       ? (games.reduce((s, g) => s + (g.lootboxes_score || 0), 0) / games.length).toFixed(1)
       : "—";
-
-  /* Split games for bento layout */
-  const featuredGame = games[0];
-  const topRowGames = games.slice(1, 5);
-  const statsRowGames = games.slice(5, 7);
-  const remainingGames = games.slice(7);
 
   return (
     <div className="min-h-screen bg-white">
@@ -346,12 +186,11 @@ export default async function LootboxHubPage({
             </div>
             <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">
               {typeFilter && typeMeta ? (
-                <>
-                  {typeMeta.heading}
-                </>
+                <>{typeMeta.heading}</>
               ) : (
                 <>
-                  Every Game&apos;s Monetization,<br className="hidden md:block" /> Analyzed &amp; Scored
+                  Every Game&apos;s Monetization,
+                  <br className="hidden md:block" /> Analyzed &amp; Scored
                 </>
               )}
             </h1>
@@ -362,9 +201,8 @@ export default async function LootboxHubPage({
             </p>
           </div>
 
-          {/* ── Filter Pills ── */}
+          {/* ── System Type Filter Pills ── */}
           <div className="flex flex-wrap gap-2.5">
-            {/* All button */}
             <Link
               href="/lootbox"
               className={`inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-xl border transition-all ${
@@ -374,7 +212,9 @@ export default async function LootboxHubPage({
               }`}
             >
               <span>All</span>
-              <span className={`text-xs font-medium ${!typeFilter ? "text-gray-300" : "text-gray-400"}`}>{allGames.length}</span>
+              <span className={`text-xs font-medium ${!typeFilter ? "text-gray-300" : "text-gray-400"}`}>
+                {allGames.length}
+              </span>
             </Link>
 
             {VALID_TYPES.map((t) => {
@@ -392,7 +232,9 @@ export default async function LootboxHubPage({
                   }`}
                 >
                   <span>{meta.heading.replace(" Games", "")}</span>
-                  <span className={`text-xs font-medium ${isActive ? "text-gray-300" : "text-gray-400"}`}>{count}</span>
+                  <span className={`text-xs font-medium ${isActive ? "text-gray-300" : "text-gray-400"}`}>
+                    {count}
+                  </span>
                 </Link>
               );
             })}
@@ -401,114 +243,39 @@ export default async function LootboxHubPage({
       </div>
 
       {/* ── Filtered info bar ── */}
-      {typeFilter && typeMeta && games.length > 0 && (() => {
-        const contents = games.map((g) => toContentArray(g.lootbox_content)[0]).filter(Boolean);
-        const withPity = contents.filter((c) => c.has_pity_system).length;
-        const costs = contents.map((c) => c.cost_per_pull).filter((c): c is number => c !== null && c > 0);
-        const avgCostVal = costs.length > 0 ? (costs.reduce((a, b) => a + b, 0) / costs.length) : null;
-        return (
-          <div className="container-main pb-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="rounded-xl bg-gray-50 border border-gray-200 p-4">
-                <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Games</p>
-                <p className="text-2xl font-extrabold text-gray-900">{games.length}</p>
-              </div>
-              <div className="rounded-xl bg-gray-50 border border-gray-200 p-4">
-                <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Avg Score</p>
-                <p className="text-2xl font-extrabold text-gray-900">{avgScore}</p>
-              </div>
-              <div className="rounded-xl bg-gray-50 border border-gray-200 p-4">
-                <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Pity System</p>
-                <p className="text-2xl font-extrabold text-gray-900">{Math.round((withPity / games.length) * 100)}%</p>
-              </div>
-              <div className="rounded-xl bg-gray-50 border border-gray-200 p-4">
-                <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Avg Cost/Pull</p>
-                <p className="text-2xl font-extrabold text-gray-900">{avgCostVal ? `$${avgCostVal.toFixed(2)}` : "—"}</p>
-              </div>
-            </div>
-          </div>
-        );
-      })()}
-
-      {/* ── Empty State ── */}
-      {games.length === 0 && (
-        <div className="container-main text-center py-20">
-          <p className="text-gray-500 mb-4">
-            No {typeMeta?.heading.toLowerCase() || "games"} found yet.
-          </p>
-          <Link href="/lootbox" className="text-sm font-medium text-blue-600 hover:text-blue-500 transition-colors">
-            View all games →
-          </Link>
-        </div>
-      )}
-
-      {/* ── Bento Grid ── */}
-      {featuredGame && (
-        <div className="container-main pb-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            {/* Featured game — 2 col × 2 row */}
-            <div className="col-span-2 row-span-2 min-h-[340px] md:min-h-[416px]">
-              <BentoGameCard game={featuredGame} featured />
-            </div>
-
-            {/* Top row — up to 4 regular cards */}
-            {topRowGames.map((game) => (
-              <div key={game.slug} className="min-h-[200px]">
-                <BentoGameCard game={game} />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* ── Stats Row + 2 more game cards ── */}
-      {games.length > 5 && (
-        <div className="container-main pb-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            {/* Stats card — 2 cols */}
-            <div className="col-span-2 rounded-2xl bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-200 p-6 md:p-8 flex items-center">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 w-full">
-                <div className="text-center md:text-left">
-                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900">{games.length}</p>
-                  <p className="text-xs text-indigo-400 font-medium mt-1">Games Analyzed</p>
+      {typeFilter && typeMeta && games.length > 0 &&
+        (() => {
+          const toContentArray = (c: any) => (!c ? [] : Array.isArray(c) ? c : [c]);
+          const contents = games.map((g) => toContentArray(g.lootbox_content)[0]).filter(Boolean);
+          const withPity = contents.filter((c: any) => c.has_pity_system).length;
+          const costs = contents.map((c: any) => c.cost_per_pull).filter((c: any): c is number => c !== null && c > 0);
+          const avgCostVal = costs.length > 0 ? costs.reduce((a: number, b: number) => a + b, 0) / costs.length : null;
+          return (
+            <div className="container-main pb-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="rounded-xl bg-gray-50 border border-gray-200 p-4">
+                  <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Games</p>
+                  <p className="text-2xl font-extrabold text-gray-900">{games.length}</p>
                 </div>
-                <div className="text-center md:text-left">
-                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900">{totalDropRates}+</p>
-                  <p className="text-xs text-indigo-400 font-medium mt-1">Drop Rates</p>
+                <div className="rounded-xl bg-gray-50 border border-gray-200 p-4">
+                  <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Avg Score</p>
+                  <p className="text-2xl font-extrabold text-gray-900">{avgScore}</p>
                 </div>
-                <div className="text-center md:text-left">
-                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900">{avgScore}</p>
-                  <p className="text-xs text-indigo-400 font-medium mt-1">Avg Score</p>
+                <div className="rounded-xl bg-gray-50 border border-gray-200 p-4">
+                  <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Pity System</p>
+                  <p className="text-2xl font-extrabold text-gray-900">{Math.round((withPity / games.length) * 100)}%</p>
                 </div>
-                <div className="text-center md:text-left">
-                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900">8</p>
-                  <p className="text-xs text-indigo-400 font-medium mt-1">Dimensions</p>
+                <div className="rounded-xl bg-gray-50 border border-gray-200 p-4">
+                  <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Avg Cost/Pull</p>
+                  <p className="text-2xl font-extrabold text-gray-900">{avgCostVal ? `$${avgCostVal.toFixed(2)}` : "—"}</p>
                 </div>
               </div>
             </div>
+          );
+        })()}
 
-            {/* 2 more game cards */}
-            {statsRowGames.map((game) => (
-              <div key={game.slug} className="min-h-[200px]">
-                <BentoGameCard game={game} />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* ── Remaining games — 4-col grid ── */}
-      {remainingGames.length > 0 && (
-        <div className="container-main pb-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            {remainingGames.map((game) => (
-              <div key={game.slug} className="min-h-[200px]">
-                <BentoGameCard game={game} />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* ── Client-side search, genre filters, and game grid ── */}
+      <LootboxDatabaseClient games={games} allGamesCount={allGames.length} />
 
       {/* ── Rankings CTA Banner ── */}
       <div className="container-main py-4">
@@ -545,14 +312,39 @@ export default async function LootboxHubPage({
 
           <div className="grid md:grid-cols-3 gap-4 mb-6">
             {[
-              { title: "Consumer Protection", pct: "40%", gradient: "from-blue-500 to-indigo-600", border: "border-blue-200", desc: "Transparency, regulatory compliance, and spending safeguards." },
-              { title: "Value & Fairness", pct: "35%", gradient: "from-emerald-500 to-teal-600", border: "border-emerald-200", desc: "Value for money, fairness mechanics, and pay-to-win impact." },
-              { title: "Player Experience", pct: "25%", gradient: "from-purple-500 to-violet-600", border: "border-purple-200", desc: "Player control over purchases and psychological design integrity." },
+              {
+                title: "Consumer Protection",
+                pct: "40%",
+                gradient: "from-blue-500 to-indigo-600",
+                border: "border-blue-200",
+                desc: "Transparency, regulatory compliance, and spending safeguards.",
+              },
+              {
+                title: "Value & Fairness",
+                pct: "35%",
+                gradient: "from-emerald-500 to-teal-600",
+                border: "border-emerald-200",
+                desc: "Value for money, fairness mechanics, and pay-to-win impact.",
+              },
+              {
+                title: "Player Experience",
+                pct: "25%",
+                gradient: "from-purple-500 to-violet-600",
+                border: "border-purple-200",
+                desc: "Player control over purchases and psychological design integrity.",
+              },
             ].map((cat) => (
-              <div key={cat.title} className={`rounded-xl bg-white border ${cat.border} p-5 hover:shadow-md transition-shadow`}>
+              <div
+                key={cat.title}
+                className={`rounded-xl bg-white border ${cat.border} p-5 hover:shadow-md transition-shadow`}
+              >
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-bold text-gray-900 text-sm">{cat.title}</h3>
-                  <span className={`text-xs font-bold text-white bg-gradient-to-r ${cat.gradient} px-2.5 py-0.5 rounded-full`}>{cat.pct}</span>
+                  <span
+                    className={`text-xs font-bold text-white bg-gradient-to-r ${cat.gradient} px-2.5 py-0.5 rounded-full`}
+                  >
+                    {cat.pct}
+                  </span>
                 </div>
                 <p className="text-xs text-gray-500 leading-relaxed">{cat.desc}</p>
               </div>
