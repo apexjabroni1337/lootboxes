@@ -34,12 +34,21 @@ export default function SteamGameRow({ game, rank }: SteamGameRowProps) {
               alt={game.title}
               className="h-full w-full object-cover"
               loading="lazy"
+              onError={(e) => {
+                // Hide broken image and show fallback
+                const target = e.currentTarget;
+                target.style.display = "none";
+                const fallback = target.nextElementSibling as HTMLElement;
+                if (fallback) fallback.style.display = "flex";
+              }}
             />
-          ) : (
-            <div className="h-full w-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
-              <span className="text-[8px] text-gray-400 truncate px-1">{game.title.slice(0, 10)}</span>
-            </div>
-          )}
+          ) : null}
+          <div
+            className="h-full w-full bg-gradient-to-br from-gray-700 to-gray-800 items-center justify-center"
+            style={{ display: image ? "none" : "flex" }}
+          >
+            <GameAvatar gameName={game.title} size="sm" />
+          </div>
         </div>
 
         {/* Middle: Title + tags inline */}

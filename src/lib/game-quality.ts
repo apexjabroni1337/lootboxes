@@ -52,6 +52,15 @@ const BLOCKED_TITLE_PATTERNS = [
   /\bscreensaver\b/i,
   /\bdesktop\s*(pet|buddy|waifu)\b/i,
 
+  // Non-game products (guides, soundtracks, artbooks, etc.)
+  /^official\s*guide\b/i,
+  /\b(strategy|game)\s*guide\b/i,
+  /\bartbook\b/i,
+  /\bart\s*book\b/i,
+  /\bsoundtrack\b/i,
+  /\boriginal\s*soundtrack\b/i,
+  /\b(ost)\b/i,
+
   // Test / Placeholder games
   /^test\s*game$/i,
   /^untitled$/i,
@@ -142,8 +151,9 @@ export function isPromotableGame(game: {
   genres?: string[] | null;
   tags?: string[] | null;
 }): boolean {
-  // Must have a cover image — no placeholder games
-  if (!game.cover_image) return false;
+  // Must have a real cover image — no placeholder games
+  // Empty strings and whitespace-only values don't count
+  if (!game.cover_image || game.cover_image.trim().length === 0) return false;
 
   // Title check
   if (hasBadTitle(game.title)) return false;
@@ -191,8 +201,8 @@ export function filterPromotableDeals<T extends { games: any; is_historic_low?: 
     if (hasBadGenres(game.genres)) return false;
     if (hasBadTags(game.tags)) return false;
 
-    // Must have a cover image
-    if (!game.cover_image) return false;
+    // Must have a real cover image
+    if (!game.cover_image || game.cover_image.trim().length === 0) return false;
 
     // Historic lows skip the hot_score check — they're inherently notable
     if ((deal as any).is_historic_low) return true;

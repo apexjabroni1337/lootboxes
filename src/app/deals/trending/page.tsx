@@ -33,8 +33,9 @@ async function getTrendingDeals() {
     .from("games")
     .select("id, title, slug, cover_image, screenshot_image, hot_score, genres, metacritic, release_date, platforms")
     .not("cover_image", "is", null)
+    .neq("cover_image", "")
     .order("hot_score", { ascending: false, nullsFirst: false })
-    .limit(100);
+    .limit(300);
 
   if (!popularGames?.length) return [];
 
@@ -81,7 +82,7 @@ async function getTrendingDeals() {
     };
   });
 
-  return combined.slice(0, 60);
+  return combined.slice(0, 150);
 }
 
 export default async function TrendingPage() {
