@@ -118,6 +118,38 @@ CREATE TABLE IF NOT EXISTS subscribers (
 
 CREATE INDEX idx_subscribers_email ON subscribers(email);
 
+-- CS2 crates (weapon cases, capsules, souvenir packages, sticker capsules)
+CREATE TABLE IF NOT EXISTS cs2_crates (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  bymykel_id TEXT UNIQUE NOT NULL,
+  name TEXT NOT NULL,
+  type TEXT NOT NULL DEFAULT 'Weapon Case',
+  description TEXT,
+  image TEXT,
+  first_sale_date TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_cs2_crates_type ON cs2_crates(type);
+CREATE INDEX idx_cs2_crates_name ON cs2_crates(name);
+
+-- CS2 crate items (skins, knives, gloves, stickers inside each crate)
+CREATE TABLE IF NOT EXISTS cs2_crate_items (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  crate_id UUID REFERENCES cs2_crates(id) ON DELETE CASCADE,
+  bymykel_id TEXT NOT NULL,
+  name TEXT NOT NULL,
+  rarity_name TEXT NOT NULL,
+  rarity_color TEXT,
+  image TEXT,
+  is_rare_special BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_cs2_crate_items_crate ON cs2_crate_items(crate_id);
+CREATE INDEX idx_cs2_crate_items_crate_rare ON cs2_crate_items(crate_id, is_rare_special);
+CREATE UNIQUE INDEX idx_cs2_crate_items_dedup ON cs2_crate_items(crate_id, bymykel_id);
+
 -- ============================================================
 -- Row Level Security Policies
 -- ============================================================
@@ -141,6 +173,14 @@ CREATE POLICY "Analytics are viewable by everyone" ON analytics_meta FOR SELECT 
 -- Drop rates: public read
 ALTER TABLE drop_rates ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Drop rates are viewable by everyone" ON drop_rates FOR SELECT USING (true);
+
+-- CS2 crates: public read
+ALTER TABLE cs2_crates ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "CS2 crates are viewable by everyone" ON cs2_crates FOR SELECT USING (true);
+
+-- CS2 crate items: public read
+ALTER TABLE cs2_crate_items ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "CS2 crate items are viewable by everyone" ON cs2_crate_items FOR SELECT USING (true);
 
 -- Clicks: service role only (no public access)
 ALTER TABLE clicks ENABLE ROW LEVEL SECURITY;
