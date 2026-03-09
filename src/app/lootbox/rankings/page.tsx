@@ -32,6 +32,7 @@ interface Game {
   title: string;
   slug: string;
   cover_image: string | null;
+  screenshot_image: string | null;
   lootboxes_score: number;
   loot_system_type: string;
   lootbox_content: LootboxContent | LootboxContent[];
@@ -112,6 +113,59 @@ function GameThumb({ game }: { game: Game }) {
   );
 }
 
+function RankedGameRow({
+  game,
+  rank,
+  score,
+  rankColor = "text-gray-400",
+}: {
+  game: Game;
+  rank: number | string;
+  score: number;
+  rankColor?: string;
+}) {
+  const bgImg = game.cover_image || game.screenshot_image;
+  return (
+    <li className="group">
+      <Link
+        href={`/lootbox/${game.slug}`}
+        className="relative flex items-center gap-3 rounded-lg overflow-hidden min-h-[52px] transition-all hover:shadow-md"
+      >
+        {bgImg ? (
+          <>
+            <img
+              src={bgImg}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              style={{ filter: "brightness(0.3)" }}
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-black/40" />
+          </>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800 to-slate-700" />
+        )}
+        <div className="relative z-10 flex items-center gap-3 w-full px-4 py-3">
+          <span className={`font-extrabold w-6 text-right text-sm ${bgImg ? "text-white/60" : rankColor}`}>{rank}</span>
+          <div className="flex-1 min-w-0">
+            <span className="font-semibold text-white text-sm group-hover:text-blue-200 transition-colors truncate block">
+              {game.title}
+            </span>
+          </div>
+          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white/15 text-white/70 backdrop-blur-sm flex-shrink-0">
+            {systemLabel(game.loot_system_type).label}
+          </span>
+          <span className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-extrabold border-2 border-white/70 shadow-lg ${
+            score >= 7 ? "bg-emerald-500" : score >= 5 ? "bg-amber-500" : score >= 3 ? "bg-orange-500" : "bg-red-500"
+          }`}>
+            {score}
+          </span>
+        </div>
+      </Link>
+    </li>
+  );
+}
+
 // Main Component
 export default async function RankingsPage() {
   const supabase = createServerClient();
@@ -119,7 +173,7 @@ export default async function RankingsPage() {
   const { data } = await supabase
     .from('games')
     .select(`
-      id, title, slug, cover_image, lootboxes_score, loot_system_type,
+      id, title, slug, cover_image, screenshot_image, lootboxes_score, loot_system_type,
       lootbox_content (
         cost_per_pull, has_pity_system,
         score_transparency, score_value, score_fairness, score_player_control,
@@ -256,21 +310,9 @@ export default async function RankingsPage() {
                 <Trophy className="w-5 h-5 text-[#0074c5]" />
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white">Best Overall</h3>
               </div>
-              <ol className="space-y-3">
+              <ol className="space-y-2">
                 {overallRanked.slice(0, 10).map((item, idx) => (
-                  <li key={item.game.id} className="flex items-center gap-3">
-                    <span className="font-bold text-gray-400 w-6 text-right">{idx + 1}</span>
-                    <GameThumb game={item.game} />
-                    <Link href={`/lootbox/${item.game.slug}`} className="flex-1 hover:text-[#0074c5] transition-colors">
-                      <span className="font-medium text-gray-900 dark:text-white hover:underline">{item.game.title}</span>
-                    </Link>
-                    <div className="flex items-center gap-2">
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${systemLabel(item.game.loot_system_type).color}`}>
-                        {systemLabel(item.game.loot_system_type).label}
-                      </span>
-                      <span className={`px-2 py-1 rounded text-xs font-bold ${scoreColor(item.score)}`}>{item.score}</span>
-                    </div>
-                  </li>
+                  <RankedGameRow key={item.game.id} game={item.game} rank={idx + 1} score={item.score} />
                 ))}
               </ol>
             </div>
@@ -284,21 +326,9 @@ export default async function RankingsPage() {
                 <Shield className="w-5 h-5 text-[#0074c5]" />
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white">Least Predatory</h3>
               </div>
-              <ol className="space-y-3">
+              <ol className="space-y-2">
                 {protectionRanked.slice(0, 10).map((item, idx) => (
-                  <li key={item.game.id} className="flex items-center gap-3">
-                    <span className="font-bold text-gray-400 w-6 text-right">{idx + 1}</span>
-                    <GameThumb game={item.game} />
-                    <Link href={`/lootbox/${item.game.slug}`} className="flex-1 hover:text-[#0074c5] transition-colors">
-                      <span className="font-medium text-gray-900 dark:text-white hover:underline">{item.game.title}</span>
-                    </Link>
-                    <div className="flex items-center gap-2">
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${systemLabel(item.game.loot_system_type).color}`}>
-                        {systemLabel(item.game.loot_system_type).label}
-                      </span>
-                      <span className={`px-2 py-1 rounded text-xs font-bold ${scoreColor(item.score)}`}>{item.score}</span>
-                    </div>
-                  </li>
+                  <RankedGameRow key={item.game.id} game={item.game} rank={idx + 1} score={item.score} />
                 ))}
               </ol>
             </div>
@@ -312,21 +342,9 @@ export default async function RankingsPage() {
                 <DollarSign className="w-5 h-5 text-emerald-600" />
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white">Most Rewarding</h3>
               </div>
-              <ol className="space-y-3">
+              <ol className="space-y-2">
                 {valueRanked.slice(0, 10).map((item, idx) => (
-                  <li key={item.game.id} className="flex items-center gap-3">
-                    <span className="font-bold text-gray-400 w-6 text-right">{idx + 1}</span>
-                    <GameThumb game={item.game} />
-                    <Link href={`/lootbox/${item.game.slug}`} className="flex-1 hover:text-[#0074c5] transition-colors">
-                      <span className="font-medium text-gray-900 dark:text-white hover:underline">{item.game.title}</span>
-                    </Link>
-                    <div className="flex items-center gap-2">
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${systemLabel(item.game.loot_system_type).color}`}>
-                        {systemLabel(item.game.loot_system_type).label}
-                      </span>
-                      <span className={`px-2 py-1 rounded text-xs font-bold ${scoreColor(item.score)}`}>{item.score}</span>
-                    </div>
-                  </li>
+                  <RankedGameRow key={item.game.id} game={item.game} rank={idx + 1} score={item.score} />
                 ))}
               </ol>
             </div>
@@ -340,21 +358,9 @@ export default async function RankingsPage() {
                 <Swords className="w-5 h-5 text-purple-600" />
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white">Non-Game-Breaking</h3>
               </div>
-              <ol className="space-y-3">
+              <ol className="space-y-2">
                 {p2wRanked.slice(0, 10).map((item, idx) => (
-                  <li key={item.game.id} className="flex items-center gap-3">
-                    <span className="font-bold text-gray-400 w-6 text-right">{idx + 1}</span>
-                    <GameThumb game={item.game} />
-                    <Link href={`/lootbox/${item.game.slug}`} className="flex-1 hover:text-[#0074c5] transition-colors">
-                      <span className="font-medium text-gray-900 dark:text-white hover:underline">{item.game.title}</span>
-                    </Link>
-                    <div className="flex items-center gap-2">
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${systemLabel(item.game.loot_system_type).color}`}>
-                        {systemLabel(item.game.loot_system_type).label}
-                      </span>
-                      <span className={`px-2 py-1 rounded text-xs font-bold ${scoreColor(item.score)}`}>{item.score}</span>
-                    </div>
-                  </li>
+                  <RankedGameRow key={item.game.id} game={item.game} rank={idx + 1} score={item.score} />
                 ))}
               </ol>
             </div>
@@ -371,21 +377,9 @@ export default async function RankingsPage() {
               <AlertTriangle className="w-5 h-5 text-rose-600" />
               <h3 className="text-xl font-bold text-gray-900 dark:text-white">Worst Offenders</h3>
             </div>
-            <ol className="space-y-3">
-              {worstOffenders.map((item, idx) => (
-                <li key={item.game.id} className="flex items-center gap-3">
-                  <span className="font-bold text-rose-600 w-6 text-right">{games.length - item.rank + 1}</span>
-                  <GameThumb game={item.game} />
-                  <Link href={`/lootbox/${item.game.slug}`} className="flex-1 hover:text-[#0074c5] transition-colors">
-                    <span className="font-medium text-gray-900 dark:text-white hover:underline">{item.game.title}</span>
-                  </Link>
-                  <div className="flex items-center gap-2">
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${systemLabel(item.game.loot_system_type).color}`}>
-                      {systemLabel(item.game.loot_system_type).label}
-                    </span>
-                    <span className={`px-2 py-1 rounded text-xs font-bold ${scoreColor(item.score)}`}>{item.score}</span>
-                  </div>
-                </li>
+            <ol className="space-y-2">
+              {worstOffenders.map((item) => (
+                <RankedGameRow key={item.game.id} game={item.game} rank={games.length - item.rank + 1} score={item.score} rankColor="text-rose-600" />
               ))}
             </ol>
           </div>

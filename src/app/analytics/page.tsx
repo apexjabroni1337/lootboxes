@@ -27,11 +27,11 @@ async function getAnalyticsData() {
     : 0;
 
   const bestGame = games.length > 0
-    ? { title: games[0].title, slug: games[0].slug, score: games[0].lootboxes_score }
+    ? { title: games[0].title, slug: games[0].slug, score: games[0].lootboxes_score, cover_image: games[0].cover_image || games[0].screenshot_image || null }
     : null;
 
   const worstGame = games.length > 0
-    ? { title: games[games.length - 1].title, slug: games[games.length - 1].slug, score: games[games.length - 1].lootboxes_score }
+    ? { title: games[games.length - 1].title, slug: games[games.length - 1].slug, score: games[games.length - 1].lootboxes_score, cover_image: games[games.length - 1].cover_image || games[games.length - 1].screenshot_image || null }
     : null;
 
   // System breakdown

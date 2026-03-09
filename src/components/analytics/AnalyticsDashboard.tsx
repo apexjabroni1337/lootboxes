@@ -14,8 +14,8 @@ import {
 interface AnalyticsDashboardProps {
   totalGamesAnalyzed: number;
   avgScore: number;
-  bestGame: { title: string; slug: string; score: number } | null;
-  worstGame: { title: string; slug: string; score: number } | null;
+  bestGame: { title: string; slug: string; score: number; cover_image?: string | null } | null;
+  worstGame: { title: string; slug: string; score: number; cover_image?: string | null } | null;
   systemBreakdown: { type: string; count: number; avgScore: number }[];
   scoreDistribution: { range: string; count: number; color: string }[];
   topGames: {
@@ -84,20 +84,61 @@ const StatCard = ({
   value,
   subtitle,
   accent = "brand",
+  bgImage,
+  href,
 }: {
   label: string;
   value: string | number;
   subtitle?: string;
   accent?: "brand" | "emerald" | "amber" | "red";
+  bgImage?: string | null;
+  href?: string;
 }) => {
-  const accentStyles: Record<string, string> = {
-    brand: "border-l-brand-500 bg-gradient-to-r from-brand-50/60 to-white",
-    emerald: "border-l-emerald-500 bg-gradient-to-r from-emerald-50/60 to-white",
-    amber: "border-l-amber-500 bg-gradient-to-r from-amber-50/60 to-white",
-    red: "border-l-red-500 bg-gradient-to-r from-red-50/60 to-white",
+  const accentBorder: Record<string, string> = {
+    brand: "border-l-brand-500",
+    emerald: "border-l-emerald-500",
+    amber: "border-l-amber-500",
+    red: "border-l-red-500",
   };
+  const accentOverlay: Record<string, string> = {
+    brand: "from-blue-900/85 via-blue-900/70 to-blue-800/60",
+    emerald: "from-emerald-900/85 via-emerald-900/70 to-emerald-800/60",
+    amber: "from-amber-900/80 via-amber-950/70 to-amber-900/60",
+    red: "from-red-900/85 via-red-900/70 to-red-800/60",
+  };
+  const accentPlain: Record<string, string> = {
+    brand: "bg-gradient-to-r from-brand-50/60 to-white",
+    emerald: "bg-gradient-to-r from-emerald-50/60 to-white",
+    amber: "bg-gradient-to-r from-amber-50/60 to-white",
+    red: "bg-gradient-to-r from-red-50/60 to-white",
+  };
+
+  const Wrapper = href ? Link : "div";
+  const wrapperProps = href ? { href } : {};
+
+  if (bgImage) {
+    return (
+      <Wrapper
+        {...(wrapperProps as any)}
+        className={`group relative rounded-xl border border-gray-200 border-l-4 ${accentBorder[accent]} overflow-hidden shadow-sm hover:shadow-lg transition-all min-h-[120px] flex flex-col justify-end`}
+      >
+        <img
+          src={bgImage}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        />
+        <div className={`absolute inset-0 bg-gradient-to-t ${accentOverlay[accent]}`} />
+        <div className="relative z-10 p-6">
+          <p className="text-xs font-semibold uppercase tracking-wider text-white/70">{label}</p>
+          <p className="mt-1 text-2xl font-extrabold text-white leading-tight drop-shadow-sm">{value}</p>
+          {subtitle && <p className="mt-1 text-xs text-white/60 font-medium">{subtitle}</p>}
+        </div>
+      </Wrapper>
+    );
+  }
+
   return (
-    <div className={`rounded-xl border border-gray-200 border-l-4 ${accentStyles[accent]} p-6 shadow-sm`}>
+    <div className={`rounded-xl border border-gray-200 border-l-4 ${accentBorder[accent]} ${accentPlain[accent]} p-6 shadow-sm`}>
       <p className="text-sm font-medium text-gray-600">{label}</p>
       <p className="mt-2 text-3xl font-bold text-gray-900">{value}</p>
       {subtitle && <p className="mt-1 text-xs text-gray-500">{subtitle}</p>}
@@ -148,6 +189,8 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
                 : 'No data'
             }
             accent="emerald"
+            bgImage={props.bestGame?.cover_image}
+            href={props.bestGame ? `/lootbox/${props.bestGame.slug}` : undefined}
           />
           <StatCard
             label="Most Aggressive"
@@ -158,6 +201,8 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
                 : 'No data'
             }
             accent="red"
+            bgImage={props.worstGame?.cover_image}
+            href={props.worstGame ? `/lootbox/${props.worstGame.slug}` : undefined}
           />
         </div>
       </section>
@@ -232,36 +277,44 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
             <h3 className="mb-6 text-lg font-bold text-green-900">
               Consumer-Friendly
             </h3>
-            <div className="space-y-4">
-              {props.topGames.slice(0, 5).map((game) => (
-                <div
-                  key={game.slug}
-                  className="flex items-center gap-4 rounded-lg border border-green-100 bg-white p-4"
-                >
-                  {game.cover_image && (
-                    <img
-                      src={game.cover_image}
-                      alt={game.title}
-                      className="h-10 w-10 rounded object-cover"
-                    />
-                  )}
-                  {!game.cover_image && (
-                    <div className="h-10 w-10 rounded bg-gray-200" />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <Link
-                      href={`/lootbox/${game.slug}`}
-                      className="block font-semibold text-gray-900 hover:text-blue-600 truncate"
-                    >
-                      {game.title}
-                    </Link>
-                    <p className="text-xs text-gray-600">
-                      {SYSTEM_LABELS[game.loot_system_type] || game.loot_system_type}
-                    </p>
-                  </div>
-                  <ScoreBadge score={game.score} />
-                </div>
-              ))}
+            <div className="space-y-3">
+              {props.topGames.slice(0, 5).map((game) => {
+                const bgImg = game.cover_image;
+                return (
+                  <Link
+                    key={game.slug}
+                    href={`/lootbox/${game.slug}`}
+                    className="group relative block rounded-xl overflow-hidden min-h-[72px] hover:shadow-md transition-all"
+                  >
+                    {bgImg ? (
+                      <>
+                        <img
+                          src={bgImg}
+                          alt=""
+                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                          style={{ filter: "brightness(0.35)" }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-emerald-900/60 via-emerald-900/30 to-transparent" />
+                      </>
+                    ) : (
+                      <div className="absolute inset-0 bg-gradient-to-r from-emerald-800 to-emerald-700" />
+                    )}
+                    <div className="relative z-10 flex items-center gap-4 p-4">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-white text-sm truncate group-hover:text-emerald-200 transition-colors">
+                          {game.title}
+                        </p>
+                        <p className="text-[11px] text-white/50 font-medium mt-0.5">
+                          {SYSTEM_LABELS[game.loot_system_type] || game.loot_system_type}
+                        </p>
+                      </div>
+                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white text-sm font-extrabold border-2 border-white/80 shadow-lg">
+                        {game.score.toFixed(1)}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </div>
 
@@ -270,36 +323,44 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
             <h3 className="mb-6 text-lg font-bold text-red-900">
               Most Aggressive
             </h3>
-            <div className="space-y-4">
-              {props.bottomGames.slice(0, 5).map((game) => (
-                <div
-                  key={game.slug}
-                  className="flex items-center gap-4 rounded-lg border border-red-100 bg-white p-4"
-                >
-                  {game.cover_image && (
-                    <img
-                      src={game.cover_image}
-                      alt={game.title}
-                      className="h-10 w-10 rounded object-cover"
-                    />
-                  )}
-                  {!game.cover_image && (
-                    <div className="h-10 w-10 rounded bg-gray-200" />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <Link
-                      href={`/lootbox/${game.slug}`}
-                      className="block font-semibold text-gray-900 hover:text-blue-600 truncate"
-                    >
-                      {game.title}
-                    </Link>
-                    <p className="text-xs text-gray-600">
-                      {SYSTEM_LABELS[game.loot_system_type] || game.loot_system_type}
-                    </p>
-                  </div>
-                  <ScoreBadge score={game.score} />
-                </div>
-              ))}
+            <div className="space-y-3">
+              {props.bottomGames.slice(0, 5).map((game) => {
+                const bgImg = game.cover_image;
+                return (
+                  <Link
+                    key={game.slug}
+                    href={`/lootbox/${game.slug}`}
+                    className="group relative block rounded-xl overflow-hidden min-h-[72px] hover:shadow-md transition-all"
+                  >
+                    {bgImg ? (
+                      <>
+                        <img
+                          src={bgImg}
+                          alt=""
+                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                          style={{ filter: "brightness(0.35)" }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-red-900/60 via-red-900/30 to-transparent" />
+                      </>
+                    ) : (
+                      <div className="absolute inset-0 bg-gradient-to-r from-red-800 to-red-700" />
+                    )}
+                    <div className="relative z-10 flex items-center gap-4 p-4">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-white text-sm truncate group-hover:text-red-200 transition-colors">
+                          {game.title}
+                        </p>
+                        <p className="text-[11px] text-white/50 font-medium mt-0.5">
+                          {SYSTEM_LABELS[game.loot_system_type] || game.loot_system_type}
+                        </p>
+                      </div>
+                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white text-sm font-extrabold border-2 border-white/80 shadow-lg">
+                        {game.score.toFixed(1)}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </div>
