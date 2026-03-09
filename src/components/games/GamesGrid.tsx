@@ -1,10 +1,6 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
-import Link from "next/link";
-import { formatPrice } from "@/lib/utils";
-import GameAvatar from "@/components/ui/GameAvatar";
-import StoreIcon from "@/components/ui/StoreIcon";
 import {
   Search,
   X,
@@ -20,6 +16,8 @@ import {
   ChevronDown,
   Loader2,
 } from "lucide-react";
+import SteamGameRow, { CompactGameCard } from "@/components/games/SteamGameRow";
+import { normalizeGame } from "@/lib/game-normalizer";
 
 /* ── Genre options ── */
 const GENRE_OPTIONS = [
@@ -44,7 +42,7 @@ const SORT_OPTIONS = [
 
 type SortId = (typeof SORT_OPTIONS)[number]["id"];
 
-/* ── Genre matching (for client-side filtering of server data) ── */
+/* ── Genre matching ── */
 function normalise(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
@@ -85,9 +83,7 @@ interface GameWithDeals {
 }
 
 interface GamesGridProps {
-  /** Initial batch of games from server (for fast first paint) */
   games: GameWithDeals[];
-  /** Total count of ALL games in the database */
   totalCount: number;
   initialGenre?: string | null;
 }
@@ -100,7 +96,6 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
   const [sortBy, setSortBy] = useState<SortId>("trending");
   const [showSortMenu, setShowSortMenu] = useState(false);
 
-  // API-driven state (for search & infinite scroll)
   const [apiGames, setApiGames] = useState<GameWithDeals[]>([]);
   const [apiTotalCount, setApiTotalCount] = useState(0);
   const [apiHasMore, setApiHasMore] = useState(false);
@@ -112,10 +107,8 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  // Determine if we're in "search mode" (querying the full library via API)
   const isSearchMode = search.length >= 2;
 
-  // Fetch from API
   const fetchGames = useCallback(async (params: {
     q?: string;
     offset?: number;
@@ -156,7 +149,6 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
     }
   }, [sortBy, activeGenre]);
 
-  // Debounced search
   useEffect(() => {
     if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
 
@@ -165,8 +157,6 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
         fetchGames({ q: search, offset: 0, sort: sortBy, genre: activeGenre || "" });
       }, 300);
     } else if (search.length === 0 && useApiMode) {
-      // Cleared search — go back to browsing from current sort/genre
-      // If no genre filter or non-default sort, stay in API mode for consistency
       if (activeGenre || sortBy !== "trending") {
         fetchGames({ offset: 0, sort: sortBy, genre: activeGenre || "" });
       } else {
@@ -179,14 +169,12 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
     };
   }, [search]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // When sort or genre changes, refetch via API if we're in API mode or have filters
   useEffect(() => {
     if (useApiMode || activeGenre || sortBy !== "trending") {
       fetchGames({ q: search.length >= 2 ? search : undefined, offset: 0, sort: sortBy, genre: activeGenre || "" });
     }
   }, [sortBy, activeGenre]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Infinite scroll observer
   useEffect(() => {
     if (!sentinelRef.current) return;
 
@@ -211,22 +199,15 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
     return () => observer.disconnect();
   }, [useApiMode, apiHasMore, apiOffset, isLoadingMore, isSearching, search, sortBy, activeGenre, fetchGames]);
 
-  // Which games to display?
   const displayGames = useMemo(() => {
-    if (useApiMode) {
-      // In API mode, genre filtering is done server-side for search,
-      // but we also do client-side filtering for the initial server data fallback
-      return apiGames;
-    }
+    if (useApiMode) return apiGames;
 
-    // Default mode: use initial server data with client-side filtering
     let result = initialGames;
 
     if (activeGenre) {
       result = result.filter((g) => gameMatchesGenre(g.genres, activeGenre));
     }
 
-    // Client-side sort for initial data
     const sorted = [...result].sort((a, b) => {
       switch (sortBy) {
         case "price_asc":
@@ -272,7 +253,6 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
           )}
         </div>
 
-        {/* Sort dropdown */}
         <div className="relative">
           <button
             onClick={() => setShowSortMenu(!showSortMenu)}
@@ -328,10 +308,7 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
           );
         })}
         {activeGenre && (
-          <button
-            onClick={() => setActiveGenre(null)}
-            className="text-xs text-gray-400 hover:text-gray-600 underline ml-1"
-          >
+          <button onClick={() => setActiveGenre(null)} className="text-xs text-gray-400 hover:text-gray-600 underline ml-1">
             Clear
           </button>
         )}
@@ -372,92 +349,21 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
         </div>
       )}
 
-      {/* Games grid */}
+      {/* Games list */}
       {!isSearching && (
         <>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {displayGames.map((game) => {
-              const bgImage = game.screenshot_image || game.cover_image;
-              return (
-                <Link
-                  key={game.id}
-                  href={`/games/${game.slug}`}
-                  className="group overflow-hidden rounded-xl border border-gray-200 bg-white transition-all hover:shadow-lg hover:-translate-y-0.5"
-                >
-                  {/* Landscape image */}
-                  <div className="relative aspect-video overflow-hidden bg-gray-100">
-                    {bgImage ? (
-                      <img
-                        src={bgImage}
-                        alt={game.title}
-                        className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <GameAvatar
-                        gameName={game.title}
-                        size="sm"
-                        aspectRatio="video"
-                      />
-                    )}
+          {/* Desktop: Steam-style rows */}
+          <div className="mt-6 hidden md:flex md:flex-col gap-1.5">
+            {displayGames.map((game) => (
+              <SteamGameRow key={game.id} game={normalizeGame(game)} />
+            ))}
+          </div>
 
-                    {/* Metacritic */}
-                    {game.metacritic && (
-                      <div className="absolute top-2 right-2">
-                        <span className={`rounded-lg px-2 py-1 text-xs font-bold text-white shadow-md ${
-                          game.metacritic >= 75 ? "bg-success-600" : game.metacritic >= 50 ? "bg-amber-500" : "bg-red-500"
-                        }`}>
-                          {game.metacritic}
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Deal count badge */}
-                    {game.dealCount > 0 && (
-                      <div className="absolute top-2 left-2">
-                        <span className="rounded-lg bg-black/60 px-2 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">
-                          {game.dealCount} {game.dealCount === 1 ? "deal" : "deals"}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Info */}
-                  <div className="p-3">
-                    <h3 className="font-semibold text-gray-900 group-hover:text-brand-600 line-clamp-1 text-sm">
-                      {game.title}
-                    </h3>
-                    {game.genres && (
-                      <div className="mt-1.5 flex flex-wrap gap-1">
-                        {(Array.isArray(game.genres) ? game.genres : [])
-                          .slice(0, 3)
-                          .map((g: string) => (
-                            <span key={g} className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-500">
-                              {g}
-                            </span>
-                          ))}
-                      </div>
-                    )}
-
-                    <div className="mt-2.5 flex items-center justify-between">
-                      {game.dealCount > 0 ? (
-                        <div className="flex items-center gap-1.5">
-                          {game.bestStore && <StoreIcon store={game.bestStore} size="sm" />}
-                          <span className="text-sm font-bold text-gray-900">
-                            From {formatPrice(game.bestPrice!)}
-                          </span>
-                        </div>
-                      ) : (
-                        <span className="text-xs text-gray-400">No deals yet</span>
-                      )}
-                      <span className="text-xs font-medium text-brand-600">
-                        Compare →
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+          {/* Mobile: compact card grid */}
+          <div className="mt-6 grid gap-4 grid-cols-2 md:hidden">
+            {displayGames.map((game) => (
+              <CompactGameCard key={game.id} game={normalizeGame(game)} />
+            ))}
           </div>
 
           {/* Empty state */}
@@ -481,7 +387,7 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
             </div>
           )}
 
-          {/* Initial mode: "Browse more" button to switch to API mode */}
+          {/* Initial mode: "Browse more" button */}
           {!useApiMode && !isSearchMode && !activeGenre && displayGames.length < totalCount && (
             <div className="mt-8 text-center">
               <button

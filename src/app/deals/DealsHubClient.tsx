@@ -1,13 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
-import { formatPrice, formatDiscount, timeAgo } from "@/lib/utils";
-import { STORES } from "@/lib/types";
 import {
   TrendingDown,
-  ExternalLink,
-  Clock,
   Sparkles,
   Flame,
   Tag,
@@ -25,9 +20,8 @@ import {
   ArrowUpDown,
   ChevronDown,
 } from "lucide-react";
-import GameAvatar from "@/components/ui/GameAvatar";
-import StoreIcon from "@/components/ui/StoreIcon";
-import WishlistButton from "@/components/deals/WishlistButton";
+import SteamGameRow, { CompactGameCard } from "@/components/games/SteamGameRow";
+import { normalizeDeal } from "@/lib/game-normalizer";
 
 /* ── Price / discount tabs ── */
 const TABS = [
@@ -116,7 +110,6 @@ export default function DealsHubClient({
   const filtered = useMemo(() => {
     let result = deals;
 
-    // Search
     if (search.length >= 2) {
       const q = search.toLowerCase();
       result = result.filter((d: any) =>
@@ -124,7 +117,6 @@ export default function DealsHubClient({
       );
     }
 
-    // Tab filter
     switch (activeTab) {
       case "historic":
         result = result.filter((d: any) => d.is_historic_low);
@@ -143,12 +135,10 @@ export default function DealsHubClient({
         break;
     }
 
-    // Genre filter
     if (activeGenre) {
       result = result.filter((d: any) => gameMatchesGenre(d.games?.genres, activeGenre));
     }
 
-    // Sort
     const sorted = [...result].sort((a: any, b: any) => {
       switch (sortBy) {
         case "price_asc":
@@ -189,7 +179,6 @@ export default function DealsHubClient({
           )}
         </div>
 
-        {/* Sort dropdown */}
         <div className="relative">
           <button
             onClick={() => setShowSortMenu(!showSortMenu)}
@@ -267,10 +256,7 @@ export default function DealsHubClient({
           );
         })}
         {activeGenre && (
-          <button
-            onClick={() => setActiveGenre(null)}
-            className="text-xs text-gray-400 hover:text-gray-600 underline ml-1"
-          >
+          <button onClick={() => setActiveGenre(null)} className="text-xs text-gray-400 hover:text-gray-600 underline ml-1">
             Clear
           </button>
         )}
@@ -289,7 +275,7 @@ export default function DealsHubClient({
         </p>
       </div>
 
-      {/* Deals card grid */}
+      {/* Deals list */}
       {filtered.length === 0 ? (
         <div className="mt-4 rounded-xl border border-gray-200 bg-white p-12 text-center">
           <p className="text-gray-500">
@@ -298,114 +284,20 @@ export default function DealsHubClient({
         </div>
       ) : (
         <>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {visibleDeals.map((deal: any) => {
-              const game = deal.games;
-              const storeInfo = STORES[deal.store] || { name: deal.store, color: "#666" };
-              const bgImage = game?.screenshot_image || game?.cover_image;
-              const hasDiscount = deal.discount_pct > 0;
-
-              return (
-                <div
-                  key={deal.id}
-                  className={`group flex flex-col overflow-hidden rounded-xl border bg-white shadow-sm transition-all hover:shadow-lg ${
-                    deal.is_historic_low ? "border-brand-200 ring-1 ring-brand-100" : "border-gray-200"
-                  }`}
-                >
-                  {/* Game artwork */}
-                  <div className="relative overflow-hidden bg-gray-100">
-                    {bgImage ? (
-                      <div className="aspect-[16/9] overflow-hidden">
-                        <img
-                          src={bgImage}
-                          alt={game?.title || "Game"}
-                          className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                          loading="lazy"
-                        />
-                      </div>
-                    ) : (
-                      <GameAvatar
-                        gameName={game?.title || "Unknown"}
-                        size="md"
-                        aspectRatio="video"
-                      />
-                    )}
-
-                    {/* Discount badge */}
-                    {hasDiscount && (
-                      <div className="absolute right-2 top-2">
-                        <span className="rounded-lg bg-success-600 px-2 py-1 text-sm font-bold text-white shadow-md">
-                          {formatDiscount(deal.discount_pct)}
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Wishlist heart */}
-                    <div className="absolute left-2 top-2">
-                      <WishlistButton dealId={deal.id} />
-                    </div>
-
-                    {/* Historic low badge */}
-                    {deal.is_historic_low && (
-                      <div className="absolute bottom-2 left-2">
-                        <span className="flex items-center gap-1 rounded-lg bg-brand-600 px-2 py-1 text-[10px] font-semibold text-white shadow-md">
-                          <TrendingDown className="h-3 w-3" />
-                          Historic Low
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Store bar */}
-                  <div className="flex items-center gap-2 border-b border-gray-100 px-3 py-2">
-                    <StoreIcon store={deal.store} size="sm" />
-                    <span className="text-xs font-medium text-gray-600">{storeInfo.name}</span>
-                    {deal.expires_at && (
-                      <span className="ml-auto flex items-center gap-0.5 text-[10px] text-gray-400">
-                        <Clock className="h-3 w-3" />
-                        {timeAgo(deal.expires_at)}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex flex-1 flex-col px-3 pb-3 pt-2.5">
-                    <Link
-                      href={`/games/${game?.slug || deal.game_id}`}
-                      className="line-clamp-1 text-sm font-semibold text-gray-900 hover:text-brand-600"
-                    >
-                      {game?.title || "Unknown Game"}
-                    </Link>
-
-                    {/* Pricing row */}
-                    <div className="mt-2 flex items-baseline gap-2">
-                      {hasDiscount && (
-                        <span className="text-xs text-gray-400 line-through">
-                          {formatPrice(deal.original_price, deal.currency)}
-                        </span>
-                      )}
-                      <span className="text-lg font-bold text-gray-900">
-                        {formatPrice(deal.price, deal.currency)}
-                      </span>
-                    </div>
-
-                    {/* CTA button */}
-                    <a
-                      href={`/go/${deal.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer nofollow"
-                      className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
-                    >
-                      Get Deal
-                      <ExternalLink className="h-3.5 w-3.5" />
-                    </a>
-                  </div>
-                </div>
-              );
-            })}
+          {/* Desktop: Steam-style rows */}
+          <div className="mt-4 hidden md:flex md:flex-col gap-1.5">
+            {visibleDeals.map((deal: any) => (
+              <SteamGameRow key={deal.id} game={normalizeDeal(deal)} />
+            ))}
           </div>
 
-          {/* Load More */}
+          {/* Mobile: compact card grid */}
+          <div className="mt-4 grid gap-4 grid-cols-2 md:hidden">
+            {visibleDeals.map((deal: any) => (
+              <CompactGameCard key={deal.id} game={normalizeDeal(deal)} />
+            ))}
+          </div>
+
           {hasMore && (
             <div className="mt-8 text-center">
               <button

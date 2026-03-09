@@ -3,7 +3,6 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import {
-  Calendar,
   Clock,
   Rocket,
   X,
@@ -17,9 +16,8 @@ import {
   Users,
   Trophy,
 } from "lucide-react";
-import GameAvatar from "@/components/ui/GameAvatar";
-import StoreIcon from "@/components/ui/StoreIcon";
-import { formatDate, formatPrice } from "@/lib/utils";
+import SteamGameRow, { CompactGameCard } from "@/components/games/SteamGameRow";
+import { normalizeGame, type GameRowData } from "@/lib/game-normalizer";
 
 const GENRE_OPTIONS = [
   { id: "action", label: "Action", icon: Swords },
@@ -61,94 +59,6 @@ const TABS = [
 
 type TabId = (typeof TABS)[number]["id"];
 
-function GameCard({ game, deal, isComingSoon }: { game: any; deal?: { price: number; store: string }; isComingSoon?: boolean }) {
-  const img = game.screenshot_image || game.cover_image;
-  const genres = game.genres || [];
-
-  return (
-    <Link
-      href={`/games/${game.slug}`}
-      className="group overflow-hidden rounded-xl border border-gray-200 bg-white transition-all hover:shadow-lg hover:-translate-y-0.5"
-    >
-      <div className="relative aspect-video overflow-hidden bg-gray-100">
-        {img ? (
-          <img
-            src={img}
-            alt={game.title}
-            className="h-full w-full object-cover transition-transform group-hover:scale-105"
-            loading="lazy"
-          />
-        ) : (
-          <GameAvatar gameName={game.title} size="sm" aspectRatio="video" />
-        )}
-
-        {/* Metacritic */}
-        {game.metacritic && (
-          <div className="absolute top-2 right-2">
-            <span className={`rounded-lg px-2 py-1 text-xs font-bold text-white shadow-md ${
-              game.metacritic >= 75 ? "bg-success-600" : game.metacritic >= 50 ? "bg-amber-500" : "bg-red-500"
-            }`}>
-              {game.metacritic}
-            </span>
-          </div>
-        )}
-
-        {/* Release date badge */}
-        {game.release_date && (
-          <div className="absolute bottom-2 left-2">
-            <span className={`flex items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-semibold shadow-sm backdrop-blur-sm ${
-              isComingSoon
-                ? "bg-indigo-600/90 text-white"
-                : "bg-white/90 text-gray-700"
-            }`}>
-              <Calendar className="h-3 w-3" />
-              {formatDate(game.release_date)}
-            </span>
-          </div>
-        )}
-      </div>
-
-      <div className="p-4">
-        <h3 className="font-semibold text-gray-900 group-hover:text-brand-600 line-clamp-1">
-          {game.title}
-        </h3>
-
-        {genres.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1">
-            {genres.slice(0, 3).map((g: string) => (
-              <span
-                key={g}
-                className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-600"
-              >
-                {g}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* Price or coming soon label */}
-        <div className="mt-3">
-          {isComingSoon ? (
-            <span className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600">
-              <Clock className="h-3 w-3" />
-              Coming Soon
-            </span>
-          ) : deal ? (
-            <div className="flex items-center gap-2">
-              <StoreIcon store={deal.store} size="sm" />
-              <span className="text-sm font-bold text-gray-900">
-                From {formatPrice(deal.price)}
-              </span>
-            </div>
-          ) : (
-            <span className="text-xs text-gray-400">Price tracking soon</span>
-          )}
-        </div>
-      </div>
-    </Link>
-  );
-}
-
 interface Props {
   newReleases: any[];
   comingSoon: any[];
@@ -175,6 +85,19 @@ export default function NewReleasesClient({ newReleases, comingSoon, bestDeals, 
     return result;
   }, [currentGames, search, activeGenre]);
 
+  const normalizedGames: GameRowData[] = useMemo(() => {
+    return filtered.map((game: any) => {
+      const deal = bestDeals[game.id];
+      return normalizeGame({
+        ...game,
+        bestPrice: deal?.price ?? null,
+        bestStore: deal?.store ?? null,
+        dealCount: deal ? 1 : 0,
+        isComingSoon: activeTab === "coming",
+      });
+    });
+  }, [filtered, bestDeals, activeTab]);
+
   return (
     <div>
       {/* Tabs */}
@@ -195,9 +118,7 @@ export default function NewReleasesClient({ newReleases, comingSoon, bestDeals, 
             >
               <Icon className={`h-3.5 w-3.5 ${isActive ? "text-brand-600" : ""}`} />
               {tab.label}
-              <span className="text-xs text-gray-400">
-                {count}
-              </span>
+              <span className="text-xs text-gray-400">{count}</span>
             </button>
           );
         })}
@@ -244,16 +165,12 @@ export default function NewReleasesClient({ newReleases, comingSoon, bestDeals, 
           );
         })}
         {activeGenre && (
-          <button
-            onClick={() => setActiveGenre(null)}
-            className="text-xs text-gray-400 hover:text-gray-600 underline ml-1"
-          >
+          <button onClick={() => setActiveGenre(null)} className="text-xs text-gray-400 hover:text-gray-600 underline ml-1">
             Clear
           </button>
         )}
       </div>
 
-      {/* Results count */}
       {(search.length >= 2 || activeGenre) && (
         <p className="mt-3 text-sm text-gray-500">
           {filtered.length} {filtered.length === 1 ? "game" : "games"}
@@ -266,30 +183,28 @@ export default function NewReleasesClient({ newReleases, comingSoon, bestDeals, 
         </p>
       )}
 
-      {/* Game Grid */}
+      {/* Game list */}
       {filtered.length > 0 ? (
-        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {filtered.map((game: any) => (
-            <GameCard
-              key={game.id}
-              game={game}
-              deal={bestDeals[game.id]}
-              isComingSoon={activeTab === "coming"}
-            />
-          ))}
-        </div>
+        <>
+          <div className="mt-5 hidden md:flex md:flex-col gap-1.5">
+            {normalizedGames.map((game) => (
+              <SteamGameRow key={game.id} game={game} />
+            ))}
+          </div>
+          <div className="mt-5 grid gap-4 grid-cols-2 md:hidden">
+            {normalizedGames.map((game) => (
+              <CompactGameCard key={game.id} game={game} />
+            ))}
+          </div>
+        </>
       ) : (
         <div className="mt-6 rounded-xl border border-gray-200 bg-white p-12 text-center">
           <Rocket className="mx-auto h-12 w-12 text-gray-300" />
           <h3 className="mt-4 text-lg font-semibold text-gray-900">
             No {activeTab === "releases" ? "releases" : "upcoming games"} found
           </h3>
-          <p className="mt-2 text-sm text-gray-500">
-            Try removing filters or check back soon!
-          </p>
-          <Link href="/deals" className="btn-primary mt-6 inline-flex">
-            Browse Deals Instead
-          </Link>
+          <p className="mt-2 text-sm text-gray-500">Try removing filters or check back soon!</p>
+          <Link href="/deals" className="btn-primary mt-6 inline-flex">Browse Deals Instead</Link>
         </div>
       )}
     </div>
