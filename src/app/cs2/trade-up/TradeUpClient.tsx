@@ -16,6 +16,8 @@ import {
   Wifi,
   WifiOff,
   Package,
+  CheckCircle2,
+  AlertTriangle,
 } from "lucide-react";
 import AffiliateDisclosure from "@/components/cs2/AffiliateDisclosure";
 
@@ -31,10 +33,18 @@ const RARITY_COLORS: Record<string, string> = {
   Contraband: "#e4ae39",
 };
 
-function nextRarity(r: Rarity): string {
+/* Estimated fallback prices per rarity when live prices unavailable */
+const FALLBACK_PRICES: Record<Rarity, number> = {
+  "Mil-Spec": 0.15,
+  Restricted: 1.50,
+  Classified: 8.00,
+  Covert: 50.00,
+};
+
+function nextRarity(r: Rarity): Rarity | null {
   const idx = RARITIES.indexOf(r);
   if (idx < RARITIES.length - 1) return RARITIES[idx + 1];
-  return "Covert";
+  return null;
 }
 
 /**
@@ -76,10 +86,9 @@ interface TradeUpSkin {
   collectionId: string;
   rarity: Rarity;
   image: string | null;
-  price: number; // fallback
+  price: number; // fallback estimated price
   minFloat: number;
   maxFloat: number;
-  livePrice?: number;
 }
 
 interface Props {
@@ -95,11 +104,10 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
       const items = itemsByCase[c.id] || [];
       const skins: TradeUpSkin[] = [];
       for (const item of items) {
-        if (item.is_rare_special) continue; // Skip knives/gloves for trade-up inputs
+        if (item.is_rare_special) continue;
         const rarity = normalizeRarity(item.rarity_name);
         if (!rarity) continue;
 
-        // Parse "AK-47 | Nightwish" into weapon + skin name
         const parts = item.name.split(" | ");
         const weapon = parts[0] || item.name;
         const skinName = parts[1] || "";
@@ -113,7 +121,7 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
           collectionId: c.id,
           rarity,
           image: item.image,
-          price: 0.5, // fallback price — overridden by live data
+          price: FALLBACK_PRICES[rarity],
           minFloat: 0,
           maxFloat: 0.7,
         });
@@ -127,7 +135,6 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
 
   const collectionNames = useMemo(() => Object.keys(collections), [collections]);
 
-  // Case image lookup
   const caseImageMap = useMemo(() => {
     const map: Record<string, string | null> = {};
     for (const c of cases) {
@@ -172,7 +179,7 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
           }
         }
 
-        setLivePrices(priceMap);
+        setLivePrices((prev) => ({ ...prev, ...priceMap }));
         setIsLive(Object.keys(priceMap).length > 0);
       } catch {
         console.warn("Failed to fetch live prices for trade-up calculator");
@@ -191,10 +198,13 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
   }, [selectedCollection, fetchLivePrices]);
 
   /* Helper: get effective price for a skin (live or fallback) */
-  const getPrice = (skin: TradeUpSkin): number => {
-    const key = `${skin.weapon}|${skin.skinName}`;
-    return livePrices[key] ?? skin.price;
-  };
+  const getPrice = useCallback(
+    (skin: TradeUpSkin): number => {
+      const key = `${skin.weapon}|${skin.skinName}`;
+      return livePrices[key] ?? skin.price;
+    },
+    [livePrices]
+  );
 
   /* Available input skins = skins in selected collection at selected rarity */
   const availableSkins = useMemo(() => {
@@ -213,14 +223,15 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
   }, [collections, selectedCollection, inputRarity, skinSearch]);
 
   /* Possible outcomes = next rarity tier skins from the selected collection */
-  const outputRarity = nextRarity(inputRarity);
+  const outputRarityVal = nextRarity(inputRarity);
   const possibleOutcomes = useMemo(() => {
+    if (!outputRarityVal) return [];
     return (
       collections[selectedCollection]?.filter(
-        (s) => s.rarity === outputRarity
+        (s) => s.rarity === outputRarityVal
       ) || []
     );
-  }, [collections, selectedCollection, outputRarity]);
+  }, [collections, selectedCollection, outputRarityVal]);
 
   const addSkin = (skin: TradeUpSkin) => {
     if (selectedInputs.length >= 10) return;
@@ -233,7 +244,8 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
 
   const clearAll = () => setSelectedInputs([]);
 
-  /* Calculations — using live prices when available */
+  /* ── Core calculations ── */
+  const isReady = selectedInputs.length === 10;
   const totalInputCost = selectedInputs.reduce(
     (sum, s) => sum + getPrice(s),
     0
@@ -254,9 +266,16 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
   );
   const profit = expectedValue - totalInputCost;
   const profitPct = totalInputCost > 0 ? (profit / totalInputCost) * 100 : 0;
-  const isReady = selectedInputs.length === 10;
 
-  /* Available rarities for the current collection (only show ones that have skins AND a next tier) */
+  // Count how many outcomes are profitable
+  const profitableCount = possibleOutcomes.filter(
+    (o) => getPrice(o) > totalInputCost
+  ).length;
+  const winChance = possibleOutcomes.length > 0
+    ? (profitableCount / possibleOutcomes.length) * 100
+    : 0;
+
+  /* Available rarities for the current collection */
   const availableRarities = useMemo(() => {
     const skins = collections[selectedCollection] || [];
     const raritySet = new Set(skins.map((s) => s.rarity));
@@ -265,7 +284,6 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
     );
   }, [collections, selectedCollection]);
 
-  // Reset rarity when collection changes
   useEffect(() => {
     if (availableRarities.length > 0 && !availableRarities.includes(inputRarity)) {
       setInputRarity(availableRarities[0]);
@@ -317,7 +335,7 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
             {isLive && " Prices updated live from Skinport."}
           </p>
           <p className="text-xs text-gray-400 mt-2">
-            {collectionNames.length} weapon cases · Real items from every CS2 case
+            {collectionNames.length} weapon cases with real items and prices
           </p>
         </div>
       </section>
@@ -372,11 +390,14 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                     }}
                     className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-amber-300 focus:outline-none"
                   >
-                    {availableRarities.map((r) => (
-                      <option key={r} value={r}>
-                        {r} → {nextRarity(r)}
-                      </option>
-                    ))}
+                    {availableRarities.map((r) => {
+                      const nr = nextRarity(r);
+                      return (
+                        <option key={r} value={r}>
+                          {r} {nr ? `\u2192 ${nr}` : ""}
+                        </option>
+                      );
+                    })}
                   </select>
                 </div>
               </div>
@@ -531,9 +552,186 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                 </div>
               </div>
             )}
+
+            {/* ═══ RESULTS PANEL — only when 10 items selected ═══ */}
+            {isReady && possibleOutcomes.length > 0 && (
+              <div
+                className={`rounded-xl border-2 p-6 ${
+                  profit >= 0
+                    ? "border-emerald-300 bg-gradient-to-br from-emerald-50 to-green-50"
+                    : "border-red-200 bg-gradient-to-br from-red-50 to-orange-50"
+                }`}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  {profit >= 0 ? (
+                    <CheckCircle2 className="h-6 w-6 text-emerald-600" />
+                  ) : (
+                    <AlertTriangle className="h-6 w-6 text-red-500" />
+                  )}
+                  <h2 className="text-lg font-black text-gray-900">
+                    Trade-Up Results
+                  </h2>
+                </div>
+
+                {/* Verdict */}
+                <div
+                  className={`rounded-lg p-4 mb-4 ${
+                    profit >= 0 ? "bg-emerald-100" : "bg-red-100"
+                  }`}
+                >
+                  <p
+                    className={`text-2xl font-black ${
+                      profit >= 0 ? "text-emerald-700" : "text-red-600"
+                    }`}
+                  >
+                    {profit >= 0 ? "PROFITABLE" : "LOSING"} TRADE-UP
+                  </p>
+                  <p
+                    className={`text-sm font-semibold mt-1 ${
+                      profit >= 0 ? "text-emerald-600" : "text-red-500"
+                    }`}
+                  >
+                    Expected {profit >= 0 ? "profit" : "loss"}: {profit >= 0 ? "+" : ""}
+                    ${profit.toFixed(2)} ({profitPct >= 0 ? "+" : ""}
+                    {profitPct.toFixed(1)}%)
+                  </p>
+                </div>
+
+                {/* Summary grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+                  <div className="rounded-lg bg-white p-3 text-center border border-gray-200">
+                    <p className="text-[10px] text-gray-500 uppercase font-semibold">
+                      Input Cost
+                    </p>
+                    <p className="text-lg font-black text-gray-900">
+                      ${totalInputCost.toFixed(2)}
+                    </p>
+                  </div>
+                  <div className="rounded-lg bg-white p-3 text-center border border-gray-200">
+                    <p className="text-[10px] text-gray-500 uppercase font-semibold">
+                      Expected Output
+                    </p>
+                    <p className="text-lg font-black text-gray-900">
+                      ${expectedValue.toFixed(2)}
+                    </p>
+                  </div>
+                  <div className="rounded-lg bg-white p-3 text-center border border-gray-200">
+                    <p className="text-[10px] text-gray-500 uppercase font-semibold">
+                      Win Chance
+                    </p>
+                    <p
+                      className={`text-lg font-black ${
+                        winChance >= 50 ? "text-emerald-600" : "text-red-500"
+                      }`}
+                    >
+                      {winChance.toFixed(0)}%
+                    </p>
+                  </div>
+                  <div className="rounded-lg bg-white p-3 text-center border border-gray-200">
+                    <p className="text-[10px] text-gray-500 uppercase font-semibold">
+                      Output Float
+                    </p>
+                    <p className="text-lg font-black font-mono text-gray-900">
+                      {avgInputFloat.toFixed(4)}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Outcome breakdown */}
+                <h3 className="text-sm font-bold text-gray-700 uppercase mb-3">
+                  Possible Outcomes ({possibleOutcomes.length})
+                  <span
+                    className="ml-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
+                    style={{
+                      backgroundColor:
+                        (outputRarityVal
+                          ? RARITY_COLORS[outputRarityVal]
+                          : "#888") + "20",
+                      color: outputRarityVal
+                        ? RARITY_COLORS[outputRarityVal]
+                        : "#888",
+                    }}
+                  >
+                    {outputRarityVal}
+                  </span>
+                </h3>
+                <div className="space-y-2">
+                  {possibleOutcomes.map((outcome) => {
+                    const outcomePrice = getPrice(outcome);
+                    const hasLive =
+                      livePrices[`${outcome.weapon}|${outcome.skinName}`] !=
+                      null;
+                    const outProfit = outcomePrice - totalInputCost;
+                    const isProfitable = outProfit > 0;
+                    return (
+                      <div
+                        key={outcome.id}
+                        className={`flex items-center gap-3 rounded-lg p-3 border ${
+                          isProfitable
+                            ? "bg-emerald-50 border-emerald-200"
+                            : "bg-white border-gray-200"
+                        }`}
+                      >
+                        {outcome.image ? (
+                          <img
+                            src={outcome.image}
+                            alt={outcome.fullName}
+                            className="h-12 w-12 object-contain flex-shrink-0 rounded"
+                          />
+                        ) : (
+                          <div
+                            className="h-10 w-10 rounded flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
+                            style={{
+                              backgroundColor: outputRarityVal
+                                ? RARITY_COLORS[outputRarityVal]
+                                : "#888",
+                            }}
+                          >
+                            {outcome.weapon.charAt(0)}
+                          </div>
+                        )}
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-semibold text-gray-900 truncate">
+                            {outcome.weapon} | {outcome.skinName}
+                          </p>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span className="text-xs font-bold text-gray-700">
+                              ${outcomePrice.toFixed(2)}
+                            </span>
+                            {hasLive && (
+                              <span className="text-[9px] font-semibold text-emerald-600">
+                                LIVE
+                              </span>
+                            )}
+                            <span className="text-[10px] text-gray-400">
+                              ({(probPerOutcome * 100).toFixed(1)}% chance)
+                            </span>
+                          </div>
+                        </div>
+                        <div className="text-right flex-shrink-0">
+                          <p
+                            className={`text-sm font-black ${
+                              isProfitable
+                                ? "text-emerald-600"
+                                : "text-red-500"
+                            }`}
+                          >
+                            {isProfitable ? "+" : ""}$
+                            {outProfit.toFixed(2)}
+                          </p>
+                          <p className="text-[10px] text-gray-400">
+                            {isProfitable ? "profit" : "loss"}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* RIGHT: Results sidebar */}
+          {/* RIGHT: Sidebar */}
           <div className="space-y-6">
             {/* EV Summary */}
             <div className="rounded-xl border border-gray-200 bg-white p-5 sticky top-20">
@@ -620,6 +818,38 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                 </div>
               )}
 
+              {/* Win probability */}
+              {isReady && possibleOutcomes.length > 0 && (
+                <div className="rounded-lg bg-gray-50 p-3 mb-5">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-medium text-gray-500">
+                      Win Chance
+                    </span>
+                    <span
+                      className={`text-sm font-black ${
+                        winChance >= 50 ? "text-emerald-600" : "text-red-500"
+                      }`}
+                    >
+                      {winChance.toFixed(0)}%
+                    </span>
+                  </div>
+                  <div className="h-2 rounded-full bg-gray-200 overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all"
+                      style={{
+                        width: `${winChance}%`,
+                        backgroundColor:
+                          winChance >= 50 ? "#10b981" : "#ef4444",
+                      }}
+                    />
+                  </div>
+                  <p className="text-[10px] text-gray-400 mt-1">
+                    {profitableCount} of {possibleOutcomes.length} outcomes beat
+                    your ${totalInputCost.toFixed(2)} input
+                  </p>
+                </div>
+              )}
+
               {!isReady && (
                 <p className="text-xs text-amber-600 font-medium text-center">
                   Select {10 - selectedInputs.length} more skin
@@ -646,26 +876,26 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
               </div>
             </div>
 
-            {/* Possible outcomes */}
-            <div className="rounded-xl border border-gray-200 bg-white p-5">
-              <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4">
-                Possible Outcomes
-                <span
-                  className="ml-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
-                  style={{
-                    backgroundColor: RARITY_COLORS[outputRarity] + "20",
-                    color: RARITY_COLORS[outputRarity],
-                  }}
-                >
-                  {outputRarity}
-                </span>
-              </h2>
-
-              {possibleOutcomes.length === 0 ? (
-                <p className="text-sm text-gray-500 text-center py-4">
-                  No outcomes at this rarity tier.
-                </p>
-              ) : (
+            {/* Possible outcomes preview (before 10 selected) */}
+            {!isReady && possibleOutcomes.length > 0 && (
+              <div className="rounded-xl border border-gray-200 bg-white p-5">
+                <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4">
+                  Possible Outcomes
+                  <span
+                    className="ml-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
+                    style={{
+                      backgroundColor:
+                        (outputRarityVal
+                          ? RARITY_COLORS[outputRarityVal]
+                          : "#888") + "20",
+                      color: outputRarityVal
+                        ? RARITY_COLORS[outputRarityVal]
+                        : "#888",
+                    }}
+                  >
+                    {outputRarityVal}
+                  </span>
+                </h2>
                 <div className="space-y-2">
                   {possibleOutcomes.map((outcome) => {
                     const outcomePrice = getPrice(outcome);
@@ -687,7 +917,9 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                           <div
                             className="h-8 w-8 rounded flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
                             style={{
-                              backgroundColor: RARITY_COLORS[outcome.rarity],
+                              backgroundColor: outputRarityVal
+                                ? RARITY_COLORS[outputRarityVal]
+                                : "#888",
                             }}
                           >
                             {outcome.weapon.charAt(0)}
@@ -711,24 +943,12 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                             </span>
                           </div>
                         </div>
-                        {totalInputCost > 0 && (
-                          <span
-                            className={`text-xs font-bold ${
-                              outcomePrice > totalInputCost
-                                ? "text-emerald-600"
-                                : "text-red-500"
-                            }`}
-                          >
-                            {outcomePrice > totalInputCost ? "+" : ""}$
-                            {(outcomePrice - totalInputCost).toFixed(2)}
-                          </span>
-                        )}
                       </div>
                     );
                   })}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Key insights */}
             <div className="rounded-xl border border-gray-200 bg-white p-5">
