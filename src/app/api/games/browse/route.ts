@@ -16,8 +16,11 @@ import { createServerClient } from "@/lib/supabase";
  *   genre   - genre filter (action, rpg, fps, etc.)
  */
 export async function GET(request: NextRequest) {
+  try {
   const { searchParams } = request.nextUrl;
-  const query = searchParams.get("q")?.trim() || "";
+  const rawQuery = searchParams.get("q")?.trim() || "";
+  // Sanitize: strip characters that could break PostgREST filters
+  const query = rawQuery.replace(/[,()."'\\]/g, "").slice(0, 200);
   const offset = Math.max(0, parseInt(searchParams.get("offset") || "0", 10));
   const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "48", 10)));
   const sort = searchParams.get("sort") || "trending";
@@ -97,9 +100,20 @@ export async function GET(request: NextRequest) {
     bestStore: dealStats.get(game.id)?.store ?? null,
   }));
 
-  return NextResponse.json({
-    games: enriched,
-    totalCount: totalCount || 0,
-    hasMore: offset + limit < (totalCount || 0),
-  });
+  return NextResponse.json(
+    {
+      games: enriched,
+      totalCount: totalCount || 0,
+      hasMore: offset + limit < (totalCount || 0),
+    },
+    {
+      headers: {
+        "Cache-Control": "public, s-maxage=120, stale-while-revalidate=300",
+      },
+    }
+  );
+  } catch (err: any) {
+    console.error("[API /games/browse] Error:", err);
+    return NextResponse.json({ error: err?.message || "Internal server error" }, { status: 500 });
+  }
 }

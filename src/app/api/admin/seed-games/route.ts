@@ -41,6 +41,7 @@ const SEED_GAMES = [
 ];
 
 export async function GET(request: NextRequest) {
+  try {
   // Auth check via query param or header
   const secret = request.nextUrl.searchParams.get("secret");
   const authHeader = request.headers.get("authorization");
@@ -136,4 +137,8 @@ export async function GET(request: NextRequest) {
     summary: { seeded, updated, existing, total: SEED_GAMES.length },
     results,
   });
+  } catch (err: any) {
+    console.error("[admin/seed-games] Unhandled error:", err);
+    return NextResponse.json({ error: err?.message || "Internal server error" }, { status: 500 });
+  }
 }

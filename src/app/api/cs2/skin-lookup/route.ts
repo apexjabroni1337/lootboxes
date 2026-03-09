@@ -49,9 +49,9 @@ export async function GET(request: NextRequest) {
       if (matches.length > 0) {
         const prices = matches.map((m) => m.cheapestPrice).filter((p) => p > 0);
         results[key] = {
-          minPrice: Math.min(...prices),
-          maxPrice: Math.max(...prices),
-          avgPrice: prices.reduce((a, b) => a + b, 0) / prices.length,
+          minPrice: prices.length > 0 ? Math.min(...prices) : 0,
+          maxPrice: prices.length > 0 ? Math.max(...prices) : 0,
+          avgPrice: prices.length > 0 ? prices.reduce((a, b) => a + b, 0) / prices.length : 0,
           wears: matches.map((m) => ({
             wear: m.wear,
             cheapestPrice: m.cheapestPrice,

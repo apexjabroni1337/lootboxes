@@ -20,9 +20,9 @@ const FOOTER_SECTIONS = {
   ],
   Company: [
     { label: "About Us", href: "/about" },
-    { label: "Editorial Policy", href: "/about#editorial" },
-    { label: "Affiliate Disclosure", href: "/about#disclosure" },
-    { label: "Contact", href: "/about#contact" },
+    { label: "Editorial Policy", href: "/editorial-policy" },
+    { label: "Affiliate Disclosure", href: "/affiliate-disclosure" },
+    { label: "Contact", href: "/contact" },
   ],
   Legal: [
     { label: "Privacy Policy", href: "/privacy" },

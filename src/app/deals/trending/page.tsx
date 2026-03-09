@@ -5,6 +5,7 @@ import { formatPrice, formatDiscount } from "@/lib/utils";
 import { isPromotableGame, deduplicateByBaseTitle } from "@/lib/game-quality";
 import GameAvatar from "@/components/ui/GameAvatar";
 import StoreIcon from "@/components/ui/StoreIcon";
+import AffiliateNotice from "@/components/shared/AffiliateNotice";
 import TrendingClient from "./TrendingClient";
 
 export const metadata = {
@@ -265,6 +266,9 @@ export default async function TrendingPage() {
           <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-gray-900 group-hover:translate-x-1 transition-all" />
         </Link>
       </div>
+
+      {/* Affiliate Disclosure */}
+      <AffiliateNotice />
     </div>
   );
 }

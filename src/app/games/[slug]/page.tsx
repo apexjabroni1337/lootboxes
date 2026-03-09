@@ -7,6 +7,7 @@ import PriceChart from "@/components/games/PriceChart";
 import PriceAlertForm from "@/components/games/PriceAlertForm";
 import GameAvatar from "@/components/ui/GameAvatar";
 import StoreIcon from "@/components/ui/StoreIcon";
+import AffiliateNotice from "@/components/shared/AffiliateNotice";
 import { createServerClient } from "@/lib/supabase";
 import {
   ExternalLink,
@@ -673,6 +674,9 @@ export default async function GamePage({ params }: { params: { slug: string } })
           </section>
         )}
       </div>
+
+      {/* Affiliate Disclosure */}
+      <AffiliateNotice />
     </div>
   );
 }

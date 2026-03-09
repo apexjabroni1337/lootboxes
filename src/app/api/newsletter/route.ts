@@ -16,7 +16,9 @@ export async function POST(request: NextRequest) {
   try {
     const { email } = await request.json();
 
-    if (!email || !email.includes("@") || email.length < 5) {
+    // RFC-compliant email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    if (!email || typeof email !== "string" || email.length > 320 || !emailRegex.test(email)) {
       return NextResponse.json(
         { error: "Please provide a valid email address." },
         { status: 400 }

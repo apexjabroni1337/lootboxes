@@ -10,14 +10,19 @@ export const maxDuration = 60;
  * GET /api/cron/enhance-descriptions?secret=lootboxes-cron-2026
  */
 export async function GET(req: NextRequest) {
+  try {
   const secret = req.nextUrl.searchParams.get("secret");
-  if (secret !== "lootboxes-cron-2026") {
+  if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return NextResponse.json({ error: "Missing environment variables" }, { status: 500 });
+  }
+
   const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
   );
 
   // Fetch all games with lootbox content
@@ -71,6 +76,10 @@ export async function GET(req: NextRequest) {
   }
 
   return NextResponse.json({ updated: results.filter(r => r.status === "updated").length, total: games.length, results });
+  } catch (err: any) {
+    console.error("[cron/enhance-descriptions] Unhandled error:", err);
+    return NextResponse.json({ error: err?.message || "Internal server error" }, { status: 500 });
+  }
 }
 
 /* ── Build enhanced overview HTML ── */

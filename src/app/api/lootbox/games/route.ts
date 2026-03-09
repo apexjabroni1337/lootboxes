@@ -4,6 +4,7 @@ import { createServerClient } from "@/lib/supabase";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  try {
   const supabase = createServerClient();
 
   const { data, error } = await supabase
@@ -12,7 +13,8 @@ export async function GET() {
       "id, title, slug, lootboxes_score, loot_system_type, lootbox_content(cost_per_pull, has_pity_system, score_transparency, score_value)"
     )
     .not("lootboxes_score", "is", null)
-    .order("title");
+    .order("title")
+    .limit(2000);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -36,5 +38,16 @@ export async function GET() {
     };
   });
 
-  return NextResponse.json({ games });
+  return NextResponse.json(
+    { games },
+    {
+      headers: {
+        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+      },
+    }
+  );
+  } catch (err: any) {
+    console.error("[API /lootbox/games] Error:", err);
+    return NextResponse.json({ error: err?.message || "Internal server error" }, { status: 500 });
+  }
 }

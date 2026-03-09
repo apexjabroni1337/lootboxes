@@ -114,18 +114,23 @@ export async function POST(request: NextRequest) {
  * GET - kept for simple status check
  */
 export async function GET(request: NextRequest) {
-  const secret = request.nextUrl.searchParams.get("secret");
-  if (secret !== process.env.CRON_SECRET) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const secret = request.nextUrl.searchParams.get("secret");
+    if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const supabase = createServerClient();
+    const { count: totalCrates } = await supabase
+      .from("cs2_crates")
+      .select("id", { count: "exact", head: true });
+    const { count: totalItems } = await supabase
+      .from("cs2_crate_items")
+      .select("id", { count: "exact", head: true });
+
+    return NextResponse.json({ totalCrates, totalItems });
+  } catch (err: any) {
+    console.error("[seed-cs2-cases GET] Error:", err);
+    return NextResponse.json({ error: err?.message || "Internal server error" }, { status: 500 });
   }
-
-  const supabase = createServerClient();
-  const { count: totalCrates } = await supabase
-    .from("cs2_crates")
-    .select("id", { count: "exact", head: true });
-  const { count: totalItems } = await supabase
-    .from("cs2_crate_items")
-    .select("id", { count: "exact", head: true });
-
-  return NextResponse.json({ totalCrates, totalItems });
 }

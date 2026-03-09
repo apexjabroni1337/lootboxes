@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
 import { STORES } from "@/lib/types";
+import AffiliateNotice from "@/components/shared/AffiliateNotice";
 import {
   TrendingDown,
   Sparkles,
@@ -256,6 +257,9 @@ export default async function DealsPage({
           </div>
         </div>
       </div>
+
+      {/* Affiliate Disclosure */}
+      <AffiliateNotice />
     </div>
   );
 }

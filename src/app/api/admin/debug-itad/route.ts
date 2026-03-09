@@ -6,14 +6,19 @@ import { createServerClient } from "@/lib/supabase";
  * Usage: GET /api/admin/debug-itad?secret=YOUR_CRON_SECRET
  */
 export async function GET(request: NextRequest) {
+  try {
   const secret = request.nextUrl.searchParams.get("secret");
-  if (secret !== process.env.CRON_SECRET) {
+  if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const ITAD_KEY = process.env.ITAD_API_KEY;
+  if (!ITAD_KEY) {
+    return NextResponse.json({ error: "Missing ITAD_API_KEY env var" }, { status: 500 });
   }
 
   const supabase = createServerClient();
   const ITAD_BASE = "https://api.isthereanydeal.com";
-  const ITAD_KEY = process.env.ITAD_API_KEY!;
 
   // Get first 2 games with ITAD IDs
   const { data: games } = await supabase
@@ -59,4 +64,8 @@ export async function GET(request: NextRequest) {
     pricesIsArray: Array.isArray(pricesJson),
     pricesKeys: pricesJson && typeof pricesJson === "object" ? Object.keys(pricesJson).slice(0, 5) : null,
   });
+  } catch (err: any) {
+    console.error("[admin/debug-itad] Unhandled error:", err);
+    return NextResponse.json({ error: err?.message || "Internal server error" }, { status: 500 });
+  }
 }

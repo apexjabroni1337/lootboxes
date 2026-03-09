@@ -3,6 +3,7 @@ import AnalyticsCard from "@/components/analytics/AnalyticsCard";
 import ScoreBadge from "@/components/analytics/ScoreBadge";
 import NewsletterForm from "@/components/newsletter/NewsletterForm";
 import HowItWorks from "@/components/home/HowItWorks";
+import AffiliateNotice from "@/components/shared/AffiliateNotice";
 import TrustSignals from "@/components/home/TrustSignals";
 import GameAvatar from "@/components/ui/GameAvatar";
 import {
@@ -307,46 +308,140 @@ export default async function HomePage() {
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMyMDI4NDAiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRoLTJ2LTRoMnYtNGgydjRoNHYyaC00djRoLTJ2LTR6bTAtMzBoLTJ2LTRoMnYtNGgydjRoNHYyaC00djRoLTJ2LTR6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-30" />
         <div className="relative container-main py-16 sm:py-20">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/20 px-3.5 py-1.5 mb-6">
-            <Sparkles className="h-3.5 w-3.5 text-blue-300" />
-            <span className="text-xs font-semibold uppercase tracking-wider text-blue-200">
-              THE LOOT BOX DATABASE
-            </span>
-          </div>
+          <div className="grid lg:grid-cols-[1fr,auto] gap-10 items-center">
+            {/* Left: Text content */}
+            <div>
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/20 px-3.5 py-1.5 mb-6">
+                <Sparkles className="h-3.5 w-3.5 text-blue-300" />
+                <span className="text-xs font-semibold uppercase tracking-wider text-blue-200">
+                  THE LOOT BOX DATABASE
+                </span>
+              </div>
 
-          <h1 className="max-w-3xl text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-            Loot Box Transparency{" "}
-            <span className="text-blue-400">for Every Game</span>
-          </h1>
-          <p className="mt-4 max-w-2xl text-lg text-blue-200/80">
-            Data-driven loot box analysis, drop rates, and monetization scores
-            for every major game. Exposing the real odds behind gacha, loot boxes, card packs, and battle passes.
-          </p>
+              <h1 className="max-w-3xl text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
+                Loot Box Transparency{" "}
+                <span className="text-blue-400">for Every Game</span>
+              </h1>
+              <p className="mt-4 max-w-2xl text-lg text-blue-200/80">
+                Data-driven loot box analysis, drop rates, and monetization scores
+                for every major game. Exposing the real odds behind gacha, loot boxes, card packs, and battle passes.
+              </p>
 
-          {/* CTA buttons */}
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/lootbox"
-              className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition-all hover:bg-blue-50"
-            >
-              <BarChart3 className="h-4 w-4" />
-              Browse Loot Box Database
-            </Link>
-            <Link
-              href="/lootbox/rankings"
-              className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition-all hover:bg-white/20"
-            >
-              <Award className="h-4 w-4" />
-              View Rankings
-            </Link>
-            <Link
-              href="/deals"
-              className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-blue-200 backdrop-blur transition-all hover:bg-white/10"
-            >
-              <TrendingDown className="h-4 w-4" />
-              Game Deals
-            </Link>
+              {/* CTA buttons */}
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link
+                  href="/lootbox"
+                  className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition-all hover:bg-blue-50"
+                >
+                  <BarChart3 className="h-4 w-4" />
+                  Browse Loot Box Database
+                </Link>
+                <Link
+                  href="/lootbox/rankings"
+                  className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition-all hover:bg-white/20"
+                >
+                  <Award className="h-4 w-4" />
+                  View Rankings
+                </Link>
+                <Link
+                  href="/deals"
+                  className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-blue-200 backdrop-blur transition-all hover:bg-white/10"
+                >
+                  <TrendingDown className="h-4 w-4" />
+                  Game Deals
+                </Link>
+              </div>
+            </div>
+
+            {/* Right: CS2 Loot Box Illustration */}
+            <div className="hidden lg:flex items-center justify-center">
+              <div className="relative">
+                {/* Glow effect behind the box */}
+                <div className="absolute inset-0 rounded-3xl bg-blue-500/20 blur-3xl scale-110" />
+                <svg
+                  width="320"
+                  height="340"
+                  viewBox="0 0 320 340"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="relative drop-shadow-2xl"
+                  aria-label="CS2 Weapon Case illustration"
+                >
+                  {/* Case body - main rectangle */}
+                  <rect x="20" y="60" width="280" height="200" rx="12" fill="url(#caseGrad)" stroke="url(#caseBorder)" strokeWidth="2" />
+                  {/* Case lid top */}
+                  <path d="M20 72C20 65.373 25.373 60 32 60H288C294.627 60 300 65.373 300 72V100H20V72Z" fill="url(#lidGrad)" />
+                  {/* Lid seam line */}
+                  <line x1="20" y1="100" x2="300" y2="100" stroke="#4a6fa5" strokeWidth="1.5" opacity="0.6" />
+                  {/* CS2 logo / star emblem */}
+                  <g transform="translate(160, 170)" opacity="0.9">
+                    {/* Shield shape */}
+                    <path d="M0 -50L40 -30V15C40 35 20 50 0 60C-20 50 -40 35 -40 15V-30L0 -50Z" fill="url(#shieldGrad)" stroke="#fbbf24" strokeWidth="1.5" />
+                    {/* Star */}
+                    <path d="M0 -28L7.5 -10.5L26.5 -8L12.5 7L16 26.5L0 17.5L-16 26.5L-12.5 7L-26.5 -8L-7.5 -10.5Z" fill="#fbbf24" />
+                  </g>
+                  {/* Lock / latch */}
+                  <rect x="148" y="93" width="24" height="14" rx="3" fill="#94a3b8" stroke="#64748b" strokeWidth="1" />
+                  <circle cx="160" cy="100" r="3" fill="#475569" />
+                  {/* Corner rivets */}
+                  <circle cx="40" cy="78" r="4" fill="#64748b" opacity="0.7" />
+                  <circle cx="280" cy="78" r="4" fill="#64748b" opacity="0.7" />
+                  <circle cx="40" cy="242" r="4" fill="#64748b" opacity="0.7" />
+                  <circle cx="280" cy="242" r="4" fill="#64748b" opacity="0.7" />
+                  {/* Side handle left */}
+                  <rect x="8" y="130" width="12" height="50" rx="4" fill="#475569" opacity="0.6" />
+                  {/* Side handle right */}
+                  <rect x="300" y="130" width="12" height="50" rx="4" fill="#475569" opacity="0.6" />
+                  {/* Label strip */}
+                  <rect x="60" y="225" width="200" height="20" rx="4" fill="rgba(255,255,255,0.08)" />
+                  <text x="160" y="239" textAnchor="middle" fill="#93c5fd" fontSize="10" fontWeight="600" fontFamily="system-ui" letterSpacing="2">
+                    WEAPON CASE
+                  </text>
+                  {/* Rarity color bar at bottom */}
+                  <g transform="translate(50, 255)">
+                    <rect x="0" y="0" width="35" height="4" rx="2" fill="#b0c3d9" />
+                    <rect x="42" y="0" width="35" height="4" rx="2" fill="#5e98d9" />
+                    <rect x="84" y="0" width="35" height="4" rx="2" fill="#4b69ff" />
+                    <rect x="126" y="0" width="35" height="4" rx="2" fill="#8847ff" />
+                    <rect x="168" y="0" width="35" height="4" rx="2" fill="#d32ce6" />
+                    <rect x="210" y="0" width="10" height="4" rx="2" fill="#eb4b4b" />
+                  </g>
+                  {/* Floating sparkle particles */}
+                  <circle cx="70" cy="45" r="2" fill="#fbbf24" opacity="0.8">
+                    <animate attributeName="opacity" values="0.8;0.2;0.8" dur="2s" repeatCount="indefinite" />
+                  </circle>
+                  <circle cx="250" cy="35" r="1.5" fill="#60a5fa" opacity="0.6">
+                    <animate attributeName="opacity" values="0.6;0.15;0.6" dur="2.5s" repeatCount="indefinite" />
+                  </circle>
+                  <circle cx="290" cy="280" r="2" fill="#a78bfa" opacity="0.7">
+                    <animate attributeName="opacity" values="0.7;0.2;0.7" dur="3s" repeatCount="indefinite" />
+                  </circle>
+                  <circle cx="40" cy="290" r="1.5" fill="#fbbf24" opacity="0.5">
+                    <animate attributeName="opacity" values="0.5;0.1;0.5" dur="1.8s" repeatCount="indefinite" />
+                  </circle>
+                  {/* Gradients */}
+                  <defs>
+                    <linearGradient id="caseGrad" x1="160" y1="60" x2="160" y2="260" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#1e3a5f" />
+                      <stop offset="1" stopColor="#0f1f35" />
+                    </linearGradient>
+                    <linearGradient id="caseBorder" x1="160" y1="60" x2="160" y2="260" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#3b82f6" stopOpacity="0.4" />
+                      <stop offset="1" stopColor="#1e40af" stopOpacity="0.2" />
+                    </linearGradient>
+                    <linearGradient id="lidGrad" x1="160" y1="60" x2="160" y2="100" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#243b5c" />
+                      <stop offset="1" stopColor="#1a2d47" />
+                    </linearGradient>
+                    <linearGradient id="shieldGrad" x1="0" y1="-50" x2="0" y2="60" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#1e3a5f" />
+                      <stop offset="1" stopColor="#0c1929" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+            </div>
           </div>
 
           {/* Stats row */}
@@ -818,6 +913,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Affiliate Disclosure */}
+      <AffiliateNotice />
     </>
   );
 }

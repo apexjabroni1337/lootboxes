@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import { matchesSearch } from "@/lib/search-aliases";
 import {
   Search,
   ChevronRight,
@@ -207,8 +208,7 @@ export default function LootboxDatabaseClient({
     let result = games;
 
     if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
-      result = result.filter((g) => g.title.toLowerCase().includes(q));
+      result = result.filter((g) => matchesSearch(g.title, searchQuery));
     }
 
     if (activeGenre) {
