@@ -177,17 +177,29 @@ export function filterPromotableGames<T extends {
 /**
  * For deal-based queries where game data is nested under `.games`,
  * filter deals where the associated game is promotable.
+ *
+ * Historic low deals get a relaxed hot_score threshold — if a game
+ * is at its all-time lowest price, it's noteworthy even if niche.
  */
-export function filterPromotableDeals<T extends { games: any }>(deals: T[]): T[] {
+export function filterPromotableDeals<T extends { games: any; is_historic_low?: boolean }>(deals: T[]): T[] {
   return deals.filter((deal) => {
     const game = deal.games;
     if (!game) return false;
-    return isPromotableGame({
-      title: game.title || "",
-      cover_image: game.cover_image,
-      hot_score: game.hot_score,
-      genres: game.genres,
-      tags: game.tags,
-    });
+
+    // Always block NSFW / junk titles & genres
+    if (hasBadTitle(game.title || "")) return false;
+    if (hasBadGenres(game.genres)) return false;
+    if (hasBadTags(game.tags)) return false;
+
+    // Must have a cover image
+    if (!game.cover_image) return false;
+
+    // Historic lows skip the hot_score check — they're inherently notable
+    if ((deal as any).is_historic_low) return true;
+
+    // Regular deals still need minimum popularity
+    if ((game.hot_score ?? 0) < MIN_HOT_SCORE_FOR_PROMOTION) return false;
+
+    return true;
   });
 }

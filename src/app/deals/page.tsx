@@ -36,54 +36,87 @@ export const metadata = {
 
 export const revalidate = 300;
 
+const DEAL_SELECT = `
+  id,
+  game_id,
+  store,
+  store_url,
+  price,
+  original_price,
+  discount_pct,
+  currency,
+  is_historic_low,
+  expires_at,
+  affiliate_url,
+  scraped_at,
+  games!inner (
+    id,
+    title,
+    slug,
+    cover_image,
+    screenshot_image,
+    hot_score,
+    genres,
+    metacritic,
+    release_date,
+    platforms
+  )
+`;
+
 async function getDeals() {
   const supabase = createServerClient();
 
-  const { data: deals, error } = await supabase
-    .from("deals")
-    .select(`
-      id,
-      game_id,
-      store,
-      store_url,
-      price,
-      original_price,
-      discount_pct,
-      currency,
-      is_historic_low,
-      expires_at,
-      affiliate_url,
-      scraped_at,
-      games!inner (
-        id,
-        title,
-        slug,
-        cover_image,
-        screenshot_image,
-        hot_score,
-        genres,
-        metacritic,
-        release_date,
-        platforms
-      )
-    `)
-    .order("discount_pct", { ascending: false })
-    .limit(500);
+  // Fetch top deals by discount AND all historic lows in parallel
+  const [discountResult, historicResult] = await Promise.all([
+    supabase
+      .from("deals")
+      .select(DEAL_SELECT)
+      .order("discount_pct", { ascending: false })
+      .limit(500),
+    supabase
+      .from("deals")
+      .select(DEAL_SELECT)
+      .eq("is_historic_low", true)
+      .limit(200),
+  ]);
 
-  if (error) {
-    console.error("Deals query error:", error.message);
-    return [];
+  if (discountResult.error) {
+    console.error("Deals query error:", discountResult.error.message);
+  }
+  if (historicResult.error) {
+    console.error("Historic lows query error:", historicResult.error.message);
   }
 
-  if (!deals) return [];
+  // Merge both result sets, dedup by deal id
+  const seenIds = new Set<string>();
+  const allDeals: any[] = [];
+  for (const deal of [...(discountResult.data || []), ...(historicResult.data || [])]) {
+    if (!seenIds.has(deal.id)) {
+      seenIds.add(deal.id);
+      allDeals.push(deal);
+    }
+  }
 
-  // Deduplicate: keep only the best deal per game
+  if (allDeals.length === 0) return [];
+
+  // Deduplicate: keep best deal per game, preferring historic lows
   const bestByGame = new Map<string, any>();
-  for (const deal of deals) {
+  for (const deal of allDeals) {
     const gameId = (deal as any).game_id;
     const existing = bestByGame.get(gameId);
-    if (!existing || deal.price < existing.price) {
+    if (!existing) {
       bestByGame.set(gameId, deal);
+    } else {
+      // Prefer historic low deals; otherwise pick cheapest
+      const existingHL = existing.is_historic_low;
+      const newHL = deal.is_historic_low;
+      if (newHL && !existingHL) {
+        bestByGame.set(gameId, deal);
+      } else if (!newHL && existingHL) {
+        // keep existing historic low
+      } else if (deal.price < existing.price) {
+        bestByGame.set(gameId, deal);
+      }
     }
   }
   const unique = Array.from(bestByGame.values());
@@ -102,7 +135,7 @@ async function getDeals() {
     return (b.discount_pct || 0) - (a.discount_pct || 0);
   });
 
-  return promoted.slice(0, 150);
+  return promoted.slice(0, 200);
 }
 
 export default async function DealsPage({
