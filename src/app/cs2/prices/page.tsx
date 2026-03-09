@@ -514,34 +514,39 @@ export default function CS2PricesPage() {
                           )}
                         </div>
 
-                        {/* Buy CTA */}
+                        {/* Buy CTA — show ALL marketplaces that have a price for this item */}
                         <div className="flex-1 flex items-center gap-2 justify-end flex-wrap">
-                          {bestMp && (
-                            <a
-                              href={`/go/cs2/${bestMp.dealId}?from=prices-best`}
-                              target="_blank"
-                              rel="noopener noreferrer nofollow"
-                              className="flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-semibold text-white transition-colors"
-                              style={{ backgroundColor: bestMp.color }}
-                            >
-                              <ShoppingCart className="h-3 w-3" /> {bestMp.name}
-                            </a>
-                          )}
-                          {Object.values(MARKETPLACE_INFO)
-                            .filter((mp) => mp.dealId !== "steam" && mp.dealId !== item.bestMarket)
-                            .slice(0, 2)
-                            .map((mp) => (
+                          {(() => {
+                            // Build list of marketplaces with actual data for this item
+                            const available: { dealId: string; name: string; color: string; price: number | null }[] = [];
+                            if (item.skinportPrice) available.push({ dealId: "skinport", name: "Skinport", color: "#eb4b98", price: item.skinportPrice });
+                            if (item.csfloatPrice) available.push({ dealId: "csfloat", name: "CSFloat", color: "#4f8df0", price: item.csfloatPrice });
+                            if (item.buff163Price) available.push({ dealId: "buff163", name: "Buff163", color: "#ff6b35", price: item.buff163Price });
+                            if (item.dmarketPrice) available.push({ dealId: "dmarket", name: "DMarket", color: "#00c9a7", price: item.dmarketPrice });
+                            if (item.bitskinPrice) available.push({ dealId: "bitskins", name: "BitSkins", color: "#f97316", price: item.bitskinPrice });
+                            if (item.waxpeerPrice) available.push({ dealId: "waxpeer", name: "Waxpeer", color: "#7c3aed", price: item.waxpeerPrice });
+                            // Sort so cheapest is first
+                            available.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
+
+                            return available.map((mp, i) => (
                               <a
                                 key={mp.dealId}
                                 href={`/go/cs2/${mp.dealId}?from=prices`}
                                 target="_blank"
                                 rel="noopener noreferrer nofollow"
-                                className="flex items-center gap-1 rounded-lg border border-gray-200 px-2.5 py-1.5 text-[10px] font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                                className={`flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[10px] font-semibold transition-colors ${
+                                  i === 0
+                                    ? "text-white"
+                                    : "border border-gray-200 text-gray-600 hover:bg-gray-50"
+                                }`}
+                                style={i === 0 ? { backgroundColor: mp.color } : undefined}
                               >
-                                <div className="h-2 w-2 rounded-full flex-shrink-0" style={{ backgroundColor: mp.color }} />
+                                {i === 0 && <ShoppingCart className="h-3 w-3" />}
+                                {i > 0 && <div className="h-2 w-2 rounded-full flex-shrink-0" style={{ backgroundColor: mp.color }} />}
                                 {mp.name} <ExternalLink className="h-2.5 w-2.5" />
                               </a>
-                            ))}
+                            ));
+                          })()}
                         </div>
                       </div>
                     </div>
