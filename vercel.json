@@ -2,19 +2,27 @@
   "crons": [
     {
       "path": "/api/cron/sync-deals",
-      "schedule": "*/30 * * * *"
+      "schedule": "0 */2 * * *"
     },
     {
       "path": "/api/cron/discover-games",
-      "schedule": "0 */6 * * *"
+      "schedule": "0 3 * * *"
     },
     {
       "path": "/api/cron/enrich-games",
-      "schedule": "30 */6 * * *"
+      "schedule": "30 3 * * *"
     },
     {
       "path": "/api/cron/map-itad?batch=500",
-      "schedule": "*/5 * * * *"
+      "schedule": "*/30 * * * *"
+    },
+    {
+      "path": "/api/cron/sync-popularity",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/sync-new-releases",
+      "schedule": "0 9 * * *"
     }
   ]
 }

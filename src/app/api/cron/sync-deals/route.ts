@@ -121,14 +121,26 @@ export async function GET(request: NextRequest) {
 
     if (cleanErr) stats.errors.push(`Cleanup: ${cleanErr.message}`);
 
-    // ---- Step 3: Compute hot_score for all tracked games ----
+    // ---- Step 3: Compute hot_score for games WITHOUT popularity data ----
+    // Games with high hot_score (>100) were set by sync-popularity using
+    // real Steam player data. We only compute deal-based scores for games
+    // that sync-popularity hasn't ranked (hot_score < 100 or null).
     try {
-      const now = new Date();
-      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
-      const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+      const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
       for (const game of games || []) {
         try {
+          // Check current hot_score — skip if set by popularity sync
+          const { data: currentGame } = await supabase
+            .from("games")
+            .select("hot_score, metacritic")
+            .eq("id", game.id)
+            .single();
+
+          // If hot_score > 100, it was set by sync-popularity (popularity-ranked games
+          // score 100-250+). Don't overwrite with deal-only score.
+          if (currentGame?.hot_score && currentGame.hot_score > 100) continue;
+
           // Get best deal stats for this game
           const { data: gameDeals } = await supabase
             .from("deals")
@@ -141,29 +153,12 @@ export async function GET(request: NextRequest) {
           const hasHistoricLow = gameDeals.some((d) => d.is_historic_low);
           const isRecent = gameDeals.some((d) => d.scraped_at > dayAgo);
 
-          // Count clicks in last 7 days
-          const { count: clickCount } = await supabase
-            .from("clicks")
-            .select("id", { count: "exact", head: true })
-            .in(
-              "deal_id",
-              gameDeals.map((d: any) => d.id).filter(Boolean)
-            );
-
-          // Get metacritic from games table
-          const { data: gameInfo } = await supabase
-            .from("games")
-            .select("metacritic")
-            .eq("id", game.id)
-            .single();
-
-          // Compute hot_score
+          // Compute deal-only hot_score (0-99 range for non-popular games)
           const hotScore =
             maxDiscount +
             (hasHistoricLow ? 15 : 0) +
             (isRecent ? 10 : 0) +
-            ((clickCount || 0) * 0.5) +
-            ((gameInfo?.metacritic || 0) / 10);
+            ((currentGame?.metacritic || 0) / 10);
 
           await supabase
             .from("games")
