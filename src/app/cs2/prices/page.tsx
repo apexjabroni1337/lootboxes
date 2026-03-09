@@ -370,24 +370,16 @@ export default function CS2PricesPage() {
               </div>
 
               {/* Table header */}
-              <div className="hidden xl:flex items-center gap-3 px-5 py-2 text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-2">
-                <div className="w-64">Skin</div>
-                <div className="w-20 text-right">Steam</div>
-                <div className="w-20 text-right">
-                  <span className="text-pink-500">Skinport</span>
-                </div>
-                <div className="w-20 text-right">
-                  <span style={{ color: "#ff6b35" }}>Buff163</span>
-                </div>
-                <div className="w-20 text-right">
-                  <span style={{ color: "#00c9a7" }}>DMarket</span>
-                </div>
-                <div className="w-20 text-right">
-                  <span style={{ color: "#7c3aed" }}>Waxpeer</span>
-                </div>
-                <div className="w-24 text-right">Best Price</div>
-                <div className="w-20 text-center">Volume</div>
-                <div className="flex-1 text-right">Buy</div>
+              <div className="hidden xl:grid xl:grid-cols-[256px_88px_88px_88px_88px_88px_96px_72px_1fr] items-center px-5 py-2 text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-2">
+                <div>Skin</div>
+                <div className="text-right">Steam</div>
+                <div className="text-right text-pink-500">Skinport</div>
+                <div className="text-right" style={{ color: "#ff6b35" }}>Buff163</div>
+                <div className="text-right" style={{ color: "#00c9a7" }}>DMarket</div>
+                <div className="text-right" style={{ color: "#7c3aed" }}>Waxpeer</div>
+                <div className="text-right">Best Price</div>
+                <div className="text-center">Volume</div>
+                <div className="text-right">Buy</div>
               </div>
 
               <div className="space-y-2">
@@ -400,9 +392,9 @@ export default function CS2PricesPage() {
                       key={item.name}
                       className="rounded-xl border border-gray-200 bg-white px-4 py-3 sm:px-5 sm:py-4 shadow-sm hover:shadow-md transition-shadow"
                     >
-                      <div className="flex flex-col xl:flex-row xl:items-center gap-3">
+                      <div className="flex flex-col xl:grid xl:grid-cols-[256px_88px_88px_88px_88px_88px_96px_72px_1fr] xl:items-center gap-3 xl:gap-0">
                         {/* Skin info */}
-                        <div className="flex items-center gap-3 xl:w-64 flex-shrink-0">
+                        <div className="flex items-center gap-3">
                           {item.image ? (
                             <div
                               className="h-12 w-12 rounded-lg flex-shrink-0 overflow-hidden border-2 bg-gradient-to-br from-gray-100 to-gray-50"
@@ -437,57 +429,54 @@ export default function CS2PricesPage() {
                           </div>
                         </div>
 
-                        {/* Marketplace prices — row on desktop, grid on mobile */}
-                        <div className="grid grid-cols-2 sm:grid-cols-3 xl:flex gap-2 xl:gap-0 flex-1">
-                          {/* Steam */}
-                          <div className="xl:w-20 flex-shrink-0 xl:text-right">
-                            <span className="text-[10px] text-gray-400 xl:hidden">Steam</span>
-                            <p className="text-sm font-medium text-gray-400">{formatPrice(item.steamPrice)}</p>
-                          </div>
+                        {/* Steam */}
+                        <div className="xl:text-right">
+                          <span className="text-[10px] text-gray-400 xl:hidden">Steam</span>
+                          <p className="text-sm font-medium text-gray-400">{formatPrice(item.steamPrice)}</p>
+                        </div>
 
-                          {/* Skinport */}
-                          <div className="xl:w-20 flex-shrink-0 xl:text-right">
-                            <span className="text-[10px] xl:hidden" style={{ color: "#eb4b98" }}>Skinport</span>
-                            <p className={`text-sm font-semibold ${
-                              item.bestMarket === "skinport" ? "text-emerald-600" : "text-gray-700"
-                            }`}>
-                              {formatPrice(item.skinportPrice)}
-                            </p>
-                          </div>
+                        {/* Skinport */}
+                        <div className="xl:text-right">
+                          <span className="text-[10px] xl:hidden" style={{ color: "#eb4b98" }}>Skinport</span>
+                          <p className={`text-sm font-semibold ${
+                            item.bestMarket === "skinport" ? "text-emerald-600" : "text-gray-700"
+                          }`}>
+                            {formatPrice(item.skinportPrice)}
+                          </p>
+                        </div>
 
-                          {/* Buff163 */}
-                          <div className="xl:w-20 flex-shrink-0 xl:text-right">
-                            <span className="text-[10px] xl:hidden" style={{ color: "#ff6b35" }}>Buff163</span>
-                            <p className={`text-sm font-semibold ${
-                              item.bestMarket === "buff163" ? "text-emerald-600" : "text-gray-700"
-                            }`}>
-                              {formatPrice(item.buff163Price)}
-                            </p>
-                          </div>
+                        {/* Buff163 */}
+                        <div className="xl:text-right">
+                          <span className="text-[10px] xl:hidden" style={{ color: "#ff6b35" }}>Buff163</span>
+                          <p className={`text-sm font-semibold ${
+                            item.bestMarket === "buff163" ? "text-emerald-600" : "text-gray-700"
+                          }`}>
+                            {formatPrice(item.buff163Price)}
+                          </p>
+                        </div>
 
-                          {/* DMarket */}
-                          <div className="xl:w-20 flex-shrink-0 xl:text-right">
-                            <span className="text-[10px] xl:hidden" style={{ color: "#00c9a7" }}>DMarket</span>
-                            <p className={`text-sm font-semibold ${
-                              item.bestMarket === "dmarket" ? "text-emerald-600" : "text-gray-700"
-                            }`}>
-                              {formatPrice(item.dmarketPrice)}
-                            </p>
-                          </div>
+                        {/* DMarket */}
+                        <div className="xl:text-right">
+                          <span className="text-[10px] xl:hidden" style={{ color: "#00c9a7" }}>DMarket</span>
+                          <p className={`text-sm font-semibold ${
+                            item.bestMarket === "dmarket" ? "text-emerald-600" : "text-gray-700"
+                          }`}>
+                            {formatPrice(item.dmarketPrice)}
+                          </p>
+                        </div>
 
-                          {/* Waxpeer */}
-                          <div className="xl:w-20 flex-shrink-0 xl:text-right">
-                            <span className="text-[10px] xl:hidden" style={{ color: "#7c3aed" }}>Waxpeer</span>
-                            <p className={`text-sm font-semibold ${
-                              item.bestMarket === "waxpeer" ? "text-emerald-600" : "text-gray-700"
-                            }`}>
-                              {formatPrice(item.waxpeerPrice)}
-                            </p>
-                          </div>
+                        {/* Waxpeer */}
+                        <div className="xl:text-right">
+                          <span className="text-[10px] xl:hidden" style={{ color: "#7c3aed" }}>Waxpeer</span>
+                          <p className={`text-sm font-semibold ${
+                            item.bestMarket === "waxpeer" ? "text-emerald-600" : "text-gray-700"
+                          }`}>
+                            {formatPrice(item.waxpeerPrice)}
+                          </p>
                         </div>
 
                         {/* Best price badge */}
-                        <div className="xl:w-24 flex-shrink-0 flex xl:justify-end items-center gap-2">
+                        <div className="flex xl:justify-end items-center">
                           {item.lowestPrice && item.lowestPrice > 0 ? (
                             <div className="text-right">
                               <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-700">
@@ -503,17 +492,21 @@ export default function CS2PricesPage() {
                         </div>
 
                         {/* Volume */}
-                        <div className="xl:w-20 flex-shrink-0 flex xl:justify-center items-center gap-2">
-                          <span className="text-[10px] text-gray-400 xl:hidden">24h:</span>
-                          {item.sold24h > 0 ? (
-                            <span className="text-xs text-gray-500">{item.sold24h.toLocaleString()}</span>
+                        <div className="xl:text-center">
+                          <span className="text-[10px] text-gray-400 xl:hidden">Vol:</span>
+                          {item.sold24h > 0 || item.sold7d > 0 || item.sold30d > 0 ? (
+                            <div className="flex flex-col items-center">
+                              {item.sold24h > 0 && <span className="text-xs text-gray-600 font-medium">{item.sold24h.toLocaleString()}</span>}
+                              {item.sold24h === 0 && item.sold7d > 0 && <span className="text-[10px] text-gray-400">{item.sold7d.toLocaleString()}/7d</span>}
+                              {item.sold24h === 0 && item.sold7d === 0 && item.sold30d > 0 && <span className="text-[10px] text-gray-400">{item.sold30d.toLocaleString()}/30d</span>}
+                            </div>
                           ) : (
                             <span className="text-xs text-gray-300">—</span>
                           )}
                         </div>
 
                         {/* Buy CTA — show ALL marketplaces that have a price for this item */}
-                        <div className="flex-1 flex items-center gap-2 justify-end flex-wrap">
+                        <div className="flex items-center gap-2 justify-end flex-wrap">
                           {(() => {
                             // Build list of marketplaces with actual data for this item
                             const available: { dealId: string; name: string; color: string; price: number | null }[] = [];
