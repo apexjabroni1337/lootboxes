@@ -354,92 +354,61 @@ export default async function HomePage() {
               </div>
             </div>
 
-            {/* Right: CS2 Loot Box Illustration */}
+            {/* Right: Stacked CS2 Cases */}
             <div className="hidden lg:flex items-center justify-center">
-              <div className="relative">
-                {/* Glow effect behind the box */}
-                <div className="absolute inset-0 rounded-3xl bg-blue-500/20 blur-3xl scale-110" />
-                <svg
-                  width="320"
-                  height="340"
-                  viewBox="0 0 320 340"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="relative drop-shadow-2xl"
-                  aria-label="CS2 Weapon Case illustration"
-                >
-                  {/* Case body - main rectangle */}
-                  <rect x="20" y="60" width="280" height="200" rx="12" fill="url(#caseGrad)" stroke="url(#caseBorder)" strokeWidth="2" />
-                  {/* Case lid top */}
-                  <path d="M20 72C20 65.373 25.373 60 32 60H288C294.627 60 300 65.373 300 72V100H20V72Z" fill="url(#lidGrad)" />
-                  {/* Lid seam line */}
-                  <line x1="20" y1="100" x2="300" y2="100" stroke="#4a6fa5" strokeWidth="1.5" opacity="0.6" />
-                  {/* CS2 logo / star emblem */}
-                  <g transform="translate(160, 170)" opacity="0.9">
-                    {/* Shield shape */}
-                    <path d="M0 -50L40 -30V15C40 35 20 50 0 60C-20 50 -40 35 -40 15V-30L0 -50Z" fill="url(#shieldGrad)" stroke="#fbbf24" strokeWidth="1.5" />
-                    {/* Star */}
-                    <path d="M0 -28L7.5 -10.5L26.5 -8L12.5 7L16 26.5L0 17.5L-16 26.5L-12.5 7L-26.5 -8L-7.5 -10.5Z" fill="#fbbf24" />
-                  </g>
-                  {/* Lock / latch */}
-                  <rect x="148" y="93" width="24" height="14" rx="3" fill="#94a3b8" stroke="#64748b" strokeWidth="1" />
-                  <circle cx="160" cy="100" r="3" fill="#475569" />
-                  {/* Corner rivets */}
-                  <circle cx="40" cy="78" r="4" fill="#64748b" opacity="0.7" />
-                  <circle cx="280" cy="78" r="4" fill="#64748b" opacity="0.7" />
-                  <circle cx="40" cy="242" r="4" fill="#64748b" opacity="0.7" />
-                  <circle cx="280" cy="242" r="4" fill="#64748b" opacity="0.7" />
-                  {/* Side handle left */}
-                  <rect x="8" y="130" width="12" height="50" rx="4" fill="#475569" opacity="0.6" />
-                  {/* Side handle right */}
-                  <rect x="300" y="130" width="12" height="50" rx="4" fill="#475569" opacity="0.6" />
-                  {/* Label strip */}
-                  <rect x="60" y="225" width="200" height="20" rx="4" fill="rgba(255,255,255,0.08)" />
-                  <text x="160" y="239" textAnchor="middle" fill="#93c5fd" fontSize="10" fontWeight="600" fontFamily="system-ui" letterSpacing="2">
-                    WEAPON CASE
-                  </text>
-                  {/* Rarity color bar at bottom */}
-                  <g transform="translate(50, 255)">
-                    <rect x="0" y="0" width="35" height="4" rx="2" fill="#b0c3d9" />
-                    <rect x="42" y="0" width="35" height="4" rx="2" fill="#5e98d9" />
-                    <rect x="84" y="0" width="35" height="4" rx="2" fill="#4b69ff" />
-                    <rect x="126" y="0" width="35" height="4" rx="2" fill="#8847ff" />
-                    <rect x="168" y="0" width="35" height="4" rx="2" fill="#d32ce6" />
-                    <rect x="210" y="0" width="10" height="4" rx="2" fill="#eb4b4b" />
-                  </g>
-                  {/* Floating sparkle particles */}
-                  <circle cx="70" cy="45" r="2" fill="#fbbf24" opacity="0.8">
-                    <animate attributeName="opacity" values="0.8;0.2;0.8" dur="2s" repeatCount="indefinite" />
-                  </circle>
-                  <circle cx="250" cy="35" r="1.5" fill="#60a5fa" opacity="0.6">
-                    <animate attributeName="opacity" values="0.6;0.15;0.6" dur="2.5s" repeatCount="indefinite" />
-                  </circle>
-                  <circle cx="290" cy="280" r="2" fill="#a78bfa" opacity="0.7">
-                    <animate attributeName="opacity" values="0.7;0.2;0.7" dur="3s" repeatCount="indefinite" />
-                  </circle>
-                  <circle cx="40" cy="290" r="1.5" fill="#fbbf24" opacity="0.5">
-                    <animate attributeName="opacity" values="0.5;0.1;0.5" dur="1.8s" repeatCount="indefinite" />
-                  </circle>
-                  {/* Gradients */}
-                  <defs>
-                    <linearGradient id="caseGrad" x1="160" y1="60" x2="160" y2="260" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#1e3a5f" />
-                      <stop offset="1" stopColor="#0f1f35" />
-                    </linearGradient>
-                    <linearGradient id="caseBorder" x1="160" y1="60" x2="160" y2="260" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#3b82f6" stopOpacity="0.4" />
-                      <stop offset="1" stopColor="#1e40af" stopOpacity="0.2" />
-                    </linearGradient>
-                    <linearGradient id="lidGrad" x1="160" y1="60" x2="160" y2="100" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#243b5c" />
-                      <stop offset="1" stopColor="#1a2d47" />
-                    </linearGradient>
-                    <linearGradient id="shieldGrad" x1="0" y1="-50" x2="0" y2="60" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#1e3a5f" />
-                      <stop offset="1" stopColor="#0c1929" />
-                    </linearGradient>
-                  </defs>
-                </svg>
+              <div className="relative w-[340px] h-[300px]">
+                {/* Ambient glow */}
+                <div
+                  className="absolute rounded-full blur-[50px]"
+                  style={{
+                    width: 280,
+                    height: 280,
+                    top: 10,
+                    left: 30,
+                    background: "radial-gradient(circle, rgba(245,158,11,0.25), transparent)",
+                  }}
+                />
+                {/* Back case — Kilowatt (rotated, faded) */}
+                <img
+                  src="https://static.wikia.nocookie.net/cswikia/images/e/e7/Kilowatt-case.png/revision/latest?cb=20240210202000"
+                  alt="CS2 Kilowatt Case"
+                  className="absolute drop-shadow-xl"
+                  style={{
+                    maxHeight: 200,
+                    top: 60,
+                    left: 120,
+                    transform: "rotate(8deg)",
+                    opacity: 0.6,
+                    zIndex: 1,
+                  }}
+                />
+                {/* Middle case — Gallery (slight tilt) */}
+                <img
+                  src="https://static.wikia.nocookie.net/cswikia/images/d/d1/Gallery-case.png/revision/latest?cb=20250925192158"
+                  alt="CS2 Gallery Case"
+                  className="absolute drop-shadow-xl"
+                  style={{
+                    maxHeight: 200,
+                    top: 30,
+                    left: 70,
+                    transform: "rotate(-5deg)",
+                    opacity: 0.8,
+                    zIndex: 2,
+                  }}
+                />
+                {/* Front case — Dreams & Nightmares (prominent) */}
+                <img
+                  src="https://static.wikia.nocookie.net/cswikia/images/f/f3/Dreams_nighmares_case.png/revision/latest?cb=20220121083639"
+                  alt="CS2 Dreams and Nightmares Case"
+                  className="absolute drop-shadow-2xl"
+                  style={{
+                    maxHeight: 230,
+                    top: 10,
+                    left: 20,
+                    transform: "rotate(-2deg)",
+                    zIndex: 3,
+                  }}
+                />
               </div>
             </div>
           </div>
