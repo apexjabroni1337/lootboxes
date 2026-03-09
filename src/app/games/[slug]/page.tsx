@@ -552,7 +552,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Monetization Analysis</h2>
                 <div className="mt-4 card border-brand-200 bg-brand-50">
                   <div className="flex items-center gap-4">
-                    <ScoreBadge score={game.lootboxes_score} size="lg" showLabel />
+                    <ScoreBadge score={game.lootboxes_score} size="md" showLabel />
                     <div className="flex-1">
                       <p className="text-sm text-gray-700">
                         We&apos;ve analyzed this game&apos;s in-game monetization system.
@@ -572,9 +572,11 @@ export default async function GamePage({ params }: { params: { slug: string } })
           <div className="space-y-6">
             {/* Lootboxes Score */}
             {game.lootboxes_score && (
-              <div className="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-900">
-                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Lootboxes Score</h3>
-                <div className="mt-3">
+              <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+                <div className="bg-gray-50 px-5 py-3 border-b border-gray-100">
+                  <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Monetization Rating</h3>
+                </div>
+                <div className="px-5 py-5">
                   <ScoreBadge score={game.lootboxes_score} size="lg" showLabel />
                 </div>
               </div>
