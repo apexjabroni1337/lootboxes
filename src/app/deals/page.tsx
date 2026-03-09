@@ -63,6 +63,65 @@ const DEAL_SELECT = `
   )
 `;
 
+/**
+ * Extract a "base title" from a game name to group DLC / edition variants.
+ * "Pals Go Only Up - Knight Character"  → "pals go only up"
+ * "My Sudoku - Classic 6x6 Medium 5"    → "my sudoku"
+ * "XEL Save the World Edition"          → "xel save the world"
+ * "Elden Ring"                           → "elden ring"
+ */
+function getBaseTitle(title: string): string {
+  let base = title.toLowerCase().trim();
+
+  // Strip everything after common DLC/edition separators
+  // " - " is the most common: "Game - DLC Name"
+  const dashIdx = base.indexOf(" - ");
+  if (dashIdx > 3) base = base.substring(0, dashIdx);
+
+  // Strip edition suffixes
+  base = base
+    .replace(/\s+(edition|pack|bundle|collection|dlc|character|upgrade|pass|season|chapter|episode|volume|vol)\b.*$/i, "")
+    .replace(/\s+(goty|game\s*of\s*the\s*year|deluxe|gold|premium|ultimate|complete|enhanced|definitive|standard|special)\b.*$/i, "")
+    .trim();
+
+  return base;
+}
+
+/**
+ * Collapse DLC/edition/character-pack variants so only one entry per
+ * base game appears in the list. Keeps the deal with the highest
+ * discount (or historic low if available).
+ */
+function deduplicateByBaseTitle(deals: any[]): any[] {
+  const byBase = new Map<string, any>();
+  for (const deal of deals) {
+    const title = deal.games?.title || "";
+    const base = getBaseTitle(title);
+    const existing = byBase.get(base);
+    if (!existing) {
+      byBase.set(base, deal);
+    } else {
+      // Prefer: historic low > higher hot_score > bigger discount
+      const existingHL = existing.is_historic_low;
+      const newHL = deal.is_historic_low;
+      if (newHL && !existingHL) {
+        byBase.set(base, deal);
+      } else if (!newHL && existingHL) {
+        // keep existing
+      } else {
+        const existingScore = existing.games?.hot_score || 0;
+        const newScore = deal.games?.hot_score || 0;
+        if (newScore > existingScore) {
+          byBase.set(base, deal);
+        } else if (newScore === existingScore && (deal.discount_pct || 0) > (existing.discount_pct || 0)) {
+          byBase.set(base, deal);
+        }
+      }
+    }
+  }
+  return Array.from(byBase.values());
+}
+
 async function getDeals() {
   const supabase = createServerClient();
 
@@ -124,8 +183,14 @@ async function getDeals() {
   // Filter out junk/NSFW/unpopular games
   const promoted = filterPromotableDeals(unique);
 
+  // Collapse DLC / edition / character-pack variants into one entry per base game.
+  // "Pals Go Only Up - Knight Character" and "Pals Go Only Up - Barbarian Character"
+  // should only show the best deal, not flood the list.
+  // Also collapses "My Sudoku - Classic 6x6 Medium 5" style variants.
+  const deduped = deduplicateByBaseTitle(promoted);
+
   // Sort: images first, then hot_score, then discount
-  promoted.sort((a: any, b: any) => {
+  deduped.sort((a: any, b: any) => {
     const aHasImg = a.games?.cover_image ? 1 : 0;
     const bHasImg = b.games?.cover_image ? 1 : 0;
     if (aHasImg !== bHasImg) return bHasImg - aHasImg;
@@ -135,7 +200,7 @@ async function getDeals() {
     return (b.discount_pct || 0) - (a.discount_pct || 0);
   });
 
-  return promoted.slice(0, 200);
+  return deduped.slice(0, 200);
 }
 
 export default async function DealsPage({
