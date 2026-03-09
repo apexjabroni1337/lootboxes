@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@/lib/supabase";
+import { createClient } from "@supabase/supabase-js";
 
 export const dynamic = "force-dynamic";
+
+// Module-level client persists across warm invocations (no per-request overhead)
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,8 +22,6 @@ export async function GET(request: NextRequest) {
     if (!uuidRegex.test(gameId)) {
       return NextResponse.json({ error: "Invalid gameId format" }, { status: 400 });
     }
-
-    const supabase = createServerClient();
 
     const { data, error } = await supabase
       .from("drop_rates")

@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LootBoxes Hero Mockups — Pick Your Favorite</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0f172a; color: #fff; font-family: system-ui, -apple-system, sans-serif; }
+
+  .header { text-align: center; padding: 40px 20px 20px; border-bottom: 1px solid #1e293b; margin-bottom: 40px; }
+  .header h1 { font-size: 28px; color: #60a5fa; }
+  .header p { color: #94a3b8; margin-top: 8px; font-size: 14px; }
+
+  .section-label { text-align: center; padding: 30px 20px 20px; }
+  .section-label h2 { font-size: 22px; color: #f59e0b; letter-spacing: 1px; text-transform: uppercase; }
+  .section-label p { color: #64748b; font-size: 13px; margin-top: 4px; }
+
+  .mockup {
+    max-width: 1200px; margin: 0 auto 60px; border: 2px solid #1e293b; border-radius: 16px; overflow: hidden; position: relative;
+  }
+  .mockup-number {
+    position: absolute; top: 12px; left: 12px; z-index: 10;
+    background: #f59e0b; color: #000; font-weight: 800; font-size: 14px;
+    width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Hero base styles (matching the real site) */
+  .hero {
+    background: linear-gradient(135deg, #0f172a, #172554, #0f172a);
+    padding: 60px 48px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: center;
+    min-height: 340px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMyMDI4NDAiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRoLTJ2LTRoMnYtNGgydjRoNHYyaC00djRoLTJ2LTR6bTAtMzBoLTJ2LTRoMnYtNGgydjRoNHYyaC00djRoLTJ2LTR6Ii8+PC9nPjwvZz48L3N2Zz4=");
+    opacity: 0.3;
+  }
+  .hero-text { position: relative; z-index: 2; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px; border-radius: 999px;
+    border: 1px solid rgba(96,165,250,0.3); background: rgba(59,130,246,0.2);
+    padding: 6px 14px; margin-bottom: 20px; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.5px; color: #bfdbfe;
+  }
+  .hero-text h1 { font-size: 48px; font-weight: 800; line-height: 1.1; max-width: 600px; }
+  .hero-text h1 span { color: #60a5fa; }
+  .hero-text p { margin-top: 16px; color: rgba(191,219,254,0.7); font-size: 16px; max-width: 540px; line-height: 1.6; }
+  .cta-row { margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn { padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .btn-white { background: #fff; color: #0f172a; }
+  .btn-ghost { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+
+  /* Right side image area */
+  .hero-image { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; }
+  .hero-image img { max-height: 280px; object-fit: contain; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5)); }
+
+  /* Generated art containers */
+  .gen-art { position: relative; width: 300px; height: 300px; display: flex; align-items: center; justify-content: center; }
+  .glow { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.4; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Hero Image Mockups — Pick Your Favorite</h1>
+  <p>20 options: #1-10 use real CS2 case images from Steam CDN &nbsp;|&nbsp; #11-20 are generated SVG/CSS art</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- REAL IMAGE MOCKUPS (#1-10) -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<div class="section-label">
+  <h2>Real Images (#1–10)</h2>
+  <p>Using actual CS2 case artwork from Steam CDN</p>
+</div>
+
+<!-- #1 — Kilowatt Case (newest) floating with glow -->
+<div class="mockup">
+  <div class="mockup-number">1</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image" style="position:relative;">
+      <div style="position:absolute;width:200px;height:200px;background:radial-gradient(circle,rgba(245,158,11,0.3),transparent);border-radius:50%;filter:blur(40px);"></div>
+      <img src="https://community.fastly.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFU2nfGaJG0btN2wwYHfxa-hY-uFxj4Duu8j27GS89ui0VXg_0Y-YDuicoaRewE3NV3T_1frxO7og5Pu6p_PmHQwviQj4n3D30vg31oraA/360fx360f" alt="Kilowatt Case" style="max-height:260px;animation:float 3s ease-in-out infinite;">
+      <style>@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}</style>
+    </div>
+  </div>
+</div>
+
+<!-- #2 — Gallery Case large with purple glow -->
+<div class="mockup">
+  <div class="mockup-number">2</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image" style="position:relative;">
+      <div style="position:absolute;width:250px;height:250px;background:radial-gradient(circle,rgba(168,85,247,0.35),transparent);border-radius:50%;filter:blur(50px);"></div>
+      <img src="https://community.fastly.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFQynOKcJWkStNjmxtbcxqGhZr6BxjkBuZUp2LiYpNWm3Qfk-UBrYT-hd4eLMlhp-ENSMg/360fx360f" alt="Gallery Case" style="max-height:280px;transform:rotate(-5deg);animation:float 3s ease-in-out infinite;">
+    </div>
+  </div>
+</div>
+
+<!-- #3 — Dreams & Nightmares Case tilted with blue glow -->
+<div class="mockup">
+  <div class="mockup-number">3</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image" style="position:relative;">
+      <div style="position:absolute;width:220px;height:220px;background:radial-gradient(circle,rgba(59,130,246,0.4),transparent);border-radius:50%;filter:blur(50px);"></div>
+      <img src="https://community.fastly.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFUznfCcJmxDv9rhwIHZwqP3a-uGwjkJ6scg2LvAo9qh3gzm80ZpMDuhcNDGJFM3ZVDYrlLox-_shpW0vZTJnXY16SIj5GGdwUI_a7wYTw/360fx360f" alt="Dreams & Nightmares Case" style="max-height:270px;animation:float 3s ease-in-out infinite;">
+    </div>
+  </div>
+</div>
+
+<!-- #4 — Multiple stacked cases -->
+<div class="mockup">
+  <div class="mockup-number">4</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image" style="position:relative;width:340px;height:300px;">
+      <div style="position:absolute;width:280px;height:280px;background:radial-gradient(circle,rgba(245,158,11,0.25),transparent);border-radius:50%;filter:blur(50px);top:10px;left:30px;"></div>
+      <img src="https://community.fastly.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFU2nfGaJG0btN2wwYHfxa-hY-uFxj4Duu8j27GS89ui0VXg_0Y-YDuicoaRewE3NV3T_1frxO7og5Pu6p_PmHQwviQj4n3D30vg31oraA/360fx360f" alt="Case 1" style="position:absolute;max-height:200px;top:60px;left:120px;transform:rotate(8deg);opacity:0.6;z-index:1;">
+      <img src="https://community.fastly.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFQynOKcJWkStNjmxtbcxqGhZr6BxjkBuZUp2LiYpNWm3Qfk-UBrYT-hd4eLMlhp-ENSMg/360fx360f" alt="Case 2" style="position:absolute;max-height:200px;top:30px;left:70px;transform:rotate(-5deg);opacity:0.8;z-index:2;">
+      <img src="https://community.fastly.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFUznfCcJmxDv9rhwIHZwqP3a-uGwjkJ6scg2LvAo9qh3gzm80ZpMDuhcNDGJFM3ZVDYrlLox-_shpW0vZTJnXY16SIj5GGdwUI_a7wYTw/360fx360f" alt="Case 3" style="position:absolute;max-height:230px;top:10px;left:20px;transform:rotate(-2deg);z-index:3;">
+    </div>
+  </div>
+</div>
+
+<!-- #5 — Revolution Case with green accent glow -->
+<div class="mockup">
+  <div class="mockup-number">5</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image" style="position:relative;">
+      <div style="position:absolute;width:240px;height:240px;background:radial-gradient(circle,rgba(34,197,94,0.3),transparent);border-radius:50%;filter:blur(50px);"></div>
+      <img src="https://community.fastly.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFYynaPdIj9DvNOzlYS0mvb6ZrmAxTkBupd12-jCoNmk2wPhrkRoZW-lJ4fAIQ46NF2F-wfryOi910e76ZvAnCQ17Cki5mGdwUIlFX0vIw/360fx360f" alt="Revolution Case" style="max-height:260px;animation:float 3s ease-in-out infinite;">
+    </div>
+  </div>
+</div>
+
+<!-- #6 — Fracture Case with pink glow, slightly smaller -->
+<div class="mockup">
+  <div class="mockup-number">6</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image" style="position:relative;">
+      <div style="position:absolute;width:200px;height:200px;background:radial-gradient(circle,rgba(236,72,153,0.35),transparent);border-radius:50%;filter:blur(50px);"></div>
+      <img src="https://community.fastly.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFMynaecIT8Wv9rilZPaw6WkYOiHk2kGsMEm3LzFpdml2wDi-kRoZWmncoaRewI3NV6FqlO5kOm508XvtcqcziRksyMm4yvD30vgDKF3Fg/360fx360f" alt="Fracture Case" style="max-height:250px;animation:float 3s ease-in-out infinite;">
+    </div>
+  </div>
+</div>
+
+<!-- #7 — Case with "opening" effect (key + case) -->
+<div class="mockup">
+  <div class="mockup-number">7</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image" style="position:relative;width:340px;height:300px;">
+      <div style="position:absolute;width:300px;height:300px;background:radial-gradient(circle,rgba(245,158,11,0.3),rgba(168,85,247,0.15),transparent);border-radius:50%;filter:blur(60px);top:0;left:20px;"></div>
+      <!-- Key floating above case -->
+      <img src="https://community.fastly.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXX7gNTPcUxqBpWQV-fVOG_wcbQVmJ4IABWuoX3e1Uy4KKZIm9BuYjiwNPSwaFkY-OHkz8IvJEii7qToN2k0FHi-0drNm3ycNfBcQU3YVHT_QO_wu3phJHpuM6cyidhviIi7SzYlULiG0YC7A/360fx360f" alt="Case Key" style="position:absolute;max-height:100px;top:10px;left:140px;z-index:3;animation:keyfloat 2s ease-in-out infinite;">
+      <img src="https://community.fastly.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFU2nfGaJG0btN2wwYHfxa-hY-uFxj4Duu8j27GS89ui0VXg_0Y-YDuicoaRewE3NV3T_1frxO7og5Pu6p_PmHQwviQj4n3D30vg31oraA/360fx360f" alt="Kilowatt Case" style="position:absolute;max-height:220px;top:70px;left:60px;z-index:2;">
+      <style>@keyframes keyfloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-8px) rotate(5deg)}}</style>
+    </div>
+  </div>
+</div>
+
+<!-- #8 — Recoil Case on dark card/pedestal -->
+<div class="mockup">
+  <div class="mockup-number">8</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image" style="position:relative;">
+      <div style="position:absolute;width:280px;height:280px;background:radial-gradient(circle,rgba(251,191,36,0.2),transparent);border-radius:50%;filter:blur(60px);"></div>
+      <div style="position:relative;background:linear-gradient(135deg,rgba(30,41,59,0.9),rgba(15,23,42,0.95));border:1px solid rgba(148,163,184,0.15);border-radius:16px;padding:30px;backdrop-filter:blur(10px);">
+        <img src="https://community.fastly.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFYxnaKkIz8R79-gxoLax6egN-KAkGkGscAj3OyYrNn33Q3nr0FsNW_1JNWVIG5oZViD-FW4xLq60cK6uszAySN9-n51dAzajQ/360fx360f" alt="Recoil Case" style="max-height:200px;display:block;margin:0 auto;">
+        <div style="text-align:center;margin-top:12px;font-size:11px;color:#94a3b8;letter-spacing:2px;text-transform:uppercase;">What's inside?</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #9 — Snakebite Case with green venom glow -->
+<div class="mockup">
+  <div class="mockup-number">9</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image" style="position:relative;">
+      <div style="position:absolute;width:260px;height:260px;background:radial-gradient(circle,rgba(74,222,128,0.3),rgba(34,197,94,0.1),transparent);border-radius:50%;filter:blur(50px);"></div>
+      <img src="https://community.fastly.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFQynaGdJjkQ6ovjw4SPlfP3auiEl2kB65Aj0uuVo4n0jQO1-UJoN2-nItOSIwU3ZA2C-Qfowbi80p_q78-YbCJ97w/360fx360f" alt="Snakebite Case" style="max-height:270px;animation:float 3s ease-in-out infinite;">
+    </div>
+  </div>
+</div>
+
+<!-- #10 — CS20 Case with retro orange glow -->
+<div class="mockup">
+  <div class="mockup-number">10</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image" style="position:relative;">
+      <div style="position:absolute;width:240px;height:240px;background:radial-gradient(circle,rgba(249,115,22,0.35),transparent);border-radius:50%;filter:blur(50px);"></div>
+      <img src="https://community.fastly.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXU5A1PIYQNqhpOSV-fRPasw8rsUFJ5KBFZv668FFUynaebIT4avdrlzteOxa-hMOKGxj8J7JUp07iYotuk2wKx_hVrYzqlIteLdQU2YFzXqFe5wu_t0MW4tJ6azynXI3t9/360fx360f" alt="CS20 Case" style="max-height:260px;animation:float 3s ease-in-out infinite;">
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- GENERATED SVG/CSS MOCKUPS (#11-20) -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<div class="section-label" style="margin-top:40px;">
+  <h2>Generated Art (#11–20)</h2>
+  <p>SVG/CSS illustrations — no external images needed</p>
+</div>
+
+<!-- #11 — Glowing mystery box with "?" -->
+<div class="mockup">
+  <div class="mockup-number">11</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="gen-art">
+        <div class="glow" style="width:200px;height:200px;background:rgba(251,191,36,0.4);top:50px;left:50px;"></div>
+        <svg width="260" height="280" viewBox="0 0 260 280" fill="none" style="position:relative;filter:drop-shadow(0 0 30px rgba(251,191,36,0.3));">
+          <!-- Box body -->
+          <rect x="30" y="80" width="200" height="160" rx="12" fill="url(#g11a)" stroke="url(#g11b)" stroke-width="2"/>
+          <!-- Lid (opened, tilted back) -->
+          <path d="M30 80L50 30H210L230 80" fill="url(#g11c)" stroke="url(#g11b)" stroke-width="2"/>
+          <line x1="30" y1="80" x2="230" y2="80" stroke="#fbbf24" stroke-width="2" opacity="0.6"/>
+          <!-- Golden light rays from opening -->
+          <path d="M130 80L100 20" stroke="#fbbf24" stroke-width="1.5" opacity="0.4"/>
+          <path d="M130 80L130 10" stroke="#fbbf24" stroke-width="2" opacity="0.5"/>
+          <path d="M130 80L160 20" stroke="#fbbf24" stroke-width="1.5" opacity="0.4"/>
+          <path d="M130 80L80 30" stroke="#fbbf24" stroke-width="1" opacity="0.3"/>
+          <path d="M130 80L180 30" stroke="#fbbf24" stroke-width="1" opacity="0.3"/>
+          <!-- Big "?" -->
+          <text x="130" y="190" text-anchor="middle" font-size="80" font-weight="900" fill="#fbbf24" opacity="0.9" font-family="system-ui">?</text>
+          <!-- Sparkles -->
+          <circle cx="90" cy="40" r="3" fill="#fbbf24" opacity="0.8"><animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.5s" repeatCount="indefinite"/></circle>
+          <circle cx="170" cy="35" r="2" fill="#fbbf24" opacity="0.6"><animate attributeName="opacity" values="0.6;0.1;0.6" dur="2s" repeatCount="indefinite"/></circle>
+          <circle cx="130" cy="15" r="2.5" fill="#fff" opacity="0.7"><animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.8s" repeatCount="indefinite"/></circle>
+          <defs>
+            <linearGradient id="g11a" x1="130" y1="80" x2="130" y2="240"><stop stop-color="#1e3a5f"/><stop offset="1" stop-color="#0c1929"/></linearGradient>
+            <linearGradient id="g11b" x1="130" y1="30" x2="130" y2="240"><stop stop-color="#fbbf24" stop-opacity="0.5"/><stop offset="1" stop-color="#92400e" stop-opacity="0.2"/></linearGradient>
+            <linearGradient id="g11c" x1="130" y1="30" x2="130" y2="80"><stop stop-color="#243b5c"/><stop offset="1" stop-color="#1a2d47"/></linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #12 — Spinning loot box cube -->
+<div class="mockup">
+  <div class="mockup-number">12</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="gen-art">
+        <div class="glow" style="width:180px;height:180px;background:rgba(96,165,250,0.4);top:60px;left:60px;"></div>
+        <div style="width:200px;height:200px;position:relative;animation:spin3d 8s linear infinite;perspective:600px;">
+          <div style="width:200px;height:200px;border:2px solid rgba(96,165,250,0.4);border-radius:20px;background:linear-gradient(135deg,rgba(30,58,95,0.9),rgba(15,23,42,0.95));display:flex;align-items:center;justify-content:center;box-shadow:0 0 60px rgba(96,165,250,0.15),inset 0 0 40px rgba(96,165,250,0.05);">
+            <div style="text-align:center;">
+              <div style="font-size:64px;font-weight:900;background:linear-gradient(135deg,#60a5fa,#a78bfa,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">?!</div>
+              <div style="font-size:10px;color:#60a5fa;letter-spacing:3px;text-transform:uppercase;margin-top:4px;">LOOT BOX</div>
+            </div>
+          </div>
+        </div>
+        <style>@keyframes spin3d{0%{transform:rotateY(0deg) rotateX(5deg)}100%{transform:rotateY(360deg) rotateX(5deg)}}</style>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #13 — Treasure chest style -->
+<div class="mockup">
+  <div class="mockup-number">13</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="gen-art">
+        <div class="glow" style="width:220px;height:220px;background:rgba(251,191,36,0.35);top:40px;left:40px;"></div>
+        <svg width="280" height="280" viewBox="0 0 280 280" fill="none" style="position:relative;filter:drop-shadow(0 0 25px rgba(251,191,36,0.2));">
+          <!-- Chest body -->
+          <rect x="40" y="130" width="200" height="110" rx="8" fill="#1a2744" stroke="#d97706" stroke-width="1.5" opacity="0.9"/>
+          <!-- Chest lid (domed) -->
+          <path d="M40 130C40 130 40 80 140 60C240 80 240 130 240 130Z" fill="#1e3352" stroke="#d97706" stroke-width="1.5"/>
+          <!-- Metal bands -->
+          <rect x="40" y="125" width="200" height="10" rx="2" fill="#92400e" opacity="0.5"/>
+          <rect x="125" y="70" width="30" height="170" rx="4" fill="#92400e" opacity="0.2"/>
+          <!-- Lock -->
+          <circle cx="140" cy="160" r="15" fill="#1a2744" stroke="#fbbf24" stroke-width="2"/>
+          <rect x="135" y="155" width="10" height="12" rx="2" fill="#fbbf24"/>
+          <!-- Gold coins spilling out -->
+          <circle cx="80" cy="115" r="10" fill="#fbbf24" opacity="0.9"/>
+          <circle cx="100" cy="108" r="8" fill="#f59e0b" opacity="0.8"/>
+          <circle cx="165" cy="112" r="9" fill="#fbbf24" opacity="0.85"/>
+          <circle cx="190" cy="118" r="7" fill="#f59e0b" opacity="0.7"/>
+          <circle cx="120" cy="105" r="6" fill="#fbbf24" opacity="0.6"/>
+          <!-- Light from inside -->
+          <ellipse cx="140" cy="120" rx="60" ry="15" fill="#fbbf24" opacity="0.15"/>
+          <!-- Sparkles -->
+          <circle cx="70" cy="90" r="2.5" fill="#fbbf24"><animate attributeName="opacity" values="1;0.2;1" dur="1.5s" repeatCount="indefinite"/></circle>
+          <circle cx="210" cy="85" r="2" fill="#fbbf24"><animate attributeName="opacity" values="0.8;0.1;0.8" dur="2s" repeatCount="indefinite"/></circle>
+          <circle cx="140" cy="45" r="3" fill="#fff" opacity="0.6"><animate attributeName="opacity" values="0.6;0.1;0.6" dur="1.8s" repeatCount="indefinite"/></circle>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #14 — Neon box with rarity colors -->
+<div class="mockup">
+  <div class="mockup-number">14</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="gen-art">
+        <div class="glow" style="width:200px;height:200px;background:rgba(168,85,247,0.4);top:50px;left:50px;"></div>
+        <div style="position:relative;width:220px;height:250px;border:2px solid rgba(168,85,247,0.5);border-radius:20px;background:linear-gradient(180deg,rgba(30,20,60,0.95),rgba(10,10,30,0.98));display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(168,85,247,0.2),0 0 80px rgba(168,85,247,0.1);overflow:hidden;">
+          <!-- Animated rarity stripe at top -->
+          <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#b0c3d9,#5e98d9,#4b69ff,#8847ff,#d32ce6,#eb4b4b);animation:shimmer 3s linear infinite;background-size:200% 100%;"></div>
+          <div style="font-size:72px;line-height:1;">📦</div>
+          <div style="margin-top:12px;font-size:11px;color:#a78bfa;letter-spacing:3px;text-transform:uppercase;">LOOT BOX</div>
+          <div style="margin-top:16px;display:flex;gap:4px;">
+            <div style="width:24px;height:4px;border-radius:2px;background:#b0c3d9;"></div>
+            <div style="width:24px;height:4px;border-radius:2px;background:#4b69ff;"></div>
+            <div style="width:24px;height:4px;border-radius:2px;background:#8847ff;"></div>
+            <div style="width:24px;height:4px;border-radius:2px;background:#d32ce6;"></div>
+            <div style="width:24px;height:4px;border-radius:2px;background:#eb4b4b;"></div>
+          </div>
+          <style>@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}</style>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #15 — Exploding open box with particles -->
+<div class="mockup">
+  <div class="mockup-number">15</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="gen-art">
+        <div class="glow" style="width:250px;height:250px;background:radial-gradient(circle,rgba(251,191,36,0.4),rgba(249,115,22,0.2),transparent);top:25px;left:25px;"></div>
+        <svg width="300" height="300" viewBox="0 0 300 300" fill="none" style="position:relative;">
+          <!-- Light burst -->
+          <circle cx="150" cy="130" r="80" fill="url(#g15burst)" opacity="0.3"/>
+          <!-- Box bottom -->
+          <rect x="60" y="150" width="180" height="100" rx="10" fill="#1e3a5f" stroke="#d97706" stroke-width="1.5"/>
+          <!-- Lid flying off -->
+          <g transform="translate(150,80) rotate(-15)">
+            <rect x="-100" y="-25" width="200" height="50" rx="10" fill="#243b5c" stroke="#d97706" stroke-width="1.5"/>
+          </g>
+          <!-- Items flying out -->
+          <text x="120" y="130" font-size="28">🔫</text>
+          <text x="155" y="110" font-size="24">🗡️</text>
+          <text x="140" y="90" font-size="20">💎</text>
+          <!-- Particles -->
+          <circle cx="80" cy="100" r="4" fill="#fbbf24"><animate attributeName="cy" values="100;60;100" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="2s" repeatCount="indefinite"/></circle>
+          <circle cx="200" cy="90" r="3" fill="#f472b6"><animate attributeName="cy" values="90;50;90" dur="2.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="2.5s" repeatCount="indefinite"/></circle>
+          <circle cx="150" cy="70" r="3.5" fill="#60a5fa"><animate attributeName="cy" values="70;30;70" dur="1.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="1.8s" repeatCount="indefinite"/></circle>
+          <circle cx="110" cy="80" r="2.5" fill="#a78bfa"><animate attributeName="cy" values="80;45;80" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.8;0;0.8" dur="2.2s" repeatCount="indefinite"/></circle>
+          <!-- Rarity bar -->
+          <g transform="translate(75,260)"><rect width="25" height="4" rx="2" fill="#b0c3d9"/><rect x="30" width="25" height="4" rx="2" fill="#5e98d9"/><rect x="60" width="25" height="4" rx="2" fill="#4b69ff"/><rect x="90" width="25" height="4" rx="2" fill="#8847ff"/><rect x="120" width="25" height="4" rx="2" fill="#d32ce6"/></g>
+          <defs><radialGradient id="g15burst"><stop stop-color="#fbbf24" stop-opacity="0.6"/><stop offset="1" stop-color="#fbbf24" stop-opacity="0"/></radialGradient></defs>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #16 — Holographic card pack style -->
+<div class="mockup">
+  <div class="mockup-number">16</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="gen-art">
+        <div class="glow" style="width:180px;height:220px;background:rgba(96,165,250,0.3);top:40px;left:60px;"></div>
+        <div style="position:relative;width:180px;height:240px;border-radius:16px;background:linear-gradient(135deg,#1e293b,#0f172a);border:2px solid rgba(96,165,250,0.3);overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.5);animation:tilt 4s ease-in-out infinite;">
+          <!-- Holographic shimmer -->
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg,transparent 30%,rgba(96,165,250,0.1) 45%,rgba(168,85,247,0.1) 55%,transparent 70%);animation:holoshift 3s linear infinite;background-size:200% 200%;"></div>
+          <!-- Content -->
+          <div style="position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+            <div style="font-size:48px;">🎰</div>
+            <div style="margin-top:8px;font-size:18px;font-weight:800;color:#fff;">LOOT</div>
+            <div style="font-size:10px;color:#60a5fa;letter-spacing:4px;margin-top:2px;">DROP RATES</div>
+            <div style="margin-top:20px;display:flex;gap:3px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#b0c3d9;"></div>
+              <div style="width:8px;height:8px;border-radius:50%;background:#4b69ff;"></div>
+              <div style="width:8px;height:8px;border-radius:50%;background:#8847ff;"></div>
+              <div style="width:8px;height:8px;border-radius:50%;background:#d32ce6;"></div>
+              <div style="width:8px;height:8px;border-radius:50%;background:#eb4b4b;"></div>
+            </div>
+          </div>
+        </div>
+        <style>@keyframes tilt{0%,100%{transform:perspective(600px) rotateY(-3deg)}50%{transform:perspective(600px) rotateY(3deg)}}@keyframes holoshift{0%{background-position:0% 0%}100%{background-position:200% 200%}}</style>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #17 — Gacha/slot machine style -->
+<div class="mockup">
+  <div class="mockup-number">17</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="gen-art">
+        <div class="glow" style="width:200px;height:200px;background:rgba(236,72,153,0.3);top:50px;left:50px;"></div>
+        <div style="position:relative;background:linear-gradient(180deg,#1e293b,#0f172a);border:2px solid rgba(236,72,153,0.3);border-radius:16px;padding:24px 20px;width:220px;">
+          <!-- Slot windows -->
+          <div style="display:flex;gap:8px;justify-content:center;">
+            <div style="width:52px;height:64px;border-radius:8px;background:#0c1929;border:1px solid rgba(236,72,153,0.3);display:flex;align-items:center;justify-content:center;font-size:28px;">🔫</div>
+            <div style="width:52px;height:64px;border-radius:8px;background:#0c1929;border:1px solid rgba(168,85,247,0.3);display:flex;align-items:center;justify-content:center;font-size:28px;">💎</div>
+            <div style="width:52px;height:64px;border-radius:8px;background:#0c1929;border:1px solid rgba(251,191,36,0.3);display:flex;align-items:center;justify-content:center;font-size:28px;">🗡️</div>
+          </div>
+          <div style="text-align:center;margin-top:14px;font-size:10px;color:#ec4899;letter-spacing:3px;text-transform:uppercase;">What are the odds?</div>
+          <div style="margin-top:12px;height:3px;border-radius:2px;background:linear-gradient(90deg,#4b69ff,#8847ff,#d32ce6,#eb4b4b);"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #18 — Stacked rarity orbs -->
+<div class="mockup">
+  <div class="mockup-number">18</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="gen-art">
+        <svg width="280" height="300" viewBox="0 0 280 300" fill="none" style="position:relative;">
+          <!-- Large rare orb -->
+          <circle cx="140" cy="150" r="80" fill="url(#g18a)" opacity="0.9" stroke="#d32ce6" stroke-width="1.5"/>
+          <circle cx="140" cy="150" r="80" fill="none" stroke="#d32ce6" stroke-width="1" opacity="0.3" stroke-dasharray="4 4"><animateTransform attributeName="transform" type="rotate" from="0 140 150" to="360 140 150" dur="20s" repeatCount="indefinite"/></circle>
+          <!-- Medium orb -->
+          <circle cx="80" cy="220" r="45" fill="url(#g18b)" opacity="0.8" stroke="#4b69ff" stroke-width="1.5"/>
+          <!-- Small orb -->
+          <circle cx="210" cy="80" r="35" fill="url(#g18c)" opacity="0.8" stroke="#fbbf24" stroke-width="1.5"/>
+          <!-- Tiny orb -->
+          <circle cx="220" cy="210" r="25" fill="url(#g18d)" opacity="0.7" stroke="#b0c3d9" stroke-width="1"/>
+          <!-- Labels -->
+          <text x="140" y="145" text-anchor="middle" font-size="11" fill="#d32ce6" font-weight="700" font-family="system-ui" letter-spacing="1">COVERT</text>
+          <text x="140" y="160" text-anchor="middle" font-size="9" fill="rgba(211,44,230,0.6)" font-family="system-ui">0.26%</text>
+          <text x="80" y="222" text-anchor="middle" font-size="9" fill="#4b69ff" font-weight="700" font-family="system-ui">RARE</text>
+          <text x="210" y="82" text-anchor="middle" font-size="9" fill="#fbbf24" font-weight="700" font-family="system-ui">★ GOLD</text>
+          <text x="220" y="213" text-anchor="middle" font-size="8" fill="#b0c3d9" font-weight="600" font-family="system-ui">COMMON</text>
+          <defs>
+            <radialGradient id="g18a"><stop stop-color="#2d1350"/><stop offset="1" stop-color="#0c0520"/></radialGradient>
+            <radialGradient id="g18b"><stop stop-color="#1a2560"/><stop offset="1" stop-color="#0c1225"/></radialGradient>
+            <radialGradient id="g18c"><stop stop-color="#3d2800"/><stop offset="1" stop-color="#1a1000"/></radialGradient>
+            <radialGradient id="g18d"><stop stop-color="#1a2535"/><stop offset="1" stop-color="#0c1520"/></radialGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #19 — Minimal gift box with ribbon -->
+<div class="mockup">
+  <div class="mockup-number">19</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="gen-art">
+        <div class="glow" style="width:180px;height:180px;background:rgba(59,130,246,0.35);top:60px;left:60px;"></div>
+        <svg width="240" height="260" viewBox="0 0 240 260" fill="none" style="position:relative;filter:drop-shadow(0 10px 30px rgba(59,130,246,0.2));">
+          <!-- Box body -->
+          <rect x="40" y="110" width="160" height="120" rx="8" fill="#162040" stroke="#3b82f6" stroke-width="2"/>
+          <!-- Lid -->
+          <rect x="30" y="85" width="180" height="30" rx="6" fill="#1e3050" stroke="#3b82f6" stroke-width="2"/>
+          <!-- Vertical ribbon -->
+          <rect x="110" y="85" width="20" height="145" fill="#3b82f6" opacity="0.3"/>
+          <!-- Horizontal ribbon -->
+          <rect x="40" y="155" width="160" height="20" fill="#3b82f6" opacity="0.3"/>
+          <!-- Bow -->
+          <ellipse cx="120" cy="80" rx="30" ry="18" fill="#3b82f6" opacity="0.5"/>
+          <ellipse cx="120" cy="80" rx="8" ry="8" fill="#60a5fa"/>
+          <!-- Bow loops -->
+          <path d="M120 80C100 60 80 65 90 80" stroke="#3b82f6" stroke-width="2" fill="#2563eb" opacity="0.4"/>
+          <path d="M120 80C140 60 160 65 150 80" stroke="#3b82f6" stroke-width="2" fill="#2563eb" opacity="0.4"/>
+          <!-- Ribbon tails -->
+          <path d="M108 80L85 50" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M132 80L155 50" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="120" y="195" text-anchor="middle" font-size="10" fill="#60a5fa" font-family="system-ui" letter-spacing="2">WHAT'S INSIDE?</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #20 — Isometric crate with glow -->
+<div class="mockup">
+  <div class="mockup-number">20</div>
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">✨ THE LOOT BOX DATABASE</div>
+      <h1>Loot Box Transparency <span>for Every Game</span></h1>
+      <p>Data-driven loot box analysis, drop rates, and monetization scores for every major game.</p>
+      <div class="cta-row">
+        <a class="btn btn-white">Browse Loot Box Database</a>
+        <a class="btn btn-ghost">View Rankings</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="gen-art">
+        <div class="glow" style="width:220px;height:220px;background:radial-gradient(circle,rgba(251,191,36,0.3),rgba(249,115,22,0.15),transparent);top:40px;left:40px;"></div>
+        <svg width="300" height="300" viewBox="0 0 300 300" fill="none" style="position:relative;filter:drop-shadow(0 0 20px rgba(251,191,36,0.15));">
+          <!-- Isometric box — right face -->
+          <path d="M150 120L260 180V270L150 210Z" fill="#162040" stroke="#d97706" stroke-width="1"/>
+          <!-- Isometric box — left face -->
+          <path d="M150 120L40 180V270L150 210Z" fill="#1a2744" stroke="#d97706" stroke-width="1"/>
+          <!-- Isometric box — top face -->
+          <path d="M40 180L150 120L260 180L150 240Z" fill="#1e3050" stroke="#d97706" stroke-width="1"/>
+          <!-- Lid slightly open — top -->
+          <path d="M40 180L150 100L260 180L150 220Z" fill="#243b5c" stroke="#fbbf24" stroke-width="1.5" opacity="0.7"/>
+          <!-- Light emanating from crack -->
+          <path d="M80 180L150 150L220 180" stroke="#fbbf24" stroke-width="1.5" opacity="0.5"/>
+          <ellipse cx="150" cy="175" rx="55" ry="8" fill="#fbbf24" opacity="0.15"/>
+          <!-- Lock icon -->
+          <circle cx="150" cy="200" r="8" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
+          <rect x="146" y="197" width="8" height="8" rx="1" fill="#fbbf24"/>
+          <!-- Floating particles -->
+          <circle cx="150" cy="90" r="3" fill="#fbbf24"><animate attributeName="cy" values="90;70;90" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.8;0.2;0.8" dur="2s" repeatCount="indefinite"/></circle>
+          <circle cx="110" cy="100" r="2" fill="#60a5fa"><animate attributeName="cy" values="100;80;100" dur="2.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.6;0.1;0.6" dur="2.5s" repeatCount="indefinite"/></circle>
+          <circle cx="190" cy="95" r="2.5" fill="#a78bfa"><animate attributeName="cy" values="95;75;95" dur="1.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.8s" repeatCount="indefinite"/></circle>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:40px;color:#475569;font-size:13px;">
+  — End of mockups. Pick a number! —
+</div>
+
+</body>
+</html>

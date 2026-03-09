@@ -1,12 +1,19 @@
 import { NextResponse } from "next/server";
-import { createServerClient } from "@/lib/supabase";
+import { createClient } from "@supabase/supabase-js";
 
-export const dynamic = "force-dynamic";
+// ISR: cache for 5 minutes, serve stale while revalidating in background.
+// This eliminates cold-start 500s — stale cache is served instantly while
+// the serverless function revalidates behind the scenes.
+export const revalidate = 300;
+
+// Module-level client persists across warm invocations (no per-request overhead)
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function GET() {
   try {
-  const supabase = createServerClient();
-
   const { data, error } = await supabase
     .from("games")
     .select(
@@ -38,14 +45,7 @@ export async function GET() {
     };
   });
 
-  return NextResponse.json(
-    { games },
-    {
-      headers: {
-        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
-      },
-    }
-  );
+  return NextResponse.json({ games });
   } catch (err: any) {
     console.error("[API /lootbox/games] Error:", err);
     return NextResponse.json({ error: err?.message || "Internal server error" }, { status: 500 });
