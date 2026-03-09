@@ -268,15 +268,16 @@ export const metadata = {
 export default async function AnalyticsPage({
   searchParams,
 }: {
-  searchParams: { type?: string };
+  searchParams: Promise<{ type?: string }>;
 }) {
+  const sp = await searchParams;
   const [analyticsData, covers] = await Promise.all([
     getAnalyticsData(),
     getGameCovers(),
   ]);
   const ARTICLES = buildArticles(covers);
 
-  const activeType = searchParams.type || "all";
+  const activeType = sp.type || "all";
   const filteredArticles =
     activeType === "all"
       ? ARTICLES

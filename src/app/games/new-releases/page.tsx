@@ -107,15 +107,16 @@ function GameCard({ game }: { game: any }) {
 export default async function NewReleasesPage({
   searchParams,
 }: {
-  searchParams: { genre?: string };
+  searchParams: Promise<{ genre?: string }>;
 }) {
+  const params = await searchParams;
   const [newReleases, comingSoon] = await Promise.all([
     getNewReleases(),
     getComingSoon(),
   ]);
 
   const allGames = [...newReleases, ...comingSoon];
-  const initialGenre = searchParams.genre || null;
+  const initialGenre = params.genre || null;
 
   return (
     <div className="pb-12">

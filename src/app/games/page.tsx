@@ -60,14 +60,15 @@ async function getGamesWithDeals() {
 export default async function GamesPage({
   searchParams,
 }: {
-  searchParams: { genre?: string };
+  searchParams: Promise<{ genre?: string }>;
 }) {
+  const params = await searchParams;
   const games = await getGamesWithDeals();
 
   return (
     <div className="py-8">
       <div className="container-main">
-        <GamesGrid games={games} initialGenre={searchParams.genre || null} />
+        <GamesGrid games={games} initialGenre={params.genre || null} />
       </div>
     </div>
   );

@@ -131,15 +131,16 @@ async function getDeals(options?: { hasLootbox?: boolean; sort?: string }) {
 export default async function DealsPage({
   searchParams,
 }: {
-  searchParams: { genre?: string; max?: string; min_discount?: string; filter?: string; has_lootbox?: string; sort?: string };
+  searchParams: Promise<{ genre?: string; max?: string; min_discount?: string; filter?: string; has_lootbox?: string; sort?: string }>;
 }) {
-  const hasLootbox = searchParams.has_lootbox === "true";
-  const sortMode = searchParams.sort || null;
+  const sp = await searchParams;
+  const hasLootbox = sp.has_lootbox === "true";
+  const sortMode = sp.sort || null;
   const deals = await getDeals({ hasLootbox, sort: sortMode || undefined });
-  const activeGenre = searchParams.genre || null;
-  const maxPrice = searchParams.max ? Number(searchParams.max) : null;
-  const minDiscount = searchParams.min_discount ? Number(searchParams.min_discount) : null;
-  const quickFilter = searchParams.filter || null;
+  const activeGenre = sp.genre || null;
+  const maxPrice = sp.max ? Number(sp.max) : null;
+  const minDiscount = sp.min_discount ? Number(sp.min_discount) : null;
+  const quickFilter = sp.filter || null;
   const historicLowCount = deals.filter((d: any) => d.is_historic_low).length;
   const bigDiscountCount = deals.filter(
     (d: any) => d.discount_pct >= 50

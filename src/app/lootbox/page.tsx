@@ -99,9 +99,9 @@ const VALID_TYPES = Object.keys(SYSTEM_TYPE_META);
 export async function generateMetadata({
   searchParams,
 }: {
-  searchParams: { type?: string };
+  searchParams: Promise<{ type?: string }>;
 }): Promise<Metadata> {
-  const type = searchParams.type;
+  const { type } = await searchParams;
   if (type && VALID_TYPES.includes(type)) {
     const meta = SYSTEM_TYPE_META[type];
     return { title: meta.title, description: meta.description };
@@ -295,11 +295,12 @@ function BentoGameCard({
 export default async function LootboxHubPage({
   searchParams,
 }: {
-  searchParams: { type?: string };
+  searchParams: Promise<{ type?: string }>;
 }) {
+  const sp = await searchParams;
   const typeFilter =
-    searchParams.type && VALID_TYPES.includes(searchParams.type)
-      ? searchParams.type
+    sp.type && VALID_TYPES.includes(sp.type)
+      ? sp.type
       : undefined;
   const typeMeta = typeFilter ? SYSTEM_TYPE_META[typeFilter] : undefined;
 
