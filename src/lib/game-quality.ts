@@ -53,13 +53,16 @@ const BLOCKED_TITLE_PATTERNS = [
   /\bdesktop\s*(pet|buddy|waifu)\b/i,
 
   // Non-game products (guides, soundtracks, artbooks, etc.)
-  /^official\s*guide\b/i,
-  /\b(strategy|game)\s*guide\b/i,
+  /\bofficial\s*guide\b/i,
+  /\b(strategy|game|player'?s?)\s*guide\b/i,
+  /\bguidebook\b/i,
   /\bartbook\b/i,
   /\bart\s*book\b/i,
   /\bsoundtrack\b/i,
   /\boriginal\s*soundtrack\b/i,
   /\b(ost)\b/i,
+  /\bwallpaper\s*pack\b/i,
+  /\bdigital\s*(art|comic|novel)\b/i,
 
   // Test / Placeholder games
   /^test\s*game$/i,
