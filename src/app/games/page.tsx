@@ -20,35 +20,27 @@ export const revalidate = 300;
 async function getGamesWithDeals() {
   const supabase = createServerClient();
 
-  // Get total count of all games
+  // Get total count of all games in the database
   const { count: totalCount } = await supabase
     .from("games")
     .select("*", { count: "exact", head: true });
 
-  // Fetch games in batches to overcome Supabase's 1000-row default limit
-  // We'll fetch up to 5000 games (should cover most databases)
-  const allGames: any[] = [];
-  const batchSize = 1000;
-  const maxBatches = 5;
+  // Fetch top 48 games by hot_score for initial fast render
+  // The full library is searchable via /api/games/browse (infinite scroll + search)
+  const { data: games, error } = await supabase
+    .from("games")
+    .select("id, title, slug, cover_image, screenshot_image, genres, platforms, metacritic, release_date, hot_score")
+    .order("hot_score", { ascending: false, nullsFirst: false })
+    .limit(48);
 
-  for (let i = 0; i < maxBatches; i++) {
-    const { data: batch, error } = await supabase
-      .from("games")
-      .select("id, title, slug, cover_image, screenshot_image, genres, platforms, metacritic, release_date, hot_score")
-      .order("title", { ascending: true })
-      .range(i * batchSize, (i + 1) * batchSize - 1);
+  if (error || !games) return { games: [], totalCount: totalCount || 0 };
 
-    if (error || !batch || batch.length === 0) break;
-    allGames.push(...batch);
-    if (batch.length < batchSize) break; // No more pages
-  }
-
-  if (allGames.length === 0) return { games: [], totalCount: 0 };
-
-  // Get best price and deal count per game
+  // Get best price and deal count for these games
+  const gameIds = games.map((g: any) => g.id);
   const { data: deals } = await supabase
     .from("deals")
     .select("game_id, price, store")
+    .in("game_id", gameIds)
     .gt("discount_pct", 0);
 
   const dealStats = new Map<string, { bestPrice: number; dealCount: number; store: string }>();
@@ -65,24 +57,12 @@ async function getGamesWithDeals() {
     }
   }
 
-  const enriched = allGames.map((game: any) => ({
+  const enriched = games.map((game: any) => ({
     ...game,
     bestPrice: dealStats.get(game.id)?.bestPrice ?? null,
     dealCount: dealStats.get(game.id)?.dealCount ?? 0,
     bestStore: dealStats.get(game.id)?.store ?? null,
   }));
-
-  // Sort: games with images first, then by hot_score, then by deal count
-  enriched.sort((a: any, b: any) => {
-    const aHasImg = a.cover_image ? 1 : 0;
-    const bHasImg = b.cover_image ? 1 : 0;
-    if (aHasImg !== bHasImg) return bHasImg - aHasImg;
-    const aScore = a.hot_score || 0;
-    const bScore = b.hot_score || 0;
-    if (aScore !== bScore) return bScore - aScore;
-    if (a.dealCount !== b.dealCount) return b.dealCount - a.dealCount;
-    return a.title.localeCompare(b.title);
-  });
 
   return { games: enriched, totalCount: totalCount || enriched.length };
 }
@@ -189,7 +169,7 @@ export default async function GamesPage({
 
       {/* ─── Filterable Game Grid ─── */}
       <div className="container-main mt-10">
-        <GamesGrid games={games} initialGenre={params.genre || null} />
+        <GamesGrid games={games} totalCount={totalCount} initialGenre={params.genre || null} />
       </div>
     </div>
   );
