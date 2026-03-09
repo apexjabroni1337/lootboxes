@@ -209,37 +209,22 @@ export async function getWeaponCasesWithItems(): Promise<
 > {
   const supabase = createServerClient();
 
-  const { data: cases, error } = await supabase
+  // Use PostgREST embedded resources to fetch crates WITH their items in one
+  // query.  This avoids the default max-rows (1000) limit that would silently
+  // truncate a separate bulk `.in()` query when many cases have 50+ items each.
+  const { data, error } = await supabase
     .from("cs2_crates")
-    .select("*")
+    .select("*, cs2_crate_items(*)")
     .eq("type", "Weapon Case")
     .order("first_sale_date", { ascending: false, nullsFirst: false });
 
-  if (error || !cases) return [];
+  if (error || !data) return [];
 
-  // Fetch all items for weapon cases in one query
-  const caseIds = cases.map((c: any) => c.id);
-  const { data: allItems, error: itemsError } = await supabase
-    .from("cs2_crate_items")
-    .select("*")
-    .in("crate_id", caseIds)
-    .limit(5000);
-
-  if (itemsError || !allItems) {
-    return cases.map((c: any) => ({ ...c, items: [] }));
-  }
-
-  // Group items by crate_id
-  const itemsByCrate: Record<string, CS2CrateItem[]> = {};
-  for (const item of allItems) {
-    if (!itemsByCrate[item.crate_id]) itemsByCrate[item.crate_id] = [];
-    itemsByCrate[item.crate_id].push(item);
-  }
-
-  return cases.map((c: any) => {
-    const items = itemsByCrate[c.id] || [];
+  return data.map((c: any) => {
+    const items: CS2CrateItem[] = (c.cs2_crate_items || []) as CS2CrateItem[];
     items.sort(raritySort);
-    return { ...c, items };
+    const { cs2_crate_items, ...crate } = c;
+    return { ...crate, items };
   });
 }
 
