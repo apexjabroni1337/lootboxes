@@ -27,57 +27,55 @@ export const revalidate = 300;
 async function getTrendingDeals() {
   const supabase = createServerClient();
 
-  // Get deals joined with games, sorted by game hot_score
-  const { data: deals, error } = await supabase
+  // Step 1: Get the most popular games by hot_score (includes games WITHOUT deals)
+  const { data: popularGames } = await supabase
+    .from("games")
+    .select("id, title, slug, cover_image, screenshot_image, hot_score, genres, metacritic")
+    .not("cover_image", "is", null)
+    .order("hot_score", { ascending: false, nullsFirst: false })
+    .limit(100);
+
+  if (!popularGames?.length) return [];
+
+  // Step 2: Get the best deal for each popular game
+  const gameIds = popularGames.map((g) => g.id);
+  const { data: deals } = await supabase
     .from("deals")
-    .select(`
-      id,
-      game_id,
-      store,
-      store_url,
-      price,
-      original_price,
-      discount_pct,
-      currency,
-      is_historic_low,
-      expires_at,
-      affiliate_url,
-      games!inner (
-        id,
-        title,
-        slug,
-        cover_image,
-        screenshot_image,
-        hot_score,
-        genres,
-        metacritic
-      )
-    `)
-    .order("discount_pct", { ascending: false })
-    .limit(500);
+    .select("game_id, id, store, store_url, price, original_price, discount_pct, currency, is_historic_low, expires_at, affiliate_url")
+    .in("game_id", gameIds)
+    .order("price", { ascending: true });
 
-  if (error || !deals) return [];
-
-  // Deduplicate: keep only the best deal per game
-  const bestByGame = new Map<string, any>();
-  for (const deal of deals) {
-    const gameId = (deal as any).game_id;
-    const existing = bestByGame.get(gameId);
-    if (!existing || deal.price < existing.price) {
-      bestByGame.set(gameId, deal);
+  // Build a map: game_id → best deal
+  const bestDealByGame = new Map<string, any>();
+  for (const deal of deals || []) {
+    if (!bestDealByGame.has(deal.game_id)) {
+      bestDealByGame.set(deal.game_id, deal);
     }
   }
-  const unique = Array.from(bestByGame.values());
 
-  // Sort by hot_score descending
-  unique.sort((a: any, b: any) => {
-    const aScore = a.games?.hot_score || 0;
-    const bScore = b.games?.hot_score || 0;
-    if (aScore !== bScore) return bScore - aScore;
-    return (b.discount_pct || 0) - (a.discount_pct || 0);
+  // Step 3: Combine games with their best deals (games without deals still show up)
+  const combined = popularGames.map((game) => {
+    const deal = bestDealByGame.get(game.id);
+    return {
+      // Deal fields (may be null for games without deals)
+      id: deal?.id || game.id,
+      game_id: game.id,
+      store: deal?.store || null,
+      store_url: deal?.store_url || null,
+      price: deal?.price || null,
+      original_price: deal?.original_price || null,
+      discount_pct: deal?.discount_pct || 0,
+      currency: deal?.currency || "USD",
+      is_historic_low: deal?.is_historic_low || false,
+      expires_at: deal?.expires_at || null,
+      affiliate_url: deal?.affiliate_url || null,
+      // Game data (nested to match existing template expectations)
+      games: game,
+      hasDeal: !!deal,
+    };
   });
 
-  return unique.slice(0, 60);
+  return combined.slice(0, 60);
 }
 
 export default async function TrendingPage() {
@@ -170,28 +168,51 @@ export default async function TrendingPage() {
                         {game?.title || "Unknown Game"}
                       </h3>
                       <div className="mt-2 flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <StoreIcon store={deal.store} size="sm" />
-                          <div className="flex items-baseline gap-2">
-                            {hasDiscount && (
-                              <span className="text-xs text-white/60 line-through">
-                                {formatPrice(deal.original_price, deal.currency)}
-                              </span>
-                            )}
-                            <span className="text-xl font-bold text-white">
-                              {formatPrice(deal.price, deal.currency)}
-                            </span>
-                          </div>
-                        </div>
-                        <a
-                          href={`/go/${deal.id}`}
-                          target="_blank"
-                          rel="noopener noreferrer nofollow"
-                          className="flex items-center gap-1 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
-                        >
-                          Get Deal
-                          <ExternalLink className="h-3.5 w-3.5" />
-                        </a>
+                        {deal.store ? (
+                          <>
+                            <div className="flex items-center gap-2">
+                              <StoreIcon store={deal.store} size="sm" />
+                              <div className="flex items-baseline gap-2">
+                                {hasDiscount && (
+                                  <span className="text-xs text-white/60 line-through">
+                                    {formatPrice(deal.original_price, deal.currency)}
+                                  </span>
+                                )}
+                                <span className="text-xl font-bold text-white">
+                                  {formatPrice(deal.price, deal.currency)}
+                                </span>
+                              </div>
+                            </div>
+                            <a
+                              href={`/go/${deal.id}`}
+                              target="_blank"
+                              rel="noopener noreferrer nofollow"
+                              className="flex items-center gap-1 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
+                            >
+                              Get Deal
+                              <ExternalLink className="h-3.5 w-3.5" />
+                            </a>
+                          </>
+                        ) : (
+                          <>
+                            <div className="flex items-center gap-2">
+                              {game?.metacritic && (
+                                <span className={`rounded-lg px-2.5 py-1 text-sm font-bold text-white shadow-md ${
+                                  game.metacritic >= 75 ? "bg-success-600" : "bg-amber-500"
+                                }`}>
+                                  {game.metacritic}
+                                </span>
+                              )}
+                              <span className="text-sm text-white/70">Popular on Steam</span>
+                            </div>
+                            <Link
+                              href={`/games/${game?.slug}`}
+                              className="flex items-center gap-1 rounded-lg bg-white/20 backdrop-blur-sm px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/30"
+                            >
+                              View Game
+                            </Link>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>

@@ -208,9 +208,10 @@ export default async function LootboxHubPage({
               className={`inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-xl border transition-all ${
                 !typeFilter
                   ? "bg-gray-900 border-gray-900 text-white shadow-lg"
-                  : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300 hover:text-gray-900"
+                  : "bg-gray-100 border-gray-200 text-gray-600 hover:bg-gray-200 hover:border-gray-300 hover:text-gray-900"
               }`}
             >
+              <Layers className="w-4 h-4" />
               <span>All</span>
               <span className={`text-xs font-medium ${!typeFilter ? "text-gray-300" : "text-gray-400"}`}>
                 {allGames.length}
@@ -221,18 +222,55 @@ export default async function LootboxHubPage({
               const meta = SYSTEM_TYPE_META[t];
               const count = typeCounts[t] || 0;
               const isActive = typeFilter === t;
+              const Icon = meta.icon;
+
+              /* Per-type color schemes */
+              const colorMap: Record<string, { active: string; inactive: string; count: string; inactiveCount: string }> = {
+                gacha: {
+                  active: "bg-purple-600 border-purple-600 text-white shadow-lg shadow-purple-200",
+                  inactive: "bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100 hover:border-purple-300",
+                  count: "text-purple-200",
+                  inactiveCount: "text-purple-400",
+                },
+                loot_box: {
+                  active: "bg-red-600 border-red-600 text-white shadow-lg shadow-red-200",
+                  inactive: "bg-red-50 border-red-200 text-red-700 hover:bg-red-100 hover:border-red-300",
+                  count: "text-red-200",
+                  inactiveCount: "text-red-400",
+                },
+                card_pack: {
+                  active: "bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-200",
+                  inactive: "bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100 hover:border-blue-300",
+                  count: "text-blue-200",
+                  inactiveCount: "text-blue-400",
+                },
+                cosmetic_shop: {
+                  active: "bg-emerald-600 border-emerald-600 text-white shadow-lg shadow-emerald-200",
+                  inactive: "bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100 hover:border-emerald-300",
+                  count: "text-emerald-200",
+                  inactiveCount: "text-emerald-400",
+                },
+                battle_pass: {
+                  active: "bg-amber-600 border-amber-600 text-white shadow-lg shadow-amber-200",
+                  inactive: "bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100 hover:border-amber-300",
+                  count: "text-amber-200",
+                  inactiveCount: "text-amber-400",
+                },
+              };
+
+              const colors = colorMap[t] || colorMap.gacha;
+
               return (
                 <Link
                   key={t}
                   href={`/lootbox?type=${t}`}
                   className={`inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-xl border transition-all ${
-                    isActive
-                      ? "bg-gray-900 border-gray-900 text-white shadow-lg"
-                      : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300 hover:text-gray-900"
+                    isActive ? colors.active : colors.inactive
                   }`}
                 >
+                  <Icon className="w-4 h-4" />
                   <span>{meta.heading.replace(" Games", "")}</span>
-                  <span className={`text-xs font-medium ${isActive ? "text-gray-300" : "text-gray-400"}`}>
+                  <span className={`text-xs font-medium ${isActive ? colors.count : colors.inactiveCount}`}>
                     {count}
                   </span>
                 </Link>

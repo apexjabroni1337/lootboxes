@@ -122,9 +122,10 @@ export default function TrendingClient({ deals }: Props) {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {visible.map((deal: any, idx: number) => {
               const game = deal.games;
-              const storeInfo = STORES[deal.store] || { name: deal.store, color: "#666" };
+              const hasDeal = deal.hasDeal !== false && deal.store;
+              const storeInfo = hasDeal ? (STORES[deal.store] || { name: deal.store, color: "#666" }) : null;
               const bgImage = game?.screenshot_image || game?.cover_image;
-              const hasDiscount = deal.discount_pct > 0;
+              const hasDiscount = hasDeal && deal.discount_pct > 0;
 
               return (
                 <div
@@ -173,11 +174,24 @@ export default function TrendingClient({ deals }: Props) {
                     )}
                   </div>
 
-                  {/* Store bar */}
-                  <div className="flex items-center gap-2 border-b border-gray-100 px-3 py-2">
-                    <StoreIcon store={deal.store} size="sm" />
-                    <span className="text-xs font-medium text-gray-600">{storeInfo.name}</span>
-                  </div>
+                  {/* Store bar — only show if game has a deal */}
+                  {hasDeal && storeInfo ? (
+                    <div className="flex items-center gap-2 border-b border-gray-100 px-3 py-2">
+                      <StoreIcon store={deal.store} size="sm" />
+                      <span className="text-xs font-medium text-gray-600">{storeInfo.name}</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 border-b border-gray-100 px-3 py-2">
+                      <span className="text-[10px] font-semibold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">Trending</span>
+                      {game?.metacritic && (
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                          game.metacritic >= 75 ? "bg-green-50 text-green-700" : "bg-yellow-50 text-yellow-700"
+                        }`}>
+                          Metacritic {game.metacritic}
+                        </span>
+                      )}
+                    </div>
+                  )}
 
                   {/* Content */}
                   <div className="flex flex-1 flex-col px-3 pb-3 pt-2.5">
@@ -188,26 +202,40 @@ export default function TrendingClient({ deals }: Props) {
                       {game?.title || "Unknown Game"}
                     </Link>
 
-                    <div className="mt-2 flex items-baseline gap-2">
-                      {hasDiscount && (
-                        <span className="text-xs text-gray-400 line-through">
-                          {formatPrice(deal.original_price, deal.currency)}
-                        </span>
-                      )}
-                      <span className="text-lg font-bold text-gray-900">
-                        {formatPrice(deal.price, deal.currency)}
-                      </span>
-                    </div>
+                    {hasDeal ? (
+                      <>
+                        <div className="mt-2 flex items-baseline gap-2">
+                          {hasDiscount && (
+                            <span className="text-xs text-gray-400 line-through">
+                              {formatPrice(deal.original_price, deal.currency)}
+                            </span>
+                          )}
+                          <span className="text-lg font-bold text-gray-900">
+                            {formatPrice(deal.price, deal.currency)}
+                          </span>
+                        </div>
 
-                    <a
-                      href={`/go/${deal.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer nofollow"
-                      className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
-                    >
-                      Get Deal
-                      <ExternalLink className="h-3.5 w-3.5" />
-                    </a>
+                        <a
+                          href={`/go/${deal.id}`}
+                          target="_blank"
+                          rel="noopener noreferrer nofollow"
+                          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
+                        >
+                          Get Deal
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        </a>
+                      </>
+                    ) : (
+                      <>
+                        <p className="mt-1 text-xs text-gray-400">No active deals</p>
+                        <Link
+                          href={`/games/${game?.slug}`}
+                          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-200"
+                        >
+                          View Game
+                        </Link>
+                      </>
+                    )}
                   </div>
                 </div>
               );
