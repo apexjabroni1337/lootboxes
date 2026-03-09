@@ -71,12 +71,15 @@ export default function Header() {
 
   const [lootboxMegaOpen, setLootboxMegaOpen] = useState(false);
   const [cs2MegaOpen, setCs2MegaOpen] = useState(false);
+  const [analyticsMegaOpen, setAnalyticsMegaOpen] = useState(false);
   const megaRef = useRef<HTMLDivElement>(null);
   const lootboxMegaRef = useRef<HTMLDivElement>(null);
   const cs2MegaRef = useRef<HTMLDivElement>(null);
+  const analyticsMegaRef = useRef<HTMLDivElement>(null);
   const megaTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lootboxTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cs2Timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const analyticsTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Cmd+K / Ctrl+K shortcut to open search
   useEffect(() => {
@@ -102,37 +105,51 @@ export default function Header() {
       if (cs2MegaRef.current && !cs2MegaRef.current.contains(e.target as Node)) {
         setCs2MegaOpen(false);
       }
+      if (analyticsMegaRef.current && !analyticsMegaRef.current.contains(e.target as Node)) {
+        setAnalyticsMegaOpen(false);
+      }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const openMega = () => {
-    if (megaTimeout.current) clearTimeout(megaTimeout.current);
-    setMegaOpen(true);
+  const closeAllMegas = () => {
+    setMegaOpen(false);
     setLootboxMegaOpen(false);
     setCs2MegaOpen(false);
+    setAnalyticsMegaOpen(false);
+  };
+  const openMega = () => {
+    if (megaTimeout.current) clearTimeout(megaTimeout.current);
+    closeAllMegas();
+    setMegaOpen(true);
   };
   const closeMega = () => {
     megaTimeout.current = setTimeout(() => setMegaOpen(false), 150);
   };
   const openLootboxMega = () => {
     if (lootboxTimeout.current) clearTimeout(lootboxTimeout.current);
+    closeAllMegas();
     setLootboxMegaOpen(true);
-    setMegaOpen(false);
-    setCs2MegaOpen(false);
   };
   const closeLootboxMega = () => {
     lootboxTimeout.current = setTimeout(() => setLootboxMegaOpen(false), 150);
   };
   const openCs2Mega = () => {
     if (cs2Timeout.current) clearTimeout(cs2Timeout.current);
+    closeAllMegas();
     setCs2MegaOpen(true);
-    setMegaOpen(false);
-    setLootboxMegaOpen(false);
   };
   const closeCs2Mega = () => {
     cs2Timeout.current = setTimeout(() => setCs2MegaOpen(false), 150);
+  };
+  const openAnalyticsMega = () => {
+    if (analyticsTimeout.current) clearTimeout(analyticsTimeout.current);
+    closeAllMegas();
+    setAnalyticsMegaOpen(true);
+  };
+  const closeAnalyticsMega = () => {
+    analyticsTimeout.current = setTimeout(() => setAnalyticsMegaOpen(false), 150);
   };
 
   return (
@@ -165,9 +182,9 @@ export default function Header() {
                 </button>
 
                 {lootboxMegaOpen && (
-                  <div className="absolute left-0 top-full z-50 mt-1 w-[600px] rounded-xl border border-gray-200 bg-white shadow-xl">
-                    {/* 3-column categorized layout */}
-                    <div className="grid grid-cols-3 gap-0 divide-x divide-gray-100 p-4">
+                  <div className="absolute left-0 top-full z-50 mt-1 w-[420px] rounded-xl border border-gray-200 bg-white shadow-xl">
+                    {/* 2-column categorized layout */}
+                    <div className="grid grid-cols-2 gap-0 divide-x divide-gray-100 p-4">
                       {/* BROWSE column */}
                       <div className="pr-4">
                         <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-gray-400">Browse</p>
@@ -187,7 +204,7 @@ export default function Header() {
                         </div>
                       </div>
                       {/* TOOLS column */}
-                      <div className="px-4">
+                      <div className="pl-4">
                         <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-gray-400">Tools</p>
                         <div className="space-y-1">
                           <Link href="/lootbox/odds-comparison" onClick={() => setLootboxMegaOpen(false)} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-colors">
@@ -201,24 +218,6 @@ export default function Header() {
                           <Link href="/lootbox/spending-guides" onClick={() => setLootboxMegaOpen(false)} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-700 transition-colors">
                             <Wallet className="h-4 w-4 text-amber-500" />
                             Spending Guides
-                          </Link>
-                        </div>
-                      </div>
-                      {/* DATA column */}
-                      <div className="pl-4">
-                        <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-gray-400">Data</p>
-                        <div className="space-y-1">
-                          <Link href="/drop-rates" onClick={() => setLootboxMegaOpen(false)} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-colors">
-                            <Layers className="h-4 w-4 text-purple-500" />
-                            Drop Rates
-                          </Link>
-                          <Link href="/lootbox/transparency-report" onClick={() => setLootboxMegaOpen(false)} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors">
-                            <Eye className="h-4 w-4 text-indigo-500" />
-                            Transparency
-                          </Link>
-                          <Link href="/methodology" onClick={() => setLootboxMegaOpen(false)} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors">
-                            <Shield className="h-4 w-4 text-gray-500" />
-                            How We Rate
                           </Link>
                         </div>
                       </div>
@@ -236,12 +235,47 @@ export default function Header() {
                 )}
               </div>
 
-              <Link
-                href="/analytics"
-                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+              {/* Analytics mega menu trigger */}
+              <div
+                ref={analyticsMegaRef}
+                className="relative"
+                onMouseEnter={openAnalyticsMega}
+                onMouseLeave={closeAnalyticsMega}
               >
-                Analytics
-              </Link>
+                <button
+                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                  onClick={() => setAnalyticsMegaOpen(!analyticsMegaOpen)}
+                >
+                  <LineChart className="h-3.5 w-3.5 text-indigo-500" />
+                  Analytics
+                  <ChevronDown
+                    className={`h-3.5 w-3.5 transition-transform ${analyticsMegaOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {analyticsMegaOpen && (
+                  <div className="absolute left-0 top-full z-50 mt-1 w-[280px] rounded-xl border border-gray-200 bg-white shadow-xl">
+                    <div className="p-3 space-y-1">
+                      <Link href="/analytics" onClick={() => setAnalyticsMegaOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors">
+                        <LineChart className="h-4 w-4 text-indigo-500" />
+                        Overview
+                      </Link>
+                      <Link href="/drop-rates" onClick={() => setAnalyticsMegaOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-colors">
+                        <Layers className="h-4 w-4 text-purple-500" />
+                        Drop Rates
+                      </Link>
+                      <Link href="/lootbox/transparency-report" onClick={() => setAnalyticsMegaOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors">
+                        <Eye className="h-4 w-4 text-indigo-500" />
+                        Transparency
+                      </Link>
+                      <Link href="/methodology" onClick={() => setAnalyticsMegaOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                        <Shield className="h-4 w-4 text-gray-500" />
+                        How We Rate
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               <Link
                 href="/blog"
@@ -664,6 +698,45 @@ export default function Header() {
                   Compare Marketplaces
                 </Link>
 
+                {/* Analytics section */}
+                <div className="mt-2 border-t border-gray-100 pt-3">
+                  <p className="px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                    Analytics
+                  </p>
+                </div>
+                <Link
+                  href="/analytics"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <LineChart className="h-4 w-4 text-indigo-500" />
+                  Overview
+                </Link>
+                <Link
+                  href="/drop-rates"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <Layers className="h-4 w-4 text-purple-500" />
+                  Drop Rates
+                </Link>
+                <Link
+                  href="/lootbox/transparency-report"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <Eye className="h-4 w-4 text-indigo-500" />
+                  Transparency
+                </Link>
+                <Link
+                  href="/methodology"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <Shield className="h-4 w-4 text-gray-500" />
+                  How We Rate
+                </Link>
+
                 {/* More section */}
                 <div className="mt-2 border-t border-gray-100 pt-3">
                   <p className="px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
@@ -671,25 +744,11 @@ export default function Header() {
                   </p>
                 </div>
                 <Link
-                  href="/analytics"
-                  onClick={() => setMobileOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                >
-                  Analytics
-                </Link>
-                <Link
                   href="/blog"
                   onClick={() => setMobileOpen(false)}
                   className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                 >
                   Blog
-                </Link>
-                <Link
-                  href="/drop-rates"
-                  onClick={() => setMobileOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                >
-                  Drop Rates
                 </Link>
 
                 <Link
