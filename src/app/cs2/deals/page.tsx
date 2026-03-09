@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import {
   ChevronLeft,
   Tag,
@@ -27,11 +26,16 @@ interface MultiMarketPrice {
   skin: string;
   wear: string;
   image: string | null;
+  rarity: string;
+  borderColor: string;
   steamPrice: number | null;
   skinportPrice: number | null;
   csfloatPrice: number | null;
   buff163Price: number | null;
   dmarketPrice: number | null;
+  bitskinPrice: number | null;
+  waxpeerPrice: number | null;
+  marketLinks: Record<string, string>;
   lowestPrice: number | null;
   highestPrice: number | null;
   averagePrice: number | null;
@@ -291,14 +295,16 @@ export default function DealsPage() {
                             {idx + 1}
                           </span>
                           {item.image ? (
-                            <div className="h-12 w-12 rounded-lg flex-shrink-0 overflow-hidden border border-gray-200">
-                              <Image
+                            <div
+                              className="h-12 w-12 rounded-lg flex-shrink-0 overflow-hidden border-2 bg-gradient-to-br from-gray-100 to-gray-50"
+                              style={{ borderColor: item.borderColor || "#ddd" }}
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
                                 src={item.image}
                                 alt={item.name}
-                                width={48}
-                                height={48}
                                 className="h-full w-full object-contain"
-                                unoptimized
+                                loading="lazy"
                               />
                             </div>
                           ) : (

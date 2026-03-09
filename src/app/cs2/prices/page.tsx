@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
+// Using native <img> for external Steam CDN images
 import {
   Search,
   TrendingUp,
@@ -29,11 +29,16 @@ interface MultiMarketPrice {
   skin: string;
   wear: string;
   image: string | null;
+  rarity: string;
+  borderColor: string;
   steamPrice: number | null;
   skinportPrice: number | null;
   csfloatPrice: number | null;
   buff163Price: number | null;
   dmarketPrice: number | null;
+  bitskinPrice: number | null;
+  waxpeerPrice: number | null;
+  marketLinks: Record<string, string>;
   lowestPrice: number | null;
   highestPrice: number | null;
   averagePrice: number | null;
@@ -401,14 +406,16 @@ export default function CS2PricesPage() {
                         {/* Skin info */}
                         <div className="flex items-center gap-3 xl:w-64 flex-shrink-0">
                           {item.image ? (
-                            <div className="h-12 w-12 rounded-lg flex-shrink-0 overflow-hidden border border-gray-200">
-                              <Image
+                            <div
+                              className="h-12 w-12 rounded-lg flex-shrink-0 overflow-hidden border-2 bg-gradient-to-br from-gray-100 to-gray-50"
+                              style={{ borderColor: item.borderColor || "#ddd" }}
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
                                 src={item.image}
                                 alt={`${item.weapon} | ${item.skin}`}
-                                width={48}
-                                height={48}
                                 className="h-full w-full object-contain"
-                                unoptimized
+                                loading="lazy"
                               />
                             </div>
                           ) : (
@@ -418,7 +425,17 @@ export default function CS2PricesPage() {
                           )}
                           <div className="min-w-0">
                             <p className="font-semibold text-gray-900 truncate text-sm">{item.weapon} | {item.skin}</p>
-                            <span className="text-xs text-gray-500">{item.wear}</span>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              {item.rarity && (
+                                <span
+                                  className="inline-block rounded px-1.5 py-0.5 text-[10px] font-bold text-white"
+                                  style={{ backgroundColor: item.borderColor || "#666" }}
+                                >
+                                  {item.rarity}
+                                </span>
+                              )}
+                              <span className="text-xs text-gray-500">{item.wear}</span>
+                            </div>
                           </div>
                         </div>
 
@@ -576,13 +593,12 @@ export default function CS2PricesPage() {
                               className="h-12 w-12 rounded-lg flex-shrink-0 overflow-hidden border"
                               style={{ borderColor: RARITY_COLORS[skin.rarity] || "#ddd" }}
                             >
-                              <Image
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
                                 src={skin.image}
                                 alt={`${skin.weapon} | ${skin.skin}`}
-                                width={48}
-                                height={48}
                                 className="h-full w-full object-contain"
-                                unoptimized
+                                loading="lazy"
                               />
                             </div>
                           ) : (

@@ -9,6 +9,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'raw.githubusercontent.com', pathname: '/ByMykel/**' },
       { protocol: 'https', hostname: 'steamcdn-a.akamaihd.net' },
       { protocol: 'https', hostname: 'community.akamai.steamstatic.com' },
+      { protocol: 'https', hostname: 'steamwebapi.ams3.cdn.digitaloceanspaces.com' },
     ],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 3600,

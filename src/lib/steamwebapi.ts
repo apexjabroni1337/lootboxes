@@ -4,8 +4,23 @@
  * Uses the SteamWebAPI.com Items endpoint (paid — "Item Small" plan).
  * Docs: https://www.steamwebapi.com/api/doc/steamwebapi-documentation-getting-started
  *
- * Provides real-time pricing from Steam Market + third-party marketplaces,
- * enabling true cross-marketplace price comparison on /cs2/prices.
+ * ACTUAL API RESPONSE FORMAT (verified via /api/cs2/debug-steam):
+ *
+ * Each item has:
+ *   markethashname  — "AK-47 | Asiimov (Field-Tested)"
+ *   itemimage       — Steam CDN image URL
+ *   pricelatestsell — latest Steam Market sale price (USD)
+ *   pricesafe       — "safe" recommended price
+ *   priceavg        — average price
+ *   pricemedian     — median price
+ *   pricemin / pricemax — range
+ *   buyorderprice   — highest Steam buy order
+ *   sold24h, sold7d, sold30d — trade volume
+ *   rarity, quality, bordercolor, color
+ *   wear, minfloat, maxfloat
+ *   prices          — ARRAY of marketplace-specific prices:
+ *     [{ price: 203.33, source: "bitskins", name: "BitSkins", logo: "...", link: "..." }, ...]
+ *     source values include: "skinport", "csfloat", "buff", "bitskins", "dmarket", "waxpeer", etc.
  *
  * Caches responses for 10 minutes to stay within rate limits.
  */
@@ -15,50 +30,75 @@ const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
 
 /* ── Types ── */
 
+/** A single marketplace price entry from the `prices` array */
+interface MarketplacePriceEntry {
+  price: number;
+  source: string;
+  name: string;
+  logo?: string;
+  link?: string;
+  quantity?: number;
+  winloss?: number | null;
+}
+
 /** Raw item from the SteamWebAPI /items endpoint */
-export interface SteamWebApiItem {
+interface SteamWebApiItem {
   markethashname: string;
-  classid?: string;
-  image?: string;
-  // Pricing fields (all in USD cents or dollars depending on config)
-  pricelatest?: number;        // Latest Steam Market price
-  pricereal?: number;          // "Real" aggregated market price
-  pricemin?: number;           // Minimum across markets
-  pricemax?: number;           // Maximum across markets
-  priceavg?: number;           // Average price
-  pricemedian?: number;        // Median price
-  pricesafe?: number;          // "Safe" recommended price
-  buyorderprice?: number;      // Highest buy order on Steam
-  sold24h?: number;            // Units sold in last 24h
-  sold7d?: number;             // Units sold in last 7 days
-  sold30d?: number;            // Units sold in last 30 days
-  // Third-party marketplace prices
-  priceskinport?: number;
-  pricecsfloat?: number;
-  pricebuff163?: number;
-  [key: string]: string | number | boolean | undefined;
+  normalizedname?: string;
+  slug?: string;
+  itemimage?: string;
+  // Steam Market pricing
+  pricelatest?: number | null;
+  pricelatestsell?: number | null;
+  pricesafe?: number | null;
+  priceavg?: number | null;
+  pricemedian?: number | null;
+  pricemin?: number | null;
+  pricemax?: number | null;
+  buyorderprice?: number | null;
+  // Volume
+  sold24h?: number | null;
+  sold7d?: number | null;
+  sold30d?: number | null;
+  soldtotal?: number | null;
+  // Item metadata
+  rarity?: string;
+  quality?: string;
+  bordercolor?: string;
+  color?: string;
+  wear?: string;
+  itemgroup?: string;
+  itemtype?: string;
+  // Third-party marketplace prices — THE KEY FIELD
+  prices?: MarketplacePriceEntry[];
 }
 
 /** Normalized multi-marketplace price for our frontend */
 export interface MultiMarketPrice {
-  name: string;            // market_hash_name
+  name: string;
   weapon: string;
   skin: string;
   wear: string;
   image: string | null;
+  rarity: string;
+  borderColor: string;
   // Multi-marketplace prices (USD)
   steamPrice: number | null;
   skinportPrice: number | null;
   csfloatPrice: number | null;
   buff163Price: number | null;
   dmarketPrice: number | null;
+  bitskinPrice: number | null;
+  waxpeerPrice: number | null;
+  // Marketplace links (direct from API)
+  marketLinks: Record<string, string>;
   // Aggregated stats
   lowestPrice: number | null;
   highestPrice: number | null;
   averagePrice: number | null;
   medianPrice: number | null;
-  bestMarket: string | null;         // dealId of cheapest marketplace
-  bestSavingsVsSteam: number | null; // savings vs Steam Market price
+  bestMarket: string | null;
+  bestSavingsVsSteam: number | null;
   // Volume
   sold24h: number;
   sold7d: number;
@@ -97,6 +137,78 @@ function parseName(marketHashName: string): { weapon: string; skin: string; wear
   };
 }
 
+/* ── Map API source names to our dealIds ── */
+const SOURCE_TO_DEALID: Record<string, string> = {
+  skinport: "skinport",
+  csfloat: "csfloat",
+  buff: "buff163",
+  buff163: "buff163",
+  dmarket: "dmarket",
+  bitskins: "bitskins",
+  waxpeer: "waxpeer",
+  tradeit: "tradeit",
+  mannco: "mannco",
+};
+
+/* ── Extract marketplace prices from `prices` array ── */
+function extractMarketplacePrices(prices?: MarketplacePriceEntry[]): {
+  skinport: number | null;
+  csfloat: number | null;
+  buff163: number | null;
+  dmarket: number | null;
+  bitskins: number | null;
+  waxpeer: number | null;
+  links: Record<string, string>;
+} {
+  const result = {
+    skinport: null as number | null,
+    csfloat: null as number | null,
+    buff163: null as number | null,
+    dmarket: null as number | null,
+    bitskins: null as number | null,
+    waxpeer: null as number | null,
+    links: {} as Record<string, string>,
+  };
+
+  if (!prices || !Array.isArray(prices)) return result;
+
+  for (const entry of prices) {
+    if (!entry.price || entry.price <= 0) continue;
+    const src = entry.source?.toLowerCase();
+    const dealId = SOURCE_TO_DEALID[src];
+    if (!dealId) continue;
+
+    // Store the link
+    if (entry.link) {
+      result.links[dealId] = entry.link;
+    }
+
+    // Map to our fields
+    switch (dealId) {
+      case "skinport":
+        if (!result.skinport || entry.price < result.skinport) result.skinport = entry.price;
+        break;
+      case "csfloat":
+        if (!result.csfloat || entry.price < result.csfloat) result.csfloat = entry.price;
+        break;
+      case "buff163":
+        if (!result.buff163 || entry.price < result.buff163) result.buff163 = entry.price;
+        break;
+      case "dmarket":
+        if (!result.dmarket || entry.price < result.dmarket) result.dmarket = entry.price;
+        break;
+      case "bitskins":
+        if (!result.bitskins || entry.price < result.bitskins) result.bitskins = entry.price;
+        break;
+      case "waxpeer":
+        if (!result.waxpeer || entry.price < result.waxpeer) result.waxpeer = entry.price;
+        break;
+    }
+  }
+
+  return result;
+}
+
 /* ── Determine cheapest marketplace ── */
 function findBestMarket(prices: Record<string, number | null>): { dealId: string; price: number } | null {
   const entries = Object.entries(prices).filter(
@@ -110,33 +222,44 @@ function findBestMarket(prices: Record<string, number | null>): { dealId: string
 /* ── Transform raw item ── */
 function transformItem(raw: SteamWebApiItem): MultiMarketPrice | null {
   const { weapon, skin, wear } = parseName(raw.markethashname);
+
+  // Must have weapon | skin format with a valid wear
   if (!skin || !wear) return null;
 
   const validWears = ["Factory New", "Minimal Wear", "Field-Tested", "Well-Worn", "Battle-Scarred"];
   if (!validWears.includes(wear)) return null;
 
-  const steamPrice = raw.pricelatest ?? raw.pricesafe ?? null;
-  const skinportPrice = raw.priceskinport ?? null;
-  const csfloatPrice = raw.pricecsfloat ?? null;
-  const buff163Price = raw.pricebuff163 ?? null;
-  // DMarket not always in SteamWebAPI — use pricereal as fallback
-  const dmarketPrice = (raw as Record<string, number | undefined>).pricedmarket ?? null;
+  // Steam Market price: prefer pricelatestsell, fallback to pricesafe
+  const steamPrice = raw.pricelatestsell ?? raw.pricesafe ?? raw.pricelatest ?? null;
 
-  const marketPrices: Record<string, number | null> = {
-    skinport: skinportPrice,
-    csfloat: csfloatPrice,
-    buff163: buff163Price,
-    dmarket: dmarketPrice,
+  // Extract per-marketplace prices from the `prices` array
+  const mp = extractMarketplacePrices(raw.prices);
+
+  const thirdPartyPrices: Record<string, number | null> = {
+    skinport: mp.skinport,
+    csfloat: mp.csfloat,
+    buff163: mp.buff163,
+    dmarket: mp.dmarket,
+    bitskins: mp.bitskins,
+    waxpeer: mp.waxpeer,
   };
 
-  const best = findBestMarket(marketPrices);
+  const best = findBestMarket(thirdPartyPrices);
   const bestSavings = (steamPrice && best)
     ? Math.max(steamPrice - best.price, 0)
     : null;
 
-  // Compute lowest/highest across ALL sources
-  const allPrices = [steamPrice, skinportPrice, csfloatPrice, buff163Price, dmarketPrice]
-    .filter((p): p is number => p != null && p > 0);
+  // Compute lowest/highest across ALL sources (steam + 3rd party)
+  const allPrices = [
+    steamPrice,
+    mp.skinport,
+    mp.csfloat,
+    mp.buff163,
+    mp.dmarket,
+    mp.bitskins,
+    mp.waxpeer,
+  ].filter((p): p is number => p != null && p > 0);
+
   const lowestPrice = allPrices.length ? Math.min(...allPrices) : null;
   const highestPrice = allPrices.length ? Math.max(...allPrices) : null;
 
@@ -145,12 +268,17 @@ function transformItem(raw: SteamWebApiItem): MultiMarketPrice | null {
     weapon,
     skin,
     wear,
-    image: raw.image || null,
+    image: raw.itemimage || null,
+    rarity: raw.rarity || "",
+    borderColor: raw.bordercolor || "",
     steamPrice,
-    skinportPrice,
-    csfloatPrice,
-    buff163Price,
-    dmarketPrice,
+    skinportPrice: mp.skinport,
+    csfloatPrice: mp.csfloat,
+    buff163Price: mp.buff163,
+    dmarketPrice: mp.dmarket,
+    bitskinPrice: mp.bitskins,
+    waxpeerPrice: mp.waxpeer,
+    marketLinks: mp.links,
     lowestPrice,
     highestPrice,
     averagePrice: raw.priceavg ?? null,
@@ -167,7 +295,13 @@ function transformItem(raw: SteamWebApiItem): MultiMarketPrice | null {
 /* ── Fetch from SteamWebAPI ── */
 async function fetchItems(): Promise<SteamWebApiItem[]> {
   const key = getApiKey();
-  const url = `${STEAMWEBAPI_BASE}/items?key=${key}&game=cs2&currency=USD&format=json`;
+
+  // Only fetch skins (not stickers, cases, etc.) by filtering grouped items
+  // Use limit to avoid the 31k+ item full dump
+  const url = `${STEAMWEBAPI_BASE}/items?key=${key}&game=cs2&currency=USD&format=json&limit=2000&sort=pricelatestsell&order=desc`;
+
+  console.log("[SteamWebAPI] Fetching items...");
+  const start = Date.now();
 
   const res = await fetch(url, {
     headers: { Accept: "application/json" },
@@ -181,7 +315,9 @@ async function fetchItems(): Promise<SteamWebApiItem[]> {
   }
 
   const data = await res.json();
-  // SteamWebAPI may return an array directly or { items: [...] }
+  const elapsed = Date.now() - start;
+  console.log(`[SteamWebAPI] Response received in ${elapsed}ms`);
+
   if (Array.isArray(data)) return data;
   if (data?.items && Array.isArray(data.items)) return data.items;
   if (data?.data && Array.isArray(data.data)) return data.data;
@@ -193,7 +329,7 @@ async function fetchItems(): Promise<SteamWebApiItem[]> {
 /* ── Public API ── */
 
 /**
- * Get all CS2 item prices from SteamWebAPI (cached 10 min).
+ * Get CS2 skin prices from SteamWebAPI (cached 10 min).
  * Returns normalized multi-marketplace prices.
  */
 export async function getMultiMarketPrices(): Promise<MultiMarketPrice[]> {
@@ -221,7 +357,7 @@ export async function getMultiMarketPrices(): Promise<MultiMarketPrice[]> {
     cacheTimestamp = now;
 
     console.log(
-      `[SteamWebAPI] Fetched ${items.length} items with multi-market prices`
+      `[SteamWebAPI] Processed ${items.length} skins with multi-market prices (from ${rawItems.length} raw items)`
     );
     return items;
   } catch (error) {
@@ -249,7 +385,6 @@ export async function searchMultiMarket(query: string, limit = 100): Promise<Mul
 
 /**
  * Get items with the biggest savings vs Steam Market.
- * Great for a "Best Deals" feature.
  */
 export async function getBestDeals(limit = 50): Promise<MultiMarketPrice[]> {
   const all = await getMultiMarketPrices();
