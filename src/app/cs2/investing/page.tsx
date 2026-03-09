@@ -33,10 +33,7 @@ const SKIN_CATEGORIES = [
   {
     name: "Popular Play Skins",
     icon: Star,
-    color: "emerald",
-    bgClass: "bg-emerald-50 border-emerald-200",
-    textClass: "text-emerald-700",
-    badgeClass: "bg-emerald-100 text-emerald-800",
+    color: "emerald" as const,
     volatility: "Low",
     liquidity: "Very High",
     supply: "Ongoing (actively unboxed)",
@@ -53,10 +50,7 @@ const SKIN_CATEGORIES = [
   {
     name: "Discontinued Case Skins",
     icon: Package,
-    color: "amber",
-    bgClass: "bg-amber-50 border-amber-200",
-    textClass: "text-amber-700",
-    badgeClass: "bg-amber-100 text-amber-800",
+    color: "amber" as const,
     volatility: "Medium",
     liquidity: "Medium",
     supply: "Fixed (cases no longer drop)",
@@ -73,10 +67,7 @@ const SKIN_CATEGORIES = [
   {
     name: "Stickers & Capsules",
     icon: Layers,
-    color: "blue",
-    bgClass: "bg-blue-50 border-blue-200",
-    textClass: "text-blue-700",
-    badgeClass: "bg-blue-100 text-blue-800",
+    color: "blue" as const,
     volatility: "High",
     liquidity: "Variable",
     supply: "Fixed (time-limited sales)",
@@ -93,10 +84,7 @@ const SKIN_CATEGORIES = [
   {
     name: "Rare Patterns & Collectibles",
     icon: Flame,
-    color: "red",
-    bgClass: "bg-red-50 border-red-200",
-    textClass: "text-red-700",
-    badgeClass: "bg-red-100 text-red-800",
+    color: "red" as const,
     volatility: "Very High",
     liquidity: "Low",
     supply: "Extremely limited",
@@ -111,6 +99,43 @@ const SKIN_CATEGORIES = [
       "These items derive value from extreme scarcity and collector demand rather than gameplay utility. Prices are often set by individual negotiation rather than market listing. The buyer pool for high-value collectibles is very small, meaning these items can be difficult to liquidate quickly. Price history for individual patterns is often inconsistent or unreliable.",
   },
 ];
+
+/* ── Color config for magazine bar style ── */
+
+const COLOR_CONFIG = {
+  emerald: {
+    bar: "from-emerald-500 to-teal-500",
+    bg: "bg-emerald-50",
+    border: "border-emerald-200",
+    text: "text-emerald-700",
+    badge: "bg-emerald-100 text-emerald-800",
+    iconBg: "bg-emerald-500/10",
+  },
+  amber: {
+    bar: "from-amber-500 to-orange-500",
+    bg: "bg-amber-50",
+    border: "border-amber-200",
+    text: "text-amber-700",
+    badge: "bg-amber-100 text-amber-800",
+    iconBg: "bg-amber-500/10",
+  },
+  blue: {
+    bar: "from-blue-500 to-cyan-500",
+    bg: "bg-blue-50",
+    border: "border-blue-200",
+    text: "text-blue-700",
+    badge: "bg-blue-100 text-blue-800",
+    iconBg: "bg-blue-500/10",
+  },
+  red: {
+    bar: "from-red-500 to-rose-500",
+    bg: "bg-red-50",
+    border: "border-red-200",
+    text: "text-red-700",
+    badge: "bg-red-100 text-red-800",
+    iconBg: "bg-red-500/10",
+  },
+};
 
 /* ── Supply mechanics (publicly documented game mechanics) ── */
 
@@ -147,32 +172,67 @@ const MARKET_FACTORS = [
   {
     title: "Player Count Trends",
     icon: BarChart3,
+    accentTop: "border-t-blue-400",
     desc: "CS2's monthly active player count directly influences skin demand. Steam Charts and SteamDB publish daily concurrent player data. Higher player counts generally correlate with increased skin transaction volume.",
   },
   {
     title: "Major Tournament Schedule",
     icon: Clock,
+    accentTop: "border-t-teal-400",
     desc: "Valve Majors occur 1-2 times per year. They generate new sticker capsules, souvenir packages, and viewer engagement. Historical pattern: sticker prices tend to be lowest during the sale window and may shift after the event concludes.",
   },
   {
     title: "Valve Updates & Patches",
     icon: Info,
+    accentTop: "border-t-purple-400",
     desc: "Valve can introduce new cases, discontinue old ones, or change game mechanics at any time. The addition of CS2 brought visual changes that affected some skin appearances. Patch notes are publicly available on the CS2 blog.",
   },
   {
     title: "Steam Market Fees",
     icon: Scale,
+    accentTop: "border-t-amber-400",
     desc: "The Steam Community Market charges a 15% combined fee (5% Steam + 10% CS2 game fee) on every sale. Third-party marketplaces charge 2-7% depending on platform. These transaction costs are an important factor in any buying/selling decision.",
   },
   {
     title: "Third-Party Market Volume",
     icon: TrendingUp,
+    accentTop: "border-t-rose-400",
     desc: "Buff163 processes more CS2 skin transactions than any other platform. DMarket, Skinport, and other third-party sites offer different fee structures and cash-out options. Price differences between platforms are publicly visible.",
   },
   {
     title: "Seasonal Patterns",
     icon: Search,
+    accentTop: "border-t-cyan-400",
     desc: "Publicly available price history data shows that transaction volume and prices have historically fluctuated during Steam Summer/Winter sales, new case releases, and Major tournaments. Past patterns do not guarantee future behavior.",
+  },
+];
+
+/* ── Risks ── */
+
+const RISKS = [
+  {
+    title: "Valve Can Change Rules at Any Time",
+    desc: "Valve has full control over the CS2 economy. They can introduce new cases, add trade restrictions, change drop rates, or modify the Steam Market at any time without notice. The 2018 trade hold changes and 2023 CS2 transition both had significant market effects.",
+  },
+  {
+    title: "Prices Can Go Down",
+    desc: "Skin prices are not guaranteed to increase. Market crashes, new supply from case openings, declining player counts, or shifts in player taste can cause prices to drop significantly. Many skins have lost value over time.",
+  },
+  {
+    title: "Scam & Fraud Risk",
+    desc: "The CS2 skin trading ecosystem has a significant scam problem. Phishing sites, fake trade bots, impersonation, and fraudulent marketplaces are common. Always verify you are on legitimate platforms and never share your Steam credentials.",
+  },
+  {
+    title: "Liquidity Is Not Guaranteed",
+    desc: "High-value or niche items can take days, weeks, or months to sell. Unlike stocks or crypto, there is no instant market order system. You may need to discount significantly to sell quickly.",
+  },
+  {
+    title: "Tax Implications",
+    desc: "In many jurisdictions, profits from digital asset sales may be subject to capital gains tax or income tax. Tax treatment of virtual items varies by country. Consult a tax professional about your specific obligations.",
+  },
+  {
+    title: "Platform Risk",
+    desc: "Third-party marketplaces can shut down, get hacked, or freeze withdrawals. The OPSkins shutdown in 2018 demonstrated this risk. Only use established platforms and avoid keeping large balances on any single site.",
   },
 ];
 
@@ -202,60 +262,67 @@ export default function CS2InvestingPage() {
         </div>
       </div>
 
-      {/* ── Hero ── */}
-      <section className="border-b border-gray-100 bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 py-10">
-        <div className="container-main">
+      {/* ── Hero with side accent bar ── */}
+      <section className="border-b border-gray-100">
+        <div className="container-main py-10">
           <Link
             href="/cs2"
-            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4"
+            className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-600 transition-colors mb-6"
           >
             <ChevronLeft className="h-4 w-4" /> CS2 Skins Hub
           </Link>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white">
-              <LineChart className="h-5 w-5" />
+
+          <div className="flex rounded-2xl overflow-hidden border border-gray-200 shadow-md">
+            <div className="w-1.5 bg-gradient-to-b from-teal-500 via-blue-500 to-purple-500 flex-shrink-0" />
+            <div className="p-8 flex-1">
+              <span className="text-[11px] font-bold text-teal-600 uppercase tracking-widest">
+                Market Intelligence
+              </span>
+              <h1 className="text-3xl font-serif font-bold text-gray-900 mt-2">
+                CS2 Skin Market Data &amp; Trends
+              </h1>
+              <p className="text-gray-500 mt-3 max-w-2xl leading-relaxed">
+                An educational overview of the CS2 skin economy using publicly available data.
+                Explore skin categories, supply mechanics, and market factors documented across
+                Steam, SteamDB, and third-party platforms.
+              </p>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              CS2 Skin Market Data &amp; Trends
-            </h1>
           </div>
-          <p className="text-gray-600 max-w-2xl">
-            An educational overview of the CS2 skin economy using publicly available data. Explore
-            skin categories, supply mechanics, and market factors documented across Steam, SteamDB,
-            and third-party platforms.
-          </p>
         </div>
       </section>
 
       {/* ── How the CS2 skin economy works ── */}
-      <section className="py-8 border-b border-gray-100">
+      <section className="py-10 border-b border-gray-100">
         <div className="container-main">
-          <div className="rounded-xl border border-brand-200 bg-gradient-to-r from-brand-50 to-white p-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-2">
-              How the CS2 Skin Economy Works
-            </h2>
-            <p className="text-sm text-gray-700 leading-relaxed mb-3">
-              Unlike cosmetics in most other games, CS2 skins are tradeable digital items that can
-              be bought, sold, and exchanged between players on the Steam Community Market and
-              third-party platforms. The Steam Community Market processes billions in transactions
-              annually. Skins have different rarities, wear conditions (float values), and visual
-              patterns — all of which are publicly inspectable and influence market pricing.
-            </p>
-            <p className="text-sm text-gray-700 leading-relaxed">
-              Skin prices are determined entirely by supply and demand on open marketplaces. Valve
-              does not set or control individual skin prices. Some skins have fixed supply (from
-              discontinued cases or past operations), while others continue to enter circulation
-              through active case drops. This publicly observable supply dynamic is a key factor in
-              how the market functions.
-            </p>
+          <div className="flex rounded-2xl overflow-hidden border border-brand-200 shadow-sm">
+            <div className="w-1.5 bg-gradient-to-b from-brand-400 to-blue-500 flex-shrink-0" />
+            <div className="p-6 flex-1 bg-gradient-to-r from-brand-50/50 to-white">
+              <h2 className="text-xl font-serif font-bold text-gray-900 mb-3">
+                How the CS2 Skin Economy Works
+              </h2>
+              <p className="text-sm text-gray-700 leading-relaxed mb-3">
+                Unlike cosmetics in most other games, CS2 skins are tradeable digital items that can
+                be bought, sold, and exchanged between players on the Steam Community Market and
+                third-party platforms. The Steam Community Market processes billions in transactions
+                annually. Skins have different rarities, wear conditions (float values), and visual
+                patterns — all of which are publicly inspectable and influence market pricing.
+              </p>
+              <p className="text-sm text-gray-700 leading-relaxed">
+                Skin prices are determined entirely by supply and demand on open marketplaces. Valve
+                does not set or control individual skin prices. Some skins have fixed supply (from
+                discontinued cases or past operations), while others continue to enter circulation
+                through active case drops. This publicly observable supply dynamic is a key factor in
+                how the market functions.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ── Skin categories ── */}
-      <section className="py-10">
+      <section className="py-12">
         <div className="container-main">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-serif font-bold text-gray-900 mb-2">
             Skin Categories by Market Characteristics
           </h2>
           <p className="text-sm text-gray-500 mb-8">
@@ -263,74 +330,71 @@ export default function CS2InvestingPage() {
             reflect observed market behavior, not predictions.
           </p>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {SKIN_CATEGORIES.map((cat) => (
-              <div
-                key={cat.name}
-                className={`rounded-xl border ${cat.bgClass} p-6`}
-              >
-                <div className="flex items-center gap-2 mb-3">
-                  <cat.icon className={`h-5 w-5 ${cat.textClass}`} />
-                  <h3 className={`text-lg font-bold ${cat.textClass}`}>
-                    {cat.name}
-                  </h3>
-                </div>
-                <p className="text-sm text-gray-700 mb-4">{cat.notes}</p>
+            {SKIN_CATEGORIES.map((cat) => {
+              const colors = COLOR_CONFIG[cat.color];
+              return (
+                <div
+                  key={cat.name}
+                  className="flex rounded-xl overflow-hidden bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+                >
+                  {/* Left color bar */}
+                  <div className={`w-1.5 bg-gradient-to-b ${colors.bar} flex-shrink-0`} />
+                  <div className="p-6 flex-1">
+                    {/* Header */}
+                    <div className="flex items-center gap-2.5 mb-3">
+                      <div className={`h-8 w-8 rounded-lg ${colors.iconBg} flex items-center justify-center`}>
+                        <cat.icon className={`h-4 w-4 ${colors.text}`} />
+                      </div>
+                      <h3 className={`text-lg font-serif font-bold ${colors.text}`}>
+                        {cat.name}
+                      </h3>
+                    </div>
 
-                {/* Market characteristics */}
-                <div className="grid grid-cols-3 gap-2 mb-4">
-                  <div className="rounded-lg bg-white/60 px-3 py-2">
-                    <p className="text-[10px] font-semibold text-gray-400 uppercase">
-                      Volatility
-                    </p>
-                    <p className="text-sm font-bold text-gray-900">
-                      {cat.volatility}
-                    </p>
-                  </div>
-                  <div className="rounded-lg bg-white/60 px-3 py-2">
-                    <p className="text-[10px] font-semibold text-gray-400 uppercase">
-                      Liquidity
-                    </p>
-                    <p className="text-sm font-bold text-gray-900">
-                      {cat.liquidity}
-                    </p>
-                  </div>
-                  <div className="rounded-lg bg-white/60 px-3 py-2">
-                    <p className="text-[10px] font-semibold text-gray-400 uppercase">
-                      Supply
-                    </p>
-                    <p className="text-sm font-bold text-gray-900">
-                      {cat.supply.split(" (")[0]}
-                    </p>
-                  </div>
-                </div>
+                    {/* Description */}
+                    <p className="text-sm text-gray-600 leading-relaxed mb-4">{cat.notes}</p>
 
-                {/* Examples */}
-                <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase mb-2">
-                    Notable Examples
-                  </p>
-                  <ul className="space-y-1">
-                    {cat.examples.map((ex) => (
-                      <li
-                        key={ex}
-                        className="text-sm text-gray-700 flex items-start gap-2"
-                      >
-                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400 flex-shrink-0" />
-                        {ex}
-                      </li>
-                    ))}
-                  </ul>
+                    {/* Market characteristic badges */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${colors.badge}`}>
+                        {cat.volatility} volatility
+                      </span>
+                      <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${colors.badge}`}>
+                        {cat.liquidity} liquidity
+                      </span>
+                      <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-gray-100 text-gray-600">
+                        {cat.supply.split(" (")[0]}
+                      </span>
+                    </div>
+
+                    {/* Examples */}
+                    <div>
+                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
+                        Notable Examples
+                      </p>
+                      <ul className="space-y-1.5">
+                        {cat.examples.map((ex) => (
+                          <li
+                            key={ex}
+                            className="text-sm text-gray-600 flex items-start gap-2"
+                          >
+                            <span className={`mt-1.5 h-1.5 w-1.5 rounded-full ${colors.text.replace("text-", "bg-")} flex-shrink-0`} />
+                            {ex}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* ── Supply mechanics ── */}
-      <section className="py-10 border-t border-gray-100 bg-gray-50/50">
+      <section className="py-12 border-t border-gray-100 bg-[#fafbfc]">
         <div className="container-main">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-serif font-bold text-gray-900 mb-2">
             Supply Mechanics
           </h2>
           <p className="text-sm text-gray-500 mb-8">
@@ -338,15 +402,23 @@ export default function CS2InvestingPage() {
             of tradeable items in circulation.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {SUPPLY_MECHANICS.map((item) => (
+            {SUPPLY_MECHANICS.map((item, i) => (
               <div
                 key={item.title}
-                className="rounded-xl border border-gray-200 bg-white p-5"
+                className="flex rounded-xl overflow-hidden bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
               >
-                <h3 className="font-bold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  {item.desc}
-                </p>
+                <div className="w-1 bg-gradient-to-b from-blue-400 to-cyan-400 flex-shrink-0" />
+                <div className="p-5 flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-lg font-black text-blue-100">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <h3 className="font-bold text-gray-900">{item.title}</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
@@ -354,9 +426,9 @@ export default function CS2InvestingPage() {
       </section>
 
       {/* ── Market factors ── */}
-      <section className="py-10 border-t border-gray-100">
+      <section className="py-12 border-t border-gray-100">
         <div className="container-main">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-serif font-bold text-gray-900 mb-2">
             Key Market Factors
           </h2>
           <p className="text-sm text-gray-500 mb-8">
@@ -367,13 +439,13 @@ export default function CS2InvestingPage() {
             {MARKET_FACTORS.map((factor) => (
               <div
                 key={factor.title}
-                className="rounded-xl border border-gray-200 bg-white p-5 hover:shadow-sm transition-shadow"
+                className={`rounded-xl border border-gray-100 bg-[#fafbfc] border-t-[3px] ${factor.accentTop} p-5 hover:shadow-md transition-shadow`}
               >
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100">
+                <div className="flex items-center gap-2.5 mb-3">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white border border-gray-200">
                     <factor.icon className="h-4 w-4 text-gray-600" />
                   </div>
-                  <h3 className="font-bold text-gray-900">{factor.title}</h3>
+                  <h3 className="font-serif font-bold text-gray-900">{factor.title}</h3>
                 </div>
                 <p className="text-sm text-gray-600 leading-relaxed">
                   {factor.desc}
@@ -385,69 +457,43 @@ export default function CS2InvestingPage() {
       </section>
 
       {/* ── Marketplace comparison ── */}
-      <section className="py-10 border-t border-gray-100 bg-gray-50/50">
+      <section className="py-12 border-t border-gray-100 bg-[#fafbfc]">
         <div className="container-main">
-          <h2 className="text-xl font-bold text-gray-900 mb-2">
+          <h2 className="text-xl font-serif font-bold text-gray-900 mb-2">
             Marketplace Fee Comparison
           </h2>
-          <p className="text-sm text-gray-600 mb-6">
+          <p className="text-sm text-gray-500 mb-6">
             Publicly listed fee structures across major CS2 skin trading platforms.
             Transaction costs vary and should be considered when buying or selling.
           </p>
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="px-4 py-3 text-left font-semibold text-gray-600">Platform</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-600">Seller Fee</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-600">Buyer Fee</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-600 hidden sm:table-cell">Cash Out</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-600 hidden sm:table-cell">Notes</th>
+                  <th className="px-5 py-3.5 text-left font-semibold text-gray-600">Platform</th>
+                  <th className="px-5 py-3.5 text-left font-semibold text-gray-600">Seller Fee</th>
+                  <th className="px-5 py-3.5 text-left font-semibold text-gray-600">Buyer Fee</th>
+                  <th className="px-5 py-3.5 text-left font-semibold text-gray-600 hidden sm:table-cell">Cash Out</th>
+                  <th className="px-5 py-3.5 text-left font-semibold text-gray-600 hidden sm:table-cell">Notes</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                <tr>
-                  <td className="px-4 py-3 font-semibold text-gray-900">Steam Market</td>
-                  <td className="px-4 py-3 text-gray-700">15% (combined)</td>
-                  <td className="px-4 py-3 text-gray-700">0%</td>
-                  <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">Steam Wallet only</td>
-                  <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">Cannot withdraw to real money</td>
-                </tr>
-                <tr className="bg-gray-50/50">
-                  <td className="px-4 py-3 font-semibold text-gray-900">Buff163</td>
-                  <td className="px-4 py-3 text-gray-700">2.5%</td>
-                  <td className="px-4 py-3 text-gray-700">0%</td>
-                  <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">Alipay / bank transfer (China)</td>
-                  <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">Highest volume globally</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 font-semibold text-gray-900">DMarket</td>
-                  <td className="px-4 py-3 text-gray-700">3%</td>
-                  <td className="px-4 py-3 text-gray-700">0%</td>
-                  <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">Crypto, PayPal, bank</td>
-                  <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">Instant trade system</td>
-                </tr>
-                <tr className="bg-gray-50/50">
-                  <td className="px-4 py-3 font-semibold text-gray-900">Skinport</td>
-                  <td className="px-4 py-3 text-gray-700">5%</td>
-                  <td className="px-4 py-3 text-gray-700">0%</td>
-                  <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">Bank transfer, PayPal</td>
-                  <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">EU-based, SEPA transfers</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 font-semibold text-gray-900">Tradeit.gg</td>
-                  <td className="px-4 py-3 text-gray-700">0% (trade)</td>
-                  <td className="px-4 py-3 text-gray-700">Spread varies</td>
-                  <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">Crypto, gift cards</td>
-                  <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">Instant skin-to-skin trading</td>
-                </tr>
-                <tr className="bg-gray-50/50">
-                  <td className="px-4 py-3 font-semibold text-gray-900">Mannco.store</td>
-                  <td className="px-4 py-3 text-gray-700">0% (trade)</td>
-                  <td className="px-4 py-3 text-gray-700">Spread varies</td>
-                  <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">Crypto, PayPal</td>
-                  <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">TF2 + CS2 items</td>
-                </tr>
+                {[
+                  { name: "Steam Market", seller: "15% (combined)", buyer: "0%", cash: "Steam Wallet only", notes: "Cannot withdraw to real money" },
+                  { name: "Buff163", seller: "2.5%", buyer: "0%", cash: "Alipay / bank transfer (China)", notes: "Highest volume globally" },
+                  { name: "DMarket", seller: "3%", buyer: "0%", cash: "Crypto, PayPal, bank", notes: "Instant trade system" },
+                  { name: "Skinport", seller: "5%", buyer: "0%", cash: "Bank transfer, PayPal", notes: "EU-based, SEPA transfers" },
+                  { name: "Tradeit.gg", seller: "0% (trade)", buyer: "Spread varies", cash: "Crypto, gift cards", notes: "Instant skin-to-skin trading" },
+                  { name: "Mannco.store", seller: "0% (trade)", buyer: "Spread varies", cash: "Crypto, PayPal", notes: "TF2 + CS2 items" },
+                ].map((row, i) => (
+                  <tr key={row.name} className={i % 2 === 1 ? "bg-gray-50/50" : ""}>
+                    <td className="px-5 py-3 font-semibold text-gray-900">{row.name}</td>
+                    <td className="px-5 py-3 text-gray-700">{row.seller}</td>
+                    <td className="px-5 py-3 text-gray-700">{row.buyer}</td>
+                    <td className="px-5 py-3 text-gray-500 hidden sm:table-cell">{row.cash}</td>
+                    <td className="px-5 py-3 text-gray-500 hidden sm:table-cell">{row.notes}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -459,52 +505,30 @@ export default function CS2InvestingPage() {
       </section>
 
       {/* ── Risks section ── */}
-      <section className="py-10 border-t border-gray-100">
+      <section className="py-12 border-t border-gray-100">
         <div className="container-main">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-serif font-bold text-gray-900 mb-2">
             Risks &amp; Important Considerations
           </h2>
           <p className="text-sm text-gray-500 mb-6">
             Anyone participating in the CS2 skin market should understand these risks.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {[
-              {
-                title: "Valve Can Change Rules at Any Time",
-                desc: "Valve has full control over the CS2 economy. They can introduce new cases, add trade restrictions, change drop rates, or modify the Steam Market at any time without notice. The 2018 trade hold changes and 2023 CS2 transition both had significant market effects.",
-              },
-              {
-                title: "Prices Can Go Down",
-                desc: "Skin prices are not guaranteed to increase. Market crashes, new supply from case openings, declining player counts, or shifts in player taste can cause prices to drop significantly. Many skins have lost value over time.",
-              },
-              {
-                title: "Scam & Fraud Risk",
-                desc: "The CS2 skin trading ecosystem has a significant scam problem. Phishing sites, fake trade bots, impersonation, and fraudulent marketplaces are common. Always verify you are on legitimate platforms and never share your Steam credentials.",
-              },
-              {
-                title: "Liquidity Is Not Guaranteed",
-                desc: "High-value or niche items can take days, weeks, or months to sell. Unlike stocks or crypto, there is no instant market order system. You may need to discount significantly to sell quickly.",
-              },
-              {
-                title: "Tax Implications",
-                desc: "In many jurisdictions, profits from digital asset sales may be subject to capital gains tax or income tax. Tax treatment of virtual items varies by country. Consult a tax professional about your specific obligations.",
-              },
-              {
-                title: "Platform Risk",
-                desc: "Third-party marketplaces can shut down, get hacked, or freeze withdrawals. The OPSkins shutdown in 2018 demonstrated this risk. Only use established platforms and avoid keeping large balances on any single site.",
-              },
-            ].map((risk) => (
+            {RISKS.map((risk) => (
               <div
                 key={risk.title}
-                className="rounded-xl border border-red-100 bg-red-50/50 p-5"
+                className="flex rounded-xl overflow-hidden border border-red-100 hover:shadow-sm transition-shadow"
               >
-                <div className="flex items-center gap-2 mb-2">
-                  <AlertTriangle className="h-4 w-4 text-red-500 flex-shrink-0" />
-                  <h3 className="font-bold text-gray-900">{risk.title}</h3>
+                <div className="w-1 bg-red-400 flex-shrink-0" />
+                <div className="p-5 flex-1 bg-red-50/30">
+                  <div className="flex items-center gap-2 mb-2">
+                    <AlertTriangle className="h-4 w-4 text-red-400 flex-shrink-0" />
+                    <h3 className="font-serif font-bold text-gray-900">{risk.title}</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    {risk.desc}
+                  </p>
                 </div>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  {risk.desc}
-                </p>
               </div>
             ))}
           </div>
@@ -512,9 +536,9 @@ export default function CS2InvestingPage() {
       </section>
 
       {/* ── Data sources ── */}
-      <section className="py-8 border-t border-gray-100 bg-gray-50/50">
+      <section className="py-10 border-t border-gray-100 bg-[#fafbfc]">
         <div className="container-main">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">
+          <h2 className="text-lg font-serif font-bold text-gray-900 mb-4">
             Where This Data Comes From
           </h2>
           <p className="text-sm text-gray-600 leading-relaxed mb-4">
@@ -534,7 +558,7 @@ export default function CS2InvestingPage() {
             ].map((source) => (
               <span
                 key={source}
-                className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600"
+                className="rounded-full border border-gray-200 bg-white px-3.5 py-1.5 text-xs font-medium text-gray-600 shadow-sm"
               >
                 {source}
               </span>
@@ -544,18 +568,18 @@ export default function CS2InvestingPage() {
       </section>
 
       {/* ── Tools CTA ── */}
-      <section className="py-10 border-t border-gray-100 bg-white">
+      <section className="py-12 border-t border-gray-100 bg-white">
         <div className="container-main text-center">
-          <h2 className="text-xl font-bold text-gray-900 mb-3">
+          <h2 className="text-xl font-serif font-bold text-gray-900 mb-3">
             Explore CS2 Market Data
           </h2>
-          <p className="text-sm text-gray-600 mb-6">
+          <p className="text-sm text-gray-500 mb-6">
             Use our free tools to browse publicly available price data across multiple marketplaces.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/cs2/prices"
-              className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700 transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-3 font-semibold text-white hover:bg-teal-700 transition-colors shadow-sm"
             >
               Browse Prices <ArrowRight className="h-4 w-4" />
             </Link>
@@ -570,44 +594,47 @@ export default function CS2InvestingPage() {
       </section>
 
       {/* ── Bottom disclaimer ── */}
-      <section className="border-t border-gray-200 bg-gray-50 py-6">
+      <section className="border-t border-gray-200 bg-[#fafbfc] py-8">
         <div className="container-main">
-          <div className="rounded-xl border border-amber-200 bg-amber-50 p-5">
-            <div className="flex items-start gap-3">
-              <Shield className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-bold text-amber-900 mb-2">
-                  Full Disclosure &amp; Legal Notice
-                </p>
-                <ul className="space-y-1.5 text-xs text-amber-800 leading-relaxed">
-                  <li>
-                    <strong>Not financial advice.</strong> Nothing on this page is intended as
-                    financial advice, investment advice, or a recommendation to buy, sell, or hold
-                    any digital item. We are not financial advisors, licensed brokers, or investment
-                    professionals.
-                  </li>
-                  <li>
-                    <strong>Consult a professional.</strong> If you are considering financial
-                    decisions involving digital assets, please consult with a qualified financial
-                    advisor who can assess your individual circumstances.
-                  </li>
-                  <li>
-                    <strong>No gambling endorsement.</strong> Lootboxes.com does not condone,
-                    promote, or facilitate gambling in any form. Case opening is a form of
-                    randomized purchasing with negative expected value and should not be treated as
-                    an investment strategy.
-                  </li>
-                  <li>
-                    <strong>Risk of loss.</strong> Digital item trading involves significant risk.
-                    Prices can decrease, platforms can change terms, and Valve can modify the CS2
-                    economy at any time. You may lose some or all of your money.
-                  </li>
-                  <li>
-                    <strong>Affiliate links.</strong> Some marketplace links on this site are
-                    affiliate links. This means we may earn a commission if you make a purchase.
-                    This does not influence our data reporting or the information presented.
-                  </li>
-                </ul>
+          <div className="flex rounded-xl overflow-hidden border border-amber-200 shadow-sm">
+            <div className="w-1.5 bg-gradient-to-b from-amber-400 to-orange-400 flex-shrink-0" />
+            <div className="p-5 flex-1 bg-amber-50">
+              <div className="flex items-start gap-3">
+                <Shield className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-serif font-bold text-amber-900 mb-2">
+                    Full Disclosure &amp; Legal Notice
+                  </p>
+                  <ul className="space-y-1.5 text-xs text-amber-800 leading-relaxed">
+                    <li>
+                      <strong>Not financial advice.</strong> Nothing on this page is intended as
+                      financial advice, investment advice, or a recommendation to buy, sell, or hold
+                      any digital item. We are not financial advisors, licensed brokers, or investment
+                      professionals.
+                    </li>
+                    <li>
+                      <strong>Consult a professional.</strong> If you are considering financial
+                      decisions involving digital assets, please consult with a qualified financial
+                      advisor who can assess your individual circumstances.
+                    </li>
+                    <li>
+                      <strong>No gambling endorsement.</strong> Lootboxes.com does not condone,
+                      promote, or facilitate gambling in any form. Case opening is a form of
+                      randomized purchasing with negative expected value and should not be treated as
+                      an investment strategy.
+                    </li>
+                    <li>
+                      <strong>Risk of loss.</strong> Digital item trading involves significant risk.
+                      Prices can decrease, platforms can change terms, and Valve can modify the CS2
+                      economy at any time. You may lose some or all of your money.
+                    </li>
+                    <li>
+                      <strong>Affiliate links.</strong> Some marketplace links on this site are
+                      affiliate links. This means we may earn a commission if you make a purchase.
+                      This does not influence our data reporting or the information presented.
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
