@@ -72,8 +72,8 @@ const TOOLS = [
     hoverBg: "hover:bg-purple-100",
   },
   {
-    title: "Investment Guide",
-    description: "Data-driven skin investment strategies. Historical ROI analysis, trend tracking, and risk-tier categorization.",
+    title: "Market Trends",
+    description: "Track skin price history, market movements, and trending items with data-driven analysis.",
     href: "/cs2/investing",
     icon: LineChart,
     color: "bg-emerald-600",

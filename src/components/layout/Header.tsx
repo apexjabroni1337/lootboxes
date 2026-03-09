@@ -346,8 +346,8 @@ export default function Header() {
                           <LineChart className="h-4.5 w-4.5" />
                         </div>
                         <div>
-                          <p className="text-sm font-semibold text-gray-900">Investment Guide</p>
-                          <p className="text-[11px] text-gray-500">ROI data & skin trends</p>
+                          <p className="text-sm font-semibold text-gray-900">Market Trends</p>
+                          <p className="text-[11px] text-gray-500">Price history & market data</p>
                         </div>
                       </Link>
                       <Link
