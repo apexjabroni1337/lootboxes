@@ -9,6 +9,7 @@ import {
   Zap,
 } from "lucide-react";
 import { createServerClient } from "@/lib/supabase";
+import { filterPromotableDeals } from "@/lib/game-quality";
 import DealsHubClient from "./DealsHubClient";
 
 export const metadata = {
@@ -85,8 +86,11 @@ async function getDeals() {
   }
   const unique = Array.from(bestByGame.values());
 
+  // Filter out junk/NSFW/unpopular games
+  const promoted = filterPromotableDeals(unique);
+
   // Sort: images first, then hot_score, then discount
-  unique.sort((a: any, b: any) => {
+  promoted.sort((a: any, b: any) => {
     const aHasImg = a.games?.cover_image ? 1 : 0;
     const bHasImg = b.games?.cover_image ? 1 : 0;
     if (aHasImg !== bHasImg) return bHasImg - aHasImg;
@@ -96,7 +100,7 @@ async function getDeals() {
     return (b.discount_pct || 0) - (a.discount_pct || 0);
   });
 
-  return unique.slice(0, 150);
+  return promoted.slice(0, 150);
 }
 
 export default async function DealsPage({

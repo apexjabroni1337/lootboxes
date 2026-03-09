@@ -4,6 +4,7 @@ import GameAvatar from "@/components/ui/GameAvatar";
 import StoreIcon from "@/components/ui/StoreIcon";
 import { createServerClient } from "@/lib/supabase";
 import { formatPrice } from "@/lib/utils";
+import { isPromotableGame } from "@/lib/game-quality";
 import GamesGrid from "@/components/games/GamesGrid";
 
 export const metadata = {
@@ -75,9 +76,9 @@ export default async function GamesPage({
   const params = await searchParams;
   const { games, totalCount } = await getGamesWithDeals();
 
-  // Featured: top 4 games by hot_score that have screenshots
+  // Featured: top 4 games by hot_score that have screenshots (quality-filtered)
   const featured = games
-    .filter((g: any) => g.screenshot_image && g.dealCount > 0)
+    .filter((g: any) => g.screenshot_image && g.dealCount > 0 && isPromotableGame({ title: g.title, cover_image: g.cover_image, hot_score: g.hot_score, genres: g.genres }))
     .slice(0, 4);
 
   return (

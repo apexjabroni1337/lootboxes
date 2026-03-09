@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Flame, TrendingUp, ExternalLink, TrendingDown, ChevronRight } from "lucide-react";
 import { createServerClient } from "@/lib/supabase";
 import { formatPrice, formatDiscount } from "@/lib/utils";
+import { isPromotableGame } from "@/lib/game-quality";
 import GameAvatar from "@/components/ui/GameAvatar";
 import StoreIcon from "@/components/ui/StoreIcon";
 import TrendingClient from "./TrendingClient";
@@ -53,8 +54,13 @@ async function getTrendingDeals() {
     }
   }
 
-  // Step 3: Combine games with their best deals (games without deals still show up)
-  const combined = popularGames.map((game) => {
+  // Step 3: Filter out junk/NSFW/unpopular games
+  const qualityGames = popularGames.filter((game) =>
+    isPromotableGame({ title: game.title, cover_image: game.cover_image, hot_score: game.hot_score, genres: game.genres })
+  );
+
+  // Step 4: Combine games with their best deals (games without deals still show up)
+  const combined = qualityGames.map((game) => {
     const deal = bestDealByGame.get(game.id);
     return {
       // Deal fields (may be null for games without deals)

@@ -4,6 +4,7 @@ import GameAvatar from "@/components/ui/GameAvatar";
 import StoreIcon from "@/components/ui/StoreIcon";
 import { createServerClient } from "@/lib/supabase";
 import { formatDate, formatPrice } from "@/lib/utils";
+import { isPromotableGame } from "@/lib/game-quality";
 import NewReleasesClient from "./NewReleasesClient";
 
 export const metadata = {
@@ -74,7 +75,12 @@ async function getNewReleases() {
   // Sort by hot_score descending so popular new releases appear first
   merged.sort((a, b) => (b.hot_score || 0) - (a.hot_score || 0));
 
-  return merged.slice(0, 150);
+  // Filter out junk/NSFW/unpopular games
+  const quality = merged.filter((game) =>
+    isPromotableGame({ title: game.title, cover_image: game.cover_image, hot_score: game.hot_score, genres: game.genres })
+  );
+
+  return quality.slice(0, 150);
 }
 
 async function getComingSoon() {
