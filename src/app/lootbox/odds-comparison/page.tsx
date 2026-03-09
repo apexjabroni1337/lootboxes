@@ -202,21 +202,25 @@ export default function OddsComparisonPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 py-16">
-        <div className="container-main">
+      <section className="relative border-b border-gray-100 bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 py-16 overflow-hidden">
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+        }} />
+        <div className="container-main relative z-10">
           <Link
             href="/lootbox"
-            className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-200 mb-4"
+            className="inline-flex items-center gap-1 text-sm text-purple-300 hover:text-white mb-6 transition-colors"
           >
             <ChevronLeft className="h-4 w-4" /> Loot Boxes
           </Link>
 
-          <div className="flex items-center gap-3 mb-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/20 backdrop-blur-sm">
-              <BarChart3 className="h-6 w-6 text-purple-400" />
+          <div className="flex items-center gap-4 mb-5">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-500/20 backdrop-blur-sm border border-purple-400/20">
+              <BarChart3 className="h-7 w-7 text-purple-400" />
             </div>
-            <div className="inline-flex rounded-full bg-purple-500/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-purple-300">
-              Comparison Tool
+            <div className="inline-flex rounded-full bg-purple-500/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-purple-300 border border-purple-400/20">
+              <Scale className="h-4 w-4 mr-1.5" /> Comparison Tool
             </div>
           </div>
 
@@ -385,7 +389,7 @@ export default function OddsComparisonPage() {
             ) : (
               <>
                 {/* Overview comparison table */}
-                <div className="rounded-xl border border-gray-200 overflow-x-auto mb-8">
+                <div className="rounded-2xl border border-gray-200 overflow-x-auto mb-8 shadow-sm">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="bg-gray-50 border-b border-gray-200">
@@ -500,9 +504,11 @@ export default function OddsComparisonPage() {
 
                 {/* Winner summary */}
                 {selectedData.length >= 2 && bestOverall && (
-                  <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 mb-8">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Trophy className="h-5 w-5 text-emerald-600" />
+                  <div className="rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50 p-6 mb-8 shadow-sm">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600">
+                        <Trophy className="h-5 w-5 text-white" />
+                      </div>
                       <h3 className="text-lg font-bold text-emerald-900">Best Overall</h3>
                     </div>
                     <p className="text-sm text-emerald-800">
@@ -528,7 +534,8 @@ export default function OddsComparisonPage() {
                   {selectedData.map(({ game, rates, error: rateError }, idx) => (
                     <div
                       key={game.id}
-                      className="rounded-xl border border-gray-200 p-5"
+                      className="rounded-2xl border border-gray-200 p-5 hover:shadow-lg transition-shadow"
+                      style={{ borderTopWidth: 3, borderTopColor: COMPARE_COLORS[idx] }}
                     >
                       <div className="flex items-center gap-2 mb-1">
                         <div className="flex-shrink-0 w-8 h-8 rounded-lg overflow-hidden" style={{ boxShadow: `0 0 0 2px ${COMPARE_COLORS[idx]}` }}>
@@ -633,40 +640,23 @@ export default function OddsComparisonPage() {
       )}
 
       {/* How it works */}
-      <section className="border-t border-gray-100 bg-gray-50 py-10">
+      <section className="border-t border-gray-100 bg-gradient-to-b from-gray-50 to-white py-12">
         <div className="container-main">
-          <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">How the Comparison Works</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            <div className="text-center">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 text-purple-600 mx-auto mb-3">
-                <span className="text-lg font-black">1</span>
+          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">How the Comparison Works</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-3xl mx-auto">
+            {[
+              { num: "1", title: "Pick Games", desc: "Select up to 4 games from our database of analyzed titles. Use quick-compare buttons to load preset groups.", gradient: "from-purple-500 to-indigo-600" },
+              { num: "2", title: "Compare Metrics", desc: "See score breakdowns, cost per pull, pity systems, and transparency ratings side-by-side. Green highlights mark category winners.", gradient: "from-blue-500 to-purple-600" },
+              { num: "3", title: "Check Drop Rates", desc: "Dive into item-level drop rate data with visual bars scaled across all games. Source quality is labeled for each rate.", gradient: "from-indigo-500 to-purple-600" },
+            ].map((step) => (
+              <div key={step.num} className="text-center group">
+                <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${step.gradient} text-white mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform`}>
+                  <span className="text-lg font-black">{step.num}</span>
+                </div>
+                <h3 className="font-bold text-gray-900 mb-1">{step.title}</h3>
+                <p className="text-sm text-gray-500 leading-relaxed">{step.desc}</p>
               </div>
-              <h3 className="font-semibold text-gray-900 text-sm mb-1">Pick Games</h3>
-              <p className="text-xs text-gray-500">
-                Select up to 4 games from our database of analyzed titles. Use quick-compare buttons
-                to load preset groups.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 text-purple-600 mx-auto mb-3">
-                <span className="text-lg font-black">2</span>
-              </div>
-              <h3 className="font-semibold text-gray-900 text-sm mb-1">Compare Metrics</h3>
-              <p className="text-xs text-gray-500">
-                See score breakdowns, cost per pull, pity systems, and transparency ratings
-                side-by-side. Green highlights mark category winners.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 text-purple-600 mx-auto mb-3">
-                <span className="text-lg font-black">3</span>
-              </div>
-              <h3 className="font-semibold text-gray-900 text-sm mb-1">Check Drop Rates</h3>
-              <p className="text-xs text-gray-500">
-                Dive into item-level drop rate data with visual bars scaled across all games.
-                Source quality (official/community/reported) is labeled for each rate.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -713,13 +703,13 @@ export default function OddsComparisonPage() {
           <div className="flex flex-wrap justify-center gap-3">
             <Link
               href="/lootbox/value-calculator"
-              className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700 transition-colors"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-3 font-semibold text-white hover:from-emerald-700 hover:to-teal-700 transition-all shadow-md hover:shadow-lg"
             >
               Value Calculator <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/lootbox"
-              className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+              className="inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-sm"
             >
               Browse All Games <ArrowRight className="h-4 w-4" />
             </Link>

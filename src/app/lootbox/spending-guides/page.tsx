@@ -101,21 +101,25 @@ export default function SpendingGuidesHub() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-br from-slate-900 via-amber-900 to-slate-800 py-16">
-        <div className="container-main">
+      <section className="relative border-b border-gray-100 bg-gradient-to-br from-slate-900 via-amber-900 to-orange-900 py-16 overflow-hidden">
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+        }} />
+        <div className="container-main relative z-10">
           <Link
             href="/lootbox"
-            className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-200 mb-4"
+            className="inline-flex items-center gap-1 text-sm text-amber-300 hover:text-white mb-6 transition-colors"
           >
             <ChevronLeft className="h-4 w-4" /> Loot Boxes
           </Link>
 
-          <div className="flex items-center gap-3 mb-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-500/20 backdrop-blur-sm">
-              <Wallet className="h-6 w-6 text-amber-400" />
+          <div className="flex items-center gap-4 mb-5">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500/20 backdrop-blur-sm border border-amber-400/20">
+              <Wallet className="h-7 w-7 text-amber-400" />
             </div>
-            <div className="inline-flex rounded-full bg-amber-500/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-amber-300">
-              {totalGuides} Games Covered
+            <div className="inline-flex rounded-full bg-amber-500/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-amber-300 border border-amber-400/20">
+              <DollarSign className="h-4 w-4 mr-1.5" /> {totalGuides} Games Covered
             </div>
           </div>
 
@@ -265,56 +269,26 @@ export default function SpendingGuidesHub() {
       </section>
 
       {/* What's in a guide */}
-      <section className="border-t border-gray-100 bg-gray-50/50 py-10">
+      <section className="border-t border-gray-100 bg-gradient-to-b from-gray-50 to-white py-12">
         <div className="container-main">
-          <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
             What&apos;s Inside Each Guide
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            <div className="rounded-xl border border-gray-200 bg-white p-5 text-center">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 mx-auto mb-3">
-                <Zap className="h-5 w-5 text-emerald-600" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-4xl mx-auto">
+            {[
+              { icon: Zap, gradient: "from-emerald-500 to-teal-600", title: "F2P Viability", desc: "Can you enjoy the game without spending a penny?" },
+              { icon: DollarSign, gradient: "from-blue-500 to-indigo-600", title: "Budget Tiers", desc: "Optimized tips at free, low, moderate, and high budgets." },
+              { icon: TrendingUp, gradient: "from-amber-500 to-orange-600", title: "Best Value", desc: "Exactly which purchases give the most bang for your buck." },
+              { icon: Shield, gradient: "from-red-500 to-rose-600", title: "What to Avoid", desc: "Traps, bad deals, and spending patterns to steer clear of." },
+            ].map((card) => (
+              <div key={card.title} className="rounded-2xl border border-gray-200 bg-white p-6 text-center hover:shadow-lg transition-shadow group">
+                <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${card.gradient} mx-auto mb-4 group-hover:scale-110 transition-transform`}>
+                  <card.icon className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="font-bold text-gray-900 mb-1">{card.title}</h3>
+                <p className="text-sm text-gray-500">{card.desc}</p>
               </div>
-              <h3 className="font-bold text-gray-900 text-sm mb-1">
-                F2P Viability
-              </h3>
-              <p className="text-xs text-gray-500">
-                Can you enjoy the game without spending a penny?
-              </p>
-            </div>
-            <div className="rounded-xl border border-gray-200 bg-white p-5 text-center">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 mx-auto mb-3">
-                <DollarSign className="h-5 w-5 text-blue-600" />
-              </div>
-              <h3 className="font-bold text-gray-900 text-sm mb-1">
-                Budget Tiers
-              </h3>
-              <p className="text-xs text-gray-500">
-                Optimized tips at free, low, moderate, and high budgets.
-              </p>
-            </div>
-            <div className="rounded-xl border border-gray-200 bg-white p-5 text-center">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 mx-auto mb-3">
-                <TrendingUp className="h-5 w-5 text-amber-600" />
-              </div>
-              <h3 className="font-bold text-gray-900 text-sm mb-1">
-                Best Value
-              </h3>
-              <p className="text-xs text-gray-500">
-                Exactly which purchases give the most bang for your buck.
-              </p>
-            </div>
-            <div className="rounded-xl border border-gray-200 bg-white p-5 text-center">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 mx-auto mb-3">
-                <Shield className="h-5 w-5 text-red-600" />
-              </div>
-              <h3 className="font-bold text-gray-900 text-sm mb-1">
-                What to Avoid
-              </h3>
-              <p className="text-xs text-gray-500">
-                Traps, bad deals, and spending patterns to steer clear of.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -332,13 +306,13 @@ export default function SpendingGuidesHub() {
           <div className="flex flex-wrap justify-center gap-3">
             <Link
               href="/lootbox/value-calculator"
-              className="inline-flex items-center gap-2 rounded-lg bg-amber-600 px-6 py-3 font-semibold text-white hover:bg-amber-700 transition-colors"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 px-6 py-3 font-semibold text-white hover:from-amber-700 hover:to-orange-700 transition-all shadow-md hover:shadow-lg"
             >
               Value Calculator <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/lootbox/odds-comparison"
-              className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+              className="inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-sm"
             >
               Compare Odds <ArrowRight className="h-4 w-4" />
             </Link>

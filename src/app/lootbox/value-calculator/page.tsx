@@ -184,17 +184,21 @@ export default function ValueCalculatorPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-br from-slate-900 via-emerald-900 to-slate-800 py-16">
-        <div className="container-main">
-          <Link href="/lootbox" className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-200 mb-4">
+      <section className="relative border-b border-gray-100 bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 py-16 overflow-hidden">
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+        }} />
+        <div className="container-main relative z-10">
+          <Link href="/lootbox" className="inline-flex items-center gap-1 text-sm text-emerald-300 hover:text-white mb-6 transition-colors">
             <ChevronLeft className="h-4 w-4" /> Loot Boxes
           </Link>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/20 backdrop-blur-sm">
-              <Calculator className="h-6 w-6 text-emerald-400" />
+          <div className="flex items-center gap-4 mb-5">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/20 backdrop-blur-sm border border-emerald-400/20">
+              <Calculator className="h-7 w-7 text-emerald-400" />
             </div>
-            <div className="inline-flex rounded-full bg-emerald-500/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-emerald-300">
-              Value Tool
+            <div className="inline-flex rounded-full bg-emerald-500/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-emerald-300 border border-emerald-400/20">
+              <DollarSign className="h-4 w-4 mr-1.5" /> Value Tool
             </div>
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">
@@ -340,9 +344,12 @@ export default function ValueCalculatorPage() {
                   </div>
 
                   {/* Cost breakdown */}
-                  <div className="rounded-xl border border-gray-200 p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                      <DollarSign className="h-5 w-5 text-gray-400" /> Cost Breakdown
+                  <div className="rounded-2xl border border-gray-200 p-6 shadow-sm">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600">
+                        <DollarSign className="h-5 w-5 text-white" />
+                      </div>
+                      Cost Breakdown
                     </h3>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                       <div className="rounded-lg bg-gray-50 p-4 text-center">
@@ -378,9 +385,12 @@ export default function ValueCalculatorPage() {
                   </div>
 
                   {/* Budget simulator */}
-                  <div className="rounded-xl border border-gray-200 p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2">
-                      <Wallet className="h-5 w-5 text-gray-400" /> Budget Simulator
+                  <div className="rounded-2xl border border-gray-200 p-6 shadow-sm">
+                    <h3 className="text-lg font-bold text-gray-900 mb-1 flex items-center gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600">
+                        <Wallet className="h-5 w-5 text-white" />
+                      </div>
+                      Budget Simulator
                     </h3>
                     <p className="text-sm text-gray-500 mb-4">
                       Set your monthly budget to see how far your money goes in this game.
@@ -560,11 +570,11 @@ export default function ValueCalculatorPage() {
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link href="/lootbox/odds-comparison"
-              className="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-6 py-3 font-semibold text-white hover:bg-purple-700 transition-colors">
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-3 font-semibold text-white hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg">
               Compare Games <ArrowRight className="h-4 w-4" />
             </Link>
             <Link href="/lootbox/spending-guides"
-              className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
+              className="inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
               Spending Guides <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

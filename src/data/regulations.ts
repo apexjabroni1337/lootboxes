@@ -1,5 +1,7 @@
 export interface Regulation {
   country: string;
+  flag: string;
+  iso: string;
   region: "Europe" | "Asia-Pacific" | "Americas" | "Other";
   status: "banned" | "restricted" | "pending" | "legal";
   summary: string;
@@ -12,6 +14,8 @@ export const REGULATIONS: Regulation[] = [
   /* ── BANNED ── */
   {
     country: "Belgium",
+    flag: "\u{1F1E7}\u{1F1EA}",
+    iso: "BE",
     region: "Europe",
     status: "banned",
     summary:
@@ -30,6 +34,8 @@ export const REGULATIONS: Regulation[] = [
   },
   {
     country: "Netherlands",
+    flag: "\u{1F1F3}\u{1F1F1}",
+    iso: "NL",
     region: "Europe",
     status: "banned",
     summary:
@@ -50,6 +56,8 @@ export const REGULATIONS: Regulation[] = [
   /* ── RESTRICTED ── */
   {
     country: "China",
+    flag: "\u{1F1E8}\u{1F1F3}",
+    iso: "CN",
     region: "Asia-Pacific",
     status: "restricted",
     summary:
@@ -71,6 +79,8 @@ export const REGULATIONS: Regulation[] = [
   },
   {
     country: "Japan",
+    flag: "\u{1F1EF}\u{1F1F5}",
+    iso: "JP",
     region: "Asia-Pacific",
     status: "restricted",
     summary:
@@ -90,6 +100,8 @@ export const REGULATIONS: Regulation[] = [
   },
   {
     country: "South Korea",
+    flag: "\u{1F1F0}\u{1F1F7}",
+    iso: "KR",
     region: "Asia-Pacific",
     status: "restricted",
     summary:
@@ -109,6 +121,8 @@ export const REGULATIONS: Regulation[] = [
   },
   {
     country: "Australia",
+    flag: "\u{1F1E6}\u{1F1FA}",
+    iso: "AU",
     region: "Asia-Pacific",
     status: "restricted",
     summary:
@@ -130,6 +144,8 @@ export const REGULATIONS: Regulation[] = [
   /* ── PENDING ── */
   {
     country: "United Kingdom",
+    flag: "\u{1F1EC}\u{1F1E7}",
+    iso: "GB",
     region: "Europe",
     status: "pending",
     summary:
@@ -150,6 +166,8 @@ export const REGULATIONS: Regulation[] = [
   },
   {
     country: "United States (Federal)",
+    flag: "\u{1F1FA}\u{1F1F8}",
+    iso: "US",
     region: "Americas",
     status: "pending",
     summary:
@@ -170,6 +188,8 @@ export const REGULATIONS: Regulation[] = [
   },
   {
     country: "Germany",
+    flag: "\u{1F1E9}\u{1F1EA}",
+    iso: "DE",
     region: "Europe",
     status: "pending",
     summary:
@@ -188,6 +208,8 @@ export const REGULATIONS: Regulation[] = [
   },
   {
     country: "France",
+    flag: "\u{1F1EB}\u{1F1F7}",
+    iso: "FR",
     region: "Europe",
     status: "pending",
     summary:
@@ -205,6 +227,8 @@ export const REGULATIONS: Regulation[] = [
   },
   {
     country: "Spain",
+    flag: "\u{1F1EA}\u{1F1F8}",
+    iso: "ES",
     region: "Europe",
     status: "pending",
     summary:
@@ -224,6 +248,8 @@ export const REGULATIONS: Regulation[] = [
   },
   {
     country: "Italy",
+    flag: "\u{1F1EE}\u{1F1F9}",
+    iso: "IT",
     region: "Europe",
     status: "legal",
     summary:
@@ -239,6 +265,8 @@ export const REGULATIONS: Regulation[] = [
   },
   {
     country: "Brazil",
+    flag: "\u{1F1E7}\u{1F1F7}",
+    iso: "BR",
     region: "Americas",
     status: "pending",
     summary:
@@ -256,6 +284,8 @@ export const REGULATIONS: Regulation[] = [
   },
   {
     country: "India",
+    flag: "\u{1F1EE}\u{1F1F3}",
+    iso: "IN",
     region: "Asia-Pacific",
     status: "legal",
     summary:
@@ -272,6 +302,8 @@ export const REGULATIONS: Regulation[] = [
   },
   {
     country: "Canada",
+    flag: "\u{1F1E8}\u{1F1E6}",
+    iso: "CA",
     region: "Americas",
     status: "pending",
     summary:

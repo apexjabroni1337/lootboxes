@@ -337,7 +337,7 @@ export default async function LootboxHubPage({
       <div className="container-main pt-10 pb-6">
         <div className="flex flex-col gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-200 rounded-full px-3.5 py-1.5 mb-4">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-200 rounded-full px-4 py-1.5 mb-4 shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
               <span className="text-[11px] font-bold text-indigo-600 uppercase tracking-wider">
                 Loot Box Database
@@ -513,11 +513,11 @@ export default async function LootboxHubPage({
       <div className="container-main py-4">
         <Link
           href="/lootbox/rankings"
-          className="group flex items-center justify-between rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border border-indigo-200 px-6 md:px-8 py-5 hover:border-indigo-300 transition-all"
+          className="group flex items-center justify-between rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border border-indigo-200 px-6 md:px-8 py-5 hover:border-indigo-300 hover:shadow-lg transition-all"
         >
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center">
-              <Trophy className="w-5 h-5 text-indigo-600" />
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+              <Trophy className="w-5 h-5 text-white" />
             </div>
             <div>
               <h2 className="font-bold text-gray-900 text-base">Loot Box Rankings</h2>
@@ -530,10 +530,10 @@ export default async function LootboxHubPage({
 
       {/* ── Methodology Section ── */}
       <div className="container-main py-8 pb-16">
-        <div className="rounded-2xl bg-gray-50 border border-gray-200 p-8">
+        <div className="rounded-2xl bg-gradient-to-br from-gray-50 to-slate-50 border border-gray-200 p-8">
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-blue-600" />
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
+              <Shield className="w-5 h-5 text-white" />
             </div>
             <h2 className="text-xl font-bold text-gray-900">How We Rate Games</h2>
           </div>
@@ -543,27 +543,19 @@ export default async function LootboxHubPage({
           </p>
 
           <div className="grid md:grid-cols-3 gap-4 mb-6">
-            <div className="rounded-xl bg-white border border-blue-200 p-4">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="font-semibold text-gray-900 text-sm">Consumer Protection</h3>
-                <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">40%</span>
+            {[
+              { title: "Consumer Protection", pct: "40%", gradient: "from-blue-500 to-indigo-600", border: "border-blue-200", desc: "Transparency, regulatory compliance, and spending safeguards." },
+              { title: "Value & Fairness", pct: "35%", gradient: "from-emerald-500 to-teal-600", border: "border-emerald-200", desc: "Value for money, fairness mechanics, and pay-to-win impact." },
+              { title: "Player Experience", pct: "25%", gradient: "from-purple-500 to-violet-600", border: "border-purple-200", desc: "Player control over purchases and psychological design integrity." },
+            ].map((cat) => (
+              <div key={cat.title} className={`rounded-xl bg-white border ${cat.border} p-5 hover:shadow-md transition-shadow`}>
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-bold text-gray-900 text-sm">{cat.title}</h3>
+                  <span className={`text-xs font-bold text-white bg-gradient-to-r ${cat.gradient} px-2.5 py-0.5 rounded-full`}>{cat.pct}</span>
+                </div>
+                <p className="text-xs text-gray-500 leading-relaxed">{cat.desc}</p>
               </div>
-              <p className="text-xs text-gray-500">Transparency, regulatory compliance, and spending safeguards.</p>
-            </div>
-            <div className="rounded-xl bg-white border border-emerald-200 p-4">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="font-semibold text-gray-900 text-sm">Value &amp; Fairness</h3>
-                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">35%</span>
-              </div>
-              <p className="text-xs text-gray-500">Value for money, fairness mechanics, and pay-to-win impact.</p>
-            </div>
-            <div className="rounded-xl bg-white border border-purple-200 p-4">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="font-semibold text-gray-900 text-sm">Player Experience</h3>
-                <span className="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">25%</span>
-              </div>
-              <p className="text-xs text-gray-500">Player control over purchases and psychological design integrity.</p>
-            </div>
+            ))}
           </div>
 
           <Link

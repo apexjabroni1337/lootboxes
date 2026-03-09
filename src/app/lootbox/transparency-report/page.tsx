@@ -164,21 +164,25 @@ export default async function TransparencyReportPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-800 py-16">
-        <div className="container-main">
+      <section className="relative border-b border-gray-100 bg-gradient-to-br from-slate-900 via-indigo-900 to-violet-900 py-16 overflow-hidden">
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+        }} />
+        <div className="container-main relative z-10">
           <Link
             href="/lootbox"
-            className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-200 mb-4"
+            className="inline-flex items-center gap-1 text-sm text-indigo-300 hover:text-white mb-6 transition-colors"
           >
             <ChevronLeft className="h-4 w-4" /> Loot Boxes
           </Link>
 
-          <div className="flex items-center gap-3 mb-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500/20 backdrop-blur-sm">
-              <Eye className="h-6 w-6 text-indigo-400" />
+          <div className="flex items-center gap-4 mb-5">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-500/20 backdrop-blur-sm border border-indigo-400/20">
+              <Eye className="h-7 w-7 text-indigo-400" />
             </div>
-            <div className="inline-flex rounded-full bg-indigo-500/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-indigo-300">
-              {totalGames} Games Graded
+            <div className="inline-flex rounded-full bg-indigo-500/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-indigo-300 border border-indigo-400/20">
+              <BarChart3 className="h-4 w-4 mr-1.5" /> {totalGames} Games Graded
             </div>
           </div>
 
@@ -200,27 +204,21 @@ export default async function TransparencyReportPage() {
       {/* Summary stats */}
       <section className="border-b border-gray-100 bg-gray-50/50">
         <div className="container-main py-8">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
-            <div>
-              <p className="text-4xl font-black text-gray-900">{totalGames}</p>
-              <p className="text-sm text-gray-500">Games Graded</p>
-            </div>
-            <div>
-              <p className="text-4xl font-black text-emerald-600">
-                {transparentPct}%
-              </p>
-              <p className="text-sm text-gray-500">Grade B or Above</p>
-            </div>
-            <div>
-              <p className="text-4xl font-black text-red-600">
-                {opaquePct}%
-              </p>
-              <p className="text-sm text-gray-500">Grade D or Below</p>
-            </div>
-            <div>
-              <p className="text-4xl font-black text-indigo-600">{avgScore}</p>
-              <p className="text-sm text-gray-500">Average Score / 10</p>
-            </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {[
+              { value: totalGames, label: "Games Graded", gradient: "from-gray-500 to-slate-600", icon: Eye },
+              { value: `${transparentPct}%`, label: "Grade B or Above", gradient: "from-emerald-500 to-teal-600", icon: CheckCircle },
+              { value: `${opaquePct}%`, label: "Grade D or Below", gradient: "from-red-500 to-rose-600", icon: AlertTriangle },
+              { value: avgScore, label: "Average Score / 10", gradient: "from-indigo-500 to-violet-600", icon: BarChart3 },
+            ].map((stat) => (
+              <div key={stat.label} className="relative rounded-2xl border border-gray-200 bg-white p-5 text-center overflow-hidden hover:shadow-lg transition-shadow">
+                <div className={`mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${stat.gradient}`}>
+                  <stat.icon className="h-5 w-5 text-white" />
+                </div>
+                <p className="text-3xl font-black text-gray-900">{stat.value}</p>
+                <p className="text-xs text-gray-500 font-medium mt-0.5">{stat.label}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -440,10 +438,12 @@ export default async function TransparencyReportPage() {
       </section>
 
       {/* Methodology */}
-      <section className="border-t border-gray-100 bg-gray-50/50 py-12">
+      <section className="border-t border-gray-100 bg-gradient-to-b from-gray-50 to-white py-12">
         <div className="container-main">
-          <div className="flex items-center gap-2 mb-6">
-            <BarChart3 className="h-5 w-5 text-indigo-500" />
+          <div className="flex items-center gap-3 mb-6">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600">
+              <BarChart3 className="h-5 w-5 text-white" />
+            </div>
             <h2 className="text-2xl font-bold text-gray-900">
               How We Grade Transparency
             </h2>
@@ -574,51 +574,19 @@ export default async function TransparencyReportPage() {
             Why Transparency Matters
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="rounded-xl border border-gray-200 p-5">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100">
-                  <Scale className="h-4 w-4 text-emerald-600" />
+            {[
+              { icon: Scale, gradient: "from-emerald-500 to-teal-600", title: "Informed Spending", text: "When you know the odds, you can calculate expected cost per item and decide whether a purchase is worth it. Without transparency, you're spending blindly." },
+              { icon: Shield, gradient: "from-blue-500 to-indigo-600", title: "Holding Publishers Accountable", text: "Public transparency reports create market pressure. When players can compare games, publishers with poor practices face reputational consequences that encourage improvement." },
+              { icon: AlertTriangle, gradient: "from-amber-500 to-orange-600", title: "Protecting Vulnerable Players", text: "Transparency is especially important for younger players and those susceptible to gambling-like mechanics. Knowing the odds helps players set realistic expectations and budgets." },
+            ].map((card) => (
+              <div key={card.title} className="rounded-2xl border border-gray-200 p-6 hover:shadow-lg transition-shadow group">
+                <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${card.gradient} mb-4 group-hover:scale-110 transition-transform`}>
+                  <card.icon className="h-5 w-5 text-white" />
                 </div>
-                <h3 className="font-bold text-gray-900">Informed Spending</h3>
+                <h3 className="font-bold text-gray-900 text-lg mb-2">{card.title}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">{card.text}</p>
               </div>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                When you know the odds, you can calculate expected cost per item
-                and decide whether a purchase is worth it. Without transparency,
-                you&apos;re spending blindly.
-              </p>
-            </div>
-
-            <div className="rounded-xl border border-gray-200 p-5">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100">
-                  <Shield className="h-4 w-4 text-blue-600" />
-                </div>
-                <h3 className="font-bold text-gray-900">
-                  Holding Publishers Accountable
-                </h3>
-              </div>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Public transparency reports create market pressure. When players
-                can compare games, publishers with poor practices face
-                reputational consequences that encourage improvement.
-              </p>
-            </div>
-
-            <div className="rounded-xl border border-gray-200 p-5">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100">
-                  <AlertTriangle className="h-4 w-4 text-amber-600" />
-                </div>
-                <h3 className="font-bold text-gray-900">
-                  Protecting Vulnerable Players
-                </h3>
-              </div>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Transparency is especially important for younger players and
-                those susceptible to gambling-like mechanics. Knowing the odds
-                helps players set realistic expectations and budgets.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -641,7 +609,7 @@ export default async function TransparencyReportPage() {
             </div>
             <Link
               href="/newsletter"
-              className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-6 py-3 font-semibold text-white hover:bg-indigo-700 transition-colors whitespace-nowrap"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-3 font-semibold text-white hover:from-indigo-700 hover:to-violet-700 transition-all shadow-md hover:shadow-lg whitespace-nowrap"
             >
               Get Updates <ArrowRight className="h-4 w-4" />
             </Link>

@@ -12,7 +12,6 @@ import {
   Clock,
   CheckCircle,
   Globe,
-  MapPin,
   Search,
   Calendar,
   ArrowRight,
@@ -20,6 +19,7 @@ import {
   TrendingUp,
   Users,
   Gavel,
+  ExternalLink,
 } from "lucide-react";
 import {
   REGULATIONS,
@@ -28,100 +28,146 @@ import {
   type Regulation,
 } from "@/data/regulations";
 
+/* ── Flag image helper — uses flagcdn.com for crisp SVG flags ── */
+function FlagImg({ iso, size = 24 }: { iso: string; size?: number }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={`https://flagcdn.com/w80/${iso.toLowerCase()}.png`}
+      alt={iso}
+      width={size * 1.5}
+      height={size}
+      className="rounded-sm object-cover shadow-sm"
+      style={{ width: size * 1.5, height: size }}
+      loading="lazy"
+    />
+  );
+}
+
 /* ── helpers ── */
 const ALL_EVENTS = REGULATIONS.flatMap((r) =>
-  r.keyEvents.map((e) => ({ ...e, country: r.country, status: r.status }))
+  r.keyEvents.map((e) => ({ ...e, country: r.country, flag: r.flag, iso: r.iso, status: r.status }))
 )
   .sort((a, b) => b.date.localeCompare(a.date))
   .slice(0, 12);
 
-function StatusBadge({ status }: { status: Regulation["status"] }) {
+function StatusBadge({ status, size = "sm" }: { status: Regulation["status"]; size?: "sm" | "lg" }) {
   const meta = STATUS_META[status];
+  const sizeClass = size === "lg" ? "px-3 py-1 text-sm" : "px-2.5 py-0.5 text-xs";
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold ${meta.color} ${meta.bgColor}`}
+      className={`inline-flex items-center gap-1.5 rounded-full font-bold ${sizeClass} ${meta.color} ${meta.bgColor}`}
     >
-      {status === "banned" && <AlertTriangle className="h-3 w-3" />}
-      {status === "restricted" && <Shield className="h-3 w-3" />}
-      {status === "pending" && <Clock className="h-3 w-3" />}
-      {status === "legal" && <CheckCircle className="h-3 w-3" />}
+      {status === "banned" && <AlertTriangle className={size === "lg" ? "h-4 w-4" : "h-3 w-3"} />}
+      {status === "restricted" && <Shield className={size === "lg" ? "h-4 w-4" : "h-3 w-3"} />}
+      {status === "pending" && <Clock className={size === "lg" ? "h-4 w-4" : "h-3 w-3"} />}
+      {status === "legal" && <CheckCircle className={size === "lg" ? "h-4 w-4" : "h-3 w-3"} />}
       {meta.label}
     </span>
   );
 }
 
+/* ── Status color for left border accent ── */
+function statusAccentColor(status: Regulation["status"]) {
+  switch (status) {
+    case "banned": return "#dc2626";
+    case "restricted": return "#d97706";
+    case "pending": return "#2563eb";
+    case "legal": return "#6b7280";
+  }
+}
+
 function RegulationCard({ reg }: { reg: Regulation }) {
   const [expanded, setExpanded] = useState(false);
-  const meta = STATUS_META[reg.status];
 
   return (
     <div
-      className={`rounded-xl border ${meta.borderColor} ${meta.bgColor} overflow-hidden transition-all`}
+      className="rounded-xl border border-gray-200 bg-white overflow-hidden transition-all hover:shadow-lg group"
+      style={{ borderLeftWidth: 4, borderLeftColor: statusAccentColor(reg.status) }}
     >
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full px-5 py-4 flex items-center gap-4 text-left hover:bg-white/40 transition-colors"
+        className="w-full px-5 py-4 flex items-center gap-4 text-left hover:bg-gray-50/50 transition-colors"
       >
-        <div className="flex items-center gap-2 flex-1 min-w-0">
-          <MapPin className="h-4 w-4 text-gray-400 flex-shrink-0" />
-          <h3 className="font-semibold text-gray-900 truncate">
+        {/* Flag */}
+        <div className="flex-shrink-0">
+          <FlagImg iso={reg.iso} size={28} />
+        </div>
+
+        {/* Country name + status */}
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          <h3 className="font-bold text-gray-900 truncate text-base">
             {reg.country}
           </h3>
           <StatusBadge status={reg.status} />
         </div>
-        <span className="text-[10px] text-gray-400 flex-shrink-0 hidden sm:block">
+
+        {/* Region chip */}
+        <span className="hidden sm:inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-500">
           {reg.region}
         </span>
-        {expanded ? (
-          <ChevronUp className="h-4 w-4 text-gray-400 flex-shrink-0" />
-        ) : (
-          <ChevronDown className="h-4 w-4 text-gray-400 flex-shrink-0" />
-        )}
+
+        {/* Expand icon */}
+        <div className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors ${expanded ? "bg-blue-100" : "bg-gray-100 group-hover:bg-gray-200"}`}>
+          {expanded ? (
+            <ChevronUp className="h-4 w-4 text-blue-600" />
+          ) : (
+            <ChevronDown className="h-4 w-4 text-gray-500" />
+          )}
+        </div>
       </button>
 
       {expanded && (
-        <div className="px-5 pb-5 border-t border-gray-200/50">
+        <div className="px-5 pb-5 border-t border-gray-100">
+          {/* Summary */}
           <p className="text-sm text-gray-700 mt-4 leading-relaxed">
             {reg.summary}
           </p>
 
-          {reg.requirements.length > 0 && (
-            <div className="mt-4">
-              <h4 className="text-xs font-bold uppercase tracking-wide text-gray-500 mb-2">
-                Key Requirements
-              </h4>
-              <ul className="space-y-1.5">
-                {reg.requirements.map((req, i) => (
-                  <li
-                    key={i}
-                    className="flex items-start gap-2 text-sm text-gray-600"
-                  >
-                    <span className="text-gray-400 mt-0.5">•</span>
-                    {req}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {reg.keyEvents.length > 0 && (
-            <div className="mt-4">
-              <h4 className="text-xs font-bold uppercase tracking-wide text-gray-500 mb-2">
-                Timeline
-              </h4>
-              <div className="relative ml-2 border-l-2 border-gray-200 pl-4 space-y-3">
-                {reg.keyEvents.map((event, i) => (
-                  <div key={i} className="relative">
-                    <div className="absolute -left-[21px] top-1.5 h-2.5 w-2.5 rounded-full bg-gray-300 border-2 border-white" />
-                    <p className="text-xs text-gray-400 font-mono">
-                      {event.date}
-                    </p>
-                    <p className="text-sm text-gray-700">{event.description}</p>
-                  </div>
-                ))}
+          <div className="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-5">
+            {/* Requirements */}
+            {reg.requirements.length > 0 && (
+              <div className="rounded-lg bg-gray-50 p-4">
+                <h4 className="text-xs font-bold uppercase tracking-wide text-gray-500 mb-3 flex items-center gap-1.5">
+                  <Shield className="h-3.5 w-3.5" /> Key Requirements
+                </h4>
+                <ul className="space-y-2">
+                  {reg.requirements.map((req, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-2 text-sm text-gray-600"
+                    >
+                      <div className="mt-1.5 h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: statusAccentColor(reg.status) }} />
+                      {req}
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
-          )}
+            )}
+
+            {/* Timeline */}
+            {reg.keyEvents.length > 0 && (
+              <div className="rounded-lg bg-gray-50 p-4">
+                <h4 className="text-xs font-bold uppercase tracking-wide text-gray-500 mb-3 flex items-center gap-1.5">
+                  <Calendar className="h-3.5 w-3.5" /> Timeline
+                </h4>
+                <div className="relative ml-2 border-l-2 pl-4 space-y-3" style={{ borderColor: statusAccentColor(reg.status) + "40" }}>
+                  {reg.keyEvents.map((event, i) => (
+                    <div key={i} className="relative">
+                      <div
+                        className="absolute -left-[21px] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-white"
+                        style={{ backgroundColor: statusAccentColor(reg.status) }}
+                      />
+                      <p className="text-[11px] font-mono text-gray-400">
+                        {event.date}
+                      </p>
+                      <p className="text-sm text-gray-700">{event.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
 
           <p className="mt-4 text-[10px] text-gray-400">
             Last updated: {reg.lastUpdated}
@@ -162,21 +208,39 @@ export default function RegulationsPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 py-16">
-        <div className="container-main">
+      <section className="relative border-b border-gray-100 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 py-16 overflow-hidden">
+        {/* Decorative grid dots */}
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+        }} />
+
+        {/* Floating flag decorations */}
+        <div className="absolute top-8 right-8 flex gap-3 opacity-20 hidden lg:flex">
+          {REGULATIONS.slice(0, 8).map((r) => (
+            <div key={r.iso} className="rounded-md overflow-hidden shadow-lg">
+              <FlagImg iso={r.iso} size={32} />
+            </div>
+          ))}
+        </div>
+
+        <div className="container-main relative z-10">
           <Link
             href="/lootbox"
-            className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-200 mb-4"
+            className="inline-flex items-center gap-1 text-sm text-blue-300 hover:text-white mb-6 transition-colors"
           >
             <ChevronLeft className="h-4 w-4" /> Loot Boxes
           </Link>
 
-          <div className="flex items-center gap-3 mb-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/20 backdrop-blur-sm">
-              <Scale className="h-6 w-6 text-blue-400" />
+          <div className="flex items-center gap-4 mb-5">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500/20 backdrop-blur-sm border border-blue-400/20">
+              <Scale className="h-7 w-7 text-blue-400" />
             </div>
-            <div className="inline-flex rounded-full bg-blue-500/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-blue-300">
-              {totalCountries} Countries Tracked
+            <div>
+              <div className="inline-flex rounded-full bg-blue-500/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-blue-300 border border-blue-400/20">
+                <Globe className="h-4 w-4 mr-1.5" />
+                {totalCountries} Countries Tracked
+              </div>
             </div>
           </div>
 
@@ -191,23 +255,38 @@ export default function RegulationsPage() {
             to pending bills in the U.S. and Brazil, see how governments are
             responding to randomized purchase mechanics in video games.
           </p>
+
+          {/* Hero flag row — horizontal scroll of all tracked countries */}
+          <div className="mt-8 flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
+            {REGULATIONS.map((r) => {
+              const accent = statusAccentColor(r.status);
+              return (
+                <div
+                  key={r.iso}
+                  className="flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm px-3 py-1.5 flex-shrink-0 border border-white/10"
+                >
+                  <FlagImg iso={r.iso} size={16} />
+                  <span className="text-xs font-semibold text-white/80">{r.country.replace(" (Federal)", "")}</span>
+                  <div className="h-2 w-2 rounded-full flex-shrink-0" style={{ backgroundColor: accent }} />
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
-      {/* Global summary cards */}
+      {/* Global summary — status cards */}
       <section className="border-b border-gray-100 bg-gray-50/50">
-        <div className="container-main py-6">
-          {/* Quick stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <div className="container-main py-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             {(
               [
-                { key: "banned", icon: AlertTriangle, label: "Banned" },
-                { key: "restricted", icon: Shield, label: "Restricted" },
-                { key: "pending", icon: Clock, label: "Pending" },
-                { key: "legal", icon: CheckCircle, label: "No Restrictions" },
+                { key: "banned", icon: AlertTriangle, label: "Banned", gradient: "from-red-500 to-rose-600" },
+                { key: "restricted", icon: Shield, label: "Restricted", gradient: "from-amber-500 to-orange-600" },
+                { key: "pending", icon: Clock, label: "Pending", gradient: "from-blue-500 to-indigo-600" },
+                { key: "legal", icon: CheckCircle, label: "No Restrictions", gradient: "from-gray-400 to-gray-500" },
               ] as const
             ).map((item) => {
-              const meta = STATUS_META[item.key];
               const count = statusCounts[item.key];
               const isActive = statusFilter === item.key;
               return (
@@ -216,49 +295,62 @@ export default function RegulationsPage() {
                   onClick={() =>
                     setStatusFilter(isActive ? "All" : item.key)
                   }
-                  className={`rounded-xl border p-4 text-center transition-all hover:shadow-md ${
+                  className={`relative rounded-2xl p-5 text-center transition-all hover:shadow-lg overflow-hidden ${
                     isActive
-                      ? `${meta.borderColor} ${meta.bgColor} ring-2 ring-offset-1 ring-blue-300`
-                      : "border-gray-200 bg-white hover:bg-gray-50"
+                      ? "ring-2 ring-blue-400 ring-offset-2 shadow-lg"
+                      : "hover:-translate-y-0.5"
                   }`}
                 >
-                  <item.icon
-                    className={`h-5 w-5 mx-auto mb-1.5 ${
-                      isActive ? meta.color : "text-gray-400"
-                    }`}
-                  />
-                  <p className="text-2xl font-black text-gray-900">{count}</p>
-                  <p className="text-xs text-gray-500 font-medium">
-                    {item.label}
-                  </p>
+                  {/* Background gradient */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-${isActive ? "15" : "8"} transition-opacity`} />
+                  <div className="absolute inset-0 bg-white/90" />
+
+                  <div className="relative z-10">
+                    <div className={`mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${item.gradient}`}>
+                      <item.icon className="h-5 w-5 text-white" />
+                    </div>
+                    <p className="text-3xl font-black text-gray-900">{count}</p>
+                    <p className="text-xs text-gray-500 font-semibold mt-0.5">
+                      {item.label}
+                    </p>
+
+                    {/* Country flags under each stat */}
+                    <div className="flex justify-center gap-1.5 mt-3">
+                      {REGULATIONS.filter((r) => r.status === item.key).map((r) => (
+                        <FlagImg key={r.iso} iso={r.iso} size={14} />
+                      ))}
+                    </div>
+                  </div>
                 </button>
               );
             })}
           </div>
 
           {/* World overview prose */}
-          <div className="rounded-xl border border-blue-100 bg-blue-50/50 p-5">
+          <div className="rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 p-6">
             <div className="flex items-start gap-3">
-              <Globe className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500 flex-shrink-0 mt-0.5">
+                <Globe className="h-5 w-5 text-white" />
+              </div>
               <div className="text-sm text-gray-700 leading-relaxed space-y-2">
                 <p>
                   <span className="font-bold text-gray-900">
                     The global picture:
                   </span>{" "}
                   Of the {totalCountries} jurisdictions we track,{" "}
-                  <span className="font-semibold text-red-700">
+                  <span className="font-bold text-red-700">
                     {statusCounts.banned} have banned
                   </span>{" "}
                   loot boxes outright,{" "}
-                  <span className="font-semibold text-amber-700">
+                  <span className="font-bold text-amber-700">
                     {statusCounts.restricted} enforce restrictions
                   </span>{" "}
                   like mandatory disclosure,{" "}
-                  <span className="font-semibold text-blue-700">
+                  <span className="font-bold text-blue-700">
                     {statusCounts.pending} have pending legislation
                   </span>
                   , and{" "}
-                  <span className="font-semibold text-gray-600">
+                  <span className="font-bold text-gray-600">
                     {statusCounts.legal} have no specific rules
                   </span>
                   .
@@ -278,7 +370,7 @@ export default function RegulationsPage() {
       </section>
 
       {/* Search + Filter bar */}
-      <section className="border-b border-gray-100 bg-white sticky top-16 z-30">
+      <section className="border-b border-gray-100 bg-white sticky top-16 z-30 shadow-sm">
         <div className="container-main py-3 flex items-center gap-3 flex-wrap">
           <div className="relative flex-1 min-w-[200px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -287,7 +379,7 @@ export default function RegulationsPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search countries..."
-              className="w-full rounded-lg border border-gray-200 bg-gray-50 pl-9 pr-3 py-2 text-sm placeholder:text-gray-400 focus:border-blue-300 focus:outline-none focus:ring-1 focus:ring-blue-200"
+              className="w-full rounded-lg border border-gray-200 bg-gray-50 pl-9 pr-3 py-2 text-sm placeholder:text-gray-400 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100"
             />
           </div>
 
@@ -312,13 +404,13 @@ export default function RegulationsPage() {
                 setStatusFilter("All");
                 setSearchQuery("");
               }}
-              className="text-xs text-blue-600 hover:underline"
+              className="text-xs text-blue-600 hover:underline font-semibold"
             >
               Clear filters
             </button>
           )}
 
-          <span className="ml-auto text-sm text-gray-400">
+          <span className="ml-auto text-sm text-gray-400 font-medium">
             {filtered.length} of {totalCountries} countries
           </span>
         </div>
@@ -346,46 +438,47 @@ export default function RegulationsPage() {
       </section>
 
       {/* Recent regulatory events timeline */}
-      <section className="border-t border-gray-100 bg-gray-50/50 py-12">
+      <section className="border-t border-gray-100 bg-gradient-to-b from-gray-50 to-white py-12">
         <div className="container-main">
-          <div className="flex items-center gap-2 mb-6">
-            <Calendar className="h-5 w-5 text-blue-500" />
+          <div className="flex items-center gap-3 mb-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600">
+              <Calendar className="h-5 w-5 text-white" />
+            </div>
             <h2 className="text-2xl font-bold text-gray-900">
               Recent Regulatory Events
             </h2>
           </div>
-          <p className="text-sm text-gray-600 mb-6 max-w-2xl">
-            A timeline of the most significant loot box regulatory actions
-            worldwide, from the latest developments going back through the
-            history of this evolving legal landscape.
+          <p className="text-sm text-gray-600 mb-8 max-w-2xl ml-[52px]">
+            The most significant loot box regulatory actions worldwide — from the
+            latest developments going back through the history of this evolving
+            legal landscape.
           </p>
 
-          <div className="relative ml-4 border-l-2 border-blue-200 pl-6 space-y-6">
+          <div className="relative ml-6 border-l-2 border-blue-200 pl-8 space-y-8">
             {ALL_EVENTS.map((event, i) => {
-              const statusColor =
-                event.status === "banned"
-                  ? "bg-red-500"
-                  : event.status === "restricted"
-                  ? "bg-amber-500"
-                  : event.status === "pending"
-                  ? "bg-blue-500"
-                  : "bg-gray-400";
+              const accent = statusAccentColor(event.status);
               return (
-                <div key={i} className="relative">
+                <div key={i} className="relative group">
+                  {/* Timeline dot */}
                   <div
-                    className={`absolute -left-[29px] top-1 h-3 w-3 rounded-full ${statusColor} border-2 border-white`}
+                    className="absolute -left-[37px] top-1 h-4 w-4 rounded-full border-[3px] border-white shadow-sm"
+                    style={{ backgroundColor: accent }}
                   />
-                  <div className="flex items-baseline gap-2 flex-wrap">
-                    <span className="text-xs font-mono text-gray-400">
-                      {event.date}
-                    </span>
-                    <span className="text-xs font-bold text-gray-500">
-                      {event.country}
-                    </span>
+
+                  <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm group-hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-3 mb-2">
+                      <FlagImg iso={event.iso} size={18} />
+                      <span className="text-sm font-bold text-gray-900">
+                        {event.country}
+                      </span>
+                      <span className="text-xs font-mono text-gray-400 ml-auto">
+                        {event.date}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      {event.description}
+                    </p>
                   </div>
-                  <p className="text-sm text-gray-700 mt-0.5">
-                    {event.description}
-                  </p>
                 </div>
               );
             })}
@@ -396,57 +489,40 @@ export default function RegulationsPage() {
       {/* Key takeaways */}
       <section className="border-t border-gray-100 bg-white py-12">
         <div className="container-main">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-8">
             Key Takeaways for Players
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="rounded-xl border border-gray-200 p-5">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100">
-                  <Info className="h-4 w-4 text-blue-600" />
+            {[
+              {
+                icon: Info,
+                gradient: "from-blue-500 to-indigo-600",
+                title: "Know Your Rights",
+                text: "If you live in a country with disclosure requirements, publishers must show you the odds before you buy. If they don\u2019t, you may be able to report them to your consumer protection agency.",
+              },
+              {
+                icon: TrendingUp,
+                gradient: "from-emerald-500 to-teal-600",
+                title: "Trend Toward Regulation",
+                text: `The overall trend is toward more regulation, not less. ${statusCounts.pending} countries currently have pending legislation. Players should expect more transparency and consumer protections in the coming years.`,
+              },
+              {
+                icon: Users,
+                gradient: "from-amber-500 to-orange-600",
+                title: "Protecting Young Players",
+                text: "Most regulatory efforts focus on protecting minors. China\u2019s strict 3-hour weekly limit for under-18s is the most extreme example, but age verification and spending caps are being discussed worldwide.",
+              },
+            ].map((card) => (
+              <div key={card.title} className="rounded-2xl border border-gray-200 p-6 hover:shadow-lg transition-shadow group">
+                <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${card.gradient} mb-4 group-hover:scale-110 transition-transform`}>
+                  <card.icon className="h-5 w-5 text-white" />
                 </div>
-                <h3 className="font-bold text-gray-900">Know Your Rights</h3>
+                <h3 className="font-bold text-gray-900 text-lg mb-2">{card.title}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {card.text}
+                </p>
               </div>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                If you live in a country with disclosure requirements, publishers
-                must show you the odds before you buy. If they don&apos;t, you may
-                be able to report them to your consumer protection agency.
-              </p>
-            </div>
-
-            <div className="rounded-xl border border-gray-200 p-5">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100">
-                  <TrendingUp className="h-4 w-4 text-emerald-600" />
-                </div>
-                <h3 className="font-bold text-gray-900">
-                  Trend Toward Regulation
-                </h3>
-              </div>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                The overall trend is toward more regulation, not less.
-                {statusCounts.pending} countries currently have pending
-                legislation. Players should expect more transparency and consumer
-                protections in the coming years.
-              </p>
-            </div>
-
-            <div className="rounded-xl border border-gray-200 p-5">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100">
-                  <Users className="h-4 w-4 text-amber-600" />
-                </div>
-                <h3 className="font-bold text-gray-900">
-                  Protecting Young Players
-                </h3>
-              </div>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Most regulatory efforts focus on protecting minors. China&apos;s
-                strict 3-hour weekly limit for under-18s is the most extreme
-                example, but age verification and spending caps are being
-                discussed worldwide.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -507,7 +583,7 @@ export default function RegulationsPage() {
           </div>
           <Link
             href="/lootbox/transparency-report"
-            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700 transition-colors whitespace-nowrap"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 font-semibold text-white hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg whitespace-nowrap"
           >
             Transparency Report <ArrowRight className="h-4 w-4" />
           </Link>
