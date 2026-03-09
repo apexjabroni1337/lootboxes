@@ -39,17 +39,26 @@ async function getTrendingDeals() {
 
   if (!popularGames?.length) return [];
 
-  // Step 2: Get the best deal for each popular game
+  // Step 2: Get deals for popular games — batch the IN query for performance
+  // Supabase/Postgres is faster with smaller IN lists run in parallel
   const gameIds = popularGames.map((g) => g.id);
-  const { data: deals } = await supabase
-    .from("deals")
-    .select("game_id, id, store, store_url, price, original_price, discount_pct, currency, is_historic_low, expires_at, affiliate_url")
-    .in("game_id", gameIds)
-    .order("price", { ascending: true });
+  const BATCH = 100;
+  const dealBatches = [];
+  for (let i = 0; i < gameIds.length; i += BATCH) {
+    dealBatches.push(
+      supabase
+        .from("deals")
+        .select("game_id, id, store, store_url, price, original_price, discount_pct, currency, is_historic_low, expires_at, affiliate_url")
+        .in("game_id", gameIds.slice(i, i + BATCH))
+        .order("price", { ascending: true })
+    );
+  }
+  const batchResults = await Promise.all(dealBatches);
+  const allDeals = batchResults.flatMap((r) => r.data || []);
 
   // Build a map: game_id → best deal
   const bestDealByGame = new Map<string, any>();
-  for (const deal of deals || []) {
+  for (const deal of allDeals) {
     if (!bestDealByGame.has(deal.game_id)) {
       bestDealByGame.set(deal.game_id, deal);
     }

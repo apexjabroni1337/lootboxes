@@ -180,10 +180,24 @@ export default function CS2PricesPage() {
   }, [query, sortBy, wearFilter]);
 
   /* ── Fetch on mount / filter change ── */
+  /* Race both APIs: start multi + fallback in parallel.
+     If multi succeeds within 5s, use it and discard fallback.
+     If multi fails/times out, fallback data is already loading. */
   useEffect(() => {
     const timer = setTimeout(async () => {
-      const gotMulti = await fetchMultiPrices();
-      if (!gotMulti) {
+      // Start both fetches concurrently
+      const multiPromise = fetchMultiPrices();
+      // Start fallback with slight delay — if multi is fast, we cancel
+      const fallbackTimer = setTimeout(() => {
+        fetchFallbackPrices();
+      }, 3000);
+
+      const gotMulti = await multiPromise;
+      if (gotMulti) {
+        clearTimeout(fallbackTimer);
+      } else {
+        // Multi failed — make sure fallback is running
+        clearTimeout(fallbackTimer);
         await fetchFallbackPrices();
       }
     }, query ? 300 : 0);

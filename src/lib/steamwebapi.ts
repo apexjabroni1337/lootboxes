@@ -26,7 +26,7 @@
  */
 
 const STEAMWEBAPI_BASE = "https://www.steamwebapi.com/steam/api";
-const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
+const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes (skin prices don't change frequently)
 
 /* ── Types ── */
 

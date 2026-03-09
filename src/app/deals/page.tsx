@@ -126,17 +126,18 @@ async function getDeals() {
   const supabase = createServerClient();
 
   // Fetch top deals by discount AND all historic lows in parallel
+  // Reduced from 500→300 — after dedup + quality filter we only show ~200
   const [discountResult, historicResult] = await Promise.all([
     supabase
       .from("deals")
       .select(DEAL_SELECT)
       .order("discount_pct", { ascending: false })
-      .limit(500),
+      .limit(300),
     supabase
       .from("deals")
       .select(DEAL_SELECT)
       .eq("is_historic_low", true)
-      .limit(200),
+      .limit(150),
   ]);
 
   if (discountResult.error) {
