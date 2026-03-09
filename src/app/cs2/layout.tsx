@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     default: "CS2 Skins Hub — Price Tracker, Case Simulator & More",
   },
   description:
-    "The #1 CS2 skin economy resource. Compare prices across CSFloat, Skinport, Buff163 & DMarket. Open cases with real odds. Calculate trade-ups. Check float values.",
+    "The #1 CS2 skin economy resource. Compare prices across Skinport, Buff163, DMarket & Waxpeer. Open cases with real odds. Calculate trade-ups. Check float values.",
   keywords: [
     "CS2 skins",
     "CS2 skin prices",
@@ -15,8 +15,8 @@ export const metadata: Metadata = {
     "CS2 float checker",
     "CS2 trade up calculator",
     "CS2 marketplace comparison",
-    "CSFloat",
     "Skinport",
+    "Waxpeer",
     "Buff163",
   ],
   openGraph: {

@@ -333,13 +333,13 @@ export default function CS2SimulatorPage() {
               {/* CTA */}
               <div className="mt-6 space-y-2">
                 <a
-                  href="/go/cs2/csfloat?from=simulator"
+                  href="/go/cs2/skinport?from=simulator"
                   target="_blank"
                   rel="noopener noreferrer nofollow"
                   className="flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-center text-sm font-semibold text-white transition-colors"
-                  style={{ backgroundColor: "#4f8df0" }}
+                  style={{ backgroundColor: "#eb4b98" }}
                 >
-                  Buy Real Skins on CSFloat <ExternalLink className="h-3 w-3" />
+                  Buy Real Skins on Skinport <ExternalLink className="h-3 w-3" />
                 </a>
                 <Link
                   href="/cs2/prices"

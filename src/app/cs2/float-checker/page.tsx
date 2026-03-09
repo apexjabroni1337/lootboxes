@@ -73,72 +73,72 @@ interface SkinListing {
 
 const LISTINGS: SkinListing[] = [
   // AK-47 Asiimov
-  { id: "1", weapon: "AK-47", skin: "Asiimov", rarity: "Covert", float: 0.1847, patternIndex: 523, price: 78.50, marketplace: "CSFloat", dealId: "csfloat" },
+  { id: "1", weapon: "AK-47", skin: "Asiimov", rarity: "Covert", float: 0.1847, patternIndex: 523, price: 78.50, marketplace: "Skinport", dealId: "skinport" },
   { id: "2", weapon: "AK-47", skin: "Asiimov", rarity: "Covert", float: 0.2134, patternIndex: 891, price: 72.30, marketplace: "Skinport", dealId: "skinport" },
   { id: "3", weapon: "AK-47", skin: "Asiimov", rarity: "Covert", float: 0.3801, patternIndex: 44, price: 65.00, marketplace: "Buff163", dealId: "buff163" },
   // AWP Dragon Lore
-  { id: "4", weapon: "AWP", skin: "Dragon Lore", rarity: "Covert", float: 0.0124, patternIndex: 661, price: 12500.00, marketplace: "CSFloat", dealId: "csfloat" },
+  { id: "4", weapon: "AWP", skin: "Dragon Lore", rarity: "Covert", float: 0.0124, patternIndex: 661, price: 12500.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "5", weapon: "AWP", skin: "Dragon Lore", rarity: "Covert", float: 0.0698, patternIndex: 102, price: 8200.00, marketplace: "DMarket", dealId: "dmarket" },
   { id: "6", weapon: "AWP", skin: "Dragon Lore", rarity: "Covert", float: 0.2541, patternIndex: 417, price: 3950.00, marketplace: "Buff163", dealId: "buff163" },
-  { id: "7", weapon: "AWP", skin: "Dragon Lore", rarity: "Covert", float: 0.4512, patternIndex: 733, price: 2800.00, marketplace: "CSFloat", dealId: "csfloat" },
+  { id: "7", weapon: "AWP", skin: "Dragon Lore", rarity: "Covert", float: 0.4512, patternIndex: 733, price: 2800.00, marketplace: "Skinport", dealId: "skinport" },
   // M4A4 Howl
-  { id: "8", weapon: "M4A4", skin: "Howl", rarity: "Contraband", float: 0.0312, patternIndex: 155, price: 9800.00, marketplace: "CSFloat", dealId: "csfloat" },
+  { id: "8", weapon: "M4A4", skin: "Howl", rarity: "Contraband", float: 0.0312, patternIndex: 155, price: 9800.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "9", weapon: "M4A4", skin: "Howl", rarity: "Contraband", float: 0.1523, patternIndex: 802, price: 6500.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "10", weapon: "M4A4", skin: "Howl", rarity: "Contraband", float: 0.3867, patternIndex: 210, price: 5200.00, marketplace: "Buff163", dealId: "buff163" },
   // Butterfly Knife Fade
-  { id: "11", weapon: "Butterfly Knife", skin: "Fade", rarity: "Covert", float: 0.0089, patternIndex: 146, price: 2450.00, marketplace: "CSFloat", dealId: "csfloat" },
+  { id: "11", weapon: "Butterfly Knife", skin: "Fade", rarity: "Covert", float: 0.0089, patternIndex: 146, price: 2450.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "12", weapon: "Butterfly Knife", skin: "Fade", rarity: "Covert", float: 0.0234, patternIndex: 412, price: 2100.00, marketplace: "DMarket", dealId: "dmarket" },
   { id: "13", weapon: "Butterfly Knife", skin: "Fade", rarity: "Covert", float: 0.0601, patternIndex: 998, price: 1920.00, marketplace: "Skinport", dealId: "skinport" },
   // Karambit Doppler Phase 2
-  { id: "14", weapon: "Karambit", skin: "Doppler (Phase 2)", rarity: "Covert", float: 0.0087, patternIndex: 509, price: 1580.00, marketplace: "CSFloat", dealId: "csfloat" },
+  { id: "14", weapon: "Karambit", skin: "Doppler (Phase 2)", rarity: "Covert", float: 0.0087, patternIndex: 509, price: 1580.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "15", weapon: "Karambit", skin: "Doppler (Phase 2)", rarity: "Covert", float: 0.0321, patternIndex: 274, price: 1340.00, marketplace: "Buff163", dealId: "buff163" },
   { id: "16", weapon: "Karambit", skin: "Doppler (Phase 2)", rarity: "Covert", float: 0.0654, patternIndex: 831, price: 1280.00, marketplace: "Skinport", dealId: "skinport" },
   // M4A1-S Printstream
-  { id: "17", weapon: "M4A1-S", skin: "Printstream", rarity: "Covert", float: 0.0045, patternIndex: 77, price: 218.00, marketplace: "CSFloat", dealId: "csfloat" },
+  { id: "17", weapon: "M4A1-S", skin: "Printstream", rarity: "Covert", float: 0.0045, patternIndex: 77, price: 218.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "18", weapon: "M4A1-S", skin: "Printstream", rarity: "Covert", float: 0.0712, patternIndex: 543, price: 145.00, marketplace: "DMarket", dealId: "dmarket" },
   { id: "19", weapon: "M4A1-S", skin: "Printstream", rarity: "Covert", float: 0.2341, patternIndex: 126, price: 118.00, marketplace: "Buff163", dealId: "buff163" },
   // Desert Eagle Blaze
-  { id: "20", weapon: "Desert Eagle", skin: "Blaze", rarity: "Restricted", float: 0.0012, patternIndex: 362, price: 680.00, marketplace: "CSFloat", dealId: "csfloat" },
+  { id: "20", weapon: "Desert Eagle", skin: "Blaze", rarity: "Restricted", float: 0.0012, patternIndex: 362, price: 680.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "21", weapon: "Desert Eagle", skin: "Blaze", rarity: "Restricted", float: 0.0089, patternIndex: 811, price: 520.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "22", weapon: "Desert Eagle", skin: "Blaze", rarity: "Restricted", float: 0.0456, patternIndex: 190, price: 445.00, marketplace: "Buff163", dealId: "buff163" },
   // AWP Asiimov
-  { id: "23", weapon: "AWP", skin: "Asiimov", rarity: "Covert", float: 0.1812, patternIndex: 645, price: 32.00, marketplace: "CSFloat", dealId: "csfloat" },
+  { id: "23", weapon: "AWP", skin: "Asiimov", rarity: "Covert", float: 0.1812, patternIndex: 645, price: 32.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "24", weapon: "AWP", skin: "Asiimov", rarity: "Covert", float: 0.2567, patternIndex: 223, price: 28.50, marketplace: "Buff163", dealId: "buff163" },
   { id: "25", weapon: "AWP", skin: "Asiimov", rarity: "Covert", float: 0.9234, patternIndex: 900, price: 22.00, marketplace: "DMarket", dealId: "dmarket" },
   // Glock-18 Fade
-  { id: "26", weapon: "Glock-18", skin: "Fade", rarity: "Restricted", float: 0.0012, patternIndex: 38, price: 1650.00, marketplace: "CSFloat", dealId: "csfloat" },
+  { id: "26", weapon: "Glock-18", skin: "Fade", rarity: "Restricted", float: 0.0012, patternIndex: 38, price: 1650.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "27", weapon: "Glock-18", skin: "Fade", rarity: "Restricted", float: 0.0234, patternIndex: 514, price: 1320.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "28", weapon: "Glock-18", skin: "Fade", rarity: "Restricted", float: 0.0589, patternIndex: 743, price: 1190.00, marketplace: "Buff163", dealId: "buff163" },
   // AK-47 Fire Serpent
-  { id: "29", weapon: "AK-47", skin: "Fire Serpent", rarity: "Covert", float: 0.0801, patternIndex: 281, price: 1250.00, marketplace: "CSFloat", dealId: "csfloat" },
+  { id: "29", weapon: "AK-47", skin: "Fire Serpent", rarity: "Covert", float: 0.0801, patternIndex: 281, price: 1250.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "30", weapon: "AK-47", skin: "Fire Serpent", rarity: "Covert", float: 0.1623, patternIndex: 409, price: 860.00, marketplace: "DMarket", dealId: "dmarket" },
   { id: "31", weapon: "AK-47", skin: "Fire Serpent", rarity: "Covert", float: 0.3721, patternIndex: 67, price: 720.00, marketplace: "Buff163", dealId: "buff163" },
   // Sport Gloves Pandora's Box
-  { id: "32", weapon: "Sport Gloves", skin: "Pandora's Box", rarity: "Extraordinary", float: 0.1501, patternIndex: 0, price: 5200.00, marketplace: "CSFloat", dealId: "csfloat" },
+  { id: "32", weapon: "Sport Gloves", skin: "Pandora's Box", rarity: "Extraordinary", float: 0.1501, patternIndex: 0, price: 5200.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "33", weapon: "Sport Gloves", skin: "Pandora's Box", rarity: "Extraordinary", float: 0.2874, patternIndex: 0, price: 4100.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "34", weapon: "Sport Gloves", skin: "Pandora's Box", rarity: "Extraordinary", float: 0.3912, patternIndex: 0, price: 3600.00, marketplace: "Buff163", dealId: "buff163" },
   // USP-S Kill Confirmed
-  { id: "35", weapon: "USP-S", skin: "Kill Confirmed", rarity: "Covert", float: 0.0034, patternIndex: 555, price: 142.00, marketplace: "CSFloat", dealId: "csfloat" },
+  { id: "35", weapon: "USP-S", skin: "Kill Confirmed", rarity: "Covert", float: 0.0034, patternIndex: 555, price: 142.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "36", weapon: "USP-S", skin: "Kill Confirmed", rarity: "Covert", float: 0.0712, patternIndex: 834, price: 88.00, marketplace: "DMarket", dealId: "dmarket" },
   { id: "37", weapon: "USP-S", skin: "Kill Confirmed", rarity: "Covert", float: 0.2145, patternIndex: 112, price: 72.00, marketplace: "Buff163", dealId: "buff163" },
   // AWP Gungnir
-  { id: "38", weapon: "AWP", skin: "Gungnir", rarity: "Covert", float: 0.0023, patternIndex: 991, price: 14500.00, marketplace: "CSFloat", dealId: "csfloat" },
+  { id: "38", weapon: "AWP", skin: "Gungnir", rarity: "Covert", float: 0.0023, patternIndex: 991, price: 14500.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "39", weapon: "AWP", skin: "Gungnir", rarity: "Covert", float: 0.0412, patternIndex: 200, price: 8900.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "40", weapon: "AWP", skin: "Gungnir", rarity: "Covert", float: 0.0698, patternIndex: 567, price: 7800.00, marketplace: "Buff163", dealId: "buff163" },
   // AK-47 Case Hardened
-  { id: "41", weapon: "AK-47", skin: "Case Hardened", rarity: "Classified", float: 0.0312, patternIndex: 661, price: 4500.00, marketplace: "CSFloat", dealId: "csfloat" },
+  { id: "41", weapon: "AK-47", skin: "Case Hardened", rarity: "Classified", float: 0.0312, patternIndex: 661, price: 4500.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "42", weapon: "AK-47", skin: "Case Hardened", rarity: "Classified", float: 0.1567, patternIndex: 387, price: 125.00, marketplace: "Buff163", dealId: "buff163" },
   { id: "43", weapon: "AK-47", skin: "Case Hardened", rarity: "Classified", float: 0.5421, patternIndex: 321, price: 68.00, marketplace: "DMarket", dealId: "dmarket" },
   // M9 Bayonet Crimson Web
-  { id: "44", weapon: "M9 Bayonet", skin: "Crimson Web", rarity: "Covert", float: 0.0712, patternIndex: 448, price: 3200.00, marketplace: "CSFloat", dealId: "csfloat" },
+  { id: "44", weapon: "M9 Bayonet", skin: "Crimson Web", rarity: "Covert", float: 0.0712, patternIndex: 448, price: 3200.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "45", weapon: "M9 Bayonet", skin: "Crimson Web", rarity: "Covert", float: 0.1523, patternIndex: 110, price: 1850.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "46", weapon: "M9 Bayonet", skin: "Crimson Web", rarity: "Covert", float: 0.3678, patternIndex: 755, price: 920.00, marketplace: "Buff163", dealId: "buff163" },
   // AK-47 Redline
-  { id: "47", weapon: "AK-47", skin: "Redline", rarity: "Classified", float: 0.1512, patternIndex: 203, price: 18.50, marketplace: "CSFloat", dealId: "csfloat" },
+  { id: "47", weapon: "AK-47", skin: "Redline", rarity: "Classified", float: 0.1512, patternIndex: 203, price: 18.50, marketplace: "Skinport", dealId: "skinport" },
   { id: "48", weapon: "AK-47", skin: "Redline", rarity: "Classified", float: 0.2234, patternIndex: 677, price: 14.00, marketplace: "Buff163", dealId: "buff163" },
   { id: "49", weapon: "AK-47", skin: "Redline", rarity: "Classified", float: 0.3512, patternIndex: 489, price: 12.50, marketplace: "DMarket", dealId: "dmarket" },
   // AWP Wildfire
-  { id: "50", weapon: "AWP", skin: "Wildfire", rarity: "Covert", float: 0.0089, patternIndex: 311, price: 82.00, marketplace: "CSFloat", dealId: "csfloat" },
+  { id: "50", weapon: "AWP", skin: "Wildfire", rarity: "Covert", float: 0.0089, patternIndex: 311, price: 82.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "51", weapon: "AWP", skin: "Wildfire", rarity: "Covert", float: 0.0712, patternIndex: 124, price: 54.00, marketplace: "Skinport", dealId: "skinport" },
   { id: "52", weapon: "AWP", skin: "Wildfire", rarity: "Covert", float: 0.1834, patternIndex: 856, price: 38.00, marketplace: "Buff163", dealId: "buff163" },
 ];
@@ -149,7 +149,7 @@ const UNIQUE_SKINS = Array.from(
 );
 
 const COMPARE_MARKETS = [
-  { name: "CSFloat", dealId: "csfloat", color: "#4f8df0" },
+  { name: "Skinport", dealId: "skinport", color: "#eb4b98" },
   { name: "Buff163", dealId: "buff163", color: "#ff6b35" },
   { name: "DMarket", dealId: "dmarket", color: "#00c9a7" },
 ] as const;
@@ -306,7 +306,7 @@ export default function FloatCheckerPage() {
               </button>
             </div>
             <p className="mt-2 text-xs text-gray-400">
-              {UNIQUE_SKINS.length} skins in database — prices from CSFloat, Skinport, Buff163 & DMarket
+              {UNIQUE_SKINS.length} skins in database — prices from Skinport, Buff163 & DMarket
             </p>
           </div>
         </div>

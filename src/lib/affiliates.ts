@@ -47,7 +47,7 @@ export const AFFILIATE_PARTNERS: AffiliatePartner[] = [
     logo: "C",
     baseUrl: "https://csfloat.com",
     affiliateUrl: "https://csfloat.com/?ref=lootboxes",
-    active: true,
+    active: false, // Pending affiliate approval — re-enable once approved
     sellerFee: "2%",
     commission: "~35% of fees",
     tagline: "Lowest fees in the industry",
@@ -82,7 +82,7 @@ export const AFFILIATE_PARTNERS: AffiliatePartner[] = [
     color: "#00c9a7",
     logo: "D",
     baseUrl: "https://dmarket.com",
-    affiliateUrl: "https://dmarket.com/?ref=lootboxes",
+    affiliateUrl: "https://dmarket.com?ref=6Ajfc3hm9r",
     active: true,
     sellerFee: "3%",
     commission: "~20% of fees",
@@ -94,7 +94,7 @@ export const AFFILIATE_PARTNERS: AffiliatePartner[] = [
     color: "#5865F2",
     logo: "T",
     baseUrl: "https://tradeit.gg",
-    affiliateUrl: "https://tradeit.gg/?ref=lootboxes",
+    affiliateUrl: "https://tradeit.gg/?aff=LootBoxes.com",
     active: true,
     sellerFee: "0-7%",
     commission: "1% lifetime",
@@ -106,7 +106,7 @@ export const AFFILIATE_PARTNERS: AffiliatePartner[] = [
     color: "#cf6a32",
     logo: "M",
     baseUrl: "https://mannco.store",
-    affiliateUrl: "https://mannco.store/?ref=lootboxes",
+    affiliateUrl: "https://mannco.store/?ref=yzvmnzj",
     active: true,
     sellerFee: "5%",
     commission: "60% (30 days)",
@@ -118,7 +118,7 @@ export const AFFILIATE_PARTNERS: AffiliatePartner[] = [
     color: "#7c3aed",
     logo: "W",
     baseUrl: "https://waxpeer.com",
-    affiliateUrl: "https://waxpeer.com/?ref=lootboxes",
+    affiliateUrl: "https://waxpeer.com/r/lootboxes",
     active: true,
     sellerFee: "5%",
     commission: "~10% of fees",
@@ -131,7 +131,7 @@ export const AFFILIATE_PARTNERS: AffiliatePartner[] = [
     logo: "B",
     baseUrl: "https://bitskins.com",
     affiliateUrl: "https://bitskins.com/?ref=lootboxes",
-    active: true,
+    active: false, // Pending KYC verification — re-enable once approved
     sellerFee: "5%",
     commission: "1-40% tiered",
     tagline: "Volume-based affiliate tiers",
@@ -163,8 +163,8 @@ export function getPartnerUrl(dealId: string): string {
 }
 
 /** The 5 "core" marketplaces shown on price tracker (same order as before) */
-export const PRICE_TRACKER_MARKETS = ["steam", "csfloat", "skinport", "buff163", "dmarket"] as const;
+export const PRICE_TRACKER_MARKETS = ["steam", "skinport", "buff163", "dmarket", "waxpeer"] as const;
 export type PriceMarketKey = (typeof PRICE_TRACKER_MARKETS)[number];
 
 /** The marketplaces shown on the comparison page */
-export const COMPARE_MARKETS = ["csfloat", "skinport", "buff163", "dmarket", "tradeit", "mannco", "waxpeer", "bitskins", "steam"] as const;
+export const COMPARE_MARKETS = ["skinport", "buff163", "dmarket", "tradeit", "mannco", "waxpeer", "steam"] as const;

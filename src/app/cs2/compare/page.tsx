@@ -6,28 +6,10 @@ import AffiliateDisclosure from "@/components/cs2/AffiliateDisclosure";
 export const metadata: Metadata = {
   title: "CS2 Marketplace Comparison — Fees, Trust Scores & Features",
   description:
-    "Compare 9 CS2 skin marketplaces side-by-side. CSFloat, Skinport, Buff163, DMarket, Tradeit.gg and more — fees, payment methods, trust ratings, and features.",
+    "Compare CS2 skin marketplaces side-by-side. Skinport, Buff163, DMarket, Tradeit.gg, Waxpeer and more — fees, payment methods, trust ratings, and features.",
 };
 
 const MARKETPLACES = [
-  {
-    name: "CSFloat",
-    dealId: "csfloat",
-    logo: "C",
-    color: "#4f8df0",
-    sellerFee: "2%",
-    buyerFee: "0%",
-    payment: ["Credit Card", "Crypto", "PayPal"],
-    cashout: ["Bank Transfer", "Crypto", "PayPal"],
-    minCashout: "$5",
-    trustScore: 9.2,
-    highlight: "Lowest fees in the industry",
-    hasApi: true,
-    hasBargain: true,
-    hasInspect: true,
-    p2p: true,
-    editorPick: true,
-  },
   {
     name: "Skinport",
     dealId: "skinport",
@@ -44,7 +26,7 @@ const MARKETPLACES = [
     hasBargain: false,
     hasInspect: true,
     p2p: false,
-    editorPick: false,
+    editorPick: true,
   },
   {
     name: "Buff163",
@@ -98,24 +80,6 @@ const MARKETPLACES = [
     hasBargain: false,
     hasInspect: true,
     p2p: true,
-    editorPick: false,
-  },
-  {
-    name: "BitSkins",
-    dealId: "bitskins",
-    logo: "B",
-    color: "#f97316",
-    sellerFee: "5%",
-    buyerFee: "0%",
-    payment: ["Credit Card", "Crypto", "PayPal"],
-    cashout: ["PayPal", "Crypto", "Bank"],
-    minCashout: "$5",
-    trustScore: 8.2,
-    highlight: "Established since 2015",
-    hasApi: true,
-    hasBargain: false,
-    hasInspect: true,
-    p2p: false,
     editorPick: false,
   },
   {
@@ -206,15 +170,15 @@ export default function ComparePage() {
             <span className="text-sm font-semibold text-blue-900">Our Pick:</span>
           </div>
           <p className="text-sm text-blue-800">
-            <strong>CSFloat</strong> offers the lowest seller fees (2%) with full P2P trading. Best overall for most users.
+            <strong>Skinport</strong> offers the best checkout experience with broad payment options and a 9.0/10 trust score.
           </p>
           <a
-            href="/go/cs2/csfloat?from=compare-banner"
+            href="/go/cs2/skinport?from=compare-banner"
             target="_blank"
             rel="noopener noreferrer nofollow"
             className="ml-auto flex items-center gap-1 rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-700 transition-colors whitespace-nowrap"
           >
-            Visit CSFloat <ExternalLink className="h-3 w-3" />
+            Visit Skinport <ExternalLink className="h-3 w-3" />
           </a>
         </div>
       </section>

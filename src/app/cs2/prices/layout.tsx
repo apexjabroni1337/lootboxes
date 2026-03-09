@@ -5,14 +5,14 @@ import ToolSchema from "@/components/seo/ToolSchema";
 export const metadata: Metadata = {
   title: "CS2 Skin Price Tracker — Compare Prices Across 5 Marketplaces",
   description:
-    "Compare CS2 skin prices across Steam Market, CSFloat, Skinport, Buff163, and DMarket in real time. Find the cheapest listing and save money on every skin purchase.",
+    "Compare CS2 skin prices across Steam Market, Skinport, Buff163, DMarket, and Waxpeer in real time. Find the cheapest listing and save money on every skin purchase.",
   alternates: {
     canonical: "https://lootboxes.com/cs2/prices",
   },
   openGraph: {
     title: "CS2 Skin Price Tracker — Compare Prices Across 5 Marketplaces",
     description:
-      "Compare CS2 skin prices across Steam Market, CSFloat, Skinport, Buff163, and DMarket in real time.",
+      "Compare CS2 skin prices across Steam Market, Skinport, Buff163, DMarket, and Waxpeer in real time.",
     images: [
       {
         url: "https://lootboxes.com/og-cs2.png",
@@ -47,7 +47,7 @@ export default function PricesLayout({
       />
       <ToolSchema
         name="CS2 Skin Price Tracker"
-        description="Compare CS2 skin prices across Steam Market, CSFloat, Skinport, Buff163, and DMarket in real time. Find the cheapest listing and save money."
+        description="Compare CS2 skin prices across Steam Market, Skinport, Buff163, DMarket, and Waxpeer in real time. Find the cheapest listing and save money."
         url="https://lootboxes.com/cs2/prices"
       />
       {children}

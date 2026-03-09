@@ -28,12 +28,12 @@ const CS2_FAQS = [
   {
     question: "What is the cheapest CS2 skin marketplace?",
     answer:
-      "CSFloat typically has the lowest seller fees at 2%, making it one of the cheapest options. However, prices vary per skin — use our Price Tracker to compare prices across CSFloat, Skinport, Buff163, DMarket, and Steam Market in real time.",
+      "Prices vary per skin — use our Price Tracker to compare prices across Skinport, Buff163, DMarket, Waxpeer, and Steam Market in real time to find the cheapest option.",
   },
   {
     question: "How often are CS2 skin prices updated?",
     answer:
-      "Our Price Tracker updates prices every 10 minutes using live data from SteamWebAPI. We pull pricing from Steam Market, CSFloat, Skinport, Buff163, and DMarket simultaneously, so you always see the cheapest option.",
+      "Our Price Tracker updates prices every 10 minutes using live data from SteamWebAPI. We pull pricing from Steam Market, Skinport, Buff163, DMarket, and Waxpeer simultaneously, so you always see the cheapest option.",
   },
   {
     question: "What is a CS2 skin float value?",
@@ -55,7 +55,7 @@ const CS2_FAQS = [
 const TOOLS = [
   {
     title: "Skin Price Tracker",
-    description: "Compare prices across Steam Market, CSFloat, Skinport, Buff163, and DMarket in real time. Find the cheapest listing instantly.",
+    description: "Compare prices across Steam Market, Skinport, Buff163, DMarket, and Waxpeer in real time. Find the cheapest listing instantly.",
     href: "/cs2/prices",
     icon: TrendingUp,
     color: "bg-orange-500",
@@ -119,11 +119,11 @@ const TOOLS = [
 ];
 
 const MARKETPLACES = [
-  { name: "CSFloat", fee: "2%", color: "#4f8df0", dealId: "csfloat", pick: true },
-  { name: "Skinport", fee: "5%", color: "#eb4b98", dealId: "skinport", pick: false },
+  { name: "Skinport", fee: "5%", color: "#eb4b98", dealId: "skinport", pick: true },
   { name: "Buff163", fee: "2.5%", color: "#ff6b35", dealId: "buff163", pick: false },
   { name: "DMarket", fee: "3%", color: "#00c9a7", dealId: "dmarket", pick: false },
   { name: "Tradeit.gg", fee: "0-7%", color: "#5865F2", dealId: "tradeit", pick: false },
+  { name: "Waxpeer", fee: "5%", color: "#7c3aed", dealId: "waxpeer", pick: false },
 ];
 
 export default function CS2HubPage() {

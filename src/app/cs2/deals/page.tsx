@@ -30,10 +30,8 @@ interface MultiMarketPrice {
   borderColor: string;
   steamPrice: number | null;
   skinportPrice: number | null;
-  csfloatPrice: number | null;
   buff163Price: number | null;
   dmarketPrice: number | null;
-  bitskinPrice: number | null;
   waxpeerPrice: number | null;
   marketLinks: Record<string, string>;
   lowestPrice: number | null;
@@ -53,9 +51,9 @@ type DealTab = "savings" | "trending" | "undervalued";
 const MARKETPLACE_INFO: Record<string, { name: string; color: string }> = {
   steam: { name: "Steam", color: "#1b2838" },
   skinport: { name: "Skinport", color: "#eb4b98" },
-  csfloat: { name: "CSFloat", color: "#4f8df0" },
   buff163: { name: "Buff163", color: "#ff6b35" },
   dmarket: { name: "DMarket", color: "#00c9a7" },
+  waxpeer: { name: "Waxpeer", color: "#7c3aed" },
 };
 
 function formatPrice(price: number | null | undefined): string {
@@ -154,8 +152,8 @@ export default function DealsPage() {
             <h1 className="text-3xl font-bold text-gray-900">Best Deals</h1>
           </div>
           <p className="text-gray-600 max-w-2xl">
-            Real-time skin deals across every major CS2 marketplace. We compare prices from CSFloat, Skinport, Buff163,
-            DMarket and Steam Market to find you the biggest savings — updated every 10 minutes.
+            Real-time skin deals across every major CS2 marketplace. We compare prices from Skinport, Buff163,
+            DMarket, Waxpeer and Steam Market to find you the biggest savings — updated every 10 minutes.
           </p>
 
           {/* Stat cards */}
@@ -419,8 +417,8 @@ export default function DealsPage() {
           <h2 className="text-xl font-bold text-gray-900 mb-4">How We Find CS2 Skin Deals</h2>
           <div className="prose prose-gray prose-sm max-w-none">
             <p>
-              Our deals engine compares real-time prices across every major CS2 skin marketplace including CSFloat,
-              Skinport, Buff163, DMarket, and the Steam Community Market. We refresh prices every 10 minutes
+              Our deals engine compares real-time prices across every major CS2 skin marketplace including
+              Skinport, Buff163, DMarket, Waxpeer, and the Steam Community Market. We refresh prices every 10 minutes
               to catch price drops as they happen.
             </p>
             <p>

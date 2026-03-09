@@ -70,7 +70,7 @@ export default function CS2InvestingPage() {
           <div className="rounded-xl border border-brand-200 bg-gradient-to-r from-brand-50 to-white p-6">
             <h2 className="text-lg font-bold text-gray-900 mb-2">Why CS2 Skins Are Investable</h2>
             <p className="text-sm text-gray-700 leading-relaxed">
-              Unlike every other in-game cosmetic system, CS2 skins can be freely traded, sold for real money, and even appreciate in value over time. The Steam Community Market processes billions in transactions annually, and third-party marketplaces like CSFloat and Buff163 offer even better rates. This makes CS2 skins one of the only digital assets in gaming that function like actual investments.
+              Unlike every other in-game cosmetic system, CS2 skins can be freely traded, sold for real money, and even appreciate in value over time. The Steam Community Market processes billions in transactions annually, and third-party marketplaces like Buff163 and DMarket offer even better rates. This makes CS2 skins one of the only digital assets in gaming that function like actual investments.
             </p>
           </div>
         </div>
@@ -119,9 +119,9 @@ export default function CS2InvestingPage() {
           <p className="text-sm text-gray-600 mb-6">Low fees matter when you&apos;re buying to hold. These platforms keep your costs down.</p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
-              { name: "CSFloat", fee: "2%", reason: "Lowest fees, P2P trading", color: "#4f8df0", dealId: "csfloat" },
               { name: "Buff163", fee: "2.5%", reason: "Largest volume, best liquidity", color: "#ff6b35", dealId: "buff163" },
               { name: "DMarket", fee: "3%", reason: "Crypto cashout, instant trades", color: "#00c9a7", dealId: "dmarket" },
+              { name: "Skinport", fee: "5%", reason: "Best UI & checkout experience", color: "#eb4b98", dealId: "skinport" },
             ].map((mp) => (
               <a
                 key={mp.name}

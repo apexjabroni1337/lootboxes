@@ -85,10 +85,8 @@ export interface MultiMarketPrice {
   // Multi-marketplace prices (USD)
   steamPrice: number | null;
   skinportPrice: number | null;
-  csfloatPrice: number | null;
   buff163Price: number | null;
   dmarketPrice: number | null;
-  bitskinPrice: number | null;
   waxpeerPrice: number | null;
   // Marketplace links (direct from API)
   marketLinks: Record<string, string>;
@@ -140,32 +138,27 @@ function parseName(marketHashName: string): { weapon: string; skin: string; wear
 /* ── Map API source names to our dealIds ── */
 const SOURCE_TO_DEALID: Record<string, string> = {
   skinport: "skinport",
-  csfloat: "csfloat",
   buff: "buff163",
   buff163: "buff163",
   dmarket: "dmarket",
-  bitskins: "bitskins",
   waxpeer: "waxpeer",
   tradeit: "tradeit",
   mannco: "mannco",
+  // csfloat and bitskins temporarily excluded — pending affiliate approval
 };
 
 /* ── Extract marketplace prices from `prices` array ── */
 function extractMarketplacePrices(prices?: MarketplacePriceEntry[]): {
   skinport: number | null;
-  csfloat: number | null;
   buff163: number | null;
   dmarket: number | null;
-  bitskins: number | null;
   waxpeer: number | null;
   links: Record<string, string>;
 } {
   const result = {
     skinport: null as number | null,
-    csfloat: null as number | null,
     buff163: null as number | null,
     dmarket: null as number | null,
-    bitskins: null as number | null,
     waxpeer: null as number | null,
     links: {} as Record<string, string>,
   };
@@ -188,17 +181,11 @@ function extractMarketplacePrices(prices?: MarketplacePriceEntry[]): {
       case "skinport":
         if (!result.skinport || entry.price < result.skinport) result.skinport = entry.price;
         break;
-      case "csfloat":
-        if (!result.csfloat || entry.price < result.csfloat) result.csfloat = entry.price;
-        break;
       case "buff163":
         if (!result.buff163 || entry.price < result.buff163) result.buff163 = entry.price;
         break;
       case "dmarket":
         if (!result.dmarket || entry.price < result.dmarket) result.dmarket = entry.price;
-        break;
-      case "bitskins":
-        if (!result.bitskins || entry.price < result.bitskins) result.bitskins = entry.price;
         break;
       case "waxpeer":
         if (!result.waxpeer || entry.price < result.waxpeer) result.waxpeer = entry.price;
@@ -237,10 +224,8 @@ function transformItem(raw: SteamWebApiItem): MultiMarketPrice | null {
 
   const thirdPartyPrices: Record<string, number | null> = {
     skinport: mp.skinport,
-    csfloat: mp.csfloat,
     buff163: mp.buff163,
     dmarket: mp.dmarket,
-    bitskins: mp.bitskins,
     waxpeer: mp.waxpeer,
   };
 
@@ -253,10 +238,8 @@ function transformItem(raw: SteamWebApiItem): MultiMarketPrice | null {
   const allPrices = [
     steamPrice,
     mp.skinport,
-    mp.csfloat,
     mp.buff163,
     mp.dmarket,
-    mp.bitskins,
     mp.waxpeer,
   ].filter((p): p is number => p != null && p > 0);
 
@@ -273,10 +256,8 @@ function transformItem(raw: SteamWebApiItem): MultiMarketPrice | null {
     borderColor: raw.bordercolor || "",
     steamPrice,
     skinportPrice: mp.skinport,
-    csfloatPrice: mp.csfloat,
     buff163Price: mp.buff163,
     dmarketPrice: mp.dmarket,
-    bitskinPrice: mp.bitskins,
     waxpeerPrice: mp.waxpeer,
     marketLinks: mp.links,
     lowestPrice,

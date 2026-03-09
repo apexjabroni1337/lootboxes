@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "CS2 Marketplace Comparison — Fees, Features & Trust Ratings",
   description:
-    "Compare CS2 skin marketplaces side by side. See seller fees, buyer protection, payment methods, and trust ratings for CSFloat, Skinport, Buff163, DMarket, and more.",
+    "Compare CS2 skin marketplaces side by side. See seller fees, buyer protection, payment methods, and trust ratings for Skinport, Buff163, DMarket, Tradeit.gg, and more.",
   alternates: {
     canonical: "https://lootboxes.com/cs2/compare",
   },

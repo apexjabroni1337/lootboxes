@@ -2,7 +2,7 @@ import { Metadata } from "next";
 
 const title = "CS2 Skin Deals — Best Prices Across All Marketplaces";
 const description =
-  "Find the biggest savings on CS2 skins. Compare prices across CSFloat, Skinport, Buff163, DMarket and more — updated every 10 minutes.";
+  "Find the biggest savings on CS2 skins. Compare prices across Skinport, Buff163, DMarket, Waxpeer and more — updated every 10 minutes.";
 
 export const metadata: Metadata = {
   title,

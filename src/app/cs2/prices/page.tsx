@@ -33,10 +33,8 @@ interface MultiMarketPrice {
   borderColor: string;
   steamPrice: number | null;
   skinportPrice: number | null;
-  csfloatPrice: number | null;
   buff163Price: number | null;
   dmarketPrice: number | null;
-  bitskinPrice: number | null;
   waxpeerPrice: number | null;
   marketLinks: Record<string, string>;
   lowestPrice: number | null;
@@ -83,9 +81,9 @@ const RARITY_COLORS: Record<string, string> = {
 const MARKETPLACE_INFO: Record<string, { name: string; color: string; dealId: string }> = {
   steam: { name: "Steam", color: "#1b2838", dealId: "steam" },
   skinport: { name: "Skinport", color: "#eb4b98", dealId: "skinport" },
-  csfloat: { name: "CSFloat", color: "#4f8df0", dealId: "csfloat" },
   buff163: { name: "Buff163", color: "#ff6b35", dealId: "buff163" },
   dmarket: { name: "DMarket", color: "#00c9a7", dealId: "dmarket" },
+  waxpeer: { name: "Waxpeer", color: "#7c3aed", dealId: "waxpeer" },
 };
 
 function formatPrice(price: number | null | undefined): string {
@@ -379,13 +377,13 @@ export default function CS2PricesPage() {
                   <span className="text-pink-500">Skinport</span>
                 </div>
                 <div className="w-20 text-right">
-                  <span style={{ color: "#4f8df0" }}>CSFloat</span>
-                </div>
-                <div className="w-20 text-right">
                   <span style={{ color: "#ff6b35" }}>Buff163</span>
                 </div>
                 <div className="w-20 text-right">
                   <span style={{ color: "#00c9a7" }}>DMarket</span>
+                </div>
+                <div className="w-20 text-right">
+                  <span style={{ color: "#7c3aed" }}>Waxpeer</span>
                 </div>
                 <div className="w-24 text-right">Best Price</div>
                 <div className="w-20 text-center">Volume</div>
@@ -457,16 +455,6 @@ export default function CS2PricesPage() {
                             </p>
                           </div>
 
-                          {/* CSFloat */}
-                          <div className="xl:w-20 flex-shrink-0 xl:text-right">
-                            <span className="text-[10px] xl:hidden" style={{ color: "#4f8df0" }}>CSFloat</span>
-                            <p className={`text-sm font-semibold ${
-                              item.bestMarket === "csfloat" ? "text-emerald-600" : "text-gray-700"
-                            }`}>
-                              {formatPrice(item.csfloatPrice)}
-                            </p>
-                          </div>
-
                           {/* Buff163 */}
                           <div className="xl:w-20 flex-shrink-0 xl:text-right">
                             <span className="text-[10px] xl:hidden" style={{ color: "#ff6b35" }}>Buff163</span>
@@ -484,6 +472,16 @@ export default function CS2PricesPage() {
                               item.bestMarket === "dmarket" ? "text-emerald-600" : "text-gray-700"
                             }`}>
                               {formatPrice(item.dmarketPrice)}
+                            </p>
+                          </div>
+
+                          {/* Waxpeer */}
+                          <div className="xl:w-20 flex-shrink-0 xl:text-right">
+                            <span className="text-[10px] xl:hidden" style={{ color: "#7c3aed" }}>Waxpeer</span>
+                            <p className={`text-sm font-semibold ${
+                              item.bestMarket === "waxpeer" ? "text-emerald-600" : "text-gray-700"
+                            }`}>
+                              {formatPrice(item.waxpeerPrice)}
                             </p>
                           </div>
                         </div>
@@ -520,10 +518,8 @@ export default function CS2PricesPage() {
                             // Build list of marketplaces with actual data for this item
                             const available: { dealId: string; name: string; color: string; price: number | null }[] = [];
                             if (item.skinportPrice) available.push({ dealId: "skinport", name: "Skinport", color: "#eb4b98", price: item.skinportPrice });
-                            if (item.csfloatPrice) available.push({ dealId: "csfloat", name: "CSFloat", color: "#4f8df0", price: item.csfloatPrice });
                             if (item.buff163Price) available.push({ dealId: "buff163", name: "Buff163", color: "#ff6b35", price: item.buff163Price });
                             if (item.dmarketPrice) available.push({ dealId: "dmarket", name: "DMarket", color: "#00c9a7", price: item.dmarketPrice });
-                            if (item.bitskinPrice) available.push({ dealId: "bitskins", name: "BitSkins", color: "#f97316", price: item.bitskinPrice });
                             if (item.waxpeerPrice) available.push({ dealId: "waxpeer", name: "Waxpeer", color: "#7c3aed", price: item.waxpeerPrice });
                             // Sort so cheapest is first
                             available.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
@@ -684,9 +680,9 @@ export default function CS2PricesPage() {
                             </a>
                           )}
                           {[
-                            { name: "CSFloat", dealId: "csfloat", color: "#4f8df0" },
                             { name: "Buff163", dealId: "buff163", color: "#ff6b35" },
                             { name: "DMarket", dealId: "dmarket", color: "#00c9a7" },
+                            { name: "Waxpeer", dealId: "waxpeer", color: "#7c3aed" },
                           ].map((mp) => (
                             <a
                               key={mp.dealId}

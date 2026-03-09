@@ -464,13 +464,13 @@ export default function TradeUpPage() {
               {/* Affiliate CTA */}
               <div className="mt-5 pt-4 border-t border-gray-100">
                 <a
-                  href="/go/cs2/csfloat?from=trade-up"
+                  href="/go/cs2/skinport?from=trade-up"
                   target="_blank"
                   rel="noopener noreferrer nofollow"
                   className="flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition-colors"
-                  style={{ backgroundColor: "#4f8df0" }}
+                  style={{ backgroundColor: "#eb4b98" }}
                 >
-                  Buy Skins on CSFloat <ExternalLink className="h-3 w-3" />
+                  Buy Skins on Skinport <ExternalLink className="h-3 w-3" />
                 </a>
                 <p className="text-[10px] text-gray-400 text-center mt-2">Affiliate link</p>
               </div>
