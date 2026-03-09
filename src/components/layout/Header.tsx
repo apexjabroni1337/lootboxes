@@ -330,16 +330,29 @@ export default function Header() {
                         </div>
                       </Link>
                       <Link
+                        href="/cs2/deals"
+                        onClick={() => setCs2MegaOpen(false)}
+                        className="flex items-center gap-3 rounded-lg bg-green-50 px-4 py-3 transition-colors hover:bg-green-100"
+                      >
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500 text-white">
+                          <Tag className="h-4.5 w-4.5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">Best Deals</p>
+                          <p className="text-[11px] text-gray-500">Savings across all markets</p>
+                        </div>
+                      </Link>
+                      <Link
                         href="/cs2/trade-up"
                         onClick={() => setCs2MegaOpen(false)}
-                        className="col-span-2 flex items-center gap-3 rounded-lg bg-amber-50 px-4 py-3 transition-colors hover:bg-amber-100"
+                        className="flex items-center gap-3 rounded-lg bg-amber-50 px-4 py-3 transition-colors hover:bg-amber-100"
                       >
                         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500 text-white">
                           <Calculator className="h-4.5 w-4.5" />
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-gray-900">Trade-Up Calculator</p>
-                          <p className="text-[11px] text-gray-500">Calculate expected value of trade-up contracts</p>
+                          <p className="text-[11px] text-gray-500">EV of trade-up contracts</p>
                         </div>
                       </Link>
                     </div>
@@ -633,6 +646,14 @@ export default function Header() {
                 >
                   <Dices className="h-4 w-4 text-purple-500" />
                   Case Simulator
+                </Link>
+                <Link
+                  href="/cs2/deals"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <Tag className="h-4 w-4 text-emerald-500" />
+                  Best Deals
                 </Link>
                 <Link
                   href="/cs2/compare"

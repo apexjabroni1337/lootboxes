@@ -17,9 +17,36 @@ import {
   ShoppingCart,
   Tag,
   BarChart3,
+  Flame,
+  ArrowDown,
+  DollarSign,
 } from "lucide-react";
 
-/* ── Types matching our API response ── */
+/* ── Types ── */
+interface MultiMarketPrice {
+  name: string;
+  weapon: string;
+  skin: string;
+  wear: string;
+  image: string | null;
+  steamPrice: number | null;
+  skinportPrice: number | null;
+  csfloatPrice: number | null;
+  buff163Price: number | null;
+  dmarketPrice: number | null;
+  lowestPrice: number | null;
+  highestPrice: number | null;
+  averagePrice: number | null;
+  medianPrice: number | null;
+  bestMarket: string | null;
+  bestSavingsVsSteam: number | null;
+  sold24h: number;
+  sold7d: number;
+  sold30d: number;
+  buyOrderPrice: number | null;
+}
+
+/* Also keep the old SkinPrice for fallback */
 interface SkinPrice {
   name: string;
   weapon: string;
@@ -39,7 +66,8 @@ interface SkinPrice {
 }
 
 const WEARS = ["All", "Factory New", "Minimal Wear", "Field-Tested", "Well-Worn", "Battle-Scarred"] as const;
-type SortKey = "name" | "cheapest" | "expensive" | "savings";
+type SortKey = "name" | "cheapest" | "expensive" | "savings" | "volume";
+type ViewMode = "default" | "deals" | "trending";
 
 const RARITY_COLORS: Record<string, string> = {
   Consumer: "#b0c3d9", Industrial: "#5e98d9", "Mil-Spec": "#4b69ff",
@@ -47,73 +75,123 @@ const RARITY_COLORS: Record<string, string> = {
   Contraband: "#e4ae39", Extraordinary: "#e4ae39",
 };
 
-const OTHER_MARKETPLACES = [
-  { name: "CSFloat", dealId: "csfloat", color: "#4f8df0", fee: "2%" },
-  { name: "Buff163", dealId: "buff163", color: "#ff6b35", fee: "2.5%" },
-  { name: "DMarket", dealId: "dmarket", color: "#00c9a7", fee: "3%" },
-  { name: "Steam", dealId: "steam", color: "#1b2838", fee: "15%" },
-];
+const MARKETPLACE_INFO: Record<string, { name: string; color: string; dealId: string }> = {
+  steam: { name: "Steam", color: "#1b2838", dealId: "steam" },
+  skinport: { name: "Skinport", color: "#eb4b98", dealId: "skinport" },
+  csfloat: { name: "CSFloat", color: "#4f8df0", dealId: "csfloat" },
+  buff163: { name: "Buff163", color: "#ff6b35", dealId: "buff163" },
+  dmarket: { name: "DMarket", color: "#00c9a7", dealId: "dmarket" },
+};
 
-function formatPrice(price: number | null): string {
+function formatPrice(price: number | null | undefined): string {
   if (price == null || price === 0) return "—";
   return "$" + price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-function savingsPct(marketVal: number | null, skinportPrice: number | null): string {
-  if (!marketVal || !skinportPrice || marketVal <= skinportPrice) return "";
-  return `-${(((marketVal - skinportPrice) / marketVal) * 100).toFixed(0)}%`;
+function savingsPct(high: number | null, low: number | null): string {
+  if (!high || !low || high <= low) return "";
+  return `-${(((high - low) / high) * 100).toFixed(0)}%`;
 }
 
 export default function CS2PricesPage() {
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortKey>("expensive");
   const [wearFilter, setWearFilter] = useState<string>("All");
-  const [skins, setSkins] = useState<SkinPrice[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [isLive, setIsLive] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>("default");
   const [displayLimit, setDisplayLimit] = useState(50);
 
-  const fetchPrices = useCallback(async () => {
-    setLoading(true);
+  /* Multi-market data (SteamWebAPI) */
+  const [multiItems, setMultiItems] = useState<MultiMarketPrice[]>([]);
+  const [multiTotal, setMultiTotal] = useState(0);
+  const [multiLoading, setMultiLoading] = useState(true);
+  const [hasMultiData, setHasMultiData] = useState(false);
+
+  /* Fallback data (Skinport) */
+  const [fallbackItems, setFallbackItems] = useState<SkinPrice[]>([]);
+  const [fallbackTotal, setFallbackTotal] = useState(0);
+  const [fallbackLoading, setFallbackLoading] = useState(false);
+
+  const loading = multiLoading || fallbackLoading;
+  const isLive = hasMultiData || fallbackItems.length > 0;
+
+  /* ── Fetch multi-market prices ── */
+  const fetchMultiPrices = useCallback(async () => {
+    setMultiLoading(true);
+    try {
+      const params = new URLSearchParams({ limit: "500", sort: sortBy });
+      if (query) params.set("q", query);
+      if (wearFilter !== "All") params.set("wear", wearFilter);
+      if (viewMode !== "default") params.set("mode", viewMode);
+      params.set("minPrice", "1");
+
+      const res = await fetch(`/api/cs2/multi-prices?${params.toString()}`);
+      if (!res.ok) throw new Error("Multi-prices API error");
+
+      const data = await res.json();
+      const items: MultiMarketPrice[] = data.items || [];
+
+      if (items.length > 0) {
+        setMultiItems(items);
+        setMultiTotal(data.total || 0);
+        setHasMultiData(true);
+        setDisplayLimit(50);
+        return true;
+      }
+      return false;
+    } catch {
+      console.warn("[Prices] Multi-market fetch failed, trying fallback");
+      return false;
+    } finally {
+      setMultiLoading(false);
+    }
+  }, [query, sortBy, wearFilter, viewMode]);
+
+  /* ── Fallback to Skinport-only API ── */
+  const fetchFallbackPrices = useCallback(async () => {
+    setFallbackLoading(true);
     try {
       const params = new URLSearchParams({
         limit: "500",
-        sort: sortBy === "savings" ? "expensive" : sortBy,
+        sort: sortBy === "volume" ? "expensive" : (sortBy === "savings" ? "expensive" : sortBy),
         minPrice: "1",
       });
       if (query) params.set("q", query);
       if (wearFilter !== "All") params.set("wear", wearFilter);
 
       const res = await fetch(`/api/cs2/prices?${params.toString()}`);
-      if (!res.ok) throw new Error("API error");
+      if (!res.ok) throw new Error("Fallback API error");
 
       const data = await res.json();
       let items: SkinPrice[] = data.items || [];
 
-      // Client-side sort by savings if needed
-      if (sortBy === "savings") {
-        items.sort((a, b) => b.savings - a.savings);
-      }
+      if (sortBy === "savings") items.sort((a, b) => b.savings - a.savings);
 
-      setSkins(items);
-      setTotalCount(data.total || 0);
-      setIsLive(items.length > 0);
+      setFallbackItems(items);
+      setFallbackTotal(data.total || 0);
       setDisplayLimit(50);
     } catch {
-      console.warn("Failed to fetch live prices");
-      setIsLive(false);
+      console.warn("[Prices] Fallback fetch also failed");
     } finally {
-      setLoading(false);
+      setFallbackLoading(false);
     }
   }, [query, sortBy, wearFilter]);
 
+  /* ── Fetch on mount / filter change ── */
   useEffect(() => {
-    const timer = setTimeout(() => fetchPrices(), query ? 300 : 0);
+    const timer = setTimeout(async () => {
+      const gotMulti = await fetchMultiPrices();
+      if (!gotMulti) {
+        await fetchFallbackPrices();
+      }
+    }, query ? 300 : 0);
     return () => clearTimeout(timer);
-  }, [fetchPrices]);
+  }, [fetchMultiPrices, fetchFallbackPrices]);
 
-  const displayed = useMemo(() => skins.slice(0, displayLimit), [skins, displayLimit]);
+  const displayedMulti = useMemo(() => multiItems.slice(0, displayLimit), [multiItems, displayLimit]);
+  const displayedFallback = useMemo(() => fallbackItems.slice(0, displayLimit), [fallbackItems, displayLimit]);
+
+  const totalItems = hasMultiData ? multiTotal : fallbackTotal;
+  const shownItems = hasMultiData ? multiItems : fallbackItems;
 
   return (
     <div className="min-h-screen bg-white">
@@ -130,10 +208,47 @@ export default function CS2PricesPage() {
             <h1 className="text-3xl font-bold text-gray-900">Skin Price Tracker</h1>
           </div>
           <p className="text-gray-600 max-w-2xl">
-            Live CS2 skin prices from Skinport with market value comparison.
-            {totalCount > 0 && ` Tracking ${totalCount.toLocaleString()} skins.`}
-            {" "}Find deals and compare across marketplaces.
+            {hasMultiData
+              ? `Live CS2 skin prices across ${Object.keys(MARKETPLACE_INFO).length} marketplaces.`
+              : "Live CS2 skin prices from Skinport with market value comparison."
+            }
+            {totalItems > 0 && ` Tracking ${totalItems.toLocaleString()} skins.`}
+            {" "}Find the cheapest prices and compare across marketplaces.
           </p>
+
+          {/* View mode tabs */}
+          <div className="flex items-center gap-2 mt-4">
+            <button
+              onClick={() => setViewMode("default")}
+              className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                viewMode === "default"
+                  ? "bg-gray-900 text-white"
+                  : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+              }`}
+            >
+              <DollarSign className="h-3.5 w-3.5" /> All Skins
+            </button>
+            <button
+              onClick={() => setViewMode("deals")}
+              className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                viewMode === "deals"
+                  ? "bg-emerald-600 text-white"
+                  : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+              }`}
+            >
+              <Tag className="h-3.5 w-3.5" /> Best Deals
+            </button>
+            <button
+              onClick={() => setViewMode("trending")}
+              className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                viewMode === "trending"
+                  ? "bg-orange-500 text-white"
+                  : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+              }`}
+            >
+              <Flame className="h-3.5 w-3.5" /> Trending
+            </button>
+          </div>
         </div>
       </section>
 
@@ -172,6 +287,7 @@ export default function CS2PricesPage() {
               <option value="expensive">Most Valuable</option>
               <option value="cheapest">Cheapest First</option>
               <option value="savings">Biggest Savings</option>
+              {hasMultiData && <option value="volume">Most Traded</option>}
               <option value="name">Name A-Z</option>
             </select>
           </div>
@@ -186,7 +302,13 @@ export default function CS2PricesPage() {
               <>
                 <Wifi className="h-3 w-3 text-emerald-500" />
                 <span className="text-emerald-600 font-semibold">LIVE PRICES</span>
-                <span className="text-gray-400 ml-1">from Skinport — updated every 15 min</span>
+                {hasMultiData ? (
+                  <span className="text-gray-400 ml-1">
+                    from {Object.keys(MARKETPLACE_INFO).length} marketplaces — updated every 10 min
+                  </span>
+                ) : (
+                  <span className="text-gray-400 ml-1">from Skinport — updated every 15 min</span>
+                )}
               </>
             ) : (
               <>
@@ -196,19 +318,21 @@ export default function CS2PricesPage() {
             )}
           </div>
           <div className="flex items-center gap-3 ml-auto text-[11px] text-gray-400">
-            <span>Also check prices on:</span>
-            {OTHER_MARKETPLACES.map((mp) => (
-              <a
-                key={mp.dealId}
-                href={`/go/cs2/${mp.dealId}?from=prices-bar`}
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                className="flex items-center gap-1 hover:text-gray-600 transition-colors"
-              >
-                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: mp.color }} />
-                <span className="font-medium">{mp.name}</span>
-              </a>
-            ))}
+            <span>Buy on:</span>
+            {Object.values(MARKETPLACE_INFO)
+              .filter((mp) => mp.dealId !== "steam")
+              .map((mp) => (
+                <a
+                  key={mp.dealId}
+                  href={`/go/cs2/${mp.dealId}?from=prices-bar`}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  className="flex items-center gap-1 hover:text-gray-600 transition-colors"
+                >
+                  <div className="h-2 w-2 rounded-full" style={{ backgroundColor: mp.color }} />
+                  <span className="font-medium">{mp.name}</span>
+                </a>
+              ))}
           </div>
         </div>
       </section>
@@ -219,17 +343,215 @@ export default function CS2PricesPage() {
           {loading ? (
             <div className="flex items-center justify-center py-20">
               <Loader2 className="h-8 w-8 animate-spin text-gray-300" />
-              <span className="ml-3 text-sm text-gray-500">Loading live prices...</span>
+              <span className="ml-3 text-sm text-gray-500">Loading live prices from multiple marketplaces...</span>
             </div>
-          ) : (
+          ) : hasMultiData ? (
+            /* ── Multi-marketplace view ── */
             <>
-              <p className="text-sm text-gray-500 mb-4">
-                {skins.length === totalCount
-                  ? `${totalCount.toLocaleString()} skins found`
-                  : `Showing ${skins.length} of ${totalCount.toLocaleString()} skins`}
-              </p>
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-sm text-gray-500">
+                  {multiItems.length === multiTotal
+                    ? `${multiTotal.toLocaleString()} skins found`
+                    : `Showing ${multiItems.length} of ${multiTotal.toLocaleString()} skins`}
+                </p>
+                {viewMode === "deals" && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                    <ArrowDown className="h-3 w-3" /> Sorted by biggest savings vs Steam
+                  </span>
+                )}
+                {viewMode === "trending" && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-700">
+                    <Flame className="h-3 w-3" /> Sorted by 24h trade volume
+                  </span>
+                )}
+              </div>
 
               {/* Table header */}
+              <div className="hidden xl:flex items-center gap-3 px-5 py-2 text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-2">
+                <div className="w-64">Skin</div>
+                <div className="w-20 text-right">Steam</div>
+                <div className="w-20 text-right">
+                  <span className="text-pink-500">Skinport</span>
+                </div>
+                <div className="w-20 text-right">
+                  <span style={{ color: "#4f8df0" }}>CSFloat</span>
+                </div>
+                <div className="w-20 text-right">
+                  <span style={{ color: "#ff6b35" }}>Buff163</span>
+                </div>
+                <div className="w-20 text-right">
+                  <span style={{ color: "#00c9a7" }}>DMarket</span>
+                </div>
+                <div className="w-24 text-right">Best Price</div>
+                <div className="w-20 text-center">Volume</div>
+                <div className="flex-1 text-right">Buy</div>
+              </div>
+
+              <div className="space-y-2">
+                {displayedMulti.map((item) => {
+                  const savings = savingsPct(item.steamPrice, item.lowestPrice);
+                  const bestMp = item.bestMarket ? MARKETPLACE_INFO[item.bestMarket] : null;
+
+                  return (
+                    <div
+                      key={item.name}
+                      className="rounded-xl border border-gray-200 bg-white px-4 py-3 sm:px-5 sm:py-4 shadow-sm hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex flex-col xl:flex-row xl:items-center gap-3">
+                        {/* Skin info */}
+                        <div className="flex items-center gap-3 xl:w-64 flex-shrink-0">
+                          {item.image ? (
+                            <div className="h-12 w-12 rounded-lg flex-shrink-0 overflow-hidden border border-gray-200">
+                              <Image
+                                src={item.image}
+                                alt={`${item.weapon} | ${item.skin}`}
+                                width={48}
+                                height={48}
+                                className="h-full w-full object-contain"
+                                unoptimized
+                              />
+                            </div>
+                          ) : (
+                            <div className="h-12 w-12 rounded-lg flex items-center justify-center text-white font-bold text-lg flex-shrink-0 bg-gray-400">
+                              {item.weapon.charAt(0)}
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <p className="font-semibold text-gray-900 truncate text-sm">{item.weapon} | {item.skin}</p>
+                            <span className="text-xs text-gray-500">{item.wear}</span>
+                          </div>
+                        </div>
+
+                        {/* Marketplace prices — row on desktop, grid on mobile */}
+                        <div className="grid grid-cols-2 sm:grid-cols-3 xl:flex gap-2 xl:gap-0 flex-1">
+                          {/* Steam */}
+                          <div className="xl:w-20 flex-shrink-0 xl:text-right">
+                            <span className="text-[10px] text-gray-400 xl:hidden">Steam</span>
+                            <p className="text-sm font-medium text-gray-400">{formatPrice(item.steamPrice)}</p>
+                          </div>
+
+                          {/* Skinport */}
+                          <div className="xl:w-20 flex-shrink-0 xl:text-right">
+                            <span className="text-[10px] xl:hidden" style={{ color: "#eb4b98" }}>Skinport</span>
+                            <p className={`text-sm font-semibold ${
+                              item.bestMarket === "skinport" ? "text-emerald-600" : "text-gray-700"
+                            }`}>
+                              {formatPrice(item.skinportPrice)}
+                            </p>
+                          </div>
+
+                          {/* CSFloat */}
+                          <div className="xl:w-20 flex-shrink-0 xl:text-right">
+                            <span className="text-[10px] xl:hidden" style={{ color: "#4f8df0" }}>CSFloat</span>
+                            <p className={`text-sm font-semibold ${
+                              item.bestMarket === "csfloat" ? "text-emerald-600" : "text-gray-700"
+                            }`}>
+                              {formatPrice(item.csfloatPrice)}
+                            </p>
+                          </div>
+
+                          {/* Buff163 */}
+                          <div className="xl:w-20 flex-shrink-0 xl:text-right">
+                            <span className="text-[10px] xl:hidden" style={{ color: "#ff6b35" }}>Buff163</span>
+                            <p className={`text-sm font-semibold ${
+                              item.bestMarket === "buff163" ? "text-emerald-600" : "text-gray-700"
+                            }`}>
+                              {formatPrice(item.buff163Price)}
+                            </p>
+                          </div>
+
+                          {/* DMarket */}
+                          <div className="xl:w-20 flex-shrink-0 xl:text-right">
+                            <span className="text-[10px] xl:hidden" style={{ color: "#00c9a7" }}>DMarket</span>
+                            <p className={`text-sm font-semibold ${
+                              item.bestMarket === "dmarket" ? "text-emerald-600" : "text-gray-700"
+                            }`}>
+                              {formatPrice(item.dmarketPrice)}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Best price badge */}
+                        <div className="xl:w-24 flex-shrink-0 flex xl:justify-end items-center gap-2">
+                          {item.lowestPrice && item.lowestPrice > 0 ? (
+                            <div className="text-right">
+                              <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-700">
+                                {formatPrice(item.lowestPrice)}
+                              </span>
+                              {savings && (
+                                <p className="text-[10px] font-semibold text-emerald-600 mt-0.5">{savings} vs Steam</p>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-xs text-gray-300">—</span>
+                          )}
+                        </div>
+
+                        {/* Volume */}
+                        <div className="xl:w-20 flex-shrink-0 flex xl:justify-center items-center gap-2">
+                          <span className="text-[10px] text-gray-400 xl:hidden">24h:</span>
+                          {item.sold24h > 0 ? (
+                            <span className="text-xs text-gray-500">{item.sold24h.toLocaleString()}</span>
+                          ) : (
+                            <span className="text-xs text-gray-300">—</span>
+                          )}
+                        </div>
+
+                        {/* Buy CTA */}
+                        <div className="flex-1 flex items-center gap-2 justify-end flex-wrap">
+                          {bestMp && (
+                            <a
+                              href={`/go/cs2/${bestMp.dealId}?from=prices-best`}
+                              target="_blank"
+                              rel="noopener noreferrer nofollow"
+                              className="flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-semibold text-white transition-colors"
+                              style={{ backgroundColor: bestMp.color }}
+                            >
+                              <ShoppingCart className="h-3 w-3" /> {bestMp.name}
+                            </a>
+                          )}
+                          {Object.values(MARKETPLACE_INFO)
+                            .filter((mp) => mp.dealId !== "steam" && mp.dealId !== item.bestMarket)
+                            .slice(0, 2)
+                            .map((mp) => (
+                              <a
+                                key={mp.dealId}
+                                href={`/go/cs2/${mp.dealId}?from=prices`}
+                                target="_blank"
+                                rel="noopener noreferrer nofollow"
+                                className="flex items-center gap-1 rounded-lg border border-gray-200 px-2.5 py-1.5 text-[10px] font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                              >
+                                <div className="h-2 w-2 rounded-full flex-shrink-0" style={{ backgroundColor: mp.color }} />
+                                {mp.name} <ExternalLink className="h-2.5 w-2.5" />
+                              </a>
+                            ))}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {displayLimit < multiItems.length && (
+                <div className="mt-6 text-center">
+                  <button
+                    onClick={() => setDisplayLimit((prev) => prev + 50)}
+                    className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-6 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+                  >
+                    Load More ({multiItems.length - displayLimit} remaining)
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            /* ── Fallback: Skinport-only view ── */
+            <>
+              <p className="text-sm text-gray-500 mb-4">
+                {fallbackItems.length === fallbackTotal
+                  ? `${fallbackTotal.toLocaleString()} skins found`
+                  : `Showing ${fallbackItems.length} of ${fallbackTotal.toLocaleString()} skins`}
+              </p>
+
               <div className="hidden lg:flex items-center gap-4 px-5 py-2 text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-2">
                 <div className="w-80">Skin</div>
                 <div className="w-28 text-right">Skinport Price</div>
@@ -240,7 +562,7 @@ export default function CS2PricesPage() {
               </div>
 
               <div className="space-y-2">
-                {displayed.map((skin) => {
+                {displayedFallback.map((skin) => {
                   const pct = savingsPct(skin.marketValue, skin.skinportPrice);
                   return (
                     <div
@@ -248,7 +570,6 @@ export default function CS2PricesPage() {
                       className="rounded-xl border border-gray-200 bg-white px-4 py-3 sm:px-5 sm:py-4 shadow-sm hover:shadow-md transition-shadow"
                     >
                       <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4">
-                        {/* Skin info */}
                         <div className="flex items-center gap-3 lg:w-80 flex-shrink-0">
                           {skin.image ? (
                             <div
@@ -288,7 +609,6 @@ export default function CS2PricesPage() {
                           </div>
                         </div>
 
-                        {/* Skinport Price */}
                         <div className="lg:w-28 flex-shrink-0 flex lg:justify-end items-center gap-2 lg:gap-0">
                           <span className="text-[10px] text-gray-400 lg:hidden">Skinport:</span>
                           <div className="text-right">
@@ -300,7 +620,6 @@ export default function CS2PricesPage() {
                           </div>
                         </div>
 
-                        {/* Market Value */}
                         <div className="lg:w-28 flex-shrink-0 flex lg:justify-end items-center gap-2 lg:gap-0">
                           <span className="text-[10px] text-gray-400 lg:hidden">Market Value:</span>
                           <div className="text-right">
@@ -312,7 +631,6 @@ export default function CS2PricesPage() {
                           </div>
                         </div>
 
-                        {/* Savings */}
                         <div className="lg:w-24 flex-shrink-0 flex lg:justify-end items-center gap-2 lg:gap-0">
                           <span className="text-[10px] text-gray-400 lg:hidden">Savings:</span>
                           {skin.savings > 0.5 ? (
@@ -320,22 +638,18 @@ export default function CS2PricesPage() {
                               <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-700">
                                 {formatPrice(skin.savings)}
                               </span>
-                              {pct && (
-                                <p className="text-[10px] font-semibold text-emerald-600 mt-0.5">{pct}</p>
-                              )}
+                              {pct && <p className="text-[10px] font-semibold text-emerald-600 mt-0.5">{pct}</p>}
                             </div>
                           ) : (
                             <span className="text-xs text-gray-300">—</span>
                           )}
                         </div>
 
-                        {/* Quantity */}
                         <div className="lg:w-20 flex-shrink-0 flex lg:justify-center items-center gap-2 lg:gap-0">
                           <span className="text-[10px] text-gray-400 lg:hidden">Listings:</span>
                           <span className="text-xs text-gray-500">{skin.quantity > 0 ? skin.quantity : "—"}</span>
                         </div>
 
-                        {/* Compare / Buy CTAs */}
                         <div className="flex-1 flex items-center gap-2 justify-end flex-wrap">
                           {skin.itemPage && (
                             <a
@@ -348,7 +662,11 @@ export default function CS2PricesPage() {
                               <ShoppingCart className="h-3 w-3" /> Skinport
                             </a>
                           )}
-                          {OTHER_MARKETPLACES.slice(0, 3).map((mp) => (
+                          {[
+                            { name: "CSFloat", dealId: "csfloat", color: "#4f8df0" },
+                            { name: "Buff163", dealId: "buff163", color: "#ff6b35" },
+                            { name: "DMarket", dealId: "dmarket", color: "#00c9a7" },
+                          ].map((mp) => (
                             <a
                               key={mp.dealId}
                               href={`/go/cs2/${mp.dealId}?from=prices`}
@@ -367,24 +685,23 @@ export default function CS2PricesPage() {
                 })}
               </div>
 
-              {/* Load more */}
-              {displayLimit < skins.length && (
+              {displayLimit < fallbackItems.length && (
                 <div className="mt-6 text-center">
                   <button
                     onClick={() => setDisplayLimit((prev) => prev + 50)}
                     className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-6 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
                   >
-                    Load More ({skins.length - displayLimit} remaining)
+                    Load More ({fallbackItems.length - displayLimit} remaining)
                   </button>
                 </div>
               )}
-
-              {skins.length === 0 && !loading && (
-                <div className="rounded-xl border border-gray-200 bg-gray-50 p-12 text-center">
-                  <p className="text-gray-500">No skins match your search. Try a different name or wear condition.</p>
-                </div>
-              )}
             </>
+          )}
+
+          {shownItems.length === 0 && !loading && (
+            <div className="rounded-xl border border-gray-200 bg-gray-50 p-12 text-center">
+              <p className="text-gray-500">No skins match your search. Try a different name or wear condition.</p>
+            </div>
           )}
         </div>
       </section>
@@ -395,7 +712,7 @@ export default function CS2PricesPage() {
           <Star className="h-8 w-8 text-orange-400 mx-auto mb-3" />
           <h2 className="text-xl font-bold text-gray-900">Get Price Drop Alerts</h2>
           <p className="text-sm text-gray-600 mt-2 mb-6 max-w-md mx-auto">
-            Sign up to get notified when your favorite skins hit their lowest price.
+            Sign up to get notified when your favorite skins hit their lowest price across all marketplaces.
           </p>
           <Link
             href="/newsletter"
@@ -413,7 +730,12 @@ export default function CS2PricesPage() {
             <span className="font-semibold text-gray-500">Affiliate Disclosure:</span>{" "}
             Some links on this page are affiliate links. LootBoxes.com may earn a commission
             if you make a purchase, at no extra cost to you. Prices powered by{" "}
-            <a href="https://skinport.com" target="_blank" rel="noopener noreferrer nofollow" className="underline hover:text-gray-600">Skinport</a>.
+            {hasMultiData ? (
+              <a href="https://www.steamwebapi.com" target="_blank" rel="noopener noreferrer nofollow" className="underline hover:text-gray-600">SteamWebAPI</a>
+            ) : (
+              <a href="https://skinport.com" target="_blank" rel="noopener noreferrer nofollow" className="underline hover:text-gray-600">Skinport</a>
+            )}
+            .
           </p>
         </div>
       </div>

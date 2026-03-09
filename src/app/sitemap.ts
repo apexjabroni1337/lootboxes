@@ -129,6 +129,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.75,
     },
+    {
+      url: `${BASE_URL}/cs2/deals`,
+      lastModified: new Date(),
+      changeFrequency: "hourly",
+      priority: 0.85,
+    },
     // Loot Box section
     {
       url: `${BASE_URL}/lootbox`,

@@ -12,6 +12,7 @@ import {
   ArrowRight,
   CheckCircle,
   Star,
+  Tag,
 } from "lucide-react";
 import AffiliateDisclosure from "@/components/cs2/AffiliateDisclosure";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
@@ -32,7 +33,7 @@ const CS2_FAQS = [
   {
     question: "How often are CS2 skin prices updated?",
     answer:
-      "Our Price Tracker updates prices every 15 minutes using live marketplace data. This ensures you always see current prices when comparing across marketplaces.",
+      "Our Price Tracker updates prices every 10 minutes using live data from SteamWebAPI. We pull pricing from Steam Market, CSFloat, Skinport, Buff163, and DMarket simultaneously, so you always see the cheapest option.",
   },
   {
     question: "What is a CS2 skin float value?",
@@ -96,6 +97,15 @@ const TOOLS = [
     color: "bg-amber-500",
     bg: "bg-amber-50",
     hoverBg: "hover:bg-amber-100",
+  },
+  {
+    title: "Best Deals",
+    description: "Real-time price comparison across every marketplace. Find the biggest savings, trending skins, and undervalued items.",
+    href: "/cs2/deals",
+    icon: Tag,
+    color: "bg-emerald-500",
+    bg: "bg-emerald-50",
+    hoverBg: "hover:bg-emerald-100",
   },
   {
     title: "Marketplace Comparison",
