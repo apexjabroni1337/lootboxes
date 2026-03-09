@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Selector Redesign — 10 Mockups</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #f8fafc; color: #1e293b; font-family: system-ui, -apple-system, sans-serif; }
+
+  .header { text-align: center; padding: 40px 20px 20px; border-bottom: 1px solid #e2e8f0; margin-bottom: 40px; background: #fff; }
+  .header h1 { font-size: 24px; color: #1e293b; }
+  .header p { color: #64748b; margin-top: 6px; font-size: 13px; }
+
+  .mockup-wrap {
+    max-width: 860px; margin: 0 auto 50px; padding: 0 20px;
+  }
+  .mockup-label {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+  }
+  .mockup-label .num {
+    background: #7c3aed; color: #fff; font-weight: 800; font-size: 13px;
+    width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  }
+  .mockup-label h2 { font-size: 16px; font-weight: 700; }
+  .mockup-label p { font-size: 12px; color: #64748b; }
+
+  .mockup-box {
+    border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; overflow: hidden;
+  }
+
+  /* Shared case image style */
+  .case-img { height: 24px; width: 24px; object-fit: contain; border-radius: 4px; flex-shrink: 0; }
+  .case-img-lg { height: 40px; width: 40px; object-fit: contain; border-radius: 6px; flex-shrink: 0; }
+  .case-img-xl { height: 56px; width: 56px; object-fit: contain; border-radius: 8px; flex-shrink: 0; }
+
+  /* Sample case data */
+  .selected { border-color: #a78bfa !important; background: #f5f3ff !important; color: #6d28d9 !important; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Case Selector Redesign — Pick Your Favorite</h1>
+  <p>10 space-saving alternatives to the current full-grid layout. All keep the case icons.</p>
+</div>
+
+<!-- ============================================ -->
+<!-- #1 — Searchable Dropdown -->
+<!-- ============================================ -->
+<div class="mockup-wrap">
+  <div class="mockup-label">
+    <div class="num">1</div>
+    <div><h2>Searchable Dropdown</h2><p>Minimal footprint — one line when closed, full list on click</p></div>
+  </div>
+  <div class="mockup-box" style="padding: 16px;">
+    <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:6px;">Select a Case (42 available)</label>
+    <div style="position:relative;">
+      <div style="display:flex;align-items:center;gap:10px;border:2px solid #a78bfa;border-radius:10px;padding:10px 14px;background:#f5f3ff;cursor:pointer;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/e/e7/Kilowatt-case.png/revision/latest?cb=20240210202000" class="case-img-lg">
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:600;color:#1e293b;">Kilowatt Case</div>
+          <div style="font-size:11px;color:#64748b;">$2.49 · Weapon Case</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="#94a3b8"><path d="M4 6l4 4 4-4"/></svg>
+      </div>
+      <!-- Dropdown preview (would be toggleable) -->
+      <div style="position:absolute;top:calc(100% + 4px);left:0;right:0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.1);z-index:10;max-height:260px;overflow-y:auto;">
+        <div style="padding:8px;border-bottom:1px solid #f1f5f9;position:sticky;top:0;background:#fff;">
+          <input type="text" placeholder="Search cases..." style="width:100%;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;font-size:13px;outline:none;">
+        </div>
+        <div style="padding:4px;">
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:#f5f3ff;cursor:pointer;">
+            <img src="https://static.wikia.nocookie.net/cswikia/images/e/e7/Kilowatt-case.png/revision/latest?cb=20240210202000" class="case-img">
+            <span style="flex:1;font-size:13px;font-weight:500;color:#6d28d9;">Kilowatt Case</span>
+            <span style="font-size:11px;color:#a78bfa;">$2.49</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;">
+            <img src="https://static.wikia.nocookie.net/cswikia/images/d/d1/Gallery-case.png/revision/latest?cb=20250925192158" class="case-img">
+            <span style="flex:1;font-size:13px;font-weight:500;">Gallery Case</span>
+            <span style="font-size:11px;color:#94a3b8;">$2.49</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;">
+            <img src="https://static.wikia.nocookie.net/cswikia/images/2/2f/Csgo-revolution-case.PNG/revision/latest?cb=20230210063206" class="case-img">
+            <span style="flex:1;font-size:13px;font-weight:500;">Revolution Case</span>
+            <span style="font-size:11px;color:#94a3b8;">$2.49</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;">
+            <img src="https://static.wikia.nocookie.net/cswikia/images/a/aa/Csgo-recoil-case.PNG/revision/latest?cb=20220701222201" class="case-img">
+            <span style="flex:1;font-size:13px;font-weight:500;">Recoil Case</span>
+            <span style="font-size:11px;color:#94a3b8;">$2.49</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;">
+            <img src="https://static.wikia.nocookie.net/cswikia/images/f/f3/Dreams_nighmares_case.png/revision/latest?cb=20220121083639" class="case-img">
+            <span style="flex:1;font-size:13px;font-weight:500;">Dreams & Nightmares</span>
+            <span style="font-size:11px;color:#94a3b8;">$2.49</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- #2 — Horizontal Scroll Strip -->
+<!-- ============================================ -->
+<div class="mockup-wrap">
+  <div class="mockup-label">
+    <div class="num">2</div>
+    <div><h2>Horizontal Scroll Strip</h2><p>Single row, scroll left/right — icons only with name on hover</p></div>
+  </div>
+  <div class="mockup-box" style="padding: 16px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <span style="font-size:12px;font-weight:600;color:#64748b;">Select a Case (42)</span>
+      <span style="font-size:11px;color:#94a3b8;">← scroll →</span>
+    </div>
+    <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin;">
+      <div style="flex-shrink:0;width:56px;height:56px;border-radius:10px;border:2px solid #a78bfa;background:#f5f3ff;display:flex;align-items:center;justify-content:center;cursor:pointer;" title="Kilowatt Case">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/e/e7/Kilowatt-case.png/revision/latest?cb=20240210202000" class="case-img-lg">
+      </div>
+      <div style="flex-shrink:0;width:56px;height:56px;border-radius:10px;border:1px solid #e2e8f0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;" title="Gallery Case">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/d/d1/Gallery-case.png/revision/latest?cb=20250925192158" class="case-img-lg">
+      </div>
+      <div style="flex-shrink:0;width:56px;height:56px;border-radius:10px;border:1px solid #e2e8f0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;" title="Revolution Case">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/2/2f/Csgo-revolution-case.PNG/revision/latest?cb=20230210063206" class="case-img-lg">
+      </div>
+      <div style="flex-shrink:0;width:56px;height:56px;border-radius:10px;border:1px solid #e2e8f0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;" title="Recoil Case">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/a/aa/Csgo-recoil-case.PNG/revision/latest?cb=20220701222201" class="case-img-lg">
+      </div>
+      <div style="flex-shrink:0;width:56px;height:56px;border-radius:10px;border:1px solid #e2e8f0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;" title="Dreams & Nightmares">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/f/f3/Dreams_nighmares_case.png/revision/latest?cb=20220121083639" class="case-img-lg">
+      </div>
+      <div style="flex-shrink:0;width:56px;height:56px;border-radius:10px;border:1px solid #e2e8f0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;" title="Fracture Case">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/1/1d/Fracture_Case.png/revision/latest?cb=20201207135616" class="case-img-lg">
+      </div>
+      <div style="flex-shrink:0;width:56px;height:56px;border-radius:10px;border:1px solid #e2e8f0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;" title="Snakebite Case">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/a/a6/Snakebite-case.png/revision/latest?cb=20210528135607" class="case-img-lg">
+      </div>
+      <div style="flex-shrink:0;width:56px;height:56px;border-radius:10px;border:1px solid #e2e8f0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;" title="CS20 Case">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/b/be/CS20_Case.png/revision/latest?cb=20220207000124" class="case-img-lg">
+      </div>
+      <div style="flex-shrink:0;width:56px;height:56px;border-radius:10px;border:1px solid #e2e8f0;background:#f8fafc;display:flex;align-items:center;justify-content:center;font-size:11px;color:#94a3b8;font-weight:600;">+34</div>
+    </div>
+    <div style="margin-top:8px;font-size:13px;font-weight:600;color:#1e293b;">Selected: <span style="color:#7c3aed;">Kilowatt Case</span> <span style="color:#94a3b8;font-weight:400;">· $2.49</span></div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- #3 — Compact Grid (icons only, 2 rows max) -->
+<!-- ============================================ -->
+<div class="mockup-wrap">
+  <div class="mockup-label">
+    <div class="num">3</div>
+    <div><h2>Compact Icon Grid</h2><p>Tiny icons in a tight grid — name shown below on selection</p></div>
+  </div>
+  <div class="mockup-box" style="padding: 16px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <span style="font-size:12px;font-weight:600;color:#64748b;">Select a Case</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:4px;max-height:100px;overflow-y:auto;">
+      <div style="aspect-ratio:1;border-radius:8px;border:2px solid #a78bfa;background:#f5f3ff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:4px;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/e/e7/Kilowatt-case.png/revision/latest?cb=20240210202000" style="width:100%;height:100%;object-fit:contain;">
+      </div>
+      <div style="aspect-ratio:1;border-radius:8px;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:4px;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/d/d1/Gallery-case.png/revision/latest?cb=20250925192158" style="width:100%;height:100%;object-fit:contain;">
+      </div>
+      <div style="aspect-ratio:1;border-radius:8px;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:4px;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/2/2f/Csgo-revolution-case.PNG/revision/latest?cb=20230210063206" style="width:100%;height:100%;object-fit:contain;">
+      </div>
+      <div style="aspect-ratio:1;border-radius:8px;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:4px;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/a/aa/Csgo-recoil-case.PNG/revision/latest?cb=20220701222201" style="width:100%;height:100%;object-fit:contain;">
+      </div>
+      <div style="aspect-ratio:1;border-radius:8px;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:4px;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/f/f3/Dreams_nighmares_case.png/revision/latest?cb=20220121083639" style="width:100%;height:100%;object-fit:contain;">
+      </div>
+      <div style="aspect-ratio:1;border-radius:8px;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:4px;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/1/1d/Fracture_Case.png/revision/latest?cb=20201207135616" style="width:100%;height:100%;object-fit:contain;">
+      </div>
+      <div style="aspect-ratio:1;border-radius:8px;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:4px;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/a/a6/Snakebite-case.png/revision/latest?cb=20210528135607" style="width:100%;height:100%;object-fit:contain;">
+      </div>
+      <div style="aspect-ratio:1;border-radius:8px;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:4px;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/b/be/CS20_Case.png/revision/latest?cb=20220207000124" style="width:100%;height:100%;object-fit:contain;">
+      </div>
+      <div style="aspect-ratio:1;border-radius:8px;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:9px;color:#94a3b8;font-weight:700;cursor:pointer;">+34</div>
+    </div>
+    <div style="margin-top:10px;display:flex;align-items:center;gap:10px;background:#f5f3ff;border-radius:8px;padding:8px 12px;">
+      <img src="https://static.wikia.nocookie.net/cswikia/images/e/e7/Kilowatt-case.png/revision/latest?cb=20240210202000" class="case-img-lg">
+      <div>
+        <div style="font-size:14px;font-weight:600;color:#6d28d9;">Kilowatt Case</div>
+        <div style="font-size:11px;color:#94a3b8;">$2.49 · 17 items</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- #4 — Collapsible Accordion -->
+<!-- ============================================ -->
+<div class="mockup-wrap">
+  <div class="mockup-label">
+    <div class="num">4</div>
+    <div><h2>Collapsible Accordion</h2><p>Click header to expand/collapse — shows selected case when closed</p></div>
+  </div>
+  <div class="mockup-box">
+    <!-- Collapsed state showing selected -->
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;border-bottom:1px solid #e2e8f0;">
+      <img src="https://static.wikia.nocookie.net/cswikia/images/e/e7/Kilowatt-case.png/revision/latest?cb=20240210202000" class="case-img-lg">
+      <div style="flex:1;">
+        <div style="font-size:14px;font-weight:600;">Kilowatt Case</div>
+        <div style="font-size:11px;color:#94a3b8;">$2.49 · 17 items · Weapon Case</div>
+      </div>
+      <span style="font-size:11px;color:#7c3aed;font-weight:600;">Change ▼</span>
+    </div>
+    <!-- Expanded area (scrollable) -->
+    <div style="max-height:180px;overflow-y:auto;padding:8px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:#f5f3ff;cursor:pointer;margin-bottom:2px;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/e/e7/Kilowatt-case.png/revision/latest?cb=20240210202000" class="case-img">
+        <span style="flex:1;font-size:13px;font-weight:600;color:#6d28d9;">Kilowatt</span>
+        <span style="font-size:11px;color:#a78bfa;">$2.49</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;margin-bottom:2px;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/d/d1/Gallery-case.png/revision/latest?cb=20250925192158" class="case-img">
+        <span style="flex:1;font-size:13px;font-weight:500;">Gallery</span>
+        <span style="font-size:11px;color:#94a3b8;">$2.49</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;margin-bottom:2px;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/2/2f/Csgo-revolution-case.PNG/revision/latest?cb=20230210063206" class="case-img">
+        <span style="flex:1;font-size:13px;font-weight:500;">Revolution</span>
+        <span style="font-size:11px;color:#94a3b8;">$2.49</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;margin-bottom:2px;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/a/aa/Csgo-recoil-case.PNG/revision/latest?cb=20220701222201" class="case-img">
+        <span style="flex:1;font-size:13px;font-weight:500;">Recoil</span>
+        <span style="font-size:11px;color:#94a3b8;">$2.49</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/f/f3/Dreams_nighmares_case.png/revision/latest?cb=20220121083639" class="case-img">
+        <span style="flex:1;font-size:13px;font-weight:500;">Dreams & Nightmares</span>
+        <span style="font-size:11px;color:#94a3b8;">$2.49</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- #5 — Carousel with Arrows (3 visible) -->
+<!-- ============================================ -->
+<div class="mockup-wrap">
+  <div class="mockup-label">
+    <div class="num">5</div>
+    <div><h2>Card Carousel</h2><p>3 visible at a time with prev/next arrows — larger case artwork</p></div>
+  </div>
+  <div class="mockup-box" style="padding: 16px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <span style="font-size:12px;font-weight:600;color:#64748b;">Select a Case</span>
+      <div style="display:flex;gap:4px;">
+        <button style="width:28px;height:28px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;font-size:14px;color:#64748b;">‹</button>
+        <button style="width:28px;height:28px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;font-size:14px;color:#64748b;">›</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+      <div style="border:2px solid #a78bfa;border-radius:12px;background:#f5f3ff;padding:12px;text-align:center;cursor:pointer;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/e/e7/Kilowatt-case.png/revision/latest?cb=20240210202000" class="case-img-xl" style="margin:0 auto;">
+        <div style="margin-top:8px;font-size:12px;font-weight:600;color:#6d28d9;">Kilowatt</div>
+        <div style="font-size:10px;color:#a78bfa;">$2.49</div>
+      </div>
+      <div style="border:1px solid #e2e8f0;border-radius:12px;background:#fff;padding:12px;text-align:center;cursor:pointer;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/d/d1/Gallery-case.png/revision/latest?cb=20250925192158" class="case-img-xl" style="margin:0 auto;">
+        <div style="margin-top:8px;font-size:12px;font-weight:600;">Gallery</div>
+        <div style="font-size:10px;color:#94a3b8;">$2.49</div>
+      </div>
+      <div style="border:1px solid #e2e8f0;border-radius:12px;background:#fff;padding:12px;text-align:center;cursor:pointer;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/2/2f/Csgo-revolution-case.PNG/revision/latest?cb=20230210063206" class="case-img-xl" style="margin:0 auto;">
+        <div style="margin-top:8px;font-size:12px;font-weight:600;">Revolution</div>
+        <div style="font-size:10px;color:#94a3b8;">$2.49</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:8px;font-size:11px;color:#94a3b8;">1–3 of 42</div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- #6 — Two-Column List (scrollable) -->
+<!-- ============================================ -->
+<div class="mockup-wrap">
+  <div class="mockup-label">
+    <div class="num">6</div>
+    <div><h2>Two-Column Scrollable List</h2><p>Fixed height with scroll — compact rows, two columns</p></div>
+  </div>
+  <div class="mockup-box" style="padding: 16px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <span style="font-size:12px;font-weight:600;color:#64748b;">Select a Case (42)</span>
+      <input type="text" placeholder="Filter..." style="border:1px solid #e2e8f0;border-radius:6px;padding:4px 10px;font-size:12px;width:120px;outline:none;">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;max-height:160px;overflow-y:auto;">
+      <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;background:#f5f3ff;cursor:pointer;border:1px solid #a78bfa;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/e/e7/Kilowatt-case.png/revision/latest?cb=20240210202000" class="case-img">
+        <span style="font-size:12px;font-weight:600;color:#6d28d9;truncate;">Kilowatt</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;cursor:pointer;border:1px solid #e2e8f0;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/d/d1/Gallery-case.png/revision/latest?cb=20250925192158" class="case-img">
+        <span style="font-size:12px;font-weight:500;">Gallery</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;cursor:pointer;border:1px solid #e2e8f0;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/2/2f/Csgo-revolution-case.PNG/revision/latest?cb=20230210063206" class="case-img">
+        <span style="font-size:12px;font-weight:500;">Revolution</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;cursor:pointer;border:1px solid #e2e8f0;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/a/aa/Csgo-recoil-case.PNG/revision/latest?cb=20220701222201" class="case-img">
+        <span style="font-size:12px;font-weight:500;">Recoil</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;cursor:pointer;border:1px solid #e2e8f0;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/f/f3/Dreams_nighmares_case.png/revision/latest?cb=20220121083639" class="case-img">
+        <span style="font-size:12px;font-weight:500;">Dreams & N...</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;cursor:pointer;border:1px solid #e2e8f0;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/1/1d/Fracture_Case.png/revision/latest?cb=20201207135616" class="case-img">
+        <span style="font-size:12px;font-weight:500;">Fracture</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;cursor:pointer;border:1px solid #e2e8f0;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/a/a6/Snakebite-case.png/revision/latest?cb=20210528135607" class="case-img">
+        <span style="font-size:12px;font-weight:500;">Snakebite</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;cursor:pointer;border:1px solid #e2e8f0;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/b/be/CS20_Case.png/revision/latest?cb=20220207000124" class="case-img">
+        <span style="font-size:12px;font-weight:500;">CS20</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- #7 — Tabbed by Era -->
+<!-- ============================================ -->
+<div class="mockup-wrap">
+  <div class="mockup-label">
+    <div class="num">7</div>
+    <div><h2>Tabbed by Era</h2><p>Group cases by release era — only one tab's cases visible at a time</p></div>
+  </div>
+  <div class="mockup-box" style="padding: 16px;">
+    <div style="display:flex;gap:2px;margin-bottom:12px;border-bottom:2px solid #e2e8f0;">
+      <button style="padding:6px 14px;font-size:12px;font-weight:600;border:none;background:none;color:#7c3aed;border-bottom:2px solid #7c3aed;cursor:pointer;margin-bottom:-2px;">Latest (2024–25)</button>
+      <button style="padding:6px 14px;font-size:12px;font-weight:500;border:none;background:none;color:#94a3b8;cursor:pointer;">2022–23</button>
+      <button style="padding:6px 14px;font-size:12px;font-weight:500;border:none;background:none;color:#94a3b8;cursor:pointer;">2020–21</button>
+      <button style="padding:6px 14px;font-size:12px;font-weight:500;border:none;background:none;color:#94a3b8;cursor:pointer;">Classic</button>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+      <div style="display:flex;align-items:center;gap:6px;border:2px solid #a78bfa;border-radius:8px;background:#f5f3ff;padding:6px 10px;cursor:pointer;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/e/e7/Kilowatt-case.png/revision/latest?cb=20240210202000" class="case-img">
+        <span style="font-size:12px;font-weight:600;color:#6d28d9;">Kilowatt</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px;cursor:pointer;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/d/d1/Gallery-case.png/revision/latest?cb=20250925192158" class="case-img">
+        <span style="font-size:12px;font-weight:500;">Gallery</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px;cursor:pointer;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/2/2f/Csgo-revolution-case.PNG/revision/latest?cb=20230210063206" class="case-img">
+        <span style="font-size:12px;font-weight:500;">Revolution</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px;cursor:pointer;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/a/aa/Csgo-recoil-case.PNG/revision/latest?cb=20220701222201" class="case-img">
+        <span style="font-size:12px;font-weight:500;">Recoil</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- #8 — Sidebar Drawer -->
+<!-- ============================================ -->
+<div class="mockup-wrap">
+  <div class="mockup-label">
+    <div class="num">8</div>
+    <div><h2>Sidebar Drawer</h2><p>Moves selector to a slide-out panel — zero space on main page</p></div>
+  </div>
+  <div class="mockup-box" style="display:grid;grid-template-columns:220px 1fr;">
+    <!-- Sidebar -->
+    <div style="border-right:1px solid #e2e8f0;background:#f8fafc;max-height:280px;overflow-y:auto;">
+      <div style="padding:10px 12px;border-bottom:1px solid #e2e8f0;position:sticky;top:0;background:#f8fafc;">
+        <input type="text" placeholder="Search..." style="width:100%;border:1px solid #e2e8f0;border-radius:6px;padding:6px 10px;font-size:12px;outline:none;background:#fff;">
+      </div>
+      <div style="padding:4px 6px;">
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;background:#f5f3ff;cursor:pointer;margin-bottom:2px;">
+          <img src="https://static.wikia.nocookie.net/cswikia/images/e/e7/Kilowatt-case.png/revision/latest?cb=20240210202000" style="height:28px;width:28px;object-fit:contain;">
+          <div><div style="font-size:12px;font-weight:600;color:#6d28d9;">Kilowatt</div><div style="font-size:10px;color:#a78bfa;">$2.49</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer;margin-bottom:2px;">
+          <img src="https://static.wikia.nocookie.net/cswikia/images/d/d1/Gallery-case.png/revision/latest?cb=20250925192158" style="height:28px;width:28px;object-fit:contain;">
+          <div><div style="font-size:12px;font-weight:500;">Gallery</div><div style="font-size:10px;color:#94a3b8;">$2.49</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer;margin-bottom:2px;">
+          <img src="https://static.wikia.nocookie.net/cswikia/images/2/2f/Csgo-revolution-case.PNG/revision/latest?cb=20230210063206" style="height:28px;width:28px;object-fit:contain;">
+          <div><div style="font-size:12px;font-weight:500;">Revolution</div><div style="font-size:10px;color:#94a3b8;">$2.49</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer;margin-bottom:2px;">
+          <img src="https://static.wikia.nocookie.net/cswikia/images/a/aa/Csgo-recoil-case.PNG/revision/latest?cb=20220701222201" style="height:28px;width:28px;object-fit:contain;">
+          <div><div style="font-size:12px;font-weight:500;">Recoil</div><div style="font-size:10px;color:#94a3b8;">$2.49</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer;margin-bottom:2px;">
+          <img src="https://static.wikia.nocookie.net/cswikia/images/f/f3/Dreams_nighmares_case.png/revision/latest?cb=20220121083639" style="height:28px;width:28px;object-fit:contain;">
+          <div><div style="font-size:12px;font-weight:500;">Dreams & N...</div><div style="font-size:10px;color:#94a3b8;">$2.49</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer;">
+          <img src="https://static.wikia.nocookie.net/cswikia/images/1/1d/Fracture_Case.png/revision/latest?cb=20201207135616" style="height:28px;width:28px;object-fit:contain;">
+          <div><div style="font-size:12px;font-weight:500;">Fracture</div><div style="font-size:10px;color:#94a3b8;">$2.49</div></div>
+        </div>
+      </div>
+    </div>
+    <!-- Main content placeholder -->
+    <div style="padding:30px;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:13px;background:#fff;">
+      ← Case list in sidebar &nbsp;&nbsp;|&nbsp;&nbsp; Simulator content here →
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- #9 — Combobox with Recent + All -->
+<!-- ============================================ -->
+<div class="mockup-wrap">
+  <div class="mockup-label">
+    <div class="num">9</div>
+    <div><h2>Combobox with Sections</h2><p>Shows recent/popular at top, full list searchable below</p></div>
+  </div>
+  <div class="mockup-box" style="padding: 16px;">
+    <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:6px;">Select a Case</label>
+    <div style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;">
+      <input type="text" placeholder="🔍 Type to search 42 cases..." style="width:100%;border:none;padding:10px 14px;font-size:13px;outline:none;border-bottom:1px solid #f1f5f9;">
+      <div style="max-height:220px;overflow-y:auto;">
+        <div style="padding:6px 12px 2px;font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;">Popular</div>
+        <div style="padding:4px 6px;">
+          <div style="display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:8px;background:#f5f3ff;cursor:pointer;">
+            <img src="https://static.wikia.nocookie.net/cswikia/images/e/e7/Kilowatt-case.png/revision/latest?cb=20240210202000" class="case-img">
+            <span style="flex:1;font-size:13px;font-weight:600;color:#6d28d9;">Kilowatt</span>
+            <span style="font-size:11px;color:#a78bfa;">$2.49</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:8px;cursor:pointer;">
+            <img src="https://static.wikia.nocookie.net/cswikia/images/d/d1/Gallery-case.png/revision/latest?cb=20250925192158" class="case-img">
+            <span style="flex:1;font-size:13px;font-weight:500;">Gallery</span>
+            <span style="font-size:11px;color:#94a3b8;">$2.49</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:8px;cursor:pointer;">
+            <img src="https://static.wikia.nocookie.net/cswikia/images/2/2f/Csgo-revolution-case.PNG/revision/latest?cb=20230210063206" class="case-img">
+            <span style="flex:1;font-size:13px;font-weight:500;">Revolution</span>
+            <span style="font-size:11px;color:#94a3b8;">$2.49</span>
+          </div>
+        </div>
+        <div style="padding:6px 12px 2px;font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;border-top:1px solid #f1f5f9;">All Cases</div>
+        <div style="padding:4px 6px;">
+          <div style="display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:8px;cursor:pointer;">
+            <img src="https://static.wikia.nocookie.net/cswikia/images/a/aa/Csgo-recoil-case.PNG/revision/latest?cb=20220701222201" class="case-img">
+            <span style="flex:1;font-size:13px;font-weight:500;">Recoil</span>
+            <span style="font-size:11px;color:#94a3b8;">$2.49</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:8px;cursor:pointer;">
+            <img src="https://static.wikia.nocookie.net/cswikia/images/f/f3/Dreams_nighmares_case.png/revision/latest?cb=20220121083639" class="case-img">
+            <span style="flex:1;font-size:13px;font-weight:500;">Dreams & Nightmares</span>
+            <span style="font-size:11px;color:#94a3b8;">$2.49</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:8px;cursor:pointer;">
+            <img src="https://static.wikia.nocookie.net/cswikia/images/1/1d/Fracture_Case.png/revision/latest?cb=20201207135616" class="case-img">
+            <span style="flex:1;font-size:13px;font-weight:500;">Fracture</span>
+            <span style="font-size:11px;color:#94a3b8;">$2.49</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- #10 — Pill Strip + Modal -->
+<!-- ============================================ -->
+<div class="mockup-wrap">
+  <div class="mockup-label">
+    <div class="num">10</div>
+    <div><h2>Compact Strip + "See All" Modal</h2><p>Shows ~6 popular cases inline, "See All" opens full grid modal</p></div>
+  </div>
+  <div class="mockup-box" style="padding: 16px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <span style="font-size:12px;font-weight:600;color:#64748b;">Select a Case</span>
+      <button style="font-size:11px;color:#7c3aed;font-weight:600;border:none;background:none;cursor:pointer;text-decoration:underline;">See all 42 →</button>
+    </div>
+    <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;">
+      <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;width:72px;padding:8px 4px;border-radius:10px;border:2px solid #a78bfa;background:#f5f3ff;cursor:pointer;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/e/e7/Kilowatt-case.png/revision/latest?cb=20240210202000" style="height:36px;width:36px;object-fit:contain;">
+        <span style="font-size:10px;font-weight:600;color:#6d28d9;text-align:center;">Kilowatt</span>
+      </div>
+      <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;width:72px;padding:8px 4px;border-radius:10px;border:1px solid #e2e8f0;cursor:pointer;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/d/d1/Gallery-case.png/revision/latest?cb=20250925192158" style="height:36px;width:36px;object-fit:contain;">
+        <span style="font-size:10px;font-weight:500;text-align:center;">Gallery</span>
+      </div>
+      <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;width:72px;padding:8px 4px;border-radius:10px;border:1px solid #e2e8f0;cursor:pointer;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/2/2f/Csgo-revolution-case.PNG/revision/latest?cb=20230210063206" style="height:36px;width:36px;object-fit:contain;">
+        <span style="font-size:10px;font-weight:500;text-align:center;">Revolution</span>
+      </div>
+      <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;width:72px;padding:8px 4px;border-radius:10px;border:1px solid #e2e8f0;cursor:pointer;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/a/aa/Csgo-recoil-case.PNG/revision/latest?cb=20220701222201" style="height:36px;width:36px;object-fit:contain;">
+        <span style="font-size:10px;font-weight:500;text-align:center;">Recoil</span>
+      </div>
+      <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;width:72px;padding:8px 4px;border-radius:10px;border:1px solid #e2e8f0;cursor:pointer;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/f/f3/Dreams_nighmares_case.png/revision/latest?cb=20220121083639" style="height:36px;width:36px;object-fit:contain;">
+        <span style="font-size:10px;font-weight:500;text-align:center;">Dreams</span>
+      </div>
+      <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;width:72px;padding:8px 4px;border-radius:10px;border:1px solid #e2e8f0;cursor:pointer;">
+        <img src="https://static.wikia.nocookie.net/cswikia/images/1/1d/Fracture_Case.png/revision/latest?cb=20201207135616" style="height:36px;width:36px;object-fit:contain;">
+        <span style="font-size:10px;font-weight:500;text-align:center;">Fracture</span>
+      </div>
+      <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;width:72px;padding:8px 4px;border-radius:10px;border:1px dashed #d4d4d8;cursor:pointer;">
+        <div style="height:36px;width:36px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#94a3b8;">+36</div>
+        <span style="font-size:10px;font-weight:500;color:#94a3b8;text-align:center;">More</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:40px;color:#94a3b8;font-size:13px;">
+  — End of mockups. Pick a number! —
+</div>
+
+</body>
+</html>

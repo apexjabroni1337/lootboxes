@@ -62,22 +62,40 @@ export const metadata: Metadata = {
 
 // JSON-LD structured data for Google
 function JsonLd() {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "LootBoxes.com",
-    url: "https://lootboxes.com",
-    description:
-      "Compare game deals across 30+ stores. Transparent loot box analysis, drop rates, and monetization reviews.",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: "https://lootboxes.com/search?q={search_term_string}",
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "LootBoxes.com",
+      url: "https://lootboxes.com",
+      description:
+        "Compare game deals across 30+ stores. Transparent loot box analysis, drop rates, and monetization reviews.",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: "https://lootboxes.com/search?q={search_term_string}",
+        },
+        "query-input": "required name=search_term_string",
       },
-      "query-input": "required name=search_term_string",
     },
-  };
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "LootBoxes.com",
+      url: "https://lootboxes.com",
+      logo: "https://lootboxes.com/icon.svg",
+      description:
+        "Data-driven loot box transparency, game deal comparison, and monetization analysis for every major game.",
+      foundingDate: "2024",
+      sameAs: [],
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "customer support",
+        url: "https://lootboxes.com/contact",
+      },
+    },
+  ];
 
   return (
     <script

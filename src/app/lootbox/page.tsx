@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createServerClient } from "@/lib/supabase";
 import { Sparkles, Box, Layers, ShoppingBag, Shield, Trophy, ChevronRight } from "lucide-react";
 import LootboxDatabaseClient, { GameWithContent } from "./LootboxDatabaseClient";
+import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 
 export const dynamic = "force-dynamic";
 
@@ -174,6 +175,12 @@ export default async function LootboxHubPage({
 
   return (
     <div className="min-h-screen bg-white">
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://lootboxes.com" },
+          { name: "Loot Box Database", url: "https://lootboxes.com/lootbox" },
+        ]}
+      />
       {/* ── Header ── */}
       <div className="container-main pt-10 pb-6">
         <div className="flex flex-col gap-6">

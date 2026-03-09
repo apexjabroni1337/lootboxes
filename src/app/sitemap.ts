@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { createServerClient } from "@/lib/supabase";
+import { getAllBlogPosts } from "@/data/blog-posts";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://lootboxes.com";
 
@@ -16,6 +17,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { data: analytics } = await supabase
     .from("analytics")
     .select("slug, updated_at")
+    .order("updated_at", { ascending: false });
+
+  // Fetch lootbox game slugs for /lootbox/[slug] pages
+  const { data: lootboxGames } = await supabase
+    .from("games")
+    .select("slug, updated_at")
+    .not("lootbox_score", "is", null)
     .order("updated_at", { ascending: false });
 
   // Static pages with priority and frequency
@@ -75,6 +83,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.4,
     },
     {
+      url: `${BASE_URL}/search`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.5,
+    },
+    {
+      url: `${BASE_URL}/wishlist`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.4,
+    },
+    {
+      url: `${BASE_URL}/contact`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
       url: `${BASE_URL}/privacy`,
       lastModified: new Date(),
       changeFrequency: "yearly",
@@ -82,6 +108,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${BASE_URL}/terms`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.2,
+    },
+    {
+      url: `${BASE_URL}/affiliate-disclosure`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.2,
+    },
+    {
+      url: `${BASE_URL}/cookies`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.2,
+    },
+    {
+      url: `${BASE_URL}/editorial-policy`,
       lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 0.2,
@@ -134,6 +178,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: "hourly",
       priority: 0.85,
+    },
+    {
+      url: `${BASE_URL}/cs2/cases`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
     },
     // Game Deals section
     {
@@ -213,5 +263,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   );
 
-  return [...staticPages, ...gamePages, ...analyticsPages];
+  // Dynamic blog post pages
+  const blogPosts = getAllBlogPosts();
+  const blogPages: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+    url: `${BASE_URL}/blog/${post.slug}`,
+    lastModified: new Date(post.date),
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
+  // Dynamic lootbox detail pages
+  const lootboxPages: MetadataRoute.Sitemap = (lootboxGames || []).map(
+    (game) => ({
+      url: `${BASE_URL}/lootbox/${game.slug}`,
+      lastModified: game.updated_at
+        ? new Date(game.updated_at)
+        : new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    })
+  );
+
+  return [
+    ...staticPages,
+    ...gamePages,
+    ...analyticsPages,
+    ...blogPages,
+    ...lootboxPages,
+  ];
 }

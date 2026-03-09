@@ -3,6 +3,7 @@ import { Gamepad2, TrendingUp } from "lucide-react";
 import GameAvatar from "@/components/ui/GameAvatar";
 import StoreIcon from "@/components/ui/StoreIcon";
 import { createServerClient } from "@/lib/supabase";
+import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { formatPrice } from "@/lib/utils";
 import { isPromotableGame } from "@/lib/game-quality";
 import GamesGrid from "@/components/games/GamesGrid";
@@ -83,6 +84,12 @@ export default async function GamesPage({
 
   return (
     <div className="pb-12">
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://lootboxes.com" },
+          { name: "Games", url: "https://lootboxes.com/games" },
+        ]}
+      />
       {/* ─── Hero ─── */}
       <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 sm:py-10">
         <div className="container-main">

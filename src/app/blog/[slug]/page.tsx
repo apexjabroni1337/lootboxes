@@ -4,6 +4,8 @@ import { formatDate } from "@/lib/utils";
 import { getBlogPost, getAllBlogPosts } from "@/data/blog-posts";
 import { notFound } from "next/navigation";
 import NewsletterForm from "@/components/newsletter/NewsletterForm";
+import BlogPostingSchema from "@/components/seo/BlogPostingSchema";
+import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 
 // Deterministic accent color for blog post covers
 const POST_ACCENTS = [
@@ -38,9 +40,38 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const post = getBlogPost(slug);
   if (!post) return { title: "Post Not Found" };
+  const url = `https://lootboxes.com/blog/${slug}`;
   return {
     title: `${post.title} — Lootboxes.com Blog`,
     description: post.excerpt,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url,
+      type: "article",
+      publishedTime: post.date,
+      authors: [post.author],
+      tags: post.tags,
+      ...(post.coverImage && {
+        images: [
+          {
+            url: post.coverImage,
+            width: 1200,
+            height: 630,
+            alt: post.coverAlt || post.title,
+          },
+        ],
+      }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+      ...(post.coverImage && { images: [post.coverImage] }),
+    },
   };
 }
 
@@ -138,6 +169,21 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <BlogPostingSchema
+        title={post.title}
+        description={post.excerpt}
+        url={`https://lootboxes.com/blog/${post.slug}`}
+        datePublished={post.date}
+        author={post.author}
+        image={post.coverImage}
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://lootboxes.com" },
+          { name: "Blog", url: "https://lootboxes.com/blog" },
+          { name: post.title, url: `https://lootboxes.com/blog/${post.slug}` },
+        ]}
+      />
       {/* ─── Hero Cover ─── */}
       <div className="relative overflow-hidden">
         <div className="h-64 sm:h-80 md:h-96 relative">
@@ -199,7 +245,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </span>
             <span className="flex items-center gap-1.5">
               <Calendar className="h-3.5 w-3.5" />
-              {formatDate(post.date)}
+              <time dateTime={post.date}>{formatDate(post.date)}</time>
             </span>
             <span className="flex items-center gap-1.5">
               <Clock className="h-3.5 w-3.5" />
@@ -237,7 +283,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </div>
               <div>
                 <p className="text-sm font-semibold text-gray-900">{post.author}</p>
-                <p className="text-xs text-gray-400">Published {formatDate(post.date)}</p>
+                <p className="text-xs text-gray-400">Published <time dateTime={post.date}>{formatDate(post.date)}</time></p>
               </div>
             </div>
             <Link

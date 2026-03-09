@@ -10,6 +10,7 @@ import {
   Zap,
 } from "lucide-react";
 import { createServerClient } from "@/lib/supabase";
+import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import { filterPromotableDeals, getBaseTitle, deduplicateByBaseTitle } from "@/lib/game-quality";
 import DealsHubClient from "./DealsHubClient";
 
@@ -164,6 +165,12 @@ export default async function DealsPage({
 
   return (
     <div className="pb-12">
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://lootboxes.com" },
+          { name: "Game Deals", url: "https://lootboxes.com/deals" },
+        ]}
+      />
       {/* ─── Hero ─── */}
       <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 sm:py-10">
         <div className="container-main">

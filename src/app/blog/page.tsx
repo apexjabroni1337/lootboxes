@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Calendar, Clock, BookOpen, Star } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { getAllBlogPosts } from "@/data/blog-posts";
+import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 
 // Deterministic color accent per card index
 const CARD_ACCENTS = [
@@ -44,6 +45,12 @@ export default function BlogPage() {
 
   return (
     <div className="pb-12">
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://lootboxes.com" },
+          { name: "Blog", url: "https://lootboxes.com/blog" },
+        ]}
+      />
       {/* Page hero */}
       <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 sm:py-10">
         <div className="container-main">
