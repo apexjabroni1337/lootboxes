@@ -49,15 +49,17 @@ export default async function CS2CasesPage() {
   // Fetch all crates
   const crates = await getAllCrates();
 
-  // Fetch item counts per crate — must set high limit since default is 1000
-  const { data: countData } = await supabase
-    .from("cs2_crate_items")
-    .select("crate_id")
-    .limit(50000);
+  // Fetch item counts per crate using PostgREST embedded resource counting.
+  // The old approach (.limit(50000) on cs2_crate_items) silently capped at
+  // Supabase's default max-rows (1000), so most crates showed "0 items".
+  const { data: cratesWithCounts } = await supabase
+    .from("cs2_crates")
+    .select("id, cs2_crate_items(count)");
 
   const itemCounts: Record<string, number> = {};
-  for (const row of countData || []) {
-    itemCounts[row.crate_id] = (itemCounts[row.crate_id] || 0) + 1;
+  for (const row of cratesWithCounts || []) {
+    const countArr = row.cs2_crate_items as unknown as { count: number }[];
+    itemCounts[row.id] = countArr?.[0]?.count ?? 0;
   }
 
   // Get crate types for filtering

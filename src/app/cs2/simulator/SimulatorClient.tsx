@@ -190,33 +190,53 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
       <div className="grid gap-8 lg:grid-cols-3">
         {/* Main area */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Case selector */}
+          {/* Case selector — horizontal scroll strip */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">
-              Select a Case ({cases.length} available)
-            </h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-semibold text-gray-700">
+                Select a Case ({cases.length} available)
+              </h3>
+              <span className="text-[11px] text-gray-400 hidden sm:block">← scroll →</span>
+            </div>
+            <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-thin">
               {cases.map((c, i) => (
                 <button
                   key={c.id}
                   onClick={() => { setSelectedCaseIdx(i); setShowContents(false); }}
-                  className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-all ${
+                  title={c.name}
+                  className={`flex-shrink-0 w-14 h-14 rounded-xl border-2 flex items-center justify-center transition-all ${
                     i === selectedCaseIdx
-                      ? "border-purple-300 bg-purple-50 text-purple-700 shadow-sm"
-                      : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+                      ? "border-purple-400 bg-purple-50 shadow-md scale-105"
+                      : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
                   }`}
                 >
-                  {c.image && (
+                  {c.image ? (
                     <img
                       src={c.image}
-                      alt=""
-                      className="h-6 w-6 object-contain rounded"
+                      alt={c.name}
+                      className="h-10 w-10 object-contain"
                     />
+                  ) : (
+                    <Package className="h-5 w-5 text-gray-400" />
                   )}
-                  <span className="truncate max-w-[140px]">{c.name.replace(" Case", "").replace("Operation ", "")}</span>
-                  <span className="text-xs text-gray-400">${CASE_COST}</span>
                 </button>
               ))}
+            </div>
+            {/* Selected case info bar */}
+            <div className="mt-2 flex items-center gap-3 rounded-lg bg-purple-50 border border-purple-200 px-3 py-2">
+              {selectedCase?.image && (
+                <img
+                  src={selectedCase.image}
+                  alt=""
+                  className="h-10 w-10 object-contain flex-shrink-0"
+                />
+              )}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-purple-800 truncate">{selectedCase?.name}</p>
+                <p className="text-[11px] text-purple-600">
+                  ${CASE_COST} · {caseItems.length} items
+                </p>
+              </div>
             </div>
           </div>
 
