@@ -24,126 +24,83 @@ export default function SteamGameRow({ game, rank }: SteamGameRowProps) {
     <div className="group/row relative">
       <Link
         href={`/games/${game.slug}`}
-        className="flex items-stretch rounded-md border border-gray-200 bg-gradient-to-r from-[#1b2838] to-[#2a475e] hover:from-[#1e3045] hover:to-[#305878] transition-all duration-200 hover:shadow-lg overflow-hidden"
+        className="flex h-[45px] items-center rounded-sm bg-[#1b2838]/60 hover:bg-[#415a76] transition-colors duration-100 overflow-hidden"
       >
-        {/* Left: Capsule image */}
-        <div className="w-[230px] flex-shrink-0 overflow-hidden bg-[#1b2838]">
+        {/* Left: Small capsule banner */}
+        <div className="w-[120px] h-[45px] flex-shrink-0 overflow-hidden bg-[#1b2838]">
           {image ? (
             <img
               src={image}
               alt={game.title}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover/row:scale-105"
+              className="h-full w-full object-cover"
               loading="lazy"
             />
           ) : (
-            <GameAvatar gameName={game.title} size="md" aspectRatio="video" />
-          )}
-        </div>
-
-        {/* Middle: Game info */}
-        <div className="flex flex-1 flex-col justify-center gap-1.5 px-4 py-3 min-w-0">
-          <div className="flex items-center gap-2">
-            {rank && (
-              <span className="flex-shrink-0 rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-bold text-blue-200">
-                #{rank}
-              </span>
-            )}
-            <h3 className="text-sm font-semibold text-white truncate">
-              {game.title}
-            </h3>
-          </div>
-
-          {/* Platform icons */}
-          <div className="flex items-center gap-3">
-            <Monitor className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" />
-            {game.metacritic && (
-              <span
-                className={`rounded px-1.5 py-0.5 text-[10px] font-bold text-white ${
-                  game.metacritic >= 75
-                    ? "bg-emerald-500"
-                    : game.metacritic >= 50
-                    ? "bg-amber-500"
-                    : "bg-red-500"
-                }`}
-              >
-                {game.metacritic}
-              </span>
-            )}
-          </div>
-
-          {/* Genre tags */}
-          {genres.length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {genres.map((genre) => (
-                <span
-                  key={genre}
-                  className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] text-blue-200/80"
-                >
-                  {genre}
-                </span>
-              ))}
-              {game.release_date && (
-                <span className="flex items-center gap-0.5 text-[10px] text-gray-400 ml-1">
-                  <Calendar className="h-2.5 w-2.5" />
-                  {formatDate(game.release_date)}
-                </span>
-              )}
+            <div className="h-full w-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
+              <span className="text-[8px] text-gray-400 truncate px-1">{game.title.slice(0, 10)}</span>
             </div>
           )}
         </div>
 
-        {/* Right: Price section */}
-        <div className="flex flex-shrink-0 items-center gap-2 px-4">
+        {/* Middle: Title + tags inline */}
+        <div className="flex flex-1 items-center gap-3 px-3 min-w-0">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5">
+              {rank != null && (
+                <span className="flex-shrink-0 text-[9px] font-bold text-blue-300/50">#{rank}</span>
+              )}
+              <h3 className="text-[13px] text-[#c7d5e0] truncate">{game.title}</h3>
+            </div>
+            <div className="flex items-center gap-1 mt-px">
+              <Monitor className="h-2.5 w-2.5 text-[#556772] flex-shrink-0" />
+              {genres.length > 0 && (
+                <span className="text-[10px] text-[#556772] truncate">
+                  {genres.join(", ")}
+                </span>
+              )}
+              {game.release_date && (
+                <span className="flex-shrink-0 text-[10px] text-[#556772] ml-1">
+                  {formatDate(game.release_date)}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Price */}
+        <div className="flex flex-shrink-0 items-center gap-1.5 pr-3 h-full">
           {game.isComingSoon ? (
-            <span className="text-xs font-medium text-blue-200">
-              Coming Soon
-            </span>
+            <span className="text-[11px] text-[#67C1F5]">Coming Soon</span>
           ) : price != null ? (
             <>
-              {/* Discount badge */}
               {hasDiscount && (
-                <span className="rounded bg-emerald-500 px-2 py-1.5 text-sm font-bold text-white">
+                <span className="flex items-center justify-center bg-[#4c6b22] px-1.5 h-[28px] text-[13px] font-bold text-[#a4d007] leading-none rounded-sm">
                   -{Math.round(game.discount_pct!)}%
                 </span>
               )}
-
-              <div className="text-right">
+              <div className="bg-[#0d1a26] px-2 h-[28px] flex flex-col justify-center rounded-sm">
                 {hasDiscount && game.original_price != null && (
-                  <p className="text-[11px] text-gray-400 line-through">
+                  <span className="text-[9px] text-[#556772] line-through leading-none">
                     {formatPrice(game.original_price, game.currency)}
-                  </p>
+                  </span>
                 )}
-                <p className="text-sm font-semibold text-white">
+                <span className="text-[12px] text-[#acdbf5] leading-none">
                   {formatPrice(price, game.currency)}
-                </p>
+                </span>
               </div>
-
-              {/* Store icon */}
-              {store && (
-                <div className="ml-1">
-                  <StoreIcon store={store} size="sm" />
-                </div>
-              )}
-
-              {/* Historic low badge */}
-              {game.is_historic_low && (
-                <TrendingDown className="h-3.5 w-3.5 text-emerald-400 ml-0.5" />
-              )}
+              {store && <StoreIcon store={store} size="sm" />}
+              {game.is_historic_low && <TrendingDown className="h-3 w-3 text-emerald-400" />}
             </>
           ) : game.dealCount && game.dealCount > 0 ? (
-            <span className="text-xs text-blue-200">
-              {game.dealCount} {game.dealCount === 1 ? "deal" : "deals"}
-            </span>
+            <span className="text-[10px] text-[#556772]">{game.dealCount} deals</span>
           ) : (
-            <span className="text-[11px] text-gray-500">
-              No deals
-            </span>
+            <span className="text-[10px] text-[#3b5162]">No deals</span>
           )}
         </div>
       </Link>
 
-      {/* Hover preview — appears to the right, positioned absolutely */}
-      <div className="absolute left-[calc(100%+8px)] top-0 z-50 hidden group-hover/row:block pointer-events-none">
+      {/* Hover preview */}
+      <div className="absolute right-0 top-0 z-50 hidden group-hover/row:block pointer-events-none" style={{ transform: "translateX(calc(100% + 12px))" }}>
         <div className="pointer-events-auto">
           <SteamHoverPreview game={game} />
         </div>
@@ -164,10 +121,9 @@ export function CompactGameCard({ game }: { game: GameRowData }) {
   return (
     <Link
       href={`/games/${game.slug}`}
-      className="group block overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-lg transition-all"
+      className="group block overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all"
     >
-      {/* Image */}
-      <div className="relative aspect-video overflow-hidden bg-gray-100">
+      <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
         {image ? (
           <img
             src={image}
@@ -176,25 +132,23 @@ export function CompactGameCard({ game }: { game: GameRowData }) {
             loading="lazy"
           />
         ) : (
-          <GameAvatar gameName={game.title} size="md" aspectRatio="video" />
+          <GameAvatar gameName={game.title} size="sm" aspectRatio="video" />
         )}
 
-        {/* Discount badge */}
         {hasDiscount && (
-          <div className="absolute top-2 right-2">
-            <span className="rounded bg-emerald-500 px-1.5 py-0.5 text-[11px] font-bold text-white shadow-sm">
+          <div className="absolute top-1.5 right-1.5">
+            <span className="rounded bg-[#4c6b22] px-1 py-0.5 text-[10px] font-bold text-[#a4d007]">
               -{Math.round(game.discount_pct!)}%
             </span>
           </div>
         )}
 
-        {/* Metacritic */}
         {game.metacritic && (
-          <div className="absolute top-2 left-2">
+          <div className="absolute top-1.5 left-1.5">
             <span
-              className={`rounded px-1.5 py-0.5 text-[10px] font-bold text-white shadow-sm ${
+              className={`rounded px-1 py-0.5 text-[9px] font-bold text-white ${
                 game.metacritic >= 75
-                  ? "bg-emerald-500"
+                  ? "bg-emerald-600"
                   : game.metacritic >= 50
                   ? "bg-amber-500"
                   : "bg-red-500"
@@ -206,40 +160,31 @@ export function CompactGameCard({ game }: { game: GameRowData }) {
         )}
       </div>
 
-      {/* Info */}
-      <div className="p-3">
-        <h3 className="text-sm font-semibold text-gray-900 line-clamp-1 group-hover:text-brand-600">
+      <div className="p-2">
+        <h3 className="text-xs font-medium text-gray-900 line-clamp-1 group-hover:text-brand-600">
           {game.title}
         </h3>
 
         {genres.length > 0 && (
-          <div className="mt-1 flex flex-wrap gap-1">
-            {genres.map((g) => (
-              <span
-                key={g}
-                className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] text-gray-500"
-              >
-                {g}
-              </span>
-            ))}
-          </div>
+          <p className="mt-0.5 text-[10px] text-gray-400 truncate">
+            {genres.join(", ")}
+          </p>
         )}
 
-        {/* Price row */}
-        <div className="mt-2 flex items-center justify-between">
+        <div className="mt-1 flex items-center justify-between">
           {price != null ? (
-            <div className="flex items-center gap-1.5">
-              {game.store ?? game.bestStore ? (
+            <div className="flex items-center gap-1">
+              {(game.store ?? game.bestStore) && (
                 <StoreIcon store={(game.store ?? game.bestStore)!} size="sm" />
-              ) : null}
-              <span className="text-sm font-bold text-gray-900">
+              )}
+              <span className="text-xs font-bold text-gray-900">
                 {formatPrice(price, game.currency)}
               </span>
             </div>
           ) : game.isComingSoon ? (
-            <span className="text-xs text-gray-500">Coming Soon</span>
+            <span className="text-[10px] text-gray-500">Coming Soon</span>
           ) : (
-            <span className="text-xs text-gray-400">No deals</span>
+            <span className="text-[10px] text-gray-400">No deals</span>
           )}
         </div>
       </div>

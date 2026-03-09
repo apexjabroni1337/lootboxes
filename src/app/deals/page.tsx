@@ -62,7 +62,9 @@ async function getDeals() {
         screenshot_image,
         hot_score,
         genres,
-        loot_system_type
+        metacritic,
+        release_date,
+        platforms
       )
     `)
     .order("discount_pct", { ascending: false })

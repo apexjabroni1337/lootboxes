@@ -31,7 +31,7 @@ async function getTrendingDeals() {
   // Step 1: Get the most popular games by hot_score (includes games WITHOUT deals)
   const { data: popularGames } = await supabase
     .from("games")
-    .select("id, title, slug, cover_image, screenshot_image, hot_score, genres, metacritic")
+    .select("id, title, slug, cover_image, screenshot_image, hot_score, genres, metacritic, release_date, platforms")
     .not("cover_image", "is", null)
     .order("hot_score", { ascending: false, nullsFirst: false })
     .limit(100);
