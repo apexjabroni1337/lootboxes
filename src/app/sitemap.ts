@@ -135,6 +135,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "hourly",
       priority: 0.85,
     },
+    // Game Deals section
+    {
+      url: `${BASE_URL}/deals/trending`,
+      lastModified: new Date(),
+      changeFrequency: "hourly",
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/games/new-releases`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.8,
+    },
     // Loot Box section
     {
       url: `${BASE_URL}/lootbox`,

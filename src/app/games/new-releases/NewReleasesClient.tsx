@@ -2,9 +2,24 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Calendar, Clock, Rocket, X, Swords, Gamepad2, Crosshair, Globe, Car, Puzzle, Users, Trophy } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  Rocket,
+  X,
+  Search,
+  Swords,
+  Gamepad2,
+  Crosshair,
+  Globe,
+  Car,
+  Puzzle,
+  Users,
+  Trophy,
+} from "lucide-react";
 import GameAvatar from "@/components/ui/GameAvatar";
-import { formatDate } from "@/lib/utils";
+import StoreIcon from "@/components/ui/StoreIcon";
+import { formatDate, formatPrice } from "@/lib/utils";
 
 const GENRE_OPTIONS = [
   { id: "action", label: "Action", icon: Swords },
@@ -39,7 +54,14 @@ function gameMatchesGenre(genres: string[] | null | undefined, genreId: string):
   });
 }
 
-function GameCard({ game }: { game: any }) {
+const TABS = [
+  { id: "releases", label: "New Releases", icon: Rocket },
+  { id: "coming", label: "Coming Soon", icon: Clock },
+] as const;
+
+type TabId = (typeof TABS)[number]["id"];
+
+function GameCard({ game, deal, isComingSoon }: { game: any; deal?: { price: number; store: string }; isComingSoon?: boolean }) {
   const img = game.screenshot_image || game.cover_image;
   const genres = game.genres || [];
 
@@ -59,24 +81,38 @@ function GameCard({ game }: { game: any }) {
         ) : (
           <GameAvatar gameName={game.title} size="sm" aspectRatio="video" />
         )}
+
+        {/* Metacritic */}
         {game.metacritic && (
-          <div className="absolute top-2 right-2 rounded-lg bg-black/70 px-2 py-1 text-xs font-bold text-white backdrop-blur-sm">
-            {game.metacritic}/100
+          <div className="absolute top-2 right-2">
+            <span className={`rounded-lg px-2 py-1 text-xs font-bold text-white shadow-md ${
+              game.metacritic >= 75 ? "bg-success-600" : game.metacritic >= 50 ? "bg-amber-500" : "bg-red-500"
+            }`}>
+              {game.metacritic}
+            </span>
+          </div>
+        )}
+
+        {/* Release date badge */}
+        {game.release_date && (
+          <div className="absolute bottom-2 left-2">
+            <span className={`flex items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-semibold shadow-sm backdrop-blur-sm ${
+              isComingSoon
+                ? "bg-indigo-600/90 text-white"
+                : "bg-white/90 text-gray-700"
+            }`}>
+              <Calendar className="h-3 w-3" />
+              {formatDate(game.release_date)}
+            </span>
           </div>
         )}
       </div>
+
       <div className="p-4">
         <h3 className="font-semibold text-gray-900 group-hover:text-brand-600 line-clamp-1">
           {game.title}
         </h3>
-        <div className="mt-2 flex items-center gap-2 text-xs text-gray-500">
-          {game.release_date && (
-            <span className="flex items-center gap-1">
-              <Calendar className="h-3 w-3" />
-              {formatDate(game.release_date)}
-            </span>
-          )}
-        </div>
+
         {genres.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-1">
             {genres.slice(0, 3).map((g: string) => (
@@ -89,6 +125,25 @@ function GameCard({ game }: { game: any }) {
             ))}
           </div>
         )}
+
+        {/* Price or coming soon label */}
+        <div className="mt-3">
+          {isComingSoon ? (
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600">
+              <Clock className="h-3 w-3" />
+              Coming Soon
+            </span>
+          ) : deal ? (
+            <div className="flex items-center gap-2">
+              <StoreIcon store={deal.store} size="sm" />
+              <span className="text-sm font-bold text-gray-900">
+                From {formatPrice(deal.price)}
+              </span>
+            </div>
+          ) : (
+            <span className="text-xs text-gray-400">Price tracking soon</span>
+          )}
+        </div>
       </div>
     </Link>
   );
@@ -97,27 +152,77 @@ function GameCard({ game }: { game: any }) {
 interface Props {
   newReleases: any[];
   comingSoon: any[];
+  bestDeals: Record<string, { price: number; store: string }>;
   initialGenre: string | null;
 }
 
-export default function NewReleasesClient({ newReleases, comingSoon, initialGenre }: Props) {
+export default function NewReleasesClient({ newReleases, comingSoon, bestDeals, initialGenre }: Props) {
+  const [activeTab, setActiveTab] = useState<TabId>("releases");
   const [activeGenre, setActiveGenre] = useState<string | null>(initialGenre);
+  const [search, setSearch] = useState("");
 
-  const allGames = useMemo(() => [...newReleases, ...comingSoon], [newReleases, comingSoon]);
-  const newReleaseIds = useMemo(() => new Set(newReleases.map((g: any) => g.id)), [newReleases]);
+  const currentGames = activeTab === "releases" ? newReleases : comingSoon;
 
   const filtered = useMemo(() => {
-    if (!activeGenre) return allGames;
-    return allGames.filter((g) => gameMatchesGenre(g.genres, activeGenre));
-  }, [allGames, activeGenre]);
-
-  const filteredNew = filtered.filter((g: any) => newReleaseIds.has(g.id));
-  const filteredComing = filtered.filter((g: any) => !newReleaseIds.has(g.id));
+    let result = currentGames;
+    if (search.length >= 2) {
+      const q = search.toLowerCase();
+      result = result.filter((g: any) => g.title.toLowerCase().includes(q));
+    }
+    if (activeGenre) {
+      result = result.filter((g: any) => gameMatchesGenre(g.genres, activeGenre));
+    }
+    return result;
+  }, [currentGames, search, activeGenre]);
 
   return (
-    <div className="mb-6">
-      {/* Genre filter pills */}
-      <div className="flex flex-wrap items-center gap-2">
+    <div>
+      {/* Tabs */}
+      <div className="flex gap-1 rounded-xl border border-gray-200 bg-gray-50 p-1 mb-4">
+        {TABS.map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          const count = tab.id === "releases" ? newReleases.length : comingSoon.length;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all ${
+                isActive
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              <Icon className={`h-3.5 w-3.5 ${isActive ? "text-brand-600" : ""}`} />
+              {tab.label}
+              <span className="text-xs text-gray-400">
+                {count}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Search + Genre */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search games..."
+            className="w-full rounded-xl border border-gray-200 bg-white pl-10 pr-9 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all"
+          />
+          {search && (
+            <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-3 flex flex-wrap items-center gap-2">
         <span className="text-xs font-medium text-gray-400 uppercase tracking-wider mr-1">Genre:</span>
         {GENRE_OPTIONS.map((genre) => {
           const Icon = genre.icon;
@@ -148,63 +253,39 @@ export default function NewReleasesClient({ newReleases, comingSoon, initialGenr
         )}
       </div>
 
-      {activeGenre && (
-        <p className="mt-2 text-sm text-gray-500">
-          {filtered.length} {filtered.length === 1 ? "game" : "games"} in{" "}
-          <span className="font-medium text-brand-600">
-            {GENRE_OPTIONS.find((g) => g.id === activeGenre)?.label}
-          </span>
+      {/* Results count */}
+      {(search.length >= 2 || activeGenre) && (
+        <p className="mt-3 text-sm text-gray-500">
+          {filtered.length} {filtered.length === 1 ? "game" : "games"}
+          {search.length >= 2 && <> matching &ldquo;{search}&rdquo;</>}
+          {activeGenre && (
+            <span className="text-gray-400">
+              {" "}in <span className="font-medium text-brand-600">{GENRE_OPTIONS.find(g => g.id === activeGenre)?.label}</span>
+            </span>
+          )}
         </p>
       )}
 
-      {/* New Releases */}
-      {filteredNew.length > 0 && (
-        <section className="mt-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">
-              New Releases
-            </h2>
-            <span className="text-sm text-gray-500">
-              Last 90 days
-            </span>
-          </div>
-          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {filteredNew.map((game: any) => (
-              <GameCard key={game.id} game={game} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Coming Soon */}
-      {filteredComing.length > 0 && (
-        <section className="mt-12">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">
-              Coming Soon
-            </h2>
-            <span className="flex items-center gap-1 text-sm text-gray-500">
-              <Clock className="h-3.5 w-3.5" />
-              Upcoming titles
-            </span>
-          </div>
-          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {filteredComing.map((game: any) => (
-              <GameCard key={game.id} game={game} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Empty state */}
-      {filteredNew.length === 0 && filteredComing.length === 0 && (
+      {/* Game Grid */}
+      {filtered.length > 0 ? (
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {filtered.map((game: any) => (
+            <GameCard
+              key={game.id}
+              game={game}
+              deal={bestDeals[game.id]}
+              isComingSoon={activeTab === "coming"}
+            />
+          ))}
+        </div>
+      ) : (
         <div className="mt-6 rounded-xl border border-gray-200 bg-white p-12 text-center">
           <Rocket className="mx-auto h-12 w-12 text-gray-300" />
           <h3 className="mt-4 text-lg font-semibold text-gray-900">
-            No releases found
+            No {activeTab === "releases" ? "releases" : "upcoming games"} found
           </h3>
           <p className="mt-2 text-sm text-gray-500">
-            Try removing the genre filter or check back soon!
+            Try removing filters or check back soon!
           </p>
           <Link href="/deals" className="btn-primary mt-6 inline-flex">
             Browse Deals Instead

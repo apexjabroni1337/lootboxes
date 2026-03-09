@@ -447,7 +447,7 @@ export default function Header() {
                         </div>
                       </Link>
                       <Link
-                        href="/deals?sort=trending"
+                        href="/deals/trending"
                         onClick={() => setMegaOpen(false)}
                         className="flex items-center gap-3 rounded-lg bg-orange-50 px-4 py-3 transition-colors hover:bg-orange-100"
                       >
