@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import GameAvatar from "@/components/ui/GameAvatar";
 import { getGuideBySlug, SPENDING_GUIDES, type SpendingGuide } from "@/data/spending-guides";
+import { createServerClient } from "@/lib/supabase";
 
 const SYSTEM_LABELS: Record<string, string> = {
   gacha: "Gacha",
@@ -63,11 +64,30 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+export const revalidate = 3600;
+
 export default async function SpendingGuidePage({ params }: Props) {
   const { slug } = await params;
   const guide = getGuideBySlug(slug);
   if (!guide) notFound();
 
+  /* Fetch cover image from Supabase */
+  const sb = createServerClient();
+  const allSlugs = [guide.gameSlug, ...SPENDING_GUIDES.filter(g => g.gameSlug !== guide.gameSlug).map(g => g.gameSlug)];
+  const { data: gameImages } = await sb
+    .from("games")
+    .select("slug, cover_image, screenshot_image")
+    .in("slug", allSlugs);
+
+  const imageMap: Record<string, string> = {};
+  if (gameImages) {
+    for (const g of gameImages) {
+      const img = g.cover_image || g.screenshot_image;
+      if (img) imageMap[g.slug] = img;
+    }
+  }
+
+  const heroImage = imageMap[guide.gameSlug];
   const SystemIcon = SYSTEM_ICONS[guide.systemType] || ShoppingBag;
   const explainer = SYSTEM_EXPLAINER[guide.systemType] || "";
 
@@ -182,11 +202,11 @@ export default async function SpendingGuidePage({ params }: Props) {
 
           <div className="flex items-center gap-4 mb-4">
             <div className="flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden ring-2 ring-white/20">
-              <GameAvatar
-                gameName={guide.gameName}
-                size="sm"
-                aspectRatio="square"
-              />
+              {heroImage ? (
+                <img src={heroImage} alt={guide.gameName} className="w-full h-full object-cover" />
+              ) : (
+                <GameAvatar gameName={guide.gameName} size="sm" aspectRatio="square" />
+              )}
             </div>
             <div>
               <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-amber-300 mb-1">
@@ -454,11 +474,11 @@ export default async function SpendingGuidePage({ params }: Props) {
                   >
                     <div className="flex items-center gap-3 mb-2">
                       <div className="flex-shrink-0 w-8 h-8 rounded-lg overflow-hidden">
-                        <GameAvatar
-                          gameName={related.gameName}
-                          size="sm"
-                          aspectRatio="square"
-                        />
+                        {imageMap[related.gameSlug] ? (
+                          <img src={imageMap[related.gameSlug]} alt={related.gameName} className="w-full h-full object-cover" />
+                        ) : (
+                          <GameAvatar gameName={related.gameName} size="sm" aspectRatio="square" />
+                        )}
                       </div>
                       <h3 className="flex-1 font-bold text-gray-900 group-hover:text-amber-700 transition-colors">
                         {related.gameName}

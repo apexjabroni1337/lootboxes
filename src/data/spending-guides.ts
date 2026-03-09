@@ -1080,6 +1080,517 @@ export const SPENDING_GUIDES: SpendingGuide[] = [
     ],
     updatedAt: "2026-02-01",
   },
+  {
+    gameSlug: "honkai-impact-3rd",
+    gameName: "Honkai Impact 3rd",
+    systemType: "gacha",
+    freeToPlay: {
+      tips: [
+        "Story mode is fully completable with free Valkyries and gear",
+        "Events are the biggest source of free Crystals — never miss them",
+        "Foundry and G3 Stigmata provide viable free gear alternatives for most content",
+        "Elysian Realm and Memorial Arena give weekly Crystal income",
+      ],
+      rating: "Viable with Grind",
+    },
+    lowSpend: {
+      budget: "$5–15/month",
+      tips: [
+        "Monthly Crystal Pass ($5) is the best Crystal-per-dollar value",
+        "Battle Pass ($10) adds Stigmata, weapons, and Crystal income",
+        "At this budget, target one S-rank per 2–3 major updates",
+      ],
+    },
+    moderate: {
+      budget: "$30–60/month",
+      tips: [
+        "Monthly Pass + BP + occasional top-up for limited-time Valkyries",
+        "First-time top-ups are doubled — use higher tiers once",
+        "Focus on Herrscher-tier units that define team compositions",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "SSS-rank Valkyries with full signature gear costs $500–1,000+ per character",
+        "Competitive Memorial Arena and Abyss rankings require near-max investment",
+      ],
+      warnings: [
+        "Power creep is significant — top meta units rotate every few patches",
+        "Stigmata gacha has separate pity from Valkyrie gacha, doubling costs",
+      ],
+    },
+    bestValue: [
+      "Monthly Crystal Pass ($5/month) — best Crystal/dollar ratio",
+      "Battle Pass Knight ($10) — gear + Crystals + materials",
+      "First-time Crystal top-up (doubled)",
+    ],
+    avoid: [
+      "Pulling on Equipment Supply without enough for guarantee",
+      "Building niche Valkyries that only work with signature gear",
+      "Spending on dorm gacha — cosmetic-only with poor rates",
+    ],
+    updatedAt: "2026-03-01",
+  },
+  {
+    gameSlug: "tower-of-fantasy",
+    gameName: "Tower of Fantasy",
+    systemType: "gacha",
+    freeToPlay: {
+      tips: [
+        "Exploration gives massive amounts of Dark Crystals in the early game",
+        "Standard banner pity carries over and uses free Black Gold currency",
+        "Bygone Phantasm and Void Rifts provide weekly pull currency",
+        "SR weapons from standard banner are viable for most PvE content",
+      ],
+      rating: "Viable with Grind",
+    },
+    lowSpend: {
+      budget: "$5–15/month",
+      tips: [
+        "Monthly Pass ($5) gives the best Dark Crystal value per dollar",
+        "Battle Pass ($10) adds pulls, matrices, and upgrade materials",
+        "Save all premium currency for limited-banner characters you need",
+      ],
+    },
+    moderate: {
+      budget: "$30–80/month",
+      tips: [
+        "Monthly Pass + BP + selective top-ups for must-have limited Simulacra",
+        "A1 (first star) is the most important upgrade for limited characters",
+        "Matrices are as important as characters — budget for both",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "A6 limited Simulacra costs roughly $1,000–2,000 depending on luck",
+        "Full matrix sets for one character can cost $300–600+",
+      ],
+      warnings: [
+        "PvP balance is heavily influenced by spending — expect pay-to-win at high ranks",
+        "Older limited characters get powercrept quickly by newer releases",
+      ],
+    },
+    bestValue: [
+      "Monthly Pass ($5) — best Dark Crystal per dollar",
+      "Battle Pass for matrices and materials",
+      "First top-up bonus (doubled crystals)",
+    ],
+    avoid: [
+      "A3+ on limited characters unless you're a whale — A1 is sufficient",
+      "Pulling matrices without guarantee pity saved up",
+      "Standard banner pulls with premium currency — use free Black Gold only",
+    ],
+    updatedAt: "2026-03-01",
+  },
+  {
+    gameSlug: "the-finals",
+    gameName: "THE FINALS",
+    systemType: "cosmetic_shop",
+    freeToPlay: {
+      tips: [
+        "All weapons, gadgets, and gameplay content are free for everyone",
+        "Free Battle Pass track includes some cosmetic items each season",
+        "Tournament winnings and leveling give free cosmetic rewards",
+        "No gameplay advantage from any purchase — purely cosmetic monetization",
+      ],
+      rating: "Fully Viable",
+    },
+    lowSpend: {
+      budget: "$10/season",
+      tips: [
+        "Battle Pass ($10) gives themed skins, emotes, and enough Multibucks for future passes",
+        "Self-sustaining if you complete the pass each season",
+        "Seasonal skins are exclusive and don't return — decide carefully",
+      ],
+    },
+    moderate: {
+      budget: "$20–40/season",
+      tips: [
+        "Battle Pass + 1–2 store bundles for your favorite build",
+        "Store items rotate regularly — wait for skins that match your playstyle",
+        "Body type-specific skins mean you only need to buy for your preferred build",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "Store bundles range from $10–20 each with unique character skins",
+        "Full cosmetic collection requires buying most store rotations — $100+/season",
+      ],
+      warnings: [
+        "The game is newer so cosmetic library is still growing",
+        "No trading system — once bought, items are account-bound",
+      ],
+    },
+    bestValue: [
+      "Battle Pass ($10/season) — self-sustaining with Multibucks",
+      "Free tournament rewards and level-up drops",
+      "Targeted store bundles for your main build only",
+    ],
+    avoid: [
+      "Buying Multibucks to tier-skip the Battle Pass",
+      "Collecting skins for builds you don't play",
+      "Impulse buying every store rotation",
+    ],
+    updatedAt: "2026-03-01",
+  },
+  {
+    gameSlug: "dead-by-daylight",
+    gameName: "Dead by Daylight",
+    systemType: "cosmetic_shop",
+    freeToPlay: {
+      tips: [
+        "Base game includes several Killers and Survivors with unique perks",
+        "Iridescent Shards (free currency) can unlock characters and cosmetics over time",
+        "Shrine of Secrets rotates perks weekly — get premium perks without buying characters",
+        "Rift free track gives some cosmetics each season",
+      ],
+      rating: "Viable with Patience",
+    },
+    lowSpend: {
+      budget: "$5–10/season",
+      tips: [
+        "Rift Premium Pass (~$10) gives exclusive cosmetics and enough Auric Cells for value",
+        "Wait for sales on character DLC bundles — they go 50% off regularly",
+        "Buy characters whose perks you need rather than collecting all of them",
+      ],
+    },
+    moderate: {
+      budget: "$15–30/season",
+      tips: [
+        "Rift Pass + 1–2 DLC chapters per season when on sale",
+        "Licensed characters (Myers, Alien, etc.) can only be bought with real money, not Shards",
+        "Outfit bundles are slightly cheaper than buying pieces individually",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "All characters and perks costs $200+ if buying at full price",
+        "Ultra-rare outfits cost $10–15 each and are purely cosmetic",
+      ],
+      warnings: [
+        "New chapters release every 3 months — ongoing cost to stay current",
+        "Licensed DLC never goes free — plan purchases around sales",
+      ],
+    },
+    bestValue: [
+      "Rift Premium Pass (~$10) — seasonal cosmetics + progression",
+      "DLC chapters on sale (50% off during events)",
+      "Shrine of Secrets for premium perks with free Shards",
+    ],
+    avoid: [
+      "Full-price character DLC when sales happen every few months",
+      "Individual cosmetic pieces — buy outfits as bundles",
+      "Auric Cells for characters available with free Iridescent Shards",
+    ],
+    updatedAt: "2026-03-01",
+  },
+  {
+    gameSlug: "raid-shadow-legends",
+    gameName: "Raid: Shadow Legends",
+    systemType: "gacha",
+    freeToPlay: {
+      tips: [
+        "Campaign and Clan Boss give free shards daily",
+        "Rare champions like Kael and Warmaiden carry through early and mid-game content",
+        "Save all Ancient/Void/Sacred Shards for 2x events to maximize shard value",
+        "Forge and Faction Wars provide free gear and champion progression",
+      ],
+      rating: "Challenging",
+    },
+    lowSpend: {
+      budget: "$10–25/month",
+      tips: [
+        "Raid Card (~$10/month) gives multi-battle, auto-sell, and QoL features — near essential",
+        "Monthly Gem Pack provides gems for Masteries without grinding Minotaur",
+        "Daily Gem Pack is decent value for energy refills over time",
+      ],
+    },
+    moderate: {
+      budget: "$30–80/month",
+      tips: [
+        "Raid Card + shard packs during guaranteed champion events",
+        "Warrior Circle packs offer champions at better rates than standard shard pulls",
+        "Focus spending on events where you can guarantee a specific legendary",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "Building a top Arena team and completing Faction Wars requires dozens of legendaries",
+        "Whale-tier spending ($500+/month) is common among top clan members",
+      ],
+      warnings: [
+        "Legendary drop rates are extremely low (0.5% per Ancient Shard)",
+        "The game is designed to create enormous spending pressure through limited-time events",
+        "Power creep is constant — today's meta champions get outclassed regularly",
+      ],
+    },
+    bestValue: [
+      "Raid Card (~$10/month) — essential QoL improvements",
+      "Monthly Gem Pack — gems for Masteries",
+      "Shard packs during guaranteed 2x or mercy events",
+    ],
+    avoid: [
+      "Pulling shards outside of 2x events — halves your legendary chances",
+      "Buying random offers from the in-game shop pop-ups",
+      "Energy refills with gems early on — save gems for Masteries first",
+    ],
+    updatedAt: "2026-03-01",
+  },
+  {
+    gameSlug: "rocket-league",
+    gameName: "Rocket League",
+    systemType: "cosmetic_shop",
+    freeToPlay: {
+      tips: [
+        "All cars have identical hitboxes per body type — no competitive advantage from purchases",
+        "Free drops after matches give random cosmetic items",
+        "Rocket Pass free track includes decals, boosts, and goal explosions",
+        "Trading with other players lets you get specific items without spending",
+      ],
+      rating: "Fully Viable",
+    },
+    lowSpend: {
+      budget: "$10/season",
+      tips: [
+        "Rocket Pass Premium ($10) gives 70+ tiers of items including a new car",
+        "Completing the pass earns back 1,000 Credits — making it self-sustaining",
+        "Painted items from the premium track can be traded for high value",
+      ],
+    },
+    moderate: {
+      budget: "$20–40/season",
+      tips: [
+        "Rocket Pass + 1–2 Item Shop bundles per season",
+        "Esports Shop items support pro teams and have unique designs",
+        "Blueprint reveals are free — only craft blueprints for items you truly want",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "Titanium White Octane and other rare traded items cost $50–100+ in Credits",
+        "Black Market Decals and Goal Explosions are the most sought-after items",
+      ],
+      warnings: [
+        "Blueprint crafting is almost always more expensive than buying items from the trading market",
+        "Item Shop prices are often above market value for tradeable alternatives",
+      ],
+    },
+    bestValue: [
+      "Rocket Pass Premium ($10) — self-sustaining with Credit refunds",
+      "Trading with other players for specific items",
+      "Free match drops and free Rocket Pass tiers",
+    ],
+    avoid: [
+      "Crafting Blueprints — almost always overpriced vs. trading",
+      "Item Shop purchases without checking trade prices first",
+      "Opening old crates/blueprints for random items",
+    ],
+    updatedAt: "2026-03-01",
+  },
+  {
+    gameSlug: "star-wars-galaxy-of-heroes",
+    gameName: "Star Wars: Galaxy of Heroes",
+    systemType: "gacha",
+    freeToPlay: {
+      tips: [
+        "Hard node farming gives guaranteed character shards daily (though slowly)",
+        "Fleet Arena and Squad Arena give daily Crystal income based on rank",
+        "Galactic Challenges and Conquest give free gear and character shards",
+        "Focus on one faction at a time — Phoenix for early game, then Padme or Empire",
+      ],
+      rating: "Viable with Patience",
+    },
+    lowSpend: {
+      budget: "$10–20/month",
+      tips: [
+        "Hyperdrive Bundle (one-time ~$30) is the best purchase for new players — skips months of grind",
+        "Crystal subscriptions give daily Crystals for energy refreshes",
+        "Use Crystals for energy refreshes (50-cost only) rather than pack purchases",
+      ],
+    },
+    moderate: {
+      budget: "$20–50/month",
+      tips: [
+        "Crystal subs + occasional marquee packs for must-have new characters",
+        "Conquest Pass gives extra gear and Conquest currency each month",
+        "Save all hoarded resources for Galactic Legend unlock events",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "Unlocking a new Galactic Legend on day one costs $300–500+ in packs and refreshes",
+        "Relic 9 materials are extremely scarce and expensive to accelerate",
+      ],
+      warnings: [
+        "This game is one of the grindiest gachas — even whales wait months for Galactic Legends",
+        "Grand Arena Championships matchmaking means spending more just matches you against other spenders",
+      ],
+    },
+    bestValue: [
+      "Hyperdrive Bundle (one-time) — months of progress instantly",
+      "Crystal subscriptions for daily energy refreshes",
+      "50-Crystal energy refreshes (3 per day max)",
+    ],
+    avoid: [
+      "Character shard packs — terrible Crystal-per-shard value",
+      "100+ Crystal energy refreshes — diminishing returns",
+      "Chasing every new marquee character on release",
+    ],
+    updatedAt: "2026-03-01",
+  },
+  {
+    gameSlug: "brawl-stars",
+    gameName: "Brawl Stars",
+    systemType: "loot_box",
+    freeToPlay: {
+      tips: [
+        "Brawl Boxes from trophy road and daily tokens give free Brawlers over time",
+        "Brawl Pass free track includes a new Brawler every season",
+        "Star Points from Power League give free skins and boxes",
+        "All Brawlers are competitively viable at Power Level 9 — no need to max every one",
+      ],
+      rating: "Very Viable",
+    },
+    lowSpend: {
+      budget: "$10/season",
+      tips: [
+        "Brawl Pass ($10) is the single best purchase — includes a Brawler, boxes, pins, and skin",
+        "Saving pass gems can eventually buy a future pass for free",
+        "Complete all pass tiers for maximum box and Power Point value",
+      ],
+    },
+    moderate: {
+      budget: "$20–40/season",
+      tips: [
+        "Brawl Pass + occasional offers for specific Brawler skins you want",
+        "Token Doublers extend your free box income significantly",
+        "Special event skins are limited-time — decide if you want them before they leave",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "Maxing all Brawlers to Power 11 with full Gears is extremely expensive",
+        "True Gold and True Silver skins cost 25K–50K Coins each",
+      ],
+      warnings: [
+        "Hypercharge upgrades add another layer of progression cost",
+        "New Brawlers release monthly — the upgrade treadmill never ends",
+      ],
+    },
+    bestValue: [
+      "Brawl Pass ($10/season) — best value purchase in the game",
+      "Free Star Points skins from Power League",
+      "Token Doublers when on sale",
+    ],
+    avoid: [
+      "Buying boxes directly with gems — Brawl Pass gives far more boxes",
+      "Spending gems on skins when you haven't bought the pass",
+      "Maxing every Brawler — focus on your favorites",
+    ],
+    updatedAt: "2026-03-01",
+  },
+  {
+    gameSlug: "naraka-bladepoint",
+    gameName: "Naraka: Bladepoint",
+    systemType: "cosmetic_shop",
+    freeToPlay: {
+      tips: [
+        "All heroes and weapons are available to everyone — no gameplay locked behind paywalls",
+        "Hero trials let you test any hero before purchasing with free currency",
+        "Free Battle Pass track includes basic cosmetics and Tae each season",
+        "Gameplay skill matters far more than cosmetics in ranked play",
+      ],
+      rating: "Fully Viable",
+    },
+    lowSpend: {
+      budget: "$10/season",
+      tips: [
+        "Gold Battle Pass (~$10) gives premium skins, emotes, and Gold currency",
+        "Completing the pass returns enough Gold for the next season's pass",
+        "Seasonal outfits are exclusive to the pass and themed around the update",
+      ],
+    },
+    moderate: {
+      budget: "$20–50/season",
+      tips: [
+        "Battle Pass + one premium outfit bundle from the rotating store",
+        "Limited-time collaboration skins (anime, movies) are the most sought-after",
+        "Store discounts appear during major events — wait for deals",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "Legendary and Mythic outfits cost $20–40 each with unique effects",
+        "Some limited skins appreciate in perceived value since they don't return",
+      ],
+      warnings: [
+        "Gacha-style costume lotteries have poor rates for featured items",
+        "Outfit pieces sometimes need all parts to look right — partial sets look incomplete",
+      ],
+    },
+    bestValue: [
+      "Gold Battle Pass ($10/season) — self-sustaining if completed",
+      "Free hero trials before committing currency to unlock",
+      "Event-discounted store bundles",
+    ],
+    avoid: [
+      "Costume lotteries/gacha — random results with bad odds",
+      "Buying individual outfit pieces at full price",
+      "Gold currency on hero unlocks when free currency suffices",
+    ],
+    updatedAt: "2026-03-01",
+  },
+  {
+    gameSlug: "mobile-legends-bang-bang",
+    gameName: "Mobile Legends: Bang Bang",
+    systemType: "cosmetic_shop",
+    freeToPlay: {
+      tips: [
+        "Daily login rewards and events give free heroes and hero fragments",
+        "Ticket draws give free skins (Normal and Elite quality) regularly",
+        "All heroes can be earned with Battle Points from playing matches",
+        "Fragment Shop lets you redeem free Elite and Epic skins over time",
+      ],
+      rating: "Very Viable",
+    },
+    lowSpend: {
+      budget: "$5–15/month",
+      tips: [
+        "Starlight Membership ($10/month) gives an exclusive skin, weekly diamonds, and bonus rewards",
+        "First recharge bonuses give extra diamonds — use the small top-up once",
+        "Lucky Spin events occasionally give Epic skins at discounted diamond costs",
+      ],
+    },
+    moderate: {
+      budget: "$20–50/month",
+      tips: [
+        "Starlight + occasional limited Epic skin from events",
+        "KOF, Star Wars, and other collab skins are limited-time and highly collectible",
+        "Magic Wheel and Zodiac events have pity at 200 spins — plan if you want the Legend skin",
+      ],
+    },
+    bigSpend: {
+      tips: [
+        "Legend and Collector skins cost $100–200+ through event gacha mechanics",
+        "Magic Crystal skins (from Magic Wheel pity) are the rarest in the game",
+      ],
+      warnings: [
+        "Legend skin gacha is expensive with no shortcut — expect to hit pity",
+        "Collector skins release frequently, creating constant spending pressure",
+      ],
+    },
+    bestValue: [
+      "Starlight Membership ($10/month) — exclusive skin + diamonds + rewards",
+      "First recharge bonus diamonds",
+      "Fragment Shop redemptions for free Epic skins",
+    ],
+    avoid: [
+      "Magic Wheel spins without enough diamonds to hit pity (200 spins)",
+      "Buying heroes with Diamonds — use Battle Points instead",
+      "Random skin boxes with low rates for featured items",
+    ],
+    updatedAt: "2026-03-01",
+  },
 ];
 
 export function getGuideBySlug(slug: string): SpendingGuide | undefined {

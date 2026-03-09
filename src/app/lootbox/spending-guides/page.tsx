@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { SPENDING_GUIDES } from "@/data/spending-guides";
 import GameAvatar from "@/components/ui/GameAvatar";
+import { createServerClient } from "@/lib/supabase";
 
 const SYSTEM_ICONS: Record<string, typeof Sparkles> = {
   gacha: Sparkles,
@@ -86,7 +87,25 @@ const systemGroups = [
   { type: "battle_pass", label: "Battle Pass Games" },
 ].filter((g) => SPENDING_GUIDES.some((s) => s.systemType === g.type));
 
-export default function SpendingGuidesHub() {
+export const revalidate = 3600;
+
+export default async function SpendingGuidesHub() {
+  /* Fetch cover images from Supabase for all guide games */
+  const slugs = SPENDING_GUIDES.map((g) => g.gameSlug);
+  const sb = createServerClient();
+  const { data: games } = await sb
+    .from("games")
+    .select("slug, cover_image, screenshot_image")
+    .in("slug", slugs);
+
+  const imageMap: Record<string, string> = {};
+  if (games) {
+    for (const g of games) {
+      const img = g.cover_image || g.screenshot_image;
+      if (img) imageMap[g.slug] = img;
+    }
+  }
+
   const totalGuides = SPENDING_GUIDES.length;
   const systemTypeCounts = Object.entries(
     SPENDING_GUIDES.reduce(
@@ -200,14 +219,22 @@ export default function SpendingGuidesHub() {
                         href={`/lootbox/spending-guides/${guide.gameSlug}`}
                         className="group rounded-xl border border-gray-200 bg-white hover:shadow-lg transition-all hover:border-amber-200 overflow-hidden"
                       >
-                        {/* Card header with game avatar */}
+                        {/* Card header with game image */}
                         <div className="flex items-center gap-3 p-4 pb-3">
                           <div className="flex-shrink-0 w-10 h-10 rounded-lg overflow-hidden">
-                            <GameAvatar
-                              gameName={guide.gameName}
-                              size="sm"
-                              aspectRatio="square"
-                            />
+                            {imageMap[guide.gameSlug] ? (
+                              <img
+                                src={imageMap[guide.gameSlug]}
+                                alt={guide.gameName}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <GameAvatar
+                                gameName={guide.gameName}
+                                size="sm"
+                                aspectRatio="square"
+                              />
+                            )}
                           </div>
                           <div className="flex-1 min-w-0">
                             <h3 className="font-bold text-gray-900 truncate group-hover:text-amber-700 transition-colors">
