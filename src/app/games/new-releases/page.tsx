@@ -19,21 +19,62 @@ export const revalidate = 300;
 
 async function getNewReleases() {
   const supabase = createServerClient();
+
+  // Strategy: fetch recently created games sorted by hot_score (popularity).
+  // We use created_at or release_date, but release_date may be in various formats
+  // (ISO "2026-03-08" or Steam-style "Mar 5, 2026"), so we cast a wider net
+  // and rely on the "created recently" heuristic + hot_score sorting.
+
+  // Approach 1: Games with ISO-formatted release dates in last 180 days
   const today = new Date().toISOString().slice(0, 10);
-  const ninetyDaysAgo = new Date(Date.now() - 90 * 86_400_000)
+  const sixMonthsAgo = new Date(Date.now() - 180 * 86_400_000)
     .toISOString()
     .slice(0, 10);
 
-  const { data } = await supabase
+  const { data: isoReleases } = await supabase
     .from("games")
-    .select("id, title, slug, cover_image, screenshot_image, release_date, genres, platforms, metacritic")
+    .select("id, title, slug, cover_image, screenshot_image, release_date, genres, platforms, metacritic, hot_score")
     .lte("release_date", today)
-    .gte("release_date", ninetyDaysAgo)
-    .not("cover_image", "is", null)
-    .order("release_date", { ascending: false })
-    .limit(50);
+    .gte("release_date", sixMonthsAgo)
+    .order("hot_score", { ascending: false, nullsFirst: false })
+    .limit(100);
 
-  return data || [];
+  // Approach 2: Recently added games (created_at in last 30 days) that have cover images
+  // This catches games imported by sync-new-releases with non-ISO release dates
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 86_400_000).toISOString();
+
+  const { data: recentImports } = await supabase
+    .from("games")
+    .select("id, title, slug, cover_image, screenshot_image, release_date, genres, platforms, metacritic, hot_score")
+    .gte("created_at", thirtyDaysAgo)
+    .not("cover_image", "is", null)
+    .order("hot_score", { ascending: false, nullsFirst: false })
+    .limit(100);
+
+  // Merge and deduplicate, prioritize by hot_score
+  const seen = new Set<string>();
+  const merged: any[] = [];
+
+  // Add ISO releases first (they have proper dates)
+  for (const game of isoReleases || []) {
+    if (!seen.has(game.id)) {
+      seen.add(game.id);
+      merged.push(game);
+    }
+  }
+
+  // Then add recent imports that weren't already included
+  for (const game of recentImports || []) {
+    if (!seen.has(game.id)) {
+      seen.add(game.id);
+      merged.push(game);
+    }
+  }
+
+  // Sort by hot_score descending so popular new releases appear first
+  merged.sort((a, b) => (b.hot_score || 0) - (a.hot_score || 0));
+
+  return merged.slice(0, 150);
 }
 
 async function getComingSoon() {
@@ -42,11 +83,10 @@ async function getComingSoon() {
 
   const { data } = await supabase
     .from("games")
-    .select("id, title, slug, cover_image, screenshot_image, release_date, genres, platforms")
+    .select("id, title, slug, cover_image, screenshot_image, release_date, genres, platforms, metacritic")
     .gt("release_date", today)
-    .not("cover_image", "is", null)
     .order("release_date", { ascending: true })
-    .limit(30);
+    .limit(50);
 
   return data || [];
 }
