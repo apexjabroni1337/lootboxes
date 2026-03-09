@@ -165,7 +165,8 @@ export async function getWeaponCasesWithCounts(): Promise<CS2Crate[]> {
   const { data: countData } = await supabase
     .from("cs2_crate_items")
     .select("crate_id")
-    .in("crate_id", caseIds);
+    .in("crate_id", caseIds)
+    .limit(50000);
 
   const counts: Record<string, number> = {};
   for (const row of countData || []) {

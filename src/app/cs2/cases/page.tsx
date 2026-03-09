@@ -19,16 +19,41 @@ export const metadata = {
 
 export const revalidate = 86400;
 
+const TYPE_PILL_STYLES: Record<string, string> = {
+  "Weapon Case": "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100",
+  "Capsule": "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100",
+  "Sticker Capsule": "bg-pink-50 text-pink-700 border-pink-200 hover:bg-pink-100",
+  "Souvenir Package": "bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100",
+  "Graffiti Box": "bg-green-50 text-green-700 border-green-200 hover:bg-green-100",
+  "Music Kit Box": "bg-violet-50 text-violet-700 border-violet-200 hover:bg-violet-100",
+  "Patch Pack": "bg-teal-50 text-teal-700 border-teal-200 hover:bg-teal-100",
+  "Pin Capsule": "bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100",
+  "Other": "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100",
+};
+
+const TYPE_PILL_ICONS: Record<string, string> = {
+  "Weapon Case": "🔫",
+  "Capsule": "💊",
+  "Sticker Capsule": "🏷️",
+  "Souvenir Package": "🏆",
+  "Graffiti Box": "🎨",
+  "Music Kit Box": "🎵",
+  "Patch Pack": "🩹",
+  "Pin Capsule": "📌",
+  "Other": "📦",
+};
+
 export default async function CS2CasesPage() {
   const supabase = createServerClient();
 
   // Fetch all crates
   const crates = await getAllCrates();
 
-  // Fetch item counts per crate in a single query
+  // Fetch item counts per crate — must set high limit since default is 1000
   const { data: countData } = await supabase
     .from("cs2_crate_items")
-    .select("crate_id");
+    .select("crate_id")
+    .limit(50000);
 
   const itemCounts: Record<string, number> = {};
   for (const row of countData || []) {
@@ -99,15 +124,20 @@ export default async function CS2CasesPage() {
       {/* Jump nav */}
       <div className="container-main mt-6 mb-8">
         <div className="flex flex-wrap gap-2">
-          {orderedTypes.map((type) => (
-            <a
-              key={type}
-              href={`#${type.toLowerCase().replace(/\s+/g, "-")}`}
-              className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-brand-50 hover:text-brand-600 hover:border-brand-200 transition-colors"
-            >
-              {type} ({cratesByType[type].length})
-            </a>
-          ))}
+          {orderedTypes.map((type) => {
+            const style = TYPE_PILL_STYLES[type] || TYPE_PILL_STYLES["Other"];
+            return (
+              <a
+                key={type}
+                href={`#${type.toLowerCase().replace(/\s+/g, "-")}`}
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold border transition-all hover:shadow-sm hover:scale-105 ${style}`}
+              >
+                <span>{TYPE_PILL_ICONS[type] || "📦"}</span>
+                {type}
+                <span className="opacity-60">({cratesByType[type].length})</span>
+              </a>
+            );
+          })}
         </div>
       </div>
 

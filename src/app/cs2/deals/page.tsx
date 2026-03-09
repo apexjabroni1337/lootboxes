@@ -97,7 +97,7 @@ export default function DealsPage() {
       const data = await res.json();
       let fetched: MultiMarketPrice[] = data.items || [];
 
-      // "Undervalued" = skins where buy order is close to lowest price (within 15%)
+      // "High Demand" = skins where buy order is close to lowest price (within 15%)
       if (tab === "undervalued") {
         fetched = fetched.filter((item) => {
           if (!item.buyOrderPrice || !item.lowestPrice) return false;
@@ -188,7 +188,7 @@ export default function DealsPage() {
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
-              <TrendingDown className="h-3.5 w-3.5" /> Biggest Savings
+              <TrendingDown className="h-3.5 w-3.5" /> Best Prices
             </button>
             <button
               onClick={() => setTab("trending")}
@@ -208,7 +208,7 @@ export default function DealsPage() {
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
-              <ArrowDown className="h-3.5 w-3.5" /> Undervalued
+              <ArrowDown className="h-3.5 w-3.5" /> High Demand
             </button>
           </div>
 
@@ -401,7 +401,7 @@ export default function DealsPage() {
                 <div className="rounded-xl border border-gray-200 bg-gray-50 p-12 text-center">
                   <p className="text-gray-500">
                     {tab === "undervalued"
-                      ? "No undervalued skins found right now. Check back soon!"
+                      ? "No high-demand skins found right now. Check back soon!"
                       : "No deals match your search. Try a different query."}
                   </p>
                 </div>
@@ -422,11 +422,11 @@ export default function DealsPage() {
               to catch price drops as they happen.
             </p>
             <p>
-              The &ldquo;Biggest Savings&rdquo; tab shows skins where the cheapest third-party marketplace price is
+              The &ldquo;Best Prices&rdquo; tab shows skins where the cheapest third-party marketplace price is
               significantly lower than the Steam Market price — so you can see exactly how much you save by
-              shopping off-Steam. The &ldquo;Most Traded&rdquo; tab highlights the most liquid skins, and
-              &ldquo;Undervalued&rdquo; surfaces skins where buy orders are within 15% of the lowest listing
-              price — a potential indicator of rising demand.
+              shopping off-Steam. The &ldquo;Most Traded&rdquo; tab highlights the most actively traded skins, and
+              &ldquo;High Demand&rdquo; surfaces skins where buy orders are within 15% of the lowest listing
+              price — indicating strong buyer interest.
             </p>
             <p>
               All &ldquo;Buy&rdquo; links go through our affiliate tracking. We may earn a small commission
@@ -436,9 +436,16 @@ export default function DealsPage() {
         </div>
       </section>
 
-      {/* Affiliate disclosure */}
+      {/* Disclaimers */}
       <div className="border-t border-gray-100 bg-gray-50/70">
-        <div className="container-main py-4">
+        <div className="container-main py-4 space-y-2">
+          <p className="text-[11px] text-gray-400 leading-relaxed text-center">
+            <span className="font-semibold text-gray-500">Disclaimer:</span>{" "}
+            LootBoxes.com is not a financial advisor and does not provide investment, financial, or trading advice of any kind.
+            All price data and comparisons shown on this page are for informational purposes only and should not be
+            interpreted as a recommendation to buy, sell, or trade any virtual items. Virtual item markets are volatile
+            and carry risk. If you need financial guidance, please consult a qualified financial professional.
+          </p>
           <p className="text-[11px] text-gray-400 leading-relaxed text-center">
             <span className="font-semibold text-gray-500">Affiliate Disclosure:</span>{" "}
             Some links on this page are affiliate links. LootBoxes.com may earn a commission

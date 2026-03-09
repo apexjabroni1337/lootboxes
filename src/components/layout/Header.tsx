@@ -155,12 +155,12 @@ export default function Header() {
       <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-950/95">
         <div className="container-main">
           {/* Main header row */}
-          <div className="flex h-16 items-center gap-4">
+          <div className="flex h-16 items-center gap-3">
             {/* Logo */}
             <Logo size="md" />
 
             {/* Desktop Nav */}
-            <nav className="hidden items-center gap-1 lg:flex">
+            <nav className="hidden items-center lg:flex">
               {/* Loot Boxes mega menu trigger */}
               <div
                 ref={lootboxMegaRef}
@@ -169,11 +169,11 @@ export default function Header() {
                 onMouseLeave={closeLootboxMega}
               >
                 <button
-                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                  className="flex items-center gap-1 rounded-lg px-2 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
                   onClick={() => setLootboxMegaOpen(!lootboxMegaOpen)}
                 >
-                  <Zap className="h-3.5 w-3.5 text-purple-500" />
-                  Loot Boxes
+                  <Zap className="h-3.5 w-3.5 text-purple-500 flex-shrink-0" />
+                  <span className="whitespace-nowrap">Loot Boxes</span>
                   <ChevronDown
                     className={`h-3.5 w-3.5 transition-transform ${lootboxMegaOpen ? "rotate-180" : ""}`}
                   />
@@ -289,11 +289,11 @@ export default function Header() {
                 onMouseLeave={closeAnalyticsMega}
               >
                 <button
-                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                  className="flex items-center gap-1 rounded-lg px-2 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
                   onClick={() => setAnalyticsMegaOpen(!analyticsMegaOpen)}
                 >
-                  <LineChart className="h-3.5 w-3.5 text-indigo-500" />
-                  Analytics
+                  <LineChart className="h-3.5 w-3.5 text-indigo-500 flex-shrink-0" />
+                  <span className="whitespace-nowrap">Analytics</span>
                   <ChevronDown
                     className={`h-3.5 w-3.5 transition-transform ${analyticsMegaOpen ? "rotate-180" : ""}`}
                   />
@@ -377,7 +377,7 @@ export default function Header() {
 
               <Link
                 href="/blog"
-                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                className="rounded-lg px-2 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
               >
                 Blog
               </Link>
@@ -390,11 +390,11 @@ export default function Header() {
                 onMouseLeave={closeCs2Mega}
               >
                 <button
-                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                  className="flex items-center gap-1 rounded-lg px-2 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
                   onClick={() => setCs2MegaOpen(!cs2MegaOpen)}
                 >
-                  <Crosshair className="h-3.5 w-3.5 text-yellow-500" />
-                  CS2 Skins
+                  <Crosshair className="h-3.5 w-3.5 text-yellow-500 flex-shrink-0" />
+                  <span className="whitespace-nowrap">CS2 Skins</span>
                   <ChevronDown
                     className={`h-3.5 w-3.5 transition-transform ${cs2MegaOpen ? "rotate-180" : ""}`}
                   />
@@ -449,16 +449,16 @@ export default function Header() {
                         </div>
                       </Link>
                       <Link
-                        href="/cs2/float-checker"
+                        href="/cs2/cases"
                         onClick={() => setCs2MegaOpen(false)}
-                        className="flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 transition-colors hover:bg-blue-100"
+                        className="flex items-center gap-3 rounded-lg bg-yellow-50 px-4 py-3 transition-colors hover:bg-yellow-100"
                       >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500 text-white">
-                          <Search className="h-4.5 w-4.5" />
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-600 text-white">
+                          <Package className="h-4.5 w-4.5" />
                         </div>
                         <div>
-                          <p className="text-sm font-semibold text-gray-900">Float Checker</p>
-                          <p className="text-[11px] text-gray-500">Wear values & patterns</p>
+                          <p className="text-sm font-semibold text-gray-900">Cases & Capsules</p>
+                          <p className="text-[11px] text-gray-500">Every case with full contents</p>
                         </div>
                       </Link>
                       <Link
@@ -487,19 +487,19 @@ export default function Header() {
                           <p className="text-[11px] text-gray-500">EV of trade-up contracts</p>
                         </div>
                       </Link>
-                      <Link
-                        href="/cs2/cases"
-                        onClick={() => setCs2MegaOpen(false)}
-                        className="flex items-center gap-3 rounded-lg bg-yellow-50 px-4 py-3 transition-colors hover:bg-yellow-100"
+                      {/* Float Checker — under construction */}
+                      <div
+                        className="relative flex items-center gap-3 rounded-lg bg-gray-50 px-4 py-3 opacity-50 cursor-not-allowed"
                       >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-600 text-white">
-                          <Package className="h-4.5 w-4.5" />
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-400 text-white">
+                          <Search className="h-4.5 w-4.5" />
                         </div>
                         <div>
-                          <p className="text-sm font-semibold text-gray-900">Cases & Capsules</p>
-                          <p className="text-[11px] text-gray-500">Every case with full contents</p>
+                          <p className="text-sm font-semibold text-gray-400">Float Checker</p>
+                          <p className="text-[11px] text-gray-400">Wear values & patterns</p>
                         </div>
-                      </Link>
+                        <span className="absolute top-1 right-2 text-[9px] font-bold uppercase tracking-wide text-gray-400 bg-gray-200 rounded px-1.5 py-0.5">Under Construction</span>
+                      </div>
                     </div>
 
                     {/* Affiliate CTA bar */}
@@ -525,11 +525,11 @@ export default function Header() {
                 onMouseLeave={closeMega}
               >
                 <button
-                  className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                  className="flex items-center gap-1 rounded-lg px-2 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
                   onClick={() => setMegaOpen(!megaOpen)}
                 >
-                  <Flame className="h-3.5 w-3.5 text-orange-500" />
-                  Game Deals
+                  <Flame className="h-3.5 w-3.5 text-orange-500 flex-shrink-0" />
+                  <span className="whitespace-nowrap">Game Deals</span>
                   <ChevronDown
                     className={`h-3.5 w-3.5 transition-transform ${megaOpen ? "rotate-180" : ""}`}
                   />
@@ -614,13 +614,13 @@ export default function Header() {
             </nav>
 
             {/* Prominent search bar (desktop) */}
-            <div className="hidden flex-1 justify-center md:flex">
+            <div className="hidden flex-1 justify-center lg:flex min-w-0">
               <button
                 onClick={() => setSearchOpen(true)}
-                className="flex w-full max-w-md items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-400 transition-all hover:border-brand-300 hover:bg-white hover:shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:hover:border-brand-500 dark:hover:bg-gray-800"
+                className="flex w-full max-w-xs items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-400 transition-all hover:border-brand-300 hover:bg-white hover:shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:hover:border-brand-500 dark:hover:bg-gray-800"
               >
                 <Search className="h-4 w-4 flex-shrink-0 text-gray-400" />
-                <span className="flex-1 text-left truncate">Search games, deals, or analytics...</span>
+                <span className="flex-1 text-left truncate">Search games, deals...</span>
               </button>
             </div>
 
@@ -639,8 +639,8 @@ export default function Header() {
               <ThemeToggle />
 
               {/* Newsletter CTA */}
-              <Link href="/newsletter" className="btn-primary hidden md:flex">
-                Get Deal Alerts
+              <Link href="/newsletter" className="btn-primary hidden lg:flex whitespace-nowrap text-sm px-3 py-2">
+                Deal Alerts
               </Link>
 
               {/* Mobile menu toggle */}
