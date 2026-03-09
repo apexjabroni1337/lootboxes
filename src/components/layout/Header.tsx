@@ -30,6 +30,7 @@ import {
   Scale,
   Wallet,
   Eye,
+  Package,
 } from "lucide-react";
 import SearchDialog from "@/components/search/SearchDialog";
 import Logo from "@/components/brand/Logo";
@@ -486,6 +487,19 @@ export default function Header() {
                           <p className="text-[11px] text-gray-500">EV of trade-up contracts</p>
                         </div>
                       </Link>
+                      <Link
+                        href="/cs2/cases"
+                        onClick={() => setCs2MegaOpen(false)}
+                        className="flex items-center gap-3 rounded-lg bg-yellow-50 px-4 py-3 transition-colors hover:bg-yellow-100"
+                      >
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-600 text-white">
+                          <Package className="h-4.5 w-4.5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">Cases & Capsules</p>
+                          <p className="text-[11px] text-gray-500">Every case with full contents</p>
+                        </div>
+                      </Link>
                     </div>
 
                     {/* Affiliate CTA bar */}
@@ -771,6 +785,14 @@ export default function Header() {
                 >
                   <Tag className="h-4 w-4 text-emerald-500" />
                   Best Deals
+                </Link>
+                <Link
+                  href="/cs2/cases"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  <Package className="h-4 w-4 text-yellow-600" />
+                  Cases & Capsules
                 </Link>
                 <Link
                   href="/cs2/compare"
