@@ -5,7 +5,6 @@ import { useState, useEffect, useRef } from "react";
 import {
   Search,
   Menu,
-  Heart,
   X,
   ChevronDown,
   Flame,
@@ -35,7 +34,6 @@ import {
 import SearchDialog from "@/components/search/SearchDialog";
 import Logo from "@/components/brand/Logo";
 import ThemeToggle from "@/components/theme/ThemeToggle";
-import { useWishlist } from "@/components/wishlist/WishlistProvider";
 
 
 const LOOTBOX_TYPES = [
@@ -64,7 +62,6 @@ const TRENDING_SEARCHES = [
 ];
 
 export default function Header() {
-  const { count: wishlistCount } = useWishlist();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
@@ -509,7 +506,7 @@ export default function Header() {
                 className="flex w-full max-w-md items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-400 transition-all hover:border-brand-300 hover:bg-white hover:shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:hover:border-brand-500 dark:hover:bg-gray-800"
               >
                 <Search className="h-4 w-4 flex-shrink-0 text-gray-400" />
-                <span className="flex-1 text-left">Search games, deals, or analytics...</span>
+                <span className="flex-1 text-left truncate">Search games, deals, or analytics...</span>
               </button>
             </div>
 
@@ -523,20 +520,6 @@ export default function Header() {
               >
                 <Search className="h-5 w-5" />
               </button>
-
-              {/* Wishlist */}
-              <Link
-                href="/wishlist"
-                className="relative rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
-                aria-label="Wishlist"
-              >
-                <Heart className="h-5 w-5" />
-                {wishlistCount > 0 && (
-                  <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white">
-                    {wishlistCount > 9 ? "9+" : wishlistCount}
-                  </span>
-                )}
-              </Link>
 
               {/* Dark mode toggle */}
               <ThemeToggle />
