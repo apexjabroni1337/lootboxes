@@ -151,32 +151,25 @@ export async function getCrateItems(crateId: string): Promise<CS2CrateItem[]> {
 export async function getWeaponCasesWithCounts(): Promise<CS2Crate[]> {
   const supabase = createServerClient();
 
-  // Get weapon cases
+  // Get weapon cases with embedded item counts in a single query.
+  // The old approach (.limit(50000) on cs2_crate_items) silently capped at
+  // Supabase's default max-rows (1000), so most cases showed 0 items.
   const { data: cases, error } = await supabase
     .from("cs2_crates")
-    .select("*")
+    .select("*, cs2_crate_items(count)")
     .eq("type", "Weapon Case")
     .order("first_sale_date", { ascending: false, nullsFirst: false });
 
   if (error || !cases) return [];
 
-  // Get item counts per crate in a single query
-  const caseIds = cases.map((c) => c.id);
-  const { data: countData } = await supabase
-    .from("cs2_crate_items")
-    .select("crate_id")
-    .in("crate_id", caseIds)
-    .limit(50000);
-
-  const counts: Record<string, number> = {};
-  for (const row of countData || []) {
-    counts[row.crate_id] = (counts[row.crate_id] || 0) + 1;
-  }
-
-  return cases.map((c) => ({
-    ...c,
-    item_count: counts[c.id] || 0,
-  }));
+  return cases.map((c: any) => {
+    const countArr = c.cs2_crate_items as { count: number }[];
+    const { cs2_crate_items, ...rest } = c;
+    return {
+      ...rest,
+      item_count: countArr?.[0]?.count ?? 0,
+    };
+  });
 }
 
 /**
@@ -205,6 +198,49 @@ export function crateSlug(name: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+}
+
+/**
+ * Get all weapon cases with their full item lists.
+ * Used by the trade-up calculator to show real items.
+ */
+export async function getWeaponCasesWithItems(): Promise<
+  (CS2Crate & { items: CS2CrateItem[] })[]
+> {
+  const supabase = createServerClient();
+
+  const { data: cases, error } = await supabase
+    .from("cs2_crates")
+    .select("*")
+    .eq("type", "Weapon Case")
+    .order("first_sale_date", { ascending: false, nullsFirst: false });
+
+  if (error || !cases) return [];
+
+  // Fetch all items for weapon cases in one query
+  const caseIds = cases.map((c: any) => c.id);
+  const { data: allItems, error: itemsError } = await supabase
+    .from("cs2_crate_items")
+    .select("*")
+    .in("crate_id", caseIds)
+    .limit(5000);
+
+  if (itemsError || !allItems) {
+    return cases.map((c: any) => ({ ...c, items: [] }));
+  }
+
+  // Group items by crate_id
+  const itemsByCrate: Record<string, CS2CrateItem[]> = {};
+  for (const item of allItems) {
+    if (!itemsByCrate[item.crate_id]) itemsByCrate[item.crate_id] = [];
+    itemsByCrate[item.crate_id].push(item);
+  }
+
+  return cases.map((c: any) => {
+    const items = itemsByCrate[c.id] || [];
+    items.sort(raritySort);
+    return { ...c, items };
+  });
 }
 
 /**
