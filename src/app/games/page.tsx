@@ -20,12 +20,30 @@ export const revalidate = 300;
 async function getGamesWithDeals() {
   const supabase = createServerClient();
 
-  const { data: games, error } = await supabase
+  // Get total count of all games
+  const { count: totalCount } = await supabase
     .from("games")
-    .select("id, title, slug, cover_image, screenshot_image, genres, platforms, metacritic, release_date, hot_score")
-    .order("title", { ascending: true });
+    .select("*", { count: "exact", head: true });
 
-  if (error || !games) return [];
+  // Fetch games in batches to overcome Supabase's 1000-row default limit
+  // We'll fetch up to 5000 games (should cover most databases)
+  const allGames: any[] = [];
+  const batchSize = 1000;
+  const maxBatches = 5;
+
+  for (let i = 0; i < maxBatches; i++) {
+    const { data: batch, error } = await supabase
+      .from("games")
+      .select("id, title, slug, cover_image, screenshot_image, genres, platforms, metacritic, release_date, hot_score")
+      .order("title", { ascending: true })
+      .range(i * batchSize, (i + 1) * batchSize - 1);
+
+    if (error || !batch || batch.length === 0) break;
+    allGames.push(...batch);
+    if (batch.length < batchSize) break; // No more pages
+  }
+
+  if (allGames.length === 0) return { games: [], totalCount: 0 };
 
   // Get best price and deal count per game
   const { data: deals } = await supabase
@@ -47,7 +65,7 @@ async function getGamesWithDeals() {
     }
   }
 
-  const enriched = games.map((game: any) => ({
+  const enriched = allGames.map((game: any) => ({
     ...game,
     bestPrice: dealStats.get(game.id)?.bestPrice ?? null,
     dealCount: dealStats.get(game.id)?.dealCount ?? 0,
@@ -66,7 +84,7 @@ async function getGamesWithDeals() {
     return a.title.localeCompare(b.title);
   });
 
-  return enriched;
+  return { games: enriched, totalCount: totalCount || enriched.length };
 }
 
 export default async function GamesPage({
@@ -75,7 +93,7 @@ export default async function GamesPage({
   searchParams: Promise<{ genre?: string }>;
 }) {
   const params = await searchParams;
-  const games = await getGamesWithDeals();
+  const { games, totalCount } = await getGamesWithDeals();
 
   // Featured: top 4 games by hot_score that have screenshots
   const featured = games
@@ -97,7 +115,7 @@ export default async function GamesPage({
             Browse All Games
           </h1>
           <p className="text-gray-500 mt-2 max-w-lg text-sm">
-            {games.length} games tracked across 15+ stores. Compare prices, find deals, and never overpay.
+            {totalCount.toLocaleString()} games tracked across 15+ stores. Compare prices, find deals, and never overpay.
           </p>
         </div>
       </section>
