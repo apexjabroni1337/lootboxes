@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Flame, TrendingUp, ExternalLink, TrendingDown, ChevronRight } from "lucide-react";
 import { createServerClient } from "@/lib/supabase";
 import { formatPrice, formatDiscount } from "@/lib/utils";
-import { isPromotableGame } from "@/lib/game-quality";
+import { isPromotableGame, deduplicateByBaseTitle } from "@/lib/game-quality";
 import GameAvatar from "@/components/ui/GameAvatar";
 import StoreIcon from "@/components/ui/StoreIcon";
 import TrendingClient from "./TrendingClient";
@@ -91,7 +91,10 @@ async function getTrendingDeals() {
     };
   });
 
-  return combined.slice(0, 150);
+  // Collapse DLC/edition variants so only one entry per base game shows
+  const deduped = deduplicateByBaseTitle(combined);
+
+  return deduped.slice(0, 150);
 }
 
 export default async function TrendingPage() {

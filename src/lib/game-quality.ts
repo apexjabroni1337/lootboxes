@@ -216,3 +216,71 @@ export function filterPromotableDeals<T extends { games: any; is_historic_low?: 
     return true;
   });
 }
+
+// ── DLC / Edition Deduplication ──
+
+/**
+ * Extract a "base title" from a game name to group DLC / edition variants.
+ * "Kitaria Fables - Grouch Christmas Outfit" → "kitaria fables"
+ * "Pals Go Only Up - Knight Character"       → "pals go only up"
+ * "XEL Save the World Edition"               → "xel save the world"
+ * "Elden Ring"                                → "elden ring"
+ */
+export function getBaseTitle(title: string): string {
+  let base = title.toLowerCase().trim();
+
+  // Strip everything after common DLC/edition separators
+  // " - " is the most common: "Game - DLC Name"
+  const dashIdx = base.indexOf(" - ");
+  if (dashIdx > 3) base = base.substring(0, dashIdx);
+
+  // Strip trailing ": DLC Name" style separators
+  const colonIdx = base.indexOf(": ");
+  if (colonIdx > 3) base = base.substring(0, colonIdx);
+
+  // Strip edition suffixes
+  base = base
+    .replace(/\s+(edition|pack|bundle|collection|dlc|character|upgrade|pass|season|chapter|episode|volume|vol)\b.*$/i, "")
+    .replace(/\s+(goty|game\s*of\s*the\s*year|deluxe|gold|premium|ultimate|complete|enhanced|definitive|standard|special)\b.*$/i, "")
+    .replace(/\s+(soundtrack|ost|artbook|art\s*book|wallpaper|skin|costume|outfit)\b.*$/i, "")
+    .trim();
+
+  return base;
+}
+
+/**
+ * Collapse DLC/edition/character-pack variants so only one entry per
+ * base game appears in the list. Keeps the deal with the highest
+ * priority: historic low > higher hot_score > bigger discount.
+ *
+ * Works with any deal shape where game data is nested under `.games`.
+ */
+export function deduplicateByBaseTitle<T extends { games?: any; is_historic_low?: boolean; discount_pct?: number }>(deals: T[]): T[] {
+  const byBase = new Map<string, T>();
+  for (const deal of deals) {
+    const title = deal.games?.title || "";
+    const base = getBaseTitle(title);
+    const existing = byBase.get(base);
+    if (!existing) {
+      byBase.set(base, deal);
+    } else {
+      // Prefer: historic low > higher hot_score > bigger discount
+      const existingHL = (existing as any).is_historic_low;
+      const newHL = (deal as any).is_historic_low;
+      if (newHL && !existingHL) {
+        byBase.set(base, deal);
+      } else if (!newHL && existingHL) {
+        // keep existing
+      } else {
+        const existingScore = existing.games?.hot_score || 0;
+        const newScore = deal.games?.hot_score || 0;
+        if (newScore > existingScore) {
+          byBase.set(base, deal);
+        } else if (newScore === existingScore && (deal.discount_pct || 0) > ((existing as any).discount_pct || 0)) {
+          byBase.set(base, deal);
+        }
+      }
+    }
+  }
+  return Array.from(byBase.values());
+}

@@ -9,7 +9,7 @@ import {
   Zap,
 } from "lucide-react";
 import { createServerClient } from "@/lib/supabase";
-import { filterPromotableDeals } from "@/lib/game-quality";
+import { filterPromotableDeals, getBaseTitle, deduplicateByBaseTitle } from "@/lib/game-quality";
 import DealsHubClient from "./DealsHubClient";
 
 export const metadata = {
@@ -62,65 +62,6 @@ const DEAL_SELECT = `
     platforms
   )
 `;
-
-/**
- * Extract a "base title" from a game name to group DLC / edition variants.
- * "Pals Go Only Up - Knight Character"  → "pals go only up"
- * "My Sudoku - Classic 6x6 Medium 5"    → "my sudoku"
- * "XEL Save the World Edition"          → "xel save the world"
- * "Elden Ring"                           → "elden ring"
- */
-function getBaseTitle(title: string): string {
-  let base = title.toLowerCase().trim();
-
-  // Strip everything after common DLC/edition separators
-  // " - " is the most common: "Game - DLC Name"
-  const dashIdx = base.indexOf(" - ");
-  if (dashIdx > 3) base = base.substring(0, dashIdx);
-
-  // Strip edition suffixes
-  base = base
-    .replace(/\s+(edition|pack|bundle|collection|dlc|character|upgrade|pass|season|chapter|episode|volume|vol)\b.*$/i, "")
-    .replace(/\s+(goty|game\s*of\s*the\s*year|deluxe|gold|premium|ultimate|complete|enhanced|definitive|standard|special)\b.*$/i, "")
-    .trim();
-
-  return base;
-}
-
-/**
- * Collapse DLC/edition/character-pack variants so only one entry per
- * base game appears in the list. Keeps the deal with the highest
- * discount (or historic low if available).
- */
-function deduplicateByBaseTitle(deals: any[]): any[] {
-  const byBase = new Map<string, any>();
-  for (const deal of deals) {
-    const title = deal.games?.title || "";
-    const base = getBaseTitle(title);
-    const existing = byBase.get(base);
-    if (!existing) {
-      byBase.set(base, deal);
-    } else {
-      // Prefer: historic low > higher hot_score > bigger discount
-      const existingHL = existing.is_historic_low;
-      const newHL = deal.is_historic_low;
-      if (newHL && !existingHL) {
-        byBase.set(base, deal);
-      } else if (!newHL && existingHL) {
-        // keep existing
-      } else {
-        const existingScore = existing.games?.hot_score || 0;
-        const newScore = deal.games?.hot_score || 0;
-        if (newScore > existingScore) {
-          byBase.set(base, deal);
-        } else if (newScore === existingScore && (deal.discount_pct || 0) > (existing.discount_pct || 0)) {
-          byBase.set(base, deal);
-        }
-      }
-    }
-  }
-  return Array.from(byBase.values());
-}
 
 async function getDeals() {
   const supabase = createServerClient();
