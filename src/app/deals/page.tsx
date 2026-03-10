@@ -42,26 +42,19 @@ const DEAL_SELECT = `
   id,
   game_id,
   store,
-  store_url,
   price,
   original_price,
   discount_pct,
   currency,
   is_historic_low,
-  expires_at,
   affiliate_url,
-  scraped_at,
   games!inner (
     id,
     title,
     slug,
     cover_image,
-    screenshot_image,
     hot_score,
-    genres,
-    metacritic,
-    release_date,
-    platforms
+    genres
   )
 `;
 
@@ -69,18 +62,17 @@ async function getDeals() {
   const supabase = createServerClient();
 
   // Fetch top deals by discount AND all historic lows in parallel
-  // Reduced from 500→300 — after dedup + quality filter we only show ~200
   const [discountResult, historicResult] = await Promise.all([
     supabase
       .from("deals")
       .select(DEAL_SELECT)
       .order("discount_pct", { ascending: false })
-      .limit(300),
+      .limit(500),
     supabase
       .from("deals")
       .select(DEAL_SELECT)
       .eq("is_historic_low", true)
-      .limit(150),
+      .limit(450),
   ]);
 
   if (discountResult.error) {
@@ -144,7 +136,7 @@ async function getDeals() {
     return (b.discount_pct || 0) - (a.discount_pct || 0);
   });
 
-  return deduped.slice(0, 200);
+  return deduped.slice(0, 600);
 }
 
 export default async function DealsPage({
