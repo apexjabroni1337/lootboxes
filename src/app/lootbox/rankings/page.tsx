@@ -132,7 +132,9 @@ function RankedGameRow({
         href={`/lootbox/${game.slug}`}
         className="relative flex items-center gap-3 rounded-lg overflow-hidden min-h-[52px] transition-all hover:shadow-md"
       >
-        {bgImg ? (
+        {/* Always render dark fallback so text is visible even if image fails to load */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-800 to-slate-700" />
+        {bgImg && (
           <>
             <img
               src={bgImg}
@@ -143,17 +145,15 @@ function RankedGameRow({
             />
             <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-black/40" />
           </>
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-800 to-slate-700" />
         )}
         <div className="relative z-10 flex items-center gap-3 w-full px-4 py-3">
-          <span className={`font-extrabold w-6 text-right text-sm ${bgImg ? "text-white/60" : rankColor}`}>{rank}</span>
+          <span className="font-extrabold w-6 text-right text-sm text-white/60">{rank}</span>
           <div className="flex-1 min-w-0">
             <span className="font-semibold text-white text-sm group-hover:text-blue-200 transition-colors truncate block">
               {game.title}
             </span>
           </div>
-          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white dark:bg-gray-950/15 text-white/70 backdrop-blur-sm flex-shrink-0">
+          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white/15 text-white/70 backdrop-blur-sm flex-shrink-0">
             {systemLabel(game.loot_system_type).label}
           </span>
           <span className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-extrabold border-2 border-white/70 shadow-lg ${
