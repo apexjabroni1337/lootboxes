@@ -18,7 +18,7 @@ export default function DealCard({ deal }: DealCardProps) {
   return (
     <div className="group flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg dark:border-gray-800 dark:bg-gray-900">
       {/* ── Landscape game artwork ── */}
-      <div className="relative overflow-hidden bg-gray-100">
+      <div className="relative overflow-hidden bg-gray-100 dark:bg-gray-800">
         {bgImage ? (
           <div className="aspect-[16/9] overflow-hidden">
             <img
@@ -77,7 +77,7 @@ export default function DealCard({ deal }: DealCardProps) {
 
         {/* Pricing row */}
         <div className="mt-2 flex items-baseline gap-2">
-          <span className="text-xs text-gray-400 line-through">
+          <span className="text-xs text-gray-400 dark:text-gray-500 line-through">
             {formatPrice(deal.original_price)}
           </span>
           <span className="text-lg font-bold text-gray-900 dark:text-white">

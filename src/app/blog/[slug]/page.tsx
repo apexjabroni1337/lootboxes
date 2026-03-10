@@ -168,7 +168,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     : getPostAccent(post.slug);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <BlogPostingSchema
         title={post.title}
         description={post.excerpt}
@@ -204,7 +204,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <div className="container-main absolute top-0 left-0 right-0 pt-6 z-10">
             <Link
               href="/blog"
-              className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-4 py-2 text-sm font-medium text-white backdrop-blur-md hover:bg-white/25 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-full bg-white dark:bg-gray-950/15 px-4 py-2 text-sm font-medium text-white backdrop-blur-md hover:bg-white dark:bg-gray-950/25 transition-colors"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Back to Blog
@@ -218,7 +218,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 {post.tags.map((t) => (
                   <span
                     key={t}
-                    className="rounded-full bg-white/20 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm"
+                    className="rounded-full bg-white dark:bg-gray-950/20 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm"
                   >
                     {t}
                   </span>
@@ -238,7 +238,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <div className="container-main relative -mt-6 z-10">
         <div className="mx-auto max-w-3xl">
           {/* Meta card */}
-          <div className="rounded-2xl border border-gray-200 bg-white px-6 py-4 shadow-sm flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-500">
+          <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-6 py-4 shadow-sm flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-500 dark:text-gray-400">
             <span className="flex items-center gap-1.5">
               <User className="h-3.5 w-3.5" />
               {post.author}
@@ -254,7 +254,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </div>
 
           {/* Excerpt / lead paragraph */}
-          <p className="mt-8 text-lg md:text-xl text-gray-600 leading-relaxed font-light border-l-4 border-brand-500 pl-5">
+          <p className="mt-8 text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed font-light border-l-4 border-brand-500 pl-5">
             {post.excerpt}
           </p>
 
@@ -273,17 +273,17 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </article>
 
           {/* Divider */}
-          <div className="mt-12 border-t border-gray-200" />
+          <div className="mt-12 border-t border-gray-200 dark:border-gray-700" />
 
           {/* Author + nav row */}
           <div className="mt-6 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-sm">
+              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-brand-50 dark:from-brand-950/300 to-brand-700 flex items-center justify-center text-white font-bold text-sm">
                 LB
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-900">{post.author}</p>
-                <p className="text-xs text-gray-400">Published <time dateTime={post.date}>{formatDate(post.date)}</time></p>
+                <p className="text-sm font-semibold text-gray-900 dark:text-white">{post.author}</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">Published <time dateTime={post.date}>{formatDate(post.date)}</time></p>
               </div>
             </div>
             <Link
@@ -297,7 +297,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           {/* ─── Related Articles (Magazine + Bottom Color Bar style) ─── */}
           {related.length > 0 && (
             <div className="mt-10">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Keep Reading</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Keep Reading</h3>
               <div className="grid gap-4 sm:grid-cols-3">
                 {related.map((r, idx) => {
                   const rAccent = CARD_ACCENTS[idx % CARD_ACCENTS.length];
@@ -306,7 +306,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     <Link
                       key={r.slug}
                       href={`/blog/${r.slug}`}
-                      className="group flex flex-col overflow-hidden rounded-xl bg-white border border-gray-100 shadow-sm transition-all hover:shadow-lg hover:-translate-y-0.5"
+                      className="group flex flex-col overflow-hidden rounded-xl bg-white dark:bg-gray-950 border border-gray-100 dark:border-gray-800 shadow-sm transition-all hover:shadow-lg hover:-translate-y-0.5"
                     >
                       <div className="relative h-28 overflow-hidden">
                         {r.coverImage ? (
@@ -328,10 +328,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                             </span>
                           ))}
                         </div>
-                        <h4 className="text-sm font-serif font-bold text-gray-900 group-hover:text-[#0074C5] line-clamp-2 leading-snug transition-colors">
+                        <h4 className="text-sm font-serif font-bold text-gray-900 dark:text-white group-hover:text-[#0074C5] line-clamp-2 leading-snug transition-colors">
                           {r.title}
                         </h4>
-                        <div className="mt-auto pt-2 flex items-center gap-2 text-[10px] text-gray-400">
+                        <div className="mt-auto pt-2 flex items-center gap-2 text-[10px] text-gray-400 dark:text-gray-500">
                           <span>{formatDate(r.date)}</span>
                           <span>&middot;</span>
                           <span>{r.readTime} min</span>

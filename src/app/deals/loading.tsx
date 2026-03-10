@@ -15,7 +15,7 @@ export default function DealsLoading() {
         </div>
 
         {/* Table skeleton */}
-        <div className="mt-6 overflow-hidden rounded-xl border border-gray-200">
+        <div className="mt-6 overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
           <table className="w-full">
             <tbody className="divide-y divide-gray-50">
               {Array.from({ length: 10 }).map((_, i) => (

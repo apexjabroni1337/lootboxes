@@ -92,12 +92,12 @@ function ScaleVisualization() {
   ];
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-6">
-      <h3 className="font-semibold text-gray-900 mb-4">The 1-10 Scale</h3>
+    <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
+      <h3 className="font-semibold text-gray-900 dark:text-white mb-4">The 1-10 Scale</h3>
 
       {/* Color bands */}
-      <div className="flex h-12 rounded-lg overflow-hidden mb-6 border border-gray-200">
-        <div className="flex-1 bg-red-500 flex items-center justify-center">
+      <div className="flex h-12 rounded-lg overflow-hidden mb-6 border border-gray-200 dark:border-gray-700">
+        <div className="flex-1 bg-red-50 dark:bg-red-950/300 flex items-center justify-center">
           <span className="text-white text-xs font-bold">1-3: Poor</span>
         </div>
         <div className="flex-1 bg-amber-400 flex items-center justify-center">
@@ -106,7 +106,7 @@ function ScaleVisualization() {
         <div className="flex-1 bg-emerald-400 flex items-center justify-center">
           <span className="text-emerald-900 text-xs font-bold">7-8: Good</span>
         </div>
-        <div className="flex-1 bg-emerald-500 flex items-center justify-center">
+        <div className="flex-1 bg-emerald-50 dark:bg-emerald-950/300 flex items-center justify-center">
           <span className="text-white text-xs font-bold">9-10: Excellent</span>
         </div>
       </div>
@@ -116,14 +116,14 @@ function ScaleVisualization() {
         {exampleGames.map((game) => (
           <div key={game.title}>
             <div className="flex justify-between mb-1">
-              <span className="text-sm font-medium text-gray-900">
+              <span className="text-sm font-medium text-gray-900 dark:text-white">
                 {game.title}
               </span>
-              <span className="text-sm font-bold text-gray-600">
+              <span className="text-sm font-bold text-gray-600 dark:text-gray-300">
                 {game.score}
               </span>
             </div>
-            <div className="w-full h-6 bg-gray-100 rounded-lg overflow-hidden relative border border-gray-200">
+            <div className="w-full h-6 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden relative border border-gray-200 dark:border-gray-700">
               <div
                 className={`h-full ${
                   game.score >= 9
@@ -145,21 +145,21 @@ function ScaleVisualization() {
       <div className="mt-6 grid grid-cols-2 gap-3 text-xs">
         <div>
           <div className="font-semibold text-red-600 mb-1">1-3: Poor</div>
-          <p className="text-gray-600">Predatory or exploitative monetization</p>
+          <p className="text-gray-600 dark:text-gray-300">Predatory or exploitative monetization</p>
         </div>
         <div>
           <div className="font-semibold text-amber-600 mb-1">4-6: Fair</div>
-          <p className="text-gray-600">Mixed practices, room for improvement</p>
+          <p className="text-gray-600 dark:text-gray-300">Mixed practices, room for improvement</p>
         </div>
         <div>
           <div className="font-semibold text-emerald-600 mb-1">7-8: Good</div>
-          <p className="text-gray-600">Above-average, consumer-friendly</p>
+          <p className="text-gray-600 dark:text-gray-300">Above-average, consumer-friendly</p>
         </div>
         <div>
           <div className="font-semibold text-emerald-700 mb-1">
             9-10: Excellent
           </div>
-          <p className="text-gray-600">Industry-leading practices</p>
+          <p className="text-gray-600 dark:text-gray-300">Industry-leading practices</p>
         </div>
       </div>
     </div>
@@ -168,13 +168,13 @@ function ScaleVisualization() {
 
 function CriteriaTable({ subScore }: { subScore: typeof SCORE_CATEGORIES[0]["subScores"][0] }) {
   return (
-    <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
+    <div className="bg-gray-50 dark:bg-gray-900 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
       <table className="w-full text-sm">
-        <thead className="bg-gray-100 border-b border-gray-200">
+        <thead className="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
           <tr>
-            <th className="text-left px-4 py-3 font-semibold text-gray-700">Score</th>
-            <th className="text-left px-4 py-3 font-semibold text-gray-700">Rating</th>
-            <th className="text-left px-4 py-3 font-semibold text-gray-700">What This Means</th>
+            <th className="text-left px-4 py-3 font-semibold text-gray-700 dark:text-gray-200">Score</th>
+            <th className="text-left px-4 py-3 font-semibold text-gray-700 dark:text-gray-200">Rating</th>
+            <th className="text-left px-4 py-3 font-semibold text-gray-700 dark:text-gray-200">What This Means</th>
           </tr>
         </thead>
         <tbody>
@@ -186,12 +186,12 @@ function CriteriaTable({ subScore }: { subScore: typeof SCORE_CATEGORIES[0]["sub
             else bgColor = "bg-red-50";
 
             return (
-              <tr key={idx} className={`border-b border-gray-200 last:border-b-0 ${bgColor}`}>
-                <td className="px-4 py-3 font-bold text-gray-900">
+              <tr key={idx} className={`border-b border-gray-200 dark:border-gray-700 last:border-b-0 ${bgColor}`}>
+                <td className="px-4 py-3 font-bold text-gray-900 dark:text-white">
                   {criterion.range[0]}-{criterion.range[1]}
                 </td>
-                <td className="px-4 py-3 font-semibold text-gray-900">{criterion.label}</td>
-                <td className="px-4 py-3 text-gray-600">{criterion.description}</td>
+                <td className="px-4 py-3 font-semibold text-gray-900 dark:text-white">{criterion.label}</td>
+                <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{criterion.description}</td>
               </tr>
             );
           })}
@@ -218,21 +218,21 @@ function CollapsibleSection({
   return (
     <details
       open={defaultOpen || undefined}
-      className="group rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm"
+      className="group rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 overflow-hidden shadow-sm"
     >
-      <summary className="flex items-center justify-between gap-3 px-6 py-4 cursor-pointer select-none hover:bg-gray-50 transition-colors">
+      <summary className="flex items-center justify-between gap-3 px-6 py-4 cursor-pointer select-none hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-900 transition-colors">
         <div className="flex items-center gap-3 min-w-0">
           {icon}
-          <h2 className="text-xl font-bold text-gray-900">{title}</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h2>
           {badge && (
-            <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-[11px] font-semibold text-gray-500">
+            <span className="rounded-full bg-gray-100 dark:bg-gray-800 px-2.5 py-0.5 text-[11px] font-semibold text-gray-500 dark:text-gray-400">
               {badge}
             </span>
           )}
         </div>
-        <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform group-open:rotate-180" />
+        <ChevronDown className="w-5 h-5 text-gray-400 dark:text-gray-500 flex-shrink-0 transition-transform group-open:rotate-180" />
       </summary>
-      <div className="border-t border-gray-100 px-6 py-6">
+      <div className="border-t border-gray-100 dark:border-gray-800 px-6 py-6">
         {children}
       </div>
     </details>
@@ -258,21 +258,21 @@ function CollapsibleSubSection({
   return (
     <details
       open={defaultOpen || undefined}
-      className="group/sub rounded-lg border border-gray-100 overflow-hidden"
+      className="group/sub rounded-lg border border-gray-100 dark:border-gray-800 overflow-hidden"
     >
-      <summary className="flex items-center justify-between gap-3 px-4 py-3 cursor-pointer select-none hover:bg-gray-50 transition-colors">
+      <summary className="flex items-center justify-between gap-3 px-4 py-3 cursor-pointer select-none hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-900 transition-colors">
         <div className="flex items-center gap-3 min-w-0">
           {icon && <div className={iconColor}>{icon}</div>}
           <div className="min-w-0">
-            <h4 className="font-bold text-gray-900">{title}</h4>
+            <h4 className="font-bold text-gray-900 dark:text-white">{title}</h4>
             {subtitle && (
-              <p className="text-sm text-gray-500 truncate">{subtitle}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{subtitle}</p>
             )}
           </div>
         </div>
-        <ChevronDown className="w-4 h-4 text-gray-400 flex-shrink-0 transition-transform group-open/sub:rotate-180" />
+        <ChevronDown className="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0 transition-transform group-open/sub:rotate-180" />
       </summary>
-      <div className="border-t border-gray-100 px-4 py-4 bg-gray-50/30">
+      <div className="border-t border-gray-100 dark:border-gray-800 px-4 py-4 bg-gray-50 dark:bg-gray-900/30">
         {children}
       </div>
     </details>
@@ -288,16 +288,16 @@ export default function MethodologyPage() {
           <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
             <BarChart3 className="w-5 h-5 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             How We Rate Games
           </h1>
         </div>
-        <p className="text-lg text-gray-600 max-w-3xl mb-3">
+        <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mb-3">
           Our transparent, criteria-based methodology for evaluating game
           monetization. Every score is documented, reproducible, and open to
           scrutiny.
         </p>
-        <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-1.5 text-sm">
+        <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 rounded-lg px-3 py-1.5 text-sm">
           <Clock className="w-4 h-4 text-blue-600" />
           <span className="font-medium text-blue-900">
             Methodology v{METHODOLOGY_VERSION} — {METHODOLOGY_DATE}
@@ -332,10 +332,10 @@ export default function MethodologyPage() {
           >
             {/* Category overview */}
             <div className={`rounded-lg border ${category.borderColor} ${category.bgColor} p-5 mb-5`}>
-              <p className="text-gray-700 mb-3">{category.description}</p>
-              <div className="bg-white bg-opacity-60 rounded-lg p-4 border border-gray-200">
-                <p className="text-sm text-gray-700">
-                  <span className="font-semibold text-gray-900">Why It Matters:</span>{" "}
+              <p className="text-gray-700 dark:text-gray-200 mb-3">{category.description}</p>
+              <div className="bg-white dark:bg-gray-950 bg-opacity-60 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                <p className="text-sm text-gray-700 dark:text-gray-200">
+                  <span className="font-semibold text-gray-900 dark:text-white">Why It Matters:</span>{" "}
                   {category.whyItMatters}
                 </p>
               </div>
@@ -361,53 +361,53 @@ export default function MethodologyPage() {
 
         {/* ── How We Calculate ── */}
         <CollapsibleSection title="How We Calculate Your Score">
-          <div className="bg-gray-50 rounded-xl border border-gray-200 p-6 mb-6">
-            <h3 className="font-bold text-gray-900 mb-4 text-lg">
+          <div className="bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
+            <h3 className="font-bold text-gray-900 dark:text-white mb-4 text-lg">
               The Weighted Formula
             </h3>
-            <div className="bg-white rounded-lg p-5 border border-blue-200 mb-6">
+            <div className="bg-white dark:bg-gray-950 rounded-lg p-5 border border-blue-200 mb-6">
               <code className="text-sm font-mono text-blue-900">
                 Overall = (Consumer Protection avg × 0.40) + (Value & Fairness
                 avg × 0.35) + (Player Experience avg × 0.25)
               </code>
             </div>
 
-            <h3 className="font-bold text-gray-900 mb-4">
+            <h3 className="font-bold text-gray-900 dark:text-white mb-4">
               Worked Example: Genshin Impact
             </h3>
-            <div className="space-y-4 text-sm text-gray-700">
+            <div className="space-y-4 text-sm text-gray-700 dark:text-gray-200">
               <div className="grid grid-cols-3 gap-4 font-mono">
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 mb-1 uppercase">Category Scores</p>
+                  <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 uppercase">Category Scores</p>
                   <p>Consumer Protection:</p>
                   <p>Value & Fairness:</p>
                   <p>Player Experience:</p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 mb-1 uppercase">Calculation</p>
+                  <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 uppercase">Calculation</p>
                   <p>(7 + 8 + 3) / 3 = 6.0</p>
                   <p>(2 + 3 + 8) / 3 = 4.3</p>
                   <p>(3 + 3) / 2 = 3.0</p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 mb-1 uppercase">Weighted</p>
+                  <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1 uppercase">Weighted</p>
                   <p>6.0 × 0.40 = 2.40</p>
                   <p>4.3 × 0.35 = 1.51</p>
                   <p>3.0 × 0.25 = 0.75</p>
                 </div>
               </div>
 
-              <div className="border-t border-gray-300 pt-4 mt-4">
-                <p className="font-bold text-gray-900 text-base">
+              <div className="border-t border-gray-300 dark:border-gray-600 pt-4 mt-4">
+                <p className="font-bold text-gray-900 dark:text-white text-base">
                   Overall Score: 2.40 + 1.51 + 0.75 = 4.66 → rounds to{" "}
                   <span className="text-amber-600">4.7 (Fair)</span>
                 </p>
               </div>
             </div>
 
-            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-gray-700">
-                <span className="font-semibold text-gray-900">Why these weights?</span> Consumer
+            <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 rounded-lg">
+              <p className="text-sm text-gray-700 dark:text-gray-200">
+                <span className="font-semibold text-gray-900 dark:text-white">Why these weights?</span> Consumer
                 Protection is weighted highest (40%) because informed consent is
                 the foundation of fair monetization. A system can be
                 consumer-friendly in value but exploitative in design. Without
@@ -444,21 +444,21 @@ export default function MethodologyPage() {
                 examples: "Player-reported pity thresholds, budget documentation, feature changes.",
               },
             ].map((source, idx) => (
-              <div key={idx} className="bg-white border border-gray-200 rounded-xl p-6">
+              <div key={idx} className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
                 <div className={`mb-3 ${source.color}`}>{source.icon}</div>
-                <h3 className="font-bold text-gray-900 mb-2">{source.title}</h3>
-                <p className="text-sm text-gray-600 mb-4">{source.desc}</p>
-                <p className="text-xs text-gray-500">
-                  <span className="font-semibold text-gray-700">Examples:</span>{" "}
+                <h3 className="font-bold text-gray-900 dark:text-white mb-2">{source.title}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">{source.desc}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <span className="font-semibold text-gray-700 dark:text-gray-200">Examples:</span>{" "}
                   {source.examples}
                 </p>
               </div>
             ))}
           </div>
 
-          <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
-            <p className="text-sm text-gray-700">
-              <span className="font-semibold text-gray-900">Cross-referencing & Verification:</span> We
+          <div className="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 rounded-lg">
+            <p className="text-sm text-gray-700 dark:text-gray-200">
+              <span className="font-semibold text-gray-900 dark:text-white">Cross-referencing & Verification:</span> We
               require multiple independent sources before publishing a score. If
               official and community data disagree, we flag the game for manual
               review and note the discrepancy in our database.
@@ -468,9 +468,9 @@ export default function MethodologyPage() {
 
         {/* ── Score Updates ── */}
         <CollapsibleSection title="Score Updates & Version History">
-          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-            <div className="p-5 border-b border-gray-200 bg-gray-50">
-              <p className="text-sm text-gray-700">
+          <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+            <div className="p-5 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+              <p className="text-sm text-gray-700 dark:text-gray-200">
                 Scores are <span className="font-semibold">living documents</span>.
                 When a game receives a major monetization patch, changes its
                 regional pricing, or adds new safeguards, we re-evaluate and
@@ -478,25 +478,25 @@ export default function MethodologyPage() {
               </p>
             </div>
             <table className="w-full text-sm">
-              <thead className="bg-gray-100 border-b border-gray-200">
+              <thead className="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                 <tr>
-                  <th className="text-left px-6 py-3 font-semibold text-gray-700">Version</th>
-                  <th className="text-left px-6 py-3 font-semibold text-gray-700">Date</th>
-                  <th className="text-left px-6 py-3 font-semibold text-gray-700">Changes</th>
+                  <th className="text-left px-6 py-3 font-semibold text-gray-700 dark:text-gray-200">Version</th>
+                  <th className="text-left px-6 py-3 font-semibold text-gray-700 dark:text-gray-200">Date</th>
+                  <th className="text-left px-6 py-3 font-semibold text-gray-700 dark:text-gray-200">Changes</th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b border-gray-200 hover:bg-gray-50">
+                <tr className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-900">
                   <td className="px-6 py-4 font-semibold text-blue-600">v2.0</td>
-                  <td className="px-6 py-4 text-gray-600">March 2026</td>
-                  <td className="px-6 py-4 text-gray-600">
+                  <td className="px-6 py-4 text-gray-600 dark:text-gray-300">March 2026</td>
+                  <td className="px-6 py-4 text-gray-600 dark:text-gray-300">
                     Introduced three-category framework with 8 sub-scores and weighted calculation
                   </td>
                 </tr>
-                <tr className="hover:bg-gray-50">
-                  <td className="px-6 py-4 font-semibold text-gray-500">v1.0</td>
-                  <td className="px-6 py-4 text-gray-600">Initial Release</td>
-                  <td className="px-6 py-4 text-gray-600">
+                <tr className="hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-900">
+                  <td className="px-6 py-4 font-semibold text-gray-500 dark:text-gray-400">v1.0</td>
+                  <td className="px-6 py-4 text-gray-600 dark:text-gray-300">Initial Release</td>
+                  <td className="px-6 py-4 text-gray-600 dark:text-gray-300">
                     Original 4-score system (Transparency, Value, Fairness, Control)
                   </td>
                 </tr>
@@ -511,13 +511,13 @@ export default function MethodologyPage() {
             {FAQ_ITEMS.map((item, idx) => (
               <details
                 key={idx}
-                className="bg-white border border-gray-200 rounded-lg overflow-hidden group/faq"
+                className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden group/faq"
               >
-                <summary className="px-5 py-3.5 font-semibold text-gray-900 cursor-pointer hover:bg-gray-50 flex items-center justify-between">
+                <summary className="px-5 py-3.5 font-semibold text-gray-900 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-900 flex items-center justify-between">
                   <span>{item.question}</span>
-                  <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0 group-open/faq:rotate-90 transition-transform" />
+                  <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0 group-open/faq:rotate-90 transition-transform" />
                 </summary>
-                <div className="px-5 py-4 border-t border-gray-200 bg-gray-50 text-gray-700 text-sm leading-relaxed">
+                <div className="px-5 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-200 text-sm leading-relaxed">
                   {item.answer}
                 </div>
               </details>
@@ -530,13 +530,13 @@ export default function MethodologyPage() {
       <div className="grid md:grid-cols-2 gap-4 mt-8">
         <Link
           href="/lootbox"
-          className="group flex items-center justify-between bg-blue-50 border border-blue-200 rounded-xl p-6 hover:shadow-lg hover:border-blue-300 transition-all"
+          className="group flex items-center justify-between bg-blue-50 dark:bg-blue-950/30 border border-blue-200 rounded-xl p-6 hover:shadow-lg hover:border-blue-300 transition-all"
         >
           <div>
-            <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+            <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors">
               Browse the Loot Box Database
             </h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
               See how every game scores in our database
             </p>
           </div>
@@ -545,13 +545,13 @@ export default function MethodologyPage() {
 
         <Link
           href="/drop-rates"
-          className="group flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-xl p-6 hover:shadow-lg hover:border-emerald-300 transition-all"
+          className="group flex items-center justify-between bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-700/30 rounded-xl p-6 hover:shadow-lg hover:border-emerald-300 transition-all"
         >
           <div>
-            <h3 className="font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">
+            <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-emerald-600 transition-colors">
               View Drop Rate Database
             </h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
               Raw odds and rate data for every game
             </p>
           </div>

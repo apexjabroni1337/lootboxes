@@ -41,8 +41,8 @@ function CustomTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-3 shadow-lg">
-      <p className="mb-1.5 text-xs font-medium text-gray-500">
+    <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-3 shadow-lg">
+      <p className="mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
         {new Date(label).toLocaleDateString("en-US", {
           month: "long",
           year: "numeric",
@@ -62,7 +62,7 @@ function CustomTooltip({ active, payload, label }: any) {
               />
               {STORES[entry.dataKey]?.name || entry.dataKey}
             </span>
-            <span className="font-semibold text-gray-900">
+            <span className="font-semibold text-gray-900 dark:text-white">
               ${entry.value.toFixed(2)}
             </span>
           </div>

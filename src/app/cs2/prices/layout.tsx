@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import ToolSchema from "@/components/seo/ToolSchema";
 
+// Default metadata — overridden by each subpage's own metadata export
 export const metadata: Metadata = {
   title: "CS2 Skin Price Tracker — Compare Prices Across 5 Marketplaces",
   description:

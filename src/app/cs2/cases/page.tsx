@@ -79,25 +79,25 @@ export default async function CS2CasesPage() {
   ].filter((t) => cratesByType[t]?.length > 0);
 
   return (
-    <div className="min-h-screen bg-white pb-12">
+    <div className="min-h-screen bg-white dark:bg-gray-950 pb-12">
       {/* Hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-r from-yellow-50 via-amber-50 to-orange-50 py-10">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-yellow-50 dark:from-yellow-950/30 via-amber-50 dark:via-amber-950/20 to-orange-50 dark:to-orange-950/20 py-10">
         <div className="container-main">
           <Link
             href="/cs2"
-            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4"
+            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-200 mb-4"
           >
             <ChevronLeft className="h-4 w-4" /> CS2 Skins Hub
           </Link>
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500 text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/300 text-white">
               <Package className="h-5 w-5" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
               CS2 Cases & Capsules
             </h1>
           </div>
-          <p className="text-gray-600 max-w-2xl">
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl">
             Every weapon case, sticker capsule, and souvenir package ever released in
             Counter-Strike 2 and CS:GO. Browse contents, see every skin, and try your
             luck in our simulator.
@@ -105,19 +105,19 @@ export default async function CS2CasesPage() {
 
           {/* Stats */}
           <div className="flex flex-wrap gap-4 mt-5">
-            <div className="rounded-lg border border-amber-200 bg-white px-4 py-2">
-              <p className="text-2xl font-black text-gray-900">{crates.length}</p>
-              <p className="text-[11px] text-gray-500 font-medium">Total Crates</p>
+            <div className="rounded-lg border border-amber-200 bg-white dark:bg-gray-950 px-4 py-2">
+              <p className="text-2xl font-black text-gray-900 dark:text-white">{crates.length}</p>
+              <p className="text-[11px] text-gray-500 dark:text-gray-400 font-medium">Total Crates</p>
             </div>
-            <div className="rounded-lg border border-amber-200 bg-white px-4 py-2">
-              <p className="text-2xl font-black text-gray-900">{types.length}</p>
-              <p className="text-[11px] text-gray-500 font-medium">Categories</p>
+            <div className="rounded-lg border border-amber-200 bg-white dark:bg-gray-950 px-4 py-2">
+              <p className="text-2xl font-black text-gray-900 dark:text-white">{types.length}</p>
+              <p className="text-[11px] text-gray-500 dark:text-gray-400 font-medium">Categories</p>
             </div>
-            <div className="rounded-lg border border-amber-200 bg-white px-4 py-2">
-              <p className="text-2xl font-black text-gray-900">
+            <div className="rounded-lg border border-amber-200 bg-white dark:bg-gray-950 px-4 py-2">
+              <p className="text-2xl font-black text-gray-900 dark:text-white">
                 {Object.values(itemCounts).reduce((a, b) => a + b, 0).toLocaleString()}
               </p>
-              <p className="text-[11px] text-gray-500 font-medium">Total Items</p>
+              <p className="text-[11px] text-gray-500 dark:text-gray-400 font-medium">Total Items</p>
             </div>
           </div>
         </div>
@@ -151,8 +151,8 @@ export default async function CS2CasesPage() {
             <section key={type} id={type.toLowerCase().replace(/\s+/g, "-")}>
               <div className="flex items-center gap-2 mb-4">
                 <div className="h-1 w-6 rounded-full bg-amber-400" />
-                <h2 className="text-xl font-bold text-gray-900">{type}</h2>
-                <span className="text-sm text-gray-400">({typeCrates.length})</span>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">{type}</h2>
+                <span className="text-sm text-gray-400 dark:text-gray-500">({typeCrates.length})</span>
               </div>
 
               <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -165,10 +165,10 @@ export default async function CS2CasesPage() {
                     <Link
                       key={crate.id}
                       href={`/cs2/cases/${slug}`}
-                      className="group flex flex-col rounded-xl border border-gray-200 bg-white overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all"
+                      className="group flex flex-col rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all"
                     >
                       {/* Image */}
-                      <div className="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4 relative">
+                      <div className="aspect-square bg-gradient-to-br from-gray-50 dark:from-gray-900 to-gray-100 flex items-center justify-center p-4 relative">
                         {crate.image ? (
                           <img
                             src={crate.image}
@@ -187,17 +187,17 @@ export default async function CS2CasesPage() {
                       </div>
 
                       {/* Info */}
-                      <div className="p-3 border-t border-gray-100">
-                        <h3 className="text-sm font-semibold text-gray-900 line-clamp-1 group-hover:text-brand-600 transition-colors">
+                      <div className="p-3 border-t border-gray-100 dark:border-gray-800">
+                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-1 group-hover:text-brand-600 transition-colors">
                           {crate.name}
                         </h3>
                         <div className="flex items-center justify-between mt-1">
-                          <div className="flex items-center gap-1 text-[11px] text-gray-500">
+                          <div className="flex items-center gap-1 text-[11px] text-gray-500 dark:text-gray-400">
                             <Layers className="h-3 w-3" />
                             {count} items
                           </div>
                           {crate.first_sale_date && (
-                            <div className="flex items-center gap-1 text-[11px] text-gray-400">
+                            <div className="flex items-center gap-1 text-[11px] text-gray-400 dark:text-gray-500">
                               <Calendar className="h-3 w-3" />
                               {crate.first_sale_date.substring(0, 4)}
                             </div>

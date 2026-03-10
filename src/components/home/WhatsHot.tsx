@@ -47,7 +47,7 @@ export default function WhatsHot({ deals }: WhatsHotProps) {
                 className="group w-[260px] flex-shrink-0 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg dark:border-gray-700 dark:bg-gray-900"
               >
                 {/* Landscape image */}
-                <div className="relative aspect-[16/9] overflow-hidden bg-gray-100">
+                <div className="relative aspect-[16/9] overflow-hidden bg-gray-100 dark:bg-gray-800">
                   {bgImage ? (
                     <img
                       src={bgImage}
@@ -87,7 +87,7 @@ export default function WhatsHot({ deals }: WhatsHotProps) {
                   </div>
                   <div className="mt-2 flex items-center justify-between">
                     <div>
-                      <span className="text-xs text-gray-400 line-through">
+                      <span className="text-xs text-gray-400 dark:text-gray-500 line-through">
                         {formatPrice(deal.original_price)}
                       </span>
                       <span className="ml-1 text-base font-bold text-gray-900 dark:text-white">

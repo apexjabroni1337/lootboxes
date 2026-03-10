@@ -32,10 +32,10 @@ export default function AboutPage() {
   return (
     <div className="pb-16">
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900 py-16 sm:py-20">
+      <section className="relative overflow-hidden border-b border-gray-100 dark:border-gray-800 bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900 py-16 sm:py-20">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute -left-40 -top-40 h-80 w-80 rounded-full bg-brand-400/20 blur-3xl" />
-          <div className="absolute -bottom-20 right-0 h-64 w-64 rounded-full bg-white/5 blur-3xl" />
+          <div className="absolute -bottom-20 right-0 h-64 w-64 rounded-full bg-white dark:bg-gray-950/5 blur-3xl" />
         </div>
         <div className="container-main relative text-center">
           <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
@@ -50,12 +50,12 @@ export default function AboutPage() {
       </section>
 
       <div className="container-main max-w-4xl">
-        <div className="mt-12 space-y-14 text-gray-600">
+        <div className="mt-12 space-y-14 text-gray-600 dark:text-gray-300">
           {/* Mission */}
           <section>
             <div className="flex items-center gap-2">
               <Target className="h-5 w-5 text-brand-600" />
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                 Our Mission
               </h2>
             </div>
@@ -79,7 +79,7 @@ export default function AboutPage() {
           <section>
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5 text-brand-600" />
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                 What We Do
               </h2>
             </div>
@@ -117,10 +117,10 @@ export default function AboutPage() {
                 },
               ].map((item) => (
                 <div key={item.title} className="card">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50 border border-brand-100">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50 dark:bg-brand-950/30 border border-brand-100 dark:border-brand-800/30">
                     <item.icon className="h-5 w-5 text-brand-600" />
                   </div>
-                  <h3 className="mt-3 font-semibold text-gray-900">
+                  <h3 className="mt-3 font-semibold text-gray-900 dark:text-white">
                     {item.title}
                   </h3>
                   <p className="mt-1 text-sm leading-relaxed">{item.desc}</p>
@@ -133,13 +133,13 @@ export default function AboutPage() {
           <section>
             <div className="flex items-center gap-2">
               <Globe className="h-5 w-5 text-brand-600" />
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                 Our Values
               </h2>
             </div>
             <div className="mt-4 space-y-4">
-              <div className="rounded-lg border border-gray-200 bg-white p-5">
-                <h3 className="font-semibold text-gray-900">
+              <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-5">
+                <h3 className="font-semibold text-gray-900 dark:text-white">
                   Independence Above All
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed">
@@ -150,8 +150,8 @@ export default function AboutPage() {
                   it&apos;s because we think it&apos;s good for gamers — period.
                 </p>
               </div>
-              <div className="rounded-lg border border-gray-200 bg-white p-5">
-                <h3 className="font-semibold text-gray-900">
+              <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-5">
+                <h3 className="font-semibold text-gray-900 dark:text-white">
                   Transparency Is Non-Negotiable
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed">
@@ -167,8 +167,8 @@ export default function AboutPage() {
                   so — clearly and prominently.
                 </p>
               </div>
-              <div className="rounded-lg border border-gray-200 bg-white p-5">
-                <h3 className="font-semibold text-gray-900">
+              <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-5">
+                <h3 className="font-semibold text-gray-900 dark:text-white">
                   Data Over Opinions
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed">
@@ -182,63 +182,63 @@ export default function AboutPage() {
           </section>
 
           {/* Quick Links */}
-          <section className="rounded-xl border border-gray-200 bg-gray-50 p-6">
-            <h2 className="text-lg font-semibold text-gray-900">
+          <section className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-6">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
               Important Pages
             </h2>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <Link
                 href="/editorial-policy"
-                className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-brand-300 hover:shadow-sm"
+                className="flex items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-4 transition-all hover:border-brand-300 hover:shadow-sm"
               >
                 <Shield className="h-5 w-5 text-brand-600 shrink-0" />
                 <div>
-                  <p className="text-sm font-semibold text-gray-900">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">
                     Editorial Policy
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     How we maintain editorial independence
                   </p>
                 </div>
               </Link>
               <Link
                 href="/affiliate-disclosure"
-                className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-brand-300 hover:shadow-sm"
+                className="flex items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-4 transition-all hover:border-brand-300 hover:shadow-sm"
               >
                 <Handshake className="h-5 w-5 text-brand-600 shrink-0" />
                 <div>
-                  <p className="text-sm font-semibold text-gray-900">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">
                     Affiliate Disclosure
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     How we earn revenue and stay free
                   </p>
                 </div>
               </Link>
               <Link
                 href="/contact"
-                className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-brand-300 hover:shadow-sm"
+                className="flex items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-4 transition-all hover:border-brand-300 hover:shadow-sm"
               >
                 <Mail className="h-5 w-5 text-brand-600 shrink-0" />
                 <div>
-                  <p className="text-sm font-semibold text-gray-900">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">
                     Contact Us
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     Get in touch with the team
                   </p>
                 </div>
               </Link>
               <Link
                 href="/methodology"
-                className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-brand-300 hover:shadow-sm"
+                className="flex items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-4 transition-all hover:border-brand-300 hover:shadow-sm"
               >
                 <BarChart3 className="h-5 w-5 text-brand-600 shrink-0" />
                 <div>
-                  <p className="text-sm font-semibold text-gray-900">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">
                     Scoring Methodology
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     How LootBoxes Scores are calculated
                   </p>
                 </div>

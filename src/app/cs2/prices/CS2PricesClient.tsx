@@ -97,13 +97,34 @@ function savingsPct(high: number | null, low: number | null): string {
 interface Props {
   initialMultiItems: MultiMarketPrice[];
   initialFallbackItems: SkinPrice[];
+  defaultMode?: ViewMode;
+  pageTitle?: string;
+  pageDescription?: string;
 }
 
-export default function CS2PricesClient({ initialMultiItems, initialFallbackItems }: Props) {
+const MODE_ROUTES: Record<ViewMode, string> = {
+  default: "/cs2/prices",
+  deals: "/cs2/prices/best-deals",
+  trending: "/cs2/prices/trending",
+};
+
+const DEFAULT_SORT_FOR_MODE: Record<ViewMode, SortKey> = {
+  default: "expensive",
+  deals: "savings",
+  trending: "volume",
+};
+
+export default function CS2PricesClient({
+  initialMultiItems,
+  initialFallbackItems,
+  defaultMode = "default",
+  pageTitle,
+  pageDescription,
+}: Props) {
   const [query, setQuery] = useState("");
-  const [sortBy, setSortBy] = useState<SortKey>("expensive");
+  const [sortBy, setSortBy] = useState<SortKey>(DEFAULT_SORT_FOR_MODE[defaultMode]);
   const [wearFilter, setWearFilter] = useState<string>("All");
-  const [viewMode, setViewMode] = useState<ViewMode>("default");
+  const viewMode = defaultMode;
   const [displayLimit, setDisplayLimit] = useState(50);
 
   /* Multi-market data (SteamWebAPI) */
@@ -208,8 +229,6 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
   const handleQueryChange = (v: string) => { setQuery(v); setHasInteracted(true); };
   const handleSortChange = (v: SortKey) => { setSortBy(v); setHasInteracted(true); };
   const handleWearChange = (v: string) => { setWearFilter(v); setHasInteracted(true); };
-  const handleViewModeChange = (v: ViewMode) => { setViewMode(v); setHasInteracted(true); };
-
   const displayedMulti = useMemo(() => multiItems.slice(0, displayLimit), [multiItems, displayLimit]);
   const displayedFallback = useMemo(() => fallbackItems.slice(0, displayLimit), [fallbackItems, displayLimit]);
 
@@ -217,83 +236,89 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
   const shownItems = hasMultiData ? multiItems : fallbackItems;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-r from-orange-50 via-amber-50 to-yellow-50 py-10">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-orange-50 dark:from-orange-950/30 via-amber-50 dark:via-amber-950/20 to-yellow-50 dark:to-yellow-950/20 py-10">
         <div className="container-main">
-          <Link href="/cs2" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4">
+          <Link href="/cs2" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-200 mb-4">
             <ChevronLeft className="h-4 w-4" /> CS2 Skins Hub
           </Link>
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500 text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 dark:bg-orange-950/300 text-white">
               <TrendingUp className="h-5 w-5" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">Skin Price Tracker</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              {pageTitle || "Skin Price Tracker"}
+            </h1>
           </div>
-          <p className="text-gray-600 max-w-2xl">
-            {hasMultiData
-              ? `Live CS2 skin prices across ${Object.keys(MARKETPLACE_INFO).length} marketplaces.`
-              : "Live CS2 skin prices from Skinport with market value comparison."
-            }
-            {totalItems > 0 && ` Tracking ${totalItems.toLocaleString()} skins.`}
-            {" "}Find the cheapest prices and compare across marketplaces.
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl">
+            {pageDescription || (
+              <>
+                {hasMultiData
+                  ? `Live CS2 skin prices across ${Object.keys(MARKETPLACE_INFO).length} marketplaces.`
+                  : "Live CS2 skin prices from Skinport with market value comparison."
+                }
+                {totalItems > 0 && ` Tracking ${totalItems.toLocaleString()} skins.`}
+                {" "}Find the cheapest prices and compare across marketplaces.
+              </>
+            )}
           </p>
 
-          {/* View mode tabs */}
+          {/* View mode tabs — real links for SEO, each is its own page */}
           <div className="flex items-center gap-2 mt-4">
-            <button
-              onClick={() => handleViewModeChange("default")}
+            <Link
+              href={MODE_ROUTES.default}
               className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
                 viewMode === "default"
-                  ? "bg-gray-900 text-white"
-                  : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+                  ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
+                  : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
               }`}
             >
               <DollarSign className="h-3.5 w-3.5" /> All Skins
-            </button>
-            <button
-              onClick={() => handleViewModeChange("deals")}
+            </Link>
+            <Link
+              href={MODE_ROUTES.deals}
               className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
                 viewMode === "deals"
                   ? "bg-emerald-600 text-white"
-                  : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+                  : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
               }`}
             >
               <Tag className="h-3.5 w-3.5" /> Best Deals
-            </button>
-            <button
-              onClick={() => handleViewModeChange("trending")}
+            </Link>
+            <Link
+              href={MODE_ROUTES.trending}
               className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
                 viewMode === "trending"
                   ? "bg-orange-500 text-white"
-                  : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+                  : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
               }`}
             >
               <Flame className="h-3.5 w-3.5" /> Trending
-            </button>
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Search + Sort + Wear Filter */}
-      <section className="border-b border-gray-100 bg-white sticky top-16 z-30">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 sticky top-16 z-30">
         <div className="container-main py-4 flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
             <input
               type="text"
               placeholder="Search skins (e.g. AK-47, Dragon Lore, Butterfly Fade...)"
               value={query}
               onChange={(e) => handleQueryChange(e.target.value)}
-              className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-4 text-sm focus:border-brand-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-100"
+              className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 py-2.5 pl-10 pr-4 text-sm focus:border-brand-300 focus:bg-white dark:bg-gray-950 focus:outline-none focus:ring-2 focus:ring-brand-100"
             />
           </div>
           <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-gray-400" />
+            <Filter className="h-4 w-4 text-gray-400 dark:text-gray-500" />
             <select
               value={wearFilter}
               onChange={(e) => handleWearChange(e.target.value)}
-              className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-brand-300 focus:outline-none"
+              className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 py-2.5 text-sm focus:border-brand-300 focus:outline-none"
             >
               {WEARS.map((w) => (
                 <option key={w} value={w}>{w === "All" ? "All Wears" : w}</option>
@@ -301,16 +326,16 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
             </select>
           </div>
           <div className="flex items-center gap-2">
-            <ArrowUpDown className="h-4 w-4 text-gray-400" />
+            <ArrowUpDown className="h-4 w-4 text-gray-400 dark:text-gray-500" />
             <select
               value={sortBy}
               onChange={(e) => handleSortChange(e.target.value as SortKey)}
-              className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-brand-300 focus:outline-none"
+              className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 py-2.5 text-sm focus:border-brand-300 focus:outline-none"
             >
               <option value="expensive">Most Valuable</option>
               <option value="cheapest">Cheapest First</option>
               <option value="savings">Biggest Savings</option>
-              {hasMultiData && <option value="volume">Most Traded</option>}
+              <option value="volume">Most Traded</option>
               <option value="name">Name A-Z</option>
             </select>
           </div>
@@ -318,7 +343,7 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
       </section>
 
       {/* Live status bar */}
-      <section className="border-b border-gray-50 bg-gray-50/50">
+      <section className="border-b border-gray-50 bg-gray-50 dark:bg-gray-900/50">
         <div className="container-main py-3 flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-1.5 text-[11px]">
             {isLive ? (
@@ -326,21 +351,21 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
                 <Wifi className="h-3 w-3 text-emerald-500" />
                 <span className="text-emerald-600 font-semibold">LIVE PRICES</span>
                 {hasMultiData ? (
-                  <span className="text-gray-400 ml-1">
+                  <span className="text-gray-400 dark:text-gray-500 ml-1">
                     from {Object.keys(MARKETPLACE_INFO).length} marketplaces — updated every 10 min
                   </span>
                 ) : (
-                  <span className="text-gray-400 ml-1">from Skinport — updated every 15 min</span>
+                  <span className="text-gray-400 dark:text-gray-500 ml-1">from Skinport — updated every 15 min</span>
                 )}
               </>
             ) : (
               <>
-                <WifiOff className="h-3 w-3 text-gray-400" />
-                <span className="text-gray-400">Loading prices...</span>
+                <WifiOff className="h-3 w-3 text-gray-400 dark:text-gray-500" />
+                <span className="text-gray-400 dark:text-gray-500">Loading prices...</span>
               </>
             )}
           </div>
-          <div className="flex items-center gap-3 ml-auto text-[11px] text-gray-400">
+          <div className="flex items-center gap-3 ml-auto text-[11px] text-gray-400 dark:text-gray-500">
             <span>Buy on:</span>
             {Object.values(MARKETPLACE_INFO)
               .filter((mp) => mp.dealId !== "steam")
@@ -350,7 +375,7 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
                   href={`/go/cs2/${mp.dealId}?from=prices-bar`}
                   target="_blank"
                   rel="noopener noreferrer nofollow"
-                  className="flex items-center gap-1 hover:text-gray-600 transition-colors"
+                  className="flex items-center gap-1 hover:text-gray-600 dark:text-gray-300 transition-colors"
                 >
                   <div className="h-2 w-2 rounded-full" style={{ backgroundColor: mp.color }} />
                   <span className="font-medium">{mp.name}</span>
@@ -366,13 +391,13 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
           {loading ? (
             <div className="flex items-center justify-center py-20">
               <Loader2 className="h-8 w-8 animate-spin text-gray-300" />
-              <span className="ml-3 text-sm text-gray-500">Loading live prices from multiple marketplaces...</span>
+              <span className="ml-3 text-sm text-gray-500 dark:text-gray-400">Loading live prices from multiple marketplaces...</span>
             </div>
           ) : hasMultiData ? (
             /* ── Multi-marketplace view ── */
             <>
               <div className="flex items-center justify-between mb-4">
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   {multiItems.length === multiTotal
                     ? `${multiTotal.toLocaleString()} skins found`
                     : `Showing ${multiItems.length} of ${multiTotal.toLocaleString()} skins`}
@@ -390,15 +415,21 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
               </div>
 
               {/* Table header */}
-              <div className="hidden xl:grid xl:grid-cols-[256px_88px_88px_88px_88px_88px_96px_72px_1fr] items-center px-5 py-2 text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-2">
-                <div>Skin</div>
+              <div className="hidden xl:grid xl:grid-cols-[256px_88px_88px_88px_88px_88px_96px_72px_1fr] items-center px-5 py-2 text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-2">
+                <button onClick={() => handleSortChange("name")} className={`text-left hover:text-gray-600 dark:hover:text-gray-300 transition-colors ${sortBy === "name" ? "text-gray-700 dark:text-gray-200" : ""}`}>
+                  Skin {sortBy === "name" && "▲"}
+                </button>
                 <div className="text-right">Steam</div>
                 <div className="text-right text-pink-500">Skinport</div>
                 <div className="text-right" style={{ color: "#ff6b35" }}>Buff163</div>
                 <div className="text-right" style={{ color: "#00c9a7" }}>DMarket</div>
                 <div className="text-right" style={{ color: "#7c3aed" }}>Waxpeer</div>
-                <div className="text-right">Best Price</div>
-                <div className="text-center">Volume</div>
+                <button onClick={() => handleSortChange(sortBy === "cheapest" ? "expensive" : "cheapest")} className={`text-right hover:text-gray-600 dark:hover:text-gray-300 transition-colors ${sortBy === "expensive" || sortBy === "cheapest" ? "text-gray-700 dark:text-gray-200" : ""}`}>
+                  Best Price {sortBy === "expensive" ? "▼" : sortBy === "cheapest" ? "▲" : ""}
+                </button>
+                <button onClick={() => handleSortChange("volume")} className={`text-center hover:text-gray-600 dark:hover:text-gray-300 transition-colors ${sortBy === "volume" ? "text-gray-700 dark:text-gray-200" : ""}`}>
+                  Volume {sortBy === "volume" && "▼"}
+                </button>
                 <div className="text-right">Buy</div>
               </div>
 
@@ -410,7 +441,7 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
                   return (
                     <div
                       key={item.name}
-                      className="rounded-xl border border-gray-200 bg-white px-4 py-3 sm:px-5 sm:py-4 shadow-sm hover:shadow-md transition-shadow"
+                      className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-4 py-3 sm:px-5 sm:py-4 shadow-sm hover:shadow-md transition-shadow"
                     >
                       <div className="flex flex-col xl:grid xl:grid-cols-[256px_88px_88px_88px_88px_88px_96px_72px_1fr] xl:items-center gap-3 xl:gap-0">
                         {/* Skin info */}
@@ -434,7 +465,7 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
                             </div>
                           )}
                           <div className="min-w-0">
-                            <p className="font-semibold text-gray-900 truncate text-sm">{item.weapon} | {item.skin}</p>
+                            <p className="font-semibold text-gray-900 dark:text-white truncate text-sm">{item.weapon} | {item.skin}</p>
                             <div className="flex items-center gap-2 mt-0.5">
                               {item.rarity && (
                                 <span
@@ -444,15 +475,15 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
                                   {item.rarity}
                                 </span>
                               )}
-                              <span className="text-xs text-gray-500">{item.wear}</span>
+                              <span className="text-xs text-gray-500 dark:text-gray-400">{item.wear}</span>
                             </div>
                           </div>
                         </div>
 
                         {/* Steam */}
                         <div className="xl:text-right">
-                          <span className="text-[10px] text-gray-400 xl:hidden">Steam</span>
-                          <p className="text-sm font-medium text-gray-400">{formatPrice(item.steamPrice)}</p>
+                          <span className="text-[10px] text-gray-400 dark:text-gray-500 xl:hidden">Steam</span>
+                          <p className="text-sm font-medium text-gray-400 dark:text-gray-500">{formatPrice(item.steamPrice)}</p>
                         </div>
 
                         {/* Skinport */}
@@ -513,12 +544,12 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
 
                         {/* Volume */}
                         <div className="xl:text-center">
-                          <span className="text-[10px] text-gray-400 xl:hidden">Vol:</span>
+                          <span className="text-[10px] text-gray-400 dark:text-gray-500 xl:hidden">Vol:</span>
                           {item.sold24h > 0 || item.sold7d > 0 || item.sold30d > 0 ? (
                             <div className="flex flex-col items-center">
-                              {item.sold24h > 0 && <span className="text-xs text-gray-600 font-medium">{item.sold24h.toLocaleString()}</span>}
-                              {item.sold24h === 0 && item.sold7d > 0 && <span className="text-[10px] text-gray-400">{item.sold7d.toLocaleString()}/7d</span>}
-                              {item.sold24h === 0 && item.sold7d === 0 && item.sold30d > 0 && <span className="text-[10px] text-gray-400">{item.sold30d.toLocaleString()}/30d</span>}
+                              {item.sold24h > 0 && <span className="text-xs text-gray-600 dark:text-gray-300 font-medium">{item.sold24h.toLocaleString()}</span>}
+                              {item.sold24h === 0 && item.sold7d > 0 && <span className="text-[10px] text-gray-400 dark:text-gray-500">{item.sold7d.toLocaleString()}/7d</span>}
+                              {item.sold24h === 0 && item.sold7d === 0 && item.sold30d > 0 && <span className="text-[10px] text-gray-400 dark:text-gray-500">{item.sold30d.toLocaleString()}/30d</span>}
                             </div>
                           ) : (
                             <span className="text-xs text-gray-300">—</span>
@@ -565,7 +596,7 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
                 <div className="mt-6 text-center">
                   <button
                     onClick={() => setDisplayLimit((prev) => prev + 50)}
-                    className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-6 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="inline-flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-6 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                   >
                     Load More ({multiItems.length - displayLimit} remaining)
                   </button>
@@ -575,13 +606,13 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
           ) : (
             /* ── Fallback: Skinport-only view ── */
             <>
-              <p className="text-sm text-gray-500 mb-4">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                 {fallbackItems.length === fallbackTotal
                   ? `${fallbackTotal.toLocaleString()} skins found`
                   : `Showing ${fallbackItems.length} of ${fallbackTotal.toLocaleString()} skins`}
               </p>
 
-              <div className="hidden lg:flex items-center gap-4 px-5 py-2 text-[10px] font-semibold uppercase tracking-wide text-gray-400 mb-2">
+              <div className="hidden lg:flex items-center gap-4 px-5 py-2 text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-2">
                 <div className="w-80">Skin</div>
                 <div className="w-28 text-right">Skinport Price</div>
                 <div className="w-28 text-right">Market Value</div>
@@ -596,7 +627,7 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
                   return (
                     <div
                       key={skin.name}
-                      className="rounded-xl border border-gray-200 bg-white px-4 py-3 sm:px-5 sm:py-4 shadow-sm hover:shadow-md transition-shadow"
+                      className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-4 py-3 sm:px-5 sm:py-4 shadow-sm hover:shadow-md transition-shadow"
                     >
                       <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4">
                         <div className="flex items-center gap-3 lg:w-80 flex-shrink-0">
@@ -622,7 +653,7 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
                             </div>
                           )}
                           <div className="min-w-0">
-                            <p className="font-semibold text-gray-900 truncate text-sm">{skin.weapon} | {skin.skin}</p>
+                            <p className="font-semibold text-gray-900 dark:text-white truncate text-sm">{skin.weapon} | {skin.skin}</p>
                             <div className="flex items-center gap-2 mt-0.5">
                               {skin.rarity && (
                                 <span
@@ -632,15 +663,15 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
                                   {skin.rarity}
                                 </span>
                               )}
-                              <span className="text-xs text-gray-500">{skin.wear}</span>
+                              <span className="text-xs text-gray-500 dark:text-gray-400">{skin.wear}</span>
                             </div>
                           </div>
                         </div>
 
                         <div className="lg:w-28 flex-shrink-0 flex lg:justify-end items-center gap-2 lg:gap-0">
-                          <span className="text-[10px] text-gray-400 lg:hidden">Skinport:</span>
+                          <span className="text-[10px] text-gray-400 dark:text-gray-500 lg:hidden">Skinport:</span>
                           <div className="text-right">
-                            <p className="text-sm font-bold text-gray-900">{formatPrice(skin.skinportPrice)}</p>
+                            <p className="text-sm font-bold text-gray-900 dark:text-white">{formatPrice(skin.skinportPrice)}</p>
                             <div className="flex items-center gap-1 justify-end">
                               <Tag className="h-2.5 w-2.5 text-pink-400" />
                               <span className="text-[10px] text-pink-500 font-medium">Skinport</span>
@@ -649,18 +680,18 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
                         </div>
 
                         <div className="lg:w-28 flex-shrink-0 flex lg:justify-end items-center gap-2 lg:gap-0">
-                          <span className="text-[10px] text-gray-400 lg:hidden">Market Value:</span>
+                          <span className="text-[10px] text-gray-400 dark:text-gray-500 lg:hidden">Market Value:</span>
                           <div className="text-right">
-                            <p className="text-sm font-medium text-gray-500">{formatPrice(skin.marketValue)}</p>
+                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{formatPrice(skin.marketValue)}</p>
                             <div className="flex items-center gap-1 justify-end">
                               <BarChart3 className="h-2.5 w-2.5 text-gray-300" />
-                              <span className="text-[10px] text-gray-400">Suggested</span>
+                              <span className="text-[10px] text-gray-400 dark:text-gray-500">Suggested</span>
                             </div>
                           </div>
                         </div>
 
                         <div className="lg:w-24 flex-shrink-0 flex lg:justify-end items-center gap-2 lg:gap-0">
-                          <span className="text-[10px] text-gray-400 lg:hidden">Savings:</span>
+                          <span className="text-[10px] text-gray-400 dark:text-gray-500 lg:hidden">Savings:</span>
                           {skin.savings > 0.5 ? (
                             <div className="text-right">
                               <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-700">
@@ -674,8 +705,8 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
                         </div>
 
                         <div className="lg:w-20 flex-shrink-0 flex lg:justify-center items-center gap-2 lg:gap-0">
-                          <span className="text-[10px] text-gray-400 lg:hidden">Listings:</span>
-                          <span className="text-xs text-gray-500">{skin.quantity > 0 ? skin.quantity : "—"}</span>
+                          <span className="text-[10px] text-gray-400 dark:text-gray-500 lg:hidden">Listings:</span>
+                          <span className="text-xs text-gray-500 dark:text-gray-400">{skin.quantity > 0 ? skin.quantity : "—"}</span>
                         </div>
 
                         <div className="flex-1 flex items-center gap-2 justify-end flex-wrap">
@@ -700,7 +731,7 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
                               href={`/go/cs2/${mp.dealId}?from=prices`}
                               target="_blank"
                               rel="noopener noreferrer nofollow"
-                              className="flex items-center gap-1 rounded-lg border border-gray-200 px-2.5 py-1.5 text-[10px] font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                              className="flex items-center gap-1 rounded-lg border border-gray-200 dark:border-gray-700 px-2.5 py-1.5 text-[10px] font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-900 transition-colors"
                             >
                               <div className="h-2 w-2 rounded-full flex-shrink-0" style={{ backgroundColor: mp.color }} />
                               {mp.name} <ExternalLink className="h-2.5 w-2.5" />
@@ -717,7 +748,7 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
                 <div className="mt-6 text-center">
                   <button
                     onClick={() => setDisplayLimit((prev) => prev + 50)}
-                    className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-6 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="inline-flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-6 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                   >
                     Load More ({fallbackItems.length - displayLimit} remaining)
                   </button>
@@ -727,24 +758,24 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
           )}
 
           {shownItems.length === 0 && !loading && (
-            <div className="rounded-xl border border-gray-200 bg-gray-50 p-12 text-center">
-              <p className="text-gray-500">No skins match your search. Try a different name or wear condition.</p>
+            <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-12 text-center">
+              <p className="text-gray-500 dark:text-gray-400">No skins match your search. Try a different name or wear condition.</p>
             </div>
           )}
         </div>
       </section>
 
       {/* Newsletter CTA */}
-      <section className="border-t border-gray-100 bg-gradient-to-r from-orange-50 to-amber-50 py-10">
+      <section className="border-t border-gray-100 dark:border-gray-800 bg-gradient-to-r from-orange-50 dark:from-orange-950/30 to-amber-50 dark:to-amber-950/20 py-10">
         <div className="container-main text-center">
           <Star className="h-8 w-8 text-orange-400 mx-auto mb-3" />
-          <h2 className="text-xl font-bold text-gray-900">Get Price Drop Alerts</h2>
-          <p className="text-sm text-gray-600 mt-2 mb-6 max-w-md mx-auto">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Get Price Drop Alerts</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 mb-6 max-w-md mx-auto">
             Sign up to get notified when your favorite skins hit their lowest price across all marketplaces.
           </p>
           <Link
             href="/newsletter"
-            className="inline-flex items-center gap-2 rounded-lg bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600 transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-orange-50 dark:bg-orange-950/300 px-6 py-3 font-semibold text-white hover:bg-orange-600 transition-colors"
           >
             Sign Up Free
           </Link>
@@ -752,16 +783,16 @@ export default function CS2PricesClient({ initialMultiItems, initialFallbackItem
       </section>
 
       {/* Affiliate disclosure */}
-      <div className="border-t border-gray-100 bg-gray-50/70">
+      <div className="border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/70">
         <div className="container-main py-4">
-          <p className="text-[11px] text-gray-400 leading-relaxed text-center">
-            <span className="font-semibold text-gray-500">Affiliate Disclosure:</span>{" "}
+          <p className="text-[11px] text-gray-400 dark:text-gray-500 leading-relaxed text-center">
+            <span className="font-semibold text-gray-500 dark:text-gray-400">Affiliate Disclosure:</span>{" "}
             Some links on this page are affiliate links. LootBoxes.com may earn a commission
             if you make a purchase, at no extra cost to you. Prices powered by{" "}
             {hasMultiData ? (
-              <a href="https://www.steamwebapi.com" target="_blank" rel="noopener noreferrer nofollow" className="underline hover:text-gray-600">SteamWebAPI</a>
+              <a href="https://www.steamwebapi.com" target="_blank" rel="noopener noreferrer nofollow" className="underline hover:text-gray-600 dark:text-gray-300">SteamWebAPI</a>
             ) : (
-              <a href="https://skinport.com" target="_blank" rel="noopener noreferrer nofollow" className="underline hover:text-gray-600">Skinport</a>
+              <a href="https://skinport.com" target="_blank" rel="noopener noreferrer nofollow" className="underline hover:text-gray-600 dark:text-gray-300">Skinport</a>
             )}
             .
           </p>

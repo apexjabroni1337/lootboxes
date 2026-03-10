@@ -312,7 +312,7 @@ export default async function HomePage() {
             {/* Left: Text content */}
             <div>
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/20 px-3.5 py-1.5 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-50 dark:bg-blue-950/300/20 px-3.5 py-1.5 mb-6">
                 <Sparkles className="h-3.5 w-3.5 text-blue-300" />
                 <span className="text-xs font-semibold uppercase tracking-wider text-blue-200">
                   THE LOOT BOX DATABASE
@@ -332,21 +332,21 @@ export default async function HomePage() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/lootbox"
-                  className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition-all hover:bg-blue-50"
+                  className="inline-flex items-center gap-2 rounded-lg bg-white dark:bg-gray-950 px-6 py-3 text-sm font-semibold text-slate-900 transition-all hover:bg-blue-50"
                 >
                   <BarChart3 className="h-4 w-4" />
                   Browse Loot Box Database
                 </Link>
                 <Link
                   href="/lootbox/rankings"
-                  className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition-all hover:bg-white/20"
+                  className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white dark:bg-gray-950/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition-all hover:bg-white dark:bg-gray-950/20"
                 >
                   <Award className="h-4 w-4" />
                   View Rankings
                 </Link>
                 <Link
                   href="/deals"
-                  className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-blue-200 backdrop-blur transition-all hover:bg-white/10"
+                  className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white dark:bg-gray-950/5 px-6 py-3 text-sm font-semibold text-blue-200 backdrop-blur transition-all hover:bg-white dark:bg-gray-950/10"
                 >
                   <TrendingDown className="h-4 w-4" />
                   Game Deals
@@ -487,7 +487,7 @@ export default async function HomePage() {
                   {/* Content */}
                   <div className="relative flex h-full flex-col justify-between px-5 py-6" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.45)" }}>
                     <div>
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/25 backdrop-blur-sm ring-1 ring-white/20 shadow-lg">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white dark:bg-gray-950/25 backdrop-blur-sm ring-1 ring-white/20 shadow-lg">
                         <st.icon className="h-5 w-5 text-white drop-shadow-md" />
                       </div>
                       <h3 className="mt-3 text-lg font-extrabold text-white" style={{ textShadow: "0 2px 6px rgba(0,0,0,0.5)" }}>
@@ -644,7 +644,7 @@ export default async function HomePage() {
               <div className="overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-br from-white to-emerald-50/50 dark:border-emerald-900/40 dark:from-gray-900 dark:to-emerald-950/20">
                 <div className="border-b border-emerald-100 bg-emerald-50/50 px-5 py-3 dark:border-emerald-900/30 dark:bg-emerald-950/30">
                   <h3 className="flex items-center gap-2 text-sm font-bold text-emerald-700 dark:text-emerald-400">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-500 text-[10px] text-white shadow-sm">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-950/300 text-[10px] text-white shadow-sm">
                       ▲
                     </span>
                     Best Value Monetization
@@ -660,7 +660,7 @@ export default async function HomePage() {
                       <li key={item.slug}>
                         <Link
                           href={`/lootbox/${item.slug}`}
-                          className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-emerald-50/50 dark:hover:bg-emerald-950/20"
+                          className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-emerald-50 dark:bg-emerald-950/30/50 dark:hover:bg-emerald-950/20"
                         >
                           <span className="text-xs font-bold text-gray-300 dark:text-gray-600 w-4">
                             {idx + 1}
@@ -701,7 +701,7 @@ export default async function HomePage() {
               <div className="overflow-hidden rounded-2xl border border-red-200 bg-gradient-to-br from-white to-red-50/50 dark:border-red-900/40 dark:from-gray-900 dark:to-red-950/20">
                 <div className="border-b border-red-100 bg-red-50/50 px-5 py-3 dark:border-red-900/30 dark:bg-red-950/30">
                   <h3 className="flex items-center gap-2 text-sm font-bold text-red-600 dark:text-red-400">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-red-500 text-[10px] text-white shadow-sm">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-red-50 dark:bg-red-950/300 text-[10px] text-white shadow-sm">
                       ▼
                     </span>
                     Watch Out
@@ -717,7 +717,7 @@ export default async function HomePage() {
                       <li key={item.slug}>
                         <Link
                           href={`/lootbox/${item.slug}`}
-                          className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-red-50/50 dark:hover:bg-red-950/20"
+                          className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-red-50 dark:bg-red-950/30/50 dark:hover:bg-red-950/20"
                         >
                           <span className="text-xs font-bold text-gray-300 dark:text-gray-600 w-4">
                             {idx + 1}
@@ -754,11 +754,11 @@ export default async function HomePage() {
         <div className="container-main">
           <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-blue-950 to-purple-950 px-8 py-8 sm:px-10 transition-all hover:shadow-2xl">
             {/* Subtle glow */}
-            <div className="absolute -right-20 -top-20 h-60 w-60 rounded-full bg-blue-500/20 blur-3xl" />
-            <div className="absolute -left-10 -bottom-10 h-40 w-40 rounded-full bg-purple-500/15 blur-2xl" />
+            <div className="absolute -right-20 -top-20 h-60 w-60 rounded-full bg-blue-50 dark:bg-blue-950/300/20 blur-3xl" />
+            <div className="absolute -left-10 -bottom-10 h-40 w-40 rounded-full bg-purple-50 dark:bg-purple-950/300/15 blur-2xl" />
             <div className="relative flex flex-col items-center gap-5 sm:flex-row sm:justify-between">
               <div>
-                <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-400/30 bg-blue-500/20 px-3 py-1 mb-3">
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-400/30 bg-blue-50 dark:bg-blue-950/300/20 px-3 py-1 mb-3">
                   <Award className="h-3.5 w-3.5 text-blue-300" />
                   <span className="text-[11px] font-semibold uppercase tracking-wider text-blue-200">
                     Leaderboard
@@ -774,7 +774,7 @@ export default async function HomePage() {
               </div>
               <Link
                 href="/lootbox/rankings"
-                className="flex-shrink-0 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition-all hover:bg-blue-50 hover:shadow-lg"
+                className="flex-shrink-0 inline-flex items-center gap-2 rounded-lg bg-white dark:bg-gray-950 px-6 py-3 text-sm font-semibold text-slate-900 transition-all hover:bg-blue-50 hover:shadow-lg"
               >
                 View Full Rankings
                 <ArrowRight className="h-4 w-4" />
@@ -804,7 +804,7 @@ export default async function HomePage() {
               <div className="flex flex-shrink-0 gap-3">
                 <Link
                   href="/deals"
-                  className="inline-flex items-center gap-2 rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
+                  className="inline-flex items-center gap-2 rounded-lg bg-orange-50 dark:bg-orange-950/300 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
                 >
                   <TrendingDown className="h-4 w-4" />
                   Browse Deals
@@ -831,7 +831,7 @@ export default async function HomePage() {
             <div className="grid items-center gap-0 lg:grid-cols-2">
               {/* Left: Content */}
               <div className="px-8 py-10 sm:px-12">
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-brand-50 dark:bg-brand-950/30 px-3 py-1 text-xs font-semibold text-brand-700">
                   <Bell className="h-3.5 w-3.5" />
                   Weekly Roundup
                 </div>
@@ -843,7 +843,7 @@ export default async function HomePage() {
                   roundups, and battle pass reviews delivered to your inbox.
                 </p>
 
-                <div className="mt-5 flex flex-col gap-2 text-sm text-gray-500">
+                <div className="mt-5 flex flex-col gap-2 text-sm text-gray-500 dark:text-gray-400">
                   <div className="flex items-center gap-2">
                     <Zap className="h-4 w-4 text-brand-600" />
                     New game analysis every week
@@ -858,7 +858,7 @@ export default async function HomePage() {
               </div>
 
               {/* Right: Visual accent */}
-              <div className="hidden bg-gradient-to-br from-brand-500 to-brand-700 px-12 py-10 lg:flex lg:flex-col lg:items-center lg:justify-center">
+              <div className="hidden bg-gradient-to-br from-brand-50 dark:from-brand-950/300 to-brand-700 px-12 py-10 lg:flex lg:flex-col lg:items-center lg:justify-center">
                 <div className="text-center text-white">
                   <p className="text-5xl font-extrabold">
                     {siteStats.lootboxGames}+
@@ -866,12 +866,12 @@ export default async function HomePage() {
                   <p className="mt-1 text-lg font-medium text-brand-100">
                     Games analyzed
                   </p>
-                  <div className="mx-auto my-5 h-px w-20 bg-white/20" />
+                  <div className="mx-auto my-5 h-px w-20 bg-white dark:bg-gray-950/20" />
                   <p className="text-5xl font-extrabold">5</p>
                   <p className="mt-1 text-lg font-medium text-brand-100">
                     System types covered
                   </p>
-                  <div className="mx-auto my-5 h-px w-20 bg-white/20" />
+                  <div className="mx-auto my-5 h-px w-20 bg-white dark:bg-gray-950/20" />
                   <p className="text-5xl font-extrabold">100%</p>
                   <p className="mt-1 text-lg font-medium text-brand-100">
                     Free forever

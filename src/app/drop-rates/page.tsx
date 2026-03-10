@@ -139,40 +139,40 @@ export default async function DropRatesPage() {
   );
 
   return (
-    <div className="min-h-screen bg-white pb-12">
+    <div className="min-h-screen bg-white dark:bg-gray-950 pb-12">
       {/* ── Hero section with side accent bar ── */}
-      <section className="border-b border-gray-100">
+      <section className="border-b border-gray-100 dark:border-gray-800">
         <div className="container-main py-10">
-          <div className="flex rounded-2xl overflow-hidden border border-gray-200 shadow-md">
-            <div className="w-1.5 bg-gradient-to-b from-brand-500 via-purple-500 to-rose-500 flex-shrink-0" />
-            <div className="p-8 flex-1 bg-gradient-to-r from-gray-50/50 to-white">
+          <div className="flex rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-md">
+            <div className="w-1.5 bg-gradient-to-b from-brand-50 dark:from-brand-950/300 via-purple-50 dark:via-purple-950/200 to-rose-500 flex-shrink-0" />
+            <div className="p-8 flex-1 bg-gradient-to-r from-gray-50 dark:from-gray-900/50 to-white dark:to-gray-950">
               <span className="text-[11px] font-bold text-brand-600 uppercase tracking-widest">
                 Verified Data
               </span>
-              <h1 className="text-3xl font-serif font-bold text-gray-900 mt-2">
+              <h1 className="text-3xl font-serif font-bold text-gray-900 dark:text-white mt-2">
                 Drop Rate Database
               </h1>
-              <p className="text-gray-500 mt-3 max-w-2xl leading-relaxed">
+              <p className="text-gray-500 dark:text-gray-400 mt-3 max-w-2xl leading-relaxed">
                 The most comprehensive database of verified drop rates and loot box
                 probabilities across all major games. Know your odds before you spend.
               </p>
 
               {/* Stats row */}
               <div className="mt-6 flex flex-wrap gap-4">
-                <div className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white px-4 py-2.5 shadow-sm">
+                <div className="flex items-center gap-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-4 py-2.5 shadow-sm">
                   <BarChart3 className="h-4 w-4 text-brand-500" />
-                  <span className="text-xl font-bold text-gray-900">{totalGames}</span>
-                  <span className="text-sm text-gray-500">Games</span>
+                  <span className="text-xl font-bold text-gray-900 dark:text-white">{totalGames}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Games</span>
                 </div>
-                <div className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white px-4 py-2.5 shadow-sm">
+                <div className="flex items-center gap-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-4 py-2.5 shadow-sm">
                   <Zap className="h-4 w-4 text-purple-500" />
-                  <span className="text-xl font-bold text-gray-900">{totalRates}</span>
-                  <span className="text-sm text-gray-500">Drop Rates</span>
+                  <span className="text-xl font-bold text-gray-900 dark:text-white">{totalRates}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Drop Rates</span>
                 </div>
-                <div className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white px-4 py-2.5 shadow-sm">
+                <div className="flex items-center gap-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-4 py-2.5 shadow-sm">
                   <CheckCircle className="h-4 w-4 text-emerald-500" />
-                  <span className="text-xl font-bold text-gray-900">{officialCount}</span>
-                  <span className="text-sm text-gray-500">Officially Verified</span>
+                  <span className="text-xl font-bold text-gray-900 dark:text-white">{officialCount}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Officially Verified</span>
                 </div>
               </div>
             </div>
@@ -182,9 +182,9 @@ export default async function DropRatesPage() {
 
       <div className="container-main mt-8">
         {/* ── Methodology callout with accent bar ── */}
-        <div className="flex rounded-xl overflow-hidden border border-brand-200 shadow-sm">
+        <div className="flex rounded-xl overflow-hidden border border-brand-200 dark:border-brand-700/30 shadow-sm">
           <div className="w-1.5 bg-gradient-to-b from-brand-400 to-blue-500 flex-shrink-0" />
-          <div className="p-5 flex-1 bg-brand-50/50">
+          <div className="p-5 flex-1 bg-brand-50 dark:bg-brand-950/30/50">
             <div className="flex items-start gap-3">
               <Info className="mt-0.5 h-5 w-5 flex-shrink-0 text-brand-600" />
               <div>
@@ -230,7 +230,7 @@ export default async function DropRatesPage() {
         {games.length === 0 ? (
           <div className="mt-16 text-center">
             <Zap className="mx-auto h-10 w-10 text-gray-300" />
-            <p className="mt-3 text-gray-500">No drop rate data yet. Check back soon!</p>
+            <p className="mt-3 text-gray-500 dark:text-gray-400">No drop rate data yet. Check back soon!</p>
           </div>
         ) : (
           <div className="mt-8 space-y-5">
@@ -248,14 +248,14 @@ export default async function DropRatesPage() {
         )}
 
         {/* ── CTA ── */}
-        <div className="mt-12 flex rounded-xl overflow-hidden border border-gray-200 shadow-sm">
-          <div className="w-1.5 bg-gradient-to-b from-brand-500 to-purple-500 flex-shrink-0" />
-          <div className="p-6 flex-1 bg-gradient-to-r from-gray-50 to-white text-center">
+        <div className="mt-12 flex rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
+          <div className="w-1.5 bg-gradient-to-b from-brand-50 dark:from-brand-950/300 to-purple-500 flex-shrink-0" />
+          <div className="p-6 flex-1 bg-gradient-to-r from-gray-50 dark:from-gray-900 to-white dark:to-gray-950 text-center">
             <Sparkles className="mx-auto h-6 w-6 text-brand-600" />
-            <h3 className="mt-2 text-lg font-serif font-bold text-gray-900">
+            <h3 className="mt-2 text-lg font-serif font-bold text-gray-900 dark:text-white">
               Know drop rates we&apos;re missing?
             </h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
               Help us build the most accurate database by submitting your data.
             </p>
             <button className="btn-primary mt-4">Submit Drop Rates</button>

@@ -174,7 +174,7 @@ export default async function LootboxHubPage({
       : "—";
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://lootboxes.com" },
@@ -185,13 +185,13 @@ export default async function LootboxHubPage({
       <div className="container-main pt-10 pb-6">
         <div className="flex flex-col gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-200 rounded-full px-4 py-1.5 mb-4 shadow-sm">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-50 dark:from-indigo-950/30 to-violet-50 border border-indigo-200 dark:border-indigo-700/30 rounded-full px-4 py-1.5 mb-4 shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
               <span className="text-[11px] font-bold text-indigo-600 uppercase tracking-wider">
                 Loot Box Database
               </span>
             </div>
-            <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">
+            <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
               {typeFilter && typeMeta ? (
                 <>{typeMeta.heading}</>
               ) : (
@@ -201,7 +201,7 @@ export default async function LootboxHubPage({
                 </>
               )}
             </h1>
-            <p className="text-gray-500 mt-2 max-w-lg text-sm">
+            <p className="text-gray-500 dark:text-gray-400 mt-2 max-w-lg text-sm">
               {typeFilter && typeMeta
                 ? typeMeta.subtitle
                 : `${allGames.length} games analyzed across ${Object.keys(typeCounts).length} monetization systems. Data-driven. No guesswork.`}
@@ -220,7 +220,7 @@ export default async function LootboxHubPage({
             >
               <Layers className="w-4 h-4" />
               <span>All</span>
-              <span className={`text-xs font-medium ${!typeFilter ? "text-gray-300" : "text-gray-400"}`}>
+              <span className={`text-xs font-medium ${!typeFilter ? "text-gray-300" : "text-gray-400 dark:text-gray-500"}`}>
                 {allGames.length}
               </span>
             </Link>
@@ -298,21 +298,21 @@ export default async function LootboxHubPage({
           return (
             <div className="container-main pb-4">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <div className="rounded-xl bg-gray-50 border border-gray-200 p-4">
-                  <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Games</p>
-                  <p className="text-2xl font-extrabold text-gray-900">{games.length}</p>
+                <div className="rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4">
+                  <p className="text-[11px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Games</p>
+                  <p className="text-2xl font-extrabold text-gray-900 dark:text-white">{games.length}</p>
                 </div>
-                <div className="rounded-xl bg-gray-50 border border-gray-200 p-4">
-                  <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Avg Score</p>
-                  <p className="text-2xl font-extrabold text-gray-900">{avgScore}</p>
+                <div className="rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4">
+                  <p className="text-[11px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Avg Score</p>
+                  <p className="text-2xl font-extrabold text-gray-900 dark:text-white">{avgScore}</p>
                 </div>
-                <div className="rounded-xl bg-gray-50 border border-gray-200 p-4">
-                  <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Pity System</p>
-                  <p className="text-2xl font-extrabold text-gray-900">{Math.round((withPity / games.length) * 100)}%</p>
+                <div className="rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4">
+                  <p className="text-[11px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Pity System</p>
+                  <p className="text-2xl font-extrabold text-gray-900 dark:text-white">{Math.round((withPity / games.length) * 100)}%</p>
                 </div>
-                <div className="rounded-xl bg-gray-50 border border-gray-200 p-4">
-                  <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Avg Cost/Pull</p>
-                  <p className="text-2xl font-extrabold text-gray-900">{avgCostVal ? `$${avgCostVal.toFixed(2)}` : "—"}</p>
+                <div className="rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4">
+                  <p className="text-[11px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Avg Cost/Pull</p>
+                  <p className="text-2xl font-extrabold text-gray-900 dark:text-white">{avgCostVal ? `$${avgCostVal.toFixed(2)}` : "—"}</p>
                 </div>
               </div>
             </div>
@@ -326,31 +326,31 @@ export default async function LootboxHubPage({
       <div className="container-main py-4">
         <Link
           href="/lootbox/rankings"
-          className="group flex items-center justify-between rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border border-indigo-200 px-6 md:px-8 py-5 hover:border-indigo-300 hover:shadow-lg transition-all"
+          className="group flex items-center justify-between rounded-2xl bg-gradient-to-r from-indigo-50 dark:from-indigo-950/30 via-purple-50 dark:via-purple-950/20 to-pink-50 border border-indigo-200 dark:border-indigo-700/30 px-6 md:px-8 py-5 hover:border-indigo-300 hover:shadow-lg transition-all"
         >
           <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-50 dark:from-indigo-950/300 to-purple-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
               <Trophy className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="font-bold text-gray-900 text-base">Loot Box Rankings</h2>
-              <p className="text-sm text-gray-500">See every game ranked by monetization fairness — best to worst</p>
+              <h2 className="font-bold text-gray-900 dark:text-white text-base">Loot Box Rankings</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400">See every game ranked by monetization fairness — best to worst</p>
             </div>
           </div>
-          <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-gray-900 group-hover:translate-x-1 transition-all" />
+          <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-gray-900 dark:text-white group-hover:translate-x-1 transition-all" />
         </Link>
       </div>
 
       {/* ── Methodology Section ── */}
       <div className="container-main py-8 pb-16">
-        <div className="rounded-2xl bg-gradient-to-br from-gray-50 to-slate-50 border border-gray-200 p-8">
+        <div className="rounded-2xl bg-gradient-to-br from-gray-50 dark:from-gray-900 to-slate-50 dark:to-slate-950/20 border border-gray-200 dark:border-gray-700 p-8">
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-50 dark:from-blue-950/300 to-indigo-600 flex items-center justify-center shadow-lg">
               <Shield className="w-5 h-5 text-white" />
             </div>
-            <h2 className="text-xl font-bold text-gray-900">How We Rate Games</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">How We Rate Games</h2>
           </div>
-          <p className="text-sm text-gray-500 mb-6 max-w-2xl">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 max-w-2xl">
             Every game receives a Lootboxes Score from 1-10 based on 8 criteria across three
             weighted categories. Our methodology is transparent, criteria-based, and open to scrutiny.
           </p>
@@ -381,17 +381,17 @@ export default async function LootboxHubPage({
             ].map((cat) => (
               <div
                 key={cat.title}
-                className={`rounded-xl bg-white border ${cat.border} p-5 hover:shadow-md transition-shadow`}
+                className={`rounded-xl bg-white dark:bg-gray-950 border ${cat.border} p-5 hover:shadow-md transition-shadow`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-bold text-gray-900 text-sm">{cat.title}</h3>
+                  <h3 className="font-bold text-gray-900 dark:text-white text-sm">{cat.title}</h3>
                   <span
                     className={`text-xs font-bold text-white bg-gradient-to-r ${cat.gradient} px-2.5 py-0.5 rounded-full`}
                   >
                     {cat.pct}
                   </span>
                 </div>
-                <p className="text-xs text-gray-500 leading-relaxed">{cat.desc}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{cat.desc}</p>
               </div>
             ))}
           </div>
@@ -407,7 +407,7 @@ export default async function LootboxHubPage({
 
       {/* Quick links */}
       <div className="container-main pb-12 text-center">
-        <p className="text-gray-500 text-sm">
+        <p className="text-gray-500 dark:text-gray-400 text-sm">
           Looking for raw data?{" "}
           <Link href="/drop-rates" className="text-blue-600 font-medium hover:text-blue-500 transition-colors">
             View the Drop Rate Database →

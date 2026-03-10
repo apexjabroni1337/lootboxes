@@ -84,10 +84,10 @@ function RateBar({ pct }: { pct: number }) {
 
   return (
     <div className="flex items-center gap-2">
-      <div className="h-2 w-20 rounded-full bg-gray-100 overflow-hidden flex-shrink-0">
+      <div className="h-2 w-20 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden flex-shrink-0">
         <div className={`h-full rounded-full ${color}`} style={{ width: `${width}%` }} />
       </div>
-      <span className="text-sm font-bold text-gray-900 tabular-nums">
+      <span className="text-sm font-bold text-gray-900 dark:text-white tabular-nums">
         {pct >= 100
           ? "Guaranteed"
           : pct < 0.01
@@ -140,7 +140,7 @@ export default function DropRateGameSection({
   const sourceMeta = SOURCE_ICONS[sourceType] || SOURCE_ICONS.user_reported;
 
   return (
-    <div className="flex rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
+    <div className="flex rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow bg-white dark:bg-gray-950">
       {/* Left color bar */}
       <div className={`w-1.5 bg-gradient-to-b ${barGradient} flex-shrink-0`} />
 
@@ -148,11 +148,11 @@ export default function DropRateGameSection({
         {/* ── Clickable header ── */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full flex items-center justify-between px-5 py-4 bg-gray-50/50 hover:bg-gray-50 transition-colors text-left"
+          className="w-full flex items-center justify-between px-5 py-4 bg-gray-50 dark:bg-gray-900/50 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-900 transition-colors text-left"
         >
           <div className="flex items-center gap-3 min-w-0">
             {/* Game image */}
-            <div className="h-11 w-11 flex-shrink-0 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+            <div className="h-11 w-11 flex-shrink-0 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
               {game.cover_image ? (
                 <img
                   src={game.cover_image}
@@ -167,7 +167,7 @@ export default function DropRateGameSection({
             {/* Title + badges */}
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="text-base font-bold text-gray-900 truncate">
+                <h2 className="text-base font-bold text-gray-900 dark:text-white truncate">
                   {game.title}
                 </h2>
                 {game.lootboxes_score && (
@@ -181,13 +181,13 @@ export default function DropRateGameSection({
               </div>
               {/* Collapsed summary line */}
               {!isOpen && (
-                <div className="flex items-center gap-3 mt-0.5 text-xs text-gray-500">
+                <div className="flex items-center gap-3 mt-0.5 text-xs text-gray-500 dark:text-gray-400">
                   <span>
                     {game.items.length} rates
                   </span>
                   <span className="text-gray-300">•</span>
                   <span>
-                    Rarest: <span className="font-semibold text-gray-700">
+                    Rarest: <span className="font-semibold text-gray-700 dark:text-gray-200">
                       {lowestRate < 0.01 ? `${lowestRate.toFixed(4)}%` : lowestRate < 1 ? `${lowestRate.toFixed(2)}%` : `${lowestRate.toFixed(1)}%`}
                     </span>
                   </span>
@@ -211,12 +211,12 @@ export default function DropRateGameSection({
             <Link
               href={`/games/${game.slug}`}
               onClick={(e) => e.stopPropagation()}
-              className="hidden sm:flex items-center gap-1 text-xs font-medium text-brand-600 hover:text-brand-700 bg-brand-50 px-2.5 py-1 rounded-lg"
+              className="hidden sm:flex items-center gap-1 text-xs font-medium text-brand-600 hover:text-brand-700 bg-brand-50 dark:bg-brand-950/30 px-2.5 py-1 rounded-lg"
             >
               View game <ChevronRight className="h-3 w-3" />
             </Link>
             <ChevronDown
-              className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${
+              className={`h-5 w-5 text-gray-400 dark:text-gray-500 transition-transform duration-200 ${
                 isOpen ? "rotate-180" : ""
               }`}
             />
@@ -229,25 +229,25 @@ export default function DropRateGameSection({
             isOpen ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          <div className="border-t border-gray-100">
+          <div className="border-t border-gray-100 dark:border-gray-800">
             {/* Desktop table */}
             <div className="hidden sm:block overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-gray-100 bg-gray-50/30">
-                    <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                  <tr className="border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/30">
+                    <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
                       Item
                     </th>
-                    <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                    <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
                       Rarity
                     </th>
-                    <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                    <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
                       Drop Rate
                     </th>
-                    <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                    <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
                       ~Avg. Opens
                     </th>
-                    <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                    <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
                       Source
                     </th>
                   </tr>
@@ -265,11 +265,11 @@ export default function DropRateGameSection({
                     return (
                       <tr
                         key={i}
-                        className={`transition-colors hover:bg-gray-50/70 ${
+                        className={`transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-900/70 ${
                           isPity ? "bg-emerald-50/30" : ""
                         } ${isEffective ? "bg-rose-50/20" : ""}`}
                       >
-                        <td className="px-5 py-3 text-sm font-medium text-gray-900">
+                        <td className="px-5 py-3 text-sm font-medium text-gray-900 dark:text-white">
                           {item.item_name}
                         </td>
                         <td className="px-5 py-3">
@@ -282,7 +282,7 @@ export default function DropRateGameSection({
                         <td className="px-5 py-3">
                           <RateBar pct={item.drop_rate_pct} />
                         </td>
-                        <td className="px-5 py-3 text-right text-sm text-gray-500 tabular-nums">
+                        <td className="px-5 py-3 text-right text-sm text-gray-500 dark:text-gray-400 tabular-nums">
                           {avgOpens ? (
                             <span>~{avgOpens.toLocaleString()}</span>
                           ) : (
@@ -303,7 +303,7 @@ export default function DropRateGameSection({
             </div>
 
             {/* Mobile card layout */}
-            <div className="sm:hidden divide-y divide-gray-100">
+            <div className="sm:hidden divide-y divide-gray-100 dark:divide-gray-800">
               {game.items.map((item, i) => {
                 const src = SOURCE_ICONS[item.source] || SOURCE_ICONS.user_reported;
                 const isPity = item.rarity.toLowerCase().includes("pity");
@@ -315,11 +315,11 @@ export default function DropRateGameSection({
                 return (
                   <div
                     key={i}
-                    className={`px-4 py-3 ${isPity ? "bg-emerald-50/30" : ""}`}
+                    className={`px-4 py-3 ${isPity ? "bg-emerald-50 dark:bg-emerald-950/30/30" : ""}`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                           {item.item_name}
                         </p>
                         <div className="flex items-center gap-2 mt-1">
@@ -335,7 +335,7 @@ export default function DropRateGameSection({
                         </div>
                       </div>
                       <div className="text-right flex-shrink-0">
-                        <p className="text-sm font-bold text-gray-900 tabular-nums">
+                        <p className="text-sm font-bold text-gray-900 dark:text-white tabular-nums">
                           {item.drop_rate_pct >= 100
                             ? "Guaranteed"
                             : item.drop_rate_pct < 0.1
@@ -345,7 +345,7 @@ export default function DropRateGameSection({
                                 : `${item.drop_rate_pct.toFixed(1)}%`}
                         </p>
                         {avgOpens && (
-                          <p className="text-[10px] text-gray-400">
+                          <p className="text-[10px] text-gray-400 dark:text-gray-500">
                             ~{avgOpens.toLocaleString()} opens
                           </p>
                         )}

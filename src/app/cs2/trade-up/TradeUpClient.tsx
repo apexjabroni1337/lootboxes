@@ -291,21 +291,21 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
   }, [availableRarities, inputRarity]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-r from-amber-50 via-yellow-50 to-orange-50 py-10">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-amber-50 dark:from-amber-950/30 via-yellow-50 dark:via-yellow-950/20 to-orange-50 dark:to-orange-950/20 py-10">
         <div className="container-main">
           <Link
             href="/cs2"
-            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4"
+            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-200 mb-4"
           >
             <ChevronLeft className="h-4 w-4" /> CS2 Skins Hub
           </Link>
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500 text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/300 text-white">
               <Calculator className="h-5 w-5" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
               Trade-Up Calculator
             </h1>
             <div className="flex items-center gap-1.5 text-[10px] ml-3">
@@ -318,23 +318,23 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                 </>
               ) : pricesLoading ? (
                 <>
-                  <Loader2 className="h-3 w-3 animate-spin text-gray-400" />
-                  <span className="text-gray-400">Loading prices...</span>
+                  <Loader2 className="h-3 w-3 animate-spin text-gray-400 dark:text-gray-500" />
+                  <span className="text-gray-400 dark:text-gray-500">Loading prices...</span>
                 </>
               ) : (
                 <>
-                  <WifiOff className="h-3 w-3 text-gray-400" />
-                  <span className="text-gray-400">Estimated prices</span>
+                  <WifiOff className="h-3 w-3 text-gray-400 dark:text-gray-500" />
+                  <span className="text-gray-400 dark:text-gray-500">Estimated prices</span>
                 </>
               )}
             </div>
           </div>
-          <p className="text-gray-600 max-w-2xl">
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl">
             Select 10 input skins, see all possible outcomes with probabilities,
             and know your expected profit before you commit.
             {isLive && " Prices updated live from Skinport."}
           </p>
-          <p className="text-xs text-gray-400 mt-2">
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
             {collectionNames.length} weapon cases with real items and prices
           </p>
         </div>
@@ -345,13 +345,13 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
           {/* LEFT: Input selection */}
           <div className="lg:col-span-2 space-y-6">
             {/* Controls */}
-            <div className="rounded-xl border border-gray-200 bg-white p-5">
-              <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4">
+            <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-5">
+              <h2 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide mb-4">
                 Step 1: Choose Case & Rarity
               </h2>
               <div className="flex flex-col sm:flex-row gap-3">
                 <div className="flex-1">
-                  <label className="text-xs font-medium text-gray-500 mb-1 block">
+                  <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">
                     Case
                   </label>
                   <div className="flex items-center gap-2">
@@ -368,7 +368,7 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                         setSelectedCollection(e.target.value);
                         setSelectedInputs([]);
                       }}
-                      className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-amber-300 focus:outline-none"
+                      className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 py-2.5 text-sm focus:border-amber-300 focus:outline-none"
                     >
                       {collectionNames.map((c) => (
                         <option key={c} value={c}>
@@ -379,7 +379,7 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <label className="text-xs font-medium text-gray-500 mb-1 block">
+                  <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">
                     Input Rarity
                   </label>
                   <select
@@ -388,7 +388,7 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                       setInputRarity(e.target.value as Rarity);
                       setSelectedInputs([]);
                     }}
-                    className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-amber-300 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 py-2.5 text-sm focus:border-amber-300 focus:outline-none"
                   >
                     {availableRarities.map((r) => {
                       const nr = nextRarity(r);
@@ -404,9 +404,9 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
             </div>
 
             {/* Available skins */}
-            <div className="rounded-xl border border-gray-200 bg-white p-5">
+            <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-5">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                <h2 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide">
                   Step 2: Select 10 Input Skins
                 </h2>
                 <span
@@ -418,18 +418,18 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
               </div>
 
               <div className="relative mb-3">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />
                 <input
                   type="text"
                   placeholder="Filter skins..."
                   value={skinSearch}
                   onChange={(e) => setSkinSearch(e.target.value)}
-                  className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2 pl-9 pr-3 text-sm focus:border-amber-300 focus:outline-none"
+                  className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 py-2 pl-9 pr-3 text-sm focus:border-amber-300 focus:outline-none"
                 />
               </div>
 
               {availableSkins.length === 0 ? (
-                <p className="text-sm text-gray-500 text-center py-4">
+                <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
                   No {inputRarity} skins in this case.
                 </p>
               ) : (
@@ -467,11 +467,11 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                           </div>
                         )}
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium text-gray-900 truncate">
+                          <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                             {skin.weapon} | {skin.skinName}
                           </p>
                           <div className="flex items-center gap-1.5">
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
                               ${price.toFixed(2)}
                             </p>
                             {hasLive && (
@@ -481,7 +481,7 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                             )}
                           </div>
                         </div>
-                        <Plus className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                        <Plus className="h-4 w-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                       </button>
                     );
                   })}
@@ -491,9 +491,9 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
 
             {/* Selected inputs */}
             {selectedInputs.length > 0 && (
-              <div className="rounded-xl border border-gray-200 bg-white p-5">
+              <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-5">
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                  <h2 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide">
                     Your 10 Inputs
                   </h2>
                   <button
@@ -507,9 +507,9 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                   {selectedInputs.map((skin, idx) => (
                     <div
                       key={`${skin.id}-${idx}`}
-                      className="flex items-center gap-3 rounded-lg bg-gray-50 px-3 py-2"
+                      className="flex items-center gap-3 rounded-lg bg-gray-50 dark:bg-gray-900 px-3 py-2"
                     >
-                      <span className="text-xs font-bold text-gray-400 w-5">
+                      <span className="text-xs font-bold text-gray-400 dark:text-gray-500 w-5">
                         {idx + 1}.
                       </span>
                       {skin.image ? (
@@ -528,22 +528,22 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                           {skin.weapon.charAt(0)}
                         </div>
                       )}
-                      <span className="text-sm text-gray-700 flex-1 truncate">
+                      <span className="text-sm text-gray-700 dark:text-gray-200 flex-1 truncate">
                         {skin.weapon} | {skin.skinName}
                       </span>
-                      <span className="text-xs font-medium text-gray-500">
+                      <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
                         ${getPrice(skin).toFixed(2)}
                       </span>
                       <button
                         onClick={() => removeSkin(idx)}
-                        className="text-gray-400 hover:text-red-500"
+                        className="text-gray-400 dark:text-gray-500 hover:text-red-500"
                       >
                         <X className="h-3.5 w-3.5" />
                       </button>
                     </div>
                   ))}
                   {selectedInputs.length < 10 && (
-                    <div className="flex items-center gap-3 rounded-lg border border-dashed border-gray-300 px-3 py-2 text-sm text-gray-400">
+                    <div className="flex items-center gap-3 rounded-lg border border-dashed border-gray-300 dark:border-gray-600 px-3 py-2 text-sm text-gray-400 dark:text-gray-500">
                       <Plus className="h-4 w-4" />
                       {10 - selectedInputs.length} more skin
                       {10 - selectedInputs.length !== 1 ? "s" : ""} needed
@@ -568,7 +568,7 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                   ) : (
                     <AlertTriangle className="h-6 w-6 text-red-500" />
                   )}
-                  <h2 className="text-lg font-black text-gray-900">
+                  <h2 className="text-lg font-black text-gray-900 dark:text-white">
                     Trade-Up Results
                   </h2>
                 </div>
@@ -599,24 +599,24 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
 
                 {/* Summary grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
-                  <div className="rounded-lg bg-white p-3 text-center border border-gray-200">
-                    <p className="text-[10px] text-gray-500 uppercase font-semibold">
+                  <div className="rounded-lg bg-white dark:bg-gray-950 p-3 text-center border border-gray-200 dark:border-gray-700">
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-semibold">
                       Input Cost
                     </p>
-                    <p className="text-lg font-black text-gray-900">
+                    <p className="text-lg font-black text-gray-900 dark:text-white">
                       ${totalInputCost.toFixed(2)}
                     </p>
                   </div>
-                  <div className="rounded-lg bg-white p-3 text-center border border-gray-200">
-                    <p className="text-[10px] text-gray-500 uppercase font-semibold">
+                  <div className="rounded-lg bg-white dark:bg-gray-950 p-3 text-center border border-gray-200 dark:border-gray-700">
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-semibold">
                       Expected Output
                     </p>
-                    <p className="text-lg font-black text-gray-900">
+                    <p className="text-lg font-black text-gray-900 dark:text-white">
                       ${expectedValue.toFixed(2)}
                     </p>
                   </div>
-                  <div className="rounded-lg bg-white p-3 text-center border border-gray-200">
-                    <p className="text-[10px] text-gray-500 uppercase font-semibold">
+                  <div className="rounded-lg bg-white dark:bg-gray-950 p-3 text-center border border-gray-200 dark:border-gray-700">
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-semibold">
                       Win Chance
                     </p>
                     <p
@@ -627,18 +627,18 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                       {winChance.toFixed(0)}%
                     </p>
                   </div>
-                  <div className="rounded-lg bg-white p-3 text-center border border-gray-200">
-                    <p className="text-[10px] text-gray-500 uppercase font-semibold">
+                  <div className="rounded-lg bg-white dark:bg-gray-950 p-3 text-center border border-gray-200 dark:border-gray-700">
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-semibold">
                       Output Float
                     </p>
-                    <p className="text-lg font-black font-mono text-gray-900">
+                    <p className="text-lg font-black font-mono text-gray-900 dark:text-white">
                       {avgInputFloat.toFixed(4)}
                     </p>
                   </div>
                 </div>
 
                 {/* Outcome breakdown */}
-                <h3 className="text-sm font-bold text-gray-700 uppercase mb-3">
+                <h3 className="text-sm font-bold text-gray-700 dark:text-gray-200 uppercase mb-3">
                   Possible Outcomes ({possibleOutcomes.length})
                   <span
                     className="ml-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
@@ -691,11 +691,11 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                           </div>
                         )}
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-semibold text-gray-900 truncate">
+                          <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
                             {outcome.weapon} | {outcome.skinName}
                           </p>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-xs font-bold text-gray-700">
+                            <span className="text-xs font-bold text-gray-700 dark:text-gray-200">
                               ${outcomePrice.toFixed(2)}
                             </span>
                             {hasLive && (
@@ -703,7 +703,7 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                                 LIVE
                               </span>
                             )}
-                            <span className="text-[10px] text-gray-400">
+                            <span className="text-[10px] text-gray-400 dark:text-gray-500">
                               ({(probPerOutcome * 100).toFixed(1)}% chance)
                             </span>
                           </div>
@@ -719,7 +719,7 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                             {isProfitable ? "+" : ""}$
                             {outProfit.toFixed(2)}
                           </p>
-                          <p className="text-[10px] text-gray-400">
+                          <p className="text-[10px] text-gray-400 dark:text-gray-500">
                             {isProfitable ? "profit" : "loss"}
                           </p>
                         </div>
@@ -734,30 +734,30 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
           {/* RIGHT: Sidebar */}
           <div className="space-y-6">
             {/* EV Summary */}
-            <div className="rounded-xl border border-gray-200 bg-white p-5 sticky top-20">
-              <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4">
+            <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 sticky top-20">
+              <h2 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide mb-4">
                 <Calculator className="inline h-4 w-4 mr-1 -mt-0.5" />
                 Expected Value
               </h2>
 
               <div className="space-y-3 mb-5">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">
+                  <span className="text-gray-500 dark:text-gray-400">
                     Input Cost ({"\u00D7"}
                     {selectedInputs.length})
                   </span>
-                  <span className="font-bold text-gray-900">
+                  <span className="font-bold text-gray-900 dark:text-white">
                     ${totalInputCost.toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Expected Output</span>
-                  <span className="font-bold text-gray-900">
+                  <span className="text-gray-500 dark:text-gray-400">Expected Output</span>
+                  <span className="font-bold text-gray-900 dark:text-white">
                     ${expectedValue.toFixed(2)}
                   </span>
                 </div>
-                <div className="border-t border-gray-100 pt-3 flex justify-between text-sm">
-                  <span className="text-gray-500">Expected Profit</span>
+                <div className="border-t border-gray-100 dark:border-gray-800 pt-3 flex justify-between text-sm">
+                  <span className="text-gray-500 dark:text-gray-400">Expected Profit</span>
                   <span
                     className={`font-bold flex items-center gap-1 ${
                       profit >= 0 ? "text-emerald-600" : "text-red-500"
@@ -778,7 +778,7 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
               {/* Profit bar */}
               {totalInputCost > 0 && (
                 <div className="mb-5">
-                  <div className="h-3 rounded-full bg-gray-100 overflow-hidden">
+                  <div className="h-3 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all"
                       style={{
@@ -794,7 +794,7 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                       }}
                     />
                   </div>
-                  <div className="flex justify-between mt-1 text-[10px] text-gray-400">
+                  <div className="flex justify-between mt-1 text-[10px] text-gray-400 dark:text-gray-500">
                     <span>$0</span>
                     <span className="font-medium">
                       Break-even: ${totalInputCost.toFixed(2)}
@@ -805,14 +805,14 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
 
               {/* Float prediction */}
               {selectedInputs.length > 0 && (
-                <div className="rounded-lg bg-gray-50 p-3 mb-5">
+                <div className="rounded-lg bg-gray-50 dark:bg-gray-900 p-3 mb-5">
                   <div className="flex items-center gap-1.5 mb-1">
-                    <Target className="h-3.5 w-3.5 text-gray-500" />
-                    <span className="text-xs font-medium text-gray-500">
+                    <Target className="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" />
+                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
                       Predicted Output Float
                     </span>
                   </div>
-                  <p className="text-lg font-bold font-mono text-gray-900">
+                  <p className="text-lg font-bold font-mono text-gray-900 dark:text-white">
                     {avgInputFloat.toFixed(6)}
                   </p>
                 </div>
@@ -820,9 +820,9 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
 
               {/* Win probability */}
               {isReady && possibleOutcomes.length > 0 && (
-                <div className="rounded-lg bg-gray-50 p-3 mb-5">
+                <div className="rounded-lg bg-gray-50 dark:bg-gray-900 p-3 mb-5">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-medium text-gray-500">
+                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
                       Win Chance
                     </span>
                     <span
@@ -843,7 +843,7 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                       }}
                     />
                   </div>
-                  <p className="text-[10px] text-gray-400 mt-1">
+                  <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">
                     {profitableCount} of {possibleOutcomes.length} outcomes beat
                     your ${totalInputCost.toFixed(2)} input
                   </p>
@@ -859,7 +859,7 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
               )}
 
               {/* Affiliate CTA */}
-              <div className="mt-5 pt-4 border-t border-gray-100">
+              <div className="mt-5 pt-4 border-t border-gray-100 dark:border-gray-800">
                 <a
                   href="/go/cs2/skinport?from=trade-up"
                   target="_blank"
@@ -870,7 +870,7 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                   Buy Skins on Skinport{" "}
                   <ExternalLink className="h-3 w-3" />
                 </a>
-                <p className="text-[10px] text-gray-400 text-center mt-2">
+                <p className="text-[10px] text-gray-400 dark:text-gray-500 text-center mt-2">
                   Affiliate link
                 </p>
               </div>
@@ -878,8 +878,8 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
 
             {/* Possible outcomes preview (before 10 selected) */}
             {!isReady && possibleOutcomes.length > 0 && (
-              <div className="rounded-xl border border-gray-200 bg-white p-5">
-                <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4">
+              <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-5">
+                <h2 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide mb-4">
                   Possible Outcomes
                   <span
                     className="ml-2 text-[10px] font-semibold px-1.5 py-0.5 rounded"
@@ -905,7 +905,7 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                     return (
                       <div
                         key={outcome.id}
-                        className="flex items-center gap-3 rounded-lg bg-gray-50 p-3"
+                        className="flex items-center gap-3 rounded-lg bg-gray-50 dark:bg-gray-900 p-3"
                       >
                         {outcome.image ? (
                           <img
@@ -926,11 +926,11 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                           </div>
                         )}
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium text-gray-900 truncate">
+                          <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                             {outcome.weapon} | {outcome.skinName}
                           </p>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-xs font-semibold text-gray-900">
+                            <span className="text-xs font-semibold text-gray-900 dark:text-white">
                               ${outcomePrice.toFixed(2)}
                             </span>
                             {hasLive && (
@@ -938,7 +938,7 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
                                 LIVE
                               </span>
                             )}
-                            <span className="text-[10px] text-gray-400">
+                            <span className="text-[10px] text-gray-400 dark:text-gray-500">
                               ({(probPerOutcome * 100).toFixed(1)}% chance)
                             </span>
                           </div>
@@ -951,27 +951,27 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
             )}
 
             {/* Key insights */}
-            <div className="rounded-xl border border-gray-200 bg-white p-5">
-              <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">
+            <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-5">
+              <h2 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide mb-3">
                 Key Insights
               </h2>
-              <div className="space-y-2 text-xs text-gray-600">
+              <div className="space-y-2 text-xs text-gray-600 dark:text-gray-300">
                 <p>
-                  <span className="font-semibold text-gray-800">
+                  <span className="font-semibold text-gray-800 dark:text-gray-100">
                     Float formula:
                   </span>{" "}
                   Output float = avg input float {"\u00D7"} (max - min) + min of
                   output skin range.
                 </p>
                 <p>
-                  <span className="font-semibold text-gray-800">
+                  <span className="font-semibold text-gray-800 dark:text-gray-100">
                     Knives craftable:
                   </span>{" "}
                   Since Oct 2025, knives and gloves can appear as trade-up
                   outcomes.
                 </p>
                 <p>
-                  <span className="font-semibold text-gray-800">EV tip:</span>{" "}
+                  <span className="font-semibold text-gray-800 dark:text-gray-100">EV tip:</span>{" "}
                   Positive EV trade-ups are rare. Mix collections strategically
                   to shift probabilities.
                 </p>

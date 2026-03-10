@@ -52,13 +52,13 @@ export default function BlogPage() {
         ]}
       />
       {/* Page hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 sm:py-10">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-b from-gray-50 dark:from-gray-900 to-white dark:to-gray-950 py-8 sm:py-10">
         <div className="container-main">
           <div className="flex items-center gap-2">
             <BookOpen className="h-6 w-6 text-brand-600" />
-            <h1 className="text-3xl font-bold text-gray-900">Blog</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Blog</h1>
           </div>
-          <p className="mt-1 text-gray-500">
+          <p className="mt-1 text-gray-500 dark:text-gray-400">
             Loot box news, regulation updates, and in-depth industry analysis.
           </p>
         </div>
@@ -68,7 +68,7 @@ export default function BlogPage() {
         {/* ─── Featured post — Magazine split with bottom gradient bar ─── */}
         <Link
           href={`/blog/${featured.slug}`}
-          className="group block overflow-hidden rounded-2xl bg-white shadow-lg border border-gray-100 transition-shadow hover:shadow-xl"
+          className="group block overflow-hidden rounded-2xl bg-white dark:bg-gray-950 shadow-lg border border-gray-100 dark:border-gray-800 transition-shadow hover:shadow-xl"
         >
           <div className="flex flex-col md:flex-row">
             {/* Left: Image */}
@@ -91,24 +91,24 @@ export default function BlogPage() {
             </div>
 
             {/* Right: Content */}
-            <div className="md:w-1/2 p-6 flex flex-col justify-center border-l border-gray-100">
+            <div className="md:w-1/2 p-6 flex flex-col justify-center border-l border-gray-100 dark:border-gray-800">
               <div className="flex flex-wrap gap-2 mb-3">
                 {featured.tags.map((t) => (
                   <span
                     key={t}
-                    className="text-[10px] font-semibold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full"
+                    className="text-[10px] font-semibold text-blue-600 bg-blue-50 dark:bg-blue-950/30 px-2.5 py-0.5 rounded-full"
                   >
                     {t}
                   </span>
                 ))}
               </div>
-              <h2 className="text-gray-900 font-serif text-xl md:text-2xl font-bold leading-snug group-hover:text-[#0074C5] transition-colors">
+              <h2 className="text-gray-900 dark:text-white font-serif text-xl md:text-2xl font-bold leading-snug group-hover:text-[#0074C5] transition-colors">
                 {featured.title}
               </h2>
-              <p className="text-gray-500 text-sm mt-3 line-clamp-3 leading-relaxed">
+              <p className="text-gray-500 dark:text-gray-400 text-sm mt-3 line-clamp-3 leading-relaxed">
                 {featured.excerpt}
               </p>
-              <div className="mt-4 flex items-center gap-4 text-xs text-gray-400">
+              <div className="mt-4 flex items-center gap-4 text-xs text-gray-400 dark:text-gray-500">
                 <span className="flex items-center gap-1">
                   <Calendar className="h-3.5 w-3.5" />
                   {formatDate(featured.date)}
@@ -121,7 +121,7 @@ export default function BlogPage() {
             </div>
           </div>
           {/* Bottom gradient bar */}
-          <div className="h-1 bg-gradient-to-r from-[#0074C5] via-purple-500 to-rose-500" />
+          <div className="h-1 bg-gradient-to-r from-[#0074C5] via-purple-50 dark:via-purple-950/200 to-rose-500" />
         </Link>
 
         {/* ─── Post grid ─── */}
@@ -132,7 +132,7 @@ export default function BlogPage() {
               <Link
                 key={post.slug}
                 href={`/blog/${post.slug}`}
-                className="group flex flex-col overflow-hidden rounded-xl bg-white shadow-sm border border-gray-100 hover:shadow-lg transition-all"
+                className="group flex flex-col overflow-hidden rounded-xl bg-white dark:bg-gray-950 shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-all"
               >
                 {/* Cover image */}
                 <div className="h-36 overflow-hidden">
@@ -161,13 +161,13 @@ export default function BlogPage() {
                       </span>
                     ))}
                   </div>
-                  <h3 className="text-gray-900 font-serif text-base font-bold line-clamp-2 leading-snug group-hover:text-[#0074C5] transition-colors">
+                  <h3 className="text-gray-900 dark:text-white font-serif text-base font-bold line-clamp-2 leading-snug group-hover:text-[#0074C5] transition-colors">
                     {post.title}
                   </h3>
-                  <p className="mt-1.5 flex-1 text-sm text-gray-500 line-clamp-2">
+                  <p className="mt-1.5 flex-1 text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
                     {post.excerpt}
                   </p>
-                  <div className="mt-3 flex items-center gap-3 text-[10px] text-gray-400">
+                  <div className="mt-3 flex items-center gap-3 text-[10px] text-gray-400 dark:text-gray-500">
                     <span>{formatDate(post.date)}</span>
                     <span>{post.readTime} min</span>
                   </div>

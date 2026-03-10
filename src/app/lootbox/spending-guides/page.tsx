@@ -118,9 +118,9 @@ export default async function SpendingGuidesHub() {
   );
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Hero */}
-      <section className="relative border-b border-gray-100 bg-gradient-to-br from-slate-900 via-amber-900 to-orange-900 py-16 overflow-hidden">
+      <section className="relative border-b border-gray-100 dark:border-gray-800 bg-gradient-to-br from-slate-900 via-amber-900 to-orange-900 py-16 overflow-hidden">
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)",
           backgroundSize: "24px 24px",
@@ -134,10 +134,10 @@ export default async function SpendingGuidesHub() {
           </Link>
 
           <div className="flex items-center gap-4 mb-5">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500/20 backdrop-blur-sm border border-amber-400/20">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50 dark:bg-amber-950/300/20 backdrop-blur-sm border border-amber-400/20">
               <Wallet className="h-7 w-7 text-amber-400" />
             </div>
-            <div className="inline-flex rounded-full bg-amber-500/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-amber-300 border border-amber-400/20">
+            <div className="inline-flex rounded-full bg-amber-50 dark:bg-amber-950/300/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-amber-300 border border-amber-400/20">
               <DollarSign className="h-4 w-4 mr-1.5" /> {totalGuides} Games Covered
             </div>
           </div>
@@ -158,7 +158,7 @@ export default async function SpendingGuidesHub() {
       </section>
 
       {/* Quick stats */}
-      <section className="border-b border-gray-100 bg-gray-50/50">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
         <div className="container-main py-6">
           <div className="flex items-center gap-3 overflow-x-auto pb-2">
             {systemTypeCounts.map(([type, count]) => {
@@ -174,7 +174,7 @@ export default async function SpendingGuidesHub() {
                     <p className={`text-xs font-bold ${colors.text}`}>
                       {SYSTEM_LABELS[type] || type}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
                       {count} guide{count !== 1 ? "s" : ""}
                     </p>
                   </div>
@@ -200,10 +200,10 @@ export default async function SpendingGuidesHub() {
               <div key={group.type} className="mb-10">
                 <div className="flex items-center gap-2 mb-4">
                   <GroupIcon className={`h-5 w-5 ${colors.text}`} />
-                  <h2 className="text-xl font-bold text-gray-900">
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                     {group.label}
                   </h2>
-                  <span className="text-sm text-gray-400">
+                  <span className="text-sm text-gray-400 dark:text-gray-500">
                     ({guides.length})
                   </span>
                 </div>
@@ -217,7 +217,7 @@ export default async function SpendingGuidesHub() {
                       <Link
                         key={guide.gameSlug}
                         href={`/lootbox/spending-guides/${guide.gameSlug}`}
-                        className="group rounded-xl border border-gray-200 bg-white hover:shadow-lg transition-all hover:border-amber-200 overflow-hidden"
+                        className="group rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 hover:shadow-lg transition-all hover:border-amber-200 overflow-hidden"
                       >
                         {/* Card header with game image */}
                         <div className="flex items-center gap-3 p-4 pb-3">
@@ -237,7 +237,7 @@ export default async function SpendingGuidesHub() {
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h3 className="font-bold text-gray-900 truncate group-hover:text-amber-700 transition-colors">
+                            <h3 className="font-bold text-gray-900 dark:text-white truncate group-hover:text-amber-700 transition-colors">
                               {guide.gameName}
                             </h3>
                             <span
@@ -263,16 +263,16 @@ export default async function SpendingGuidesHub() {
                           </div>
 
                           <div className="grid grid-cols-2 gap-2 text-[11px]">
-                            <div className="rounded-lg bg-blue-50/70 px-2.5 py-2">
-                              <p className="text-gray-400 font-medium">
+                            <div className="rounded-lg bg-blue-50 dark:bg-blue-950/30/70 px-2.5 py-2">
+                              <p className="text-gray-400 dark:text-gray-500 font-medium">
                                 Low Spend
                               </p>
                               <p className="font-bold text-blue-700">
                                 {guide.lowSpend.budget}
                               </p>
                             </div>
-                            <div className="rounded-lg bg-amber-50/70 px-2.5 py-2">
-                              <p className="text-gray-400 font-medium">
+                            <div className="rounded-lg bg-amber-50 dark:bg-amber-950/30/70 px-2.5 py-2">
+                              <p className="text-gray-400 dark:text-gray-500 font-medium">
                                 Moderate
                               </p>
                               <p className="font-bold text-amber-700">
@@ -281,7 +281,7 @@ export default async function SpendingGuidesHub() {
                             </div>
                           </div>
 
-                          <p className="mt-2.5 text-[10px] text-gray-400">
+                          <p className="mt-2.5 text-[10px] text-gray-400 dark:text-gray-500">
                             Updated {guide.updatedAt}
                           </p>
                         </div>
@@ -296,9 +296,9 @@ export default async function SpendingGuidesHub() {
       </section>
 
       {/* What's in a guide */}
-      <section className="border-t border-gray-100 bg-gradient-to-b from-gray-50 to-white py-12">
+      <section className="border-t border-gray-100 dark:border-gray-800 bg-gradient-to-b from-gray-50 dark:from-gray-900 to-white dark:to-gray-950 py-12">
         <div className="container-main">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">
             What&apos;s Inside Each Guide
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-4xl mx-auto">
@@ -308,12 +308,12 @@ export default async function SpendingGuidesHub() {
               { icon: TrendingUp, gradient: "from-amber-500 to-orange-600", title: "Best Value", desc: "Exactly which purchases give the most bang for your buck." },
               { icon: Shield, gradient: "from-red-500 to-rose-600", title: "What to Avoid", desc: "Traps, bad deals, and spending patterns to steer clear of." },
             ].map((card) => (
-              <div key={card.title} className="rounded-2xl border border-gray-200 bg-white p-6 text-center hover:shadow-lg transition-shadow group">
+              <div key={card.title} className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-6 text-center hover:shadow-lg transition-shadow group">
                 <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${card.gradient} mx-auto mb-4 group-hover:scale-110 transition-transform`}>
                   <card.icon className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="font-bold text-gray-900 mb-1">{card.title}</h3>
-                <p className="text-sm text-gray-500">{card.desc}</p>
+                <h3 className="font-bold text-gray-900 dark:text-white mb-1">{card.title}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{card.desc}</p>
               </div>
             ))}
           </div>
@@ -321,12 +321,12 @@ export default async function SpendingGuidesHub() {
       </section>
 
       {/* CTA */}
-      <section className="border-t border-gray-100 bg-gradient-to-r from-amber-50 to-orange-50 py-10">
+      <section className="border-t border-gray-100 dark:border-gray-800 bg-gradient-to-r from-amber-50 dark:from-amber-950/30 to-orange-50 dark:to-orange-950/20 py-10">
         <div className="container-main text-center">
-          <h2 className="text-xl font-bold text-gray-900">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             Want to check if a game is worth your money?
           </h2>
-          <p className="text-sm text-gray-600 mt-2 mb-6 max-w-md mx-auto">
+          <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 mb-6 max-w-md mx-auto">
             Use our value calculator for a quick score-based verdict on any game
             in our database.
           </p>
@@ -339,7 +339,7 @@ export default async function SpendingGuidesHub() {
             </Link>
             <Link
               href="/lootbox/odds-comparison"
-              className="inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-sm"
+              className="inline-flex items-center gap-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-950 px-6 py-3 font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors shadow-sm"
             >
               Compare Odds <ArrowRight className="h-4 w-4" />
             </Link>

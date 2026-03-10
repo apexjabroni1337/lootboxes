@@ -45,7 +45,7 @@ function SearchContent() {
       <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Search</h1>
 
       <div className="relative mt-4">
-        <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+        <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
         <input
           type="text"
           value={query}
@@ -58,15 +58,15 @@ function SearchContent() {
 
       <div className="mt-6">
         {loading && (
-          <p className="text-center text-sm text-gray-400">Searching...</p>
+          <p className="text-center text-sm text-gray-400 dark:text-gray-500">Searching...</p>
         )}
 
         {!loading && query.length >= 2 && totalResults === 0 && (
           <div className="py-12 text-center">
-            <p className="text-gray-500">
+            <p className="text-gray-500 dark:text-gray-400">
               No results found for &ldquo;{query}&rdquo;
             </p>
-            <p className="mt-1 text-sm text-gray-400">
+            <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">
               Try a different search term or browse our{" "}
               <Link href="/games" className="text-brand-600 hover:underline">
                 games catalog
@@ -78,7 +78,7 @@ function SearchContent() {
         {/* Games results */}
         {results?.games?.length > 0 && (
           <section>
-            <h2 className="mb-3 text-sm font-semibold uppercase text-gray-400">
+            <h2 className="mb-3 text-sm font-semibold uppercase text-gray-400 dark:text-gray-500">
               Games ({results.games.length})
             </h2>
             <div className="space-y-2">
@@ -97,7 +97,7 @@ function SearchContent() {
                   </div>
                   <div className="flex-1">
                     <div className="font-semibold text-gray-900 dark:text-white">{game.title}</div>
-                    <div className="text-sm text-gray-500">{game.platforms?.join(", ")}</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">{game.platforms?.join(", ")}</div>
                   </div>
                 </Link>
               ))}
@@ -108,7 +108,7 @@ function SearchContent() {
         {/* Deal results */}
         {results?.deals?.length > 0 && (
           <section className="mt-6">
-            <h2 className="mb-3 text-sm font-semibold uppercase text-gray-400">
+            <h2 className="mb-3 text-sm font-semibold uppercase text-gray-400 dark:text-gray-500">
               Best Deals ({results.deals.length})
             </h2>
             <div className="space-y-2">
@@ -124,8 +124,8 @@ function SearchContent() {
                       {deal.game.cover_image ? (
                         <img src={deal.game.cover_image} alt={deal.game.title} className="h-full w-full object-cover" />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center bg-gray-100">
-                          <Tag className="h-4 w-4 text-gray-400" />
+                        <div className="flex h-full w-full items-center justify-center bg-gray-100 dark:bg-gray-800">
+                          <Tag className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                         </div>
                       )}
                     </div>
@@ -135,7 +135,7 @@ function SearchContent() {
                         <span className="rounded px-1.5 py-0.5 text-xs font-medium text-white" style={{ backgroundColor: store.color }}>
                           {store.name}
                         </span>
-                        <span className="text-gray-400 line-through">{formatPrice(deal.original_price)}</span>
+                        <span className="text-gray-400 dark:text-gray-500 line-through">{formatPrice(deal.original_price)}</span>
                         <span className="font-bold text-gray-900 dark:text-white">{formatPrice(deal.price)}</span>
                       </div>
                     </div>
@@ -150,7 +150,7 @@ function SearchContent() {
         {/* Analytics results */}
         {results?.analytics?.length > 0 && (
           <section className="mt-6">
-            <h2 className="mb-3 text-sm font-semibold uppercase text-gray-400">
+            <h2 className="mb-3 text-sm font-semibold uppercase text-gray-400 dark:text-gray-500">
               Articles ({results.analytics.length})
             </h2>
             <div className="space-y-2">
@@ -160,10 +160,10 @@ function SearchContent() {
                   href={`/analytics/${article.slug}`}
                   className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-900"
                 >
-                  <FileText className="h-5 w-5 flex-shrink-0 text-gray-400" />
+                  <FileText className="h-5 w-5 flex-shrink-0 text-gray-400 dark:text-gray-500" />
                   <div className="flex-1">
                     <div className="font-semibold text-gray-900 dark:text-white">{article.title}</div>
-                    <div className="text-sm text-gray-500">{article.excerpt}</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">{article.excerpt}</div>
                   </div>
                   <span className="badge-type text-xs uppercase">{article.type}</span>
                 </Link>

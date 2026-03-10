@@ -284,20 +284,20 @@ export default async function AnalyticsPage({
       : ARTICLES.filter((a) => a.type === activeType);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* ─── Hero Section ─── */}
-      <section className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900 py-14 sm:py-20">
+      <section className="relative overflow-hidden border-b border-gray-100 dark:border-gray-800 bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900 py-14 sm:py-20">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-white/10 blur-3xl" />
+          <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-white dark:bg-gray-950/10 blur-3xl" />
           <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-brand-400/10 blur-3xl" />
         </div>
 
         <div className="container-main relative z-10">
           <div className="flex items-center gap-3 mb-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white dark:bg-gray-950/20 backdrop-blur-sm">
               <BarChart3 className="h-6 w-6 text-white" />
             </div>
-            <div className="inline-flex rounded-full bg-white/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-white">
+            <div className="inline-flex rounded-full bg-white dark:bg-gray-950/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-white">
               Data-Driven Analysis
             </div>
           </div>
@@ -311,7 +311,7 @@ export default async function AnalyticsPage({
           </p>
 
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl">
-            <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-white/10 backdrop-blur-md px-5 py-4 transition-all hover:bg-white/20 hover:scale-[1.02]">
+            <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-white dark:bg-gray-950/10 backdrop-blur-md px-5 py-4 transition-all hover:bg-white dark:bg-gray-950/20 hover:scale-[1.02]">
               <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-400/20 mb-2">
@@ -321,7 +321,7 @@ export default async function AnalyticsPage({
                 <p className="text-xs font-medium text-blue-200 uppercase tracking-wider mt-0.5">Games Analyzed</p>
               </div>
             </div>
-            <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-white/10 backdrop-blur-md px-5 py-4 transition-all hover:bg-white/20 hover:scale-[1.02]">
+            <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-white dark:bg-gray-950/10 backdrop-blur-md px-5 py-4 transition-all hover:bg-white dark:bg-gray-950/20 hover:scale-[1.02]">
               <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-400/20 mb-2">
@@ -331,7 +331,7 @@ export default async function AnalyticsPage({
                 <p className="text-xs font-medium text-blue-200 uppercase tracking-wider mt-0.5">System Types</p>
               </div>
             </div>
-            <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-white/10 backdrop-blur-md px-5 py-4 transition-all hover:bg-white/20 hover:scale-[1.02]">
+            <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-white dark:bg-gray-950/10 backdrop-blur-md px-5 py-4 transition-all hover:bg-white dark:bg-gray-950/20 hover:scale-[1.02]">
               <div className="absolute inset-0 bg-gradient-to-br from-purple-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-400/20 mb-2">
@@ -363,12 +363,12 @@ export default async function AnalyticsPage({
       </section>
 
       {/* ─── Score Explorer + Articles ─── */}
-      <section className="border-t border-gray-100 bg-gray-50 py-10">
+      <section className="border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 py-10">
         <div className="container-main">
           <div className="grid gap-8 lg:grid-cols-3">
             {/* Main: Articles */}
             <div className="lg:col-span-2">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">In-Depth Reviews & Analyses</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">In-Depth Reviews & Analyses</h2>
 
               <div className="mb-6 flex flex-wrap gap-2">
                 {TYPES.map((type) => (
@@ -393,8 +393,8 @@ export default async function AnalyticsPage({
                   ))}
                 </div>
               ) : (
-                <div className="rounded-xl border border-gray-200 bg-white p-12 text-center">
-                  <p className="text-gray-500">No articles in this category yet.</p>
+                <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-12 text-center">
+                  <p className="text-gray-500 dark:text-gray-400">No articles in this category yet.</p>
                   <Link href="/analytics" className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-600">
                     View all articles
                     <ArrowRight className="h-4 w-4" />
@@ -407,14 +407,14 @@ export default async function AnalyticsPage({
             <div className="lg:col-span-1 space-y-6">
               <ScoreExplorerPreview games={analyticsData.allGamesForExplorer} />
 
-              <div className="rounded-xl border border-brand-200 bg-gradient-to-br from-brand-50 to-white p-6 shadow-sm">
+              <div className="rounded-xl border border-brand-200 dark:border-brand-700/30 bg-gradient-to-br from-brand-50 dark:from-brand-950/30 to-white dark:to-gray-950 p-6 shadow-sm">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-600">
                     <Sparkles className="h-5 w-5 text-white" />
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900">How We Score</h3>
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white">How We Score</h3>
                 </div>
-                <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
                   Our LootBoxes Score rates monetization on value, transparency, fairness, and consumer practices on a 1-10 scale.
                 </p>
                 <Link
@@ -426,9 +426,9 @@ export default async function AnalyticsPage({
                 </Link>
               </div>
 
-              <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                <h3 className="font-bold text-gray-900 mb-2">Full Score Database</h3>
-                <p className="text-sm text-gray-600 mb-4">
+              <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-6 shadow-sm">
+                <h3 className="font-bold text-gray-900 dark:text-white mb-2">Full Score Database</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
                   See every game we've analyzed with detailed scores, system types, and rankings.
                 </p>
                 <Link

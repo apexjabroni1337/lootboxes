@@ -69,13 +69,13 @@ export default function TrendingClient({ deals }: Props) {
     <div>
       {/* Section header */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-gray-900">More Trending Deals</h2>
-        <p className="text-sm text-gray-500">{filtered.length} games</p>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">More Trending Deals</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400">{filtered.length} games</p>
       </div>
 
       {/* Genre filter pills */}
       <div className="flex flex-wrap items-center gap-2 mb-6">
-        <span className="text-xs font-medium text-gray-400 uppercase tracking-wider mr-1">Genre:</span>
+        <span className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mr-1">Genre:</span>
         {GENRE_OPTIONS.map((genre) => {
           const Icon = genre.icon;
           const isActive = activeGenre === genre.id;
@@ -98,7 +98,7 @@ export default function TrendingClient({ deals }: Props) {
         {activeGenre && (
           <button
             onClick={() => setActiveGenre(null)}
-            className="text-xs text-gray-400 hover:text-gray-600 underline ml-1"
+            className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-300 underline ml-1"
           >
             Clear
           </button>
@@ -107,8 +107,8 @@ export default function TrendingClient({ deals }: Props) {
 
       {/* Game list */}
       {filtered.length === 0 ? (
-        <div className="rounded-xl border border-gray-200 bg-white p-12 text-center">
-          <p className="text-gray-500">No trending deals in this genre. Try another genre or check back later!</p>
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-12 text-center">
+          <p className="text-gray-500 dark:text-gray-400">No trending deals in this genre. Try another genre or check back later!</p>
         </div>
       ) : (
         <>
@@ -130,10 +130,10 @@ export default function TrendingClient({ deals }: Props) {
             <div className="mt-8 text-center">
               <button
                 onClick={() => setVisibleCount((prev) => prev + 24)}
-                className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-8 py-3 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 hover:shadow-md transition-all"
+                className="inline-flex items-center gap-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-8 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 hover:shadow-md transition-all"
               >
                 Load More
-                <span className="text-xs text-gray-400">({filtered.length - visibleCount} remaining)</span>
+                <span className="text-xs text-gray-400 dark:text-gray-500">({filtered.length - visibleCount} remaining)</span>
               </button>
             </div>
           )}

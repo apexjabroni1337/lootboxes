@@ -9,7 +9,7 @@ export default function NotFound() {
           <span className="text-4xl">🎮</span>
         </div>
         <h1 className="mt-6 text-3xl font-bold text-gray-900 dark:text-white">Page Not Found</h1>
-        <p className="mt-3 text-gray-500">
+        <p className="mt-3 text-gray-500 dark:text-gray-400">
           This page doesn&apos;t exist — kind of like that legendary drop you&apos;ve
           been waiting for.
         </p>

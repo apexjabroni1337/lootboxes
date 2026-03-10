@@ -130,9 +130,9 @@ export function CompactGameCard({ game }: { game: GameRowData }) {
   return (
     <Link
       href={`/games/${game.slug}`}
-      className="group block overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all"
+      className="group block overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 shadow-sm hover:shadow-md transition-all"
     >
-      <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
+      <div className="relative aspect-[16/10] overflow-hidden bg-gray-100 dark:bg-gray-800">
         {image ? (
           <img
             src={image}
@@ -170,12 +170,12 @@ export function CompactGameCard({ game }: { game: GameRowData }) {
       </div>
 
       <div className="p-2">
-        <h3 className="text-xs font-medium text-gray-900 line-clamp-1 group-hover:text-brand-600">
+        <h3 className="text-xs font-medium text-gray-900 dark:text-white line-clamp-1 group-hover:text-brand-600">
           {game.title}
         </h3>
 
         {genres.length > 0 && (
-          <p className="mt-0.5 text-[10px] text-gray-400 truncate">
+          <p className="mt-0.5 text-[10px] text-gray-400 dark:text-gray-500 truncate">
             {genres.join(", ")}
           </p>
         )}
@@ -186,14 +186,14 @@ export function CompactGameCard({ game }: { game: GameRowData }) {
               {(game.store ?? game.bestStore) && (
                 <StoreIcon store={(game.store ?? game.bestStore)!} size="sm" />
               )}
-              <span className="text-xs font-bold text-gray-900">
+              <span className="text-xs font-bold text-gray-900 dark:text-white">
                 {formatPrice(price, game.currency)}
               </span>
             </div>
           ) : game.isComingSoon ? (
-            <span className="text-[10px] text-gray-500">Coming Soon</span>
+            <span className="text-[10px] text-gray-500 dark:text-gray-400">Coming Soon</span>
           ) : (
-            <span className="text-[10px] text-gray-400">No deals</span>
+            <span className="text-[10px] text-gray-400 dark:text-gray-500">No deals</span>
           )}
         </div>
       </div>

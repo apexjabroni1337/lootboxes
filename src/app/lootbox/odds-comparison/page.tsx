@@ -200,9 +200,9 @@ export default function OddsComparisonPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Hero */}
-      <section className="relative border-b border-gray-100 bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 py-16 overflow-hidden">
+      <section className="relative border-b border-gray-100 dark:border-gray-800 bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 py-16 overflow-hidden">
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)",
           backgroundSize: "24px 24px",
@@ -216,10 +216,10 @@ export default function OddsComparisonPage() {
           </Link>
 
           <div className="flex items-center gap-4 mb-5">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-500/20 backdrop-blur-sm border border-purple-400/20">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-50 dark:bg-purple-950/300/20 backdrop-blur-sm border border-purple-400/20">
               <BarChart3 className="h-7 w-7 text-purple-400" />
             </div>
-            <div className="inline-flex rounded-full bg-purple-500/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-purple-300 border border-purple-400/20">
+            <div className="inline-flex rounded-full bg-purple-50 dark:bg-purple-950/300/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-purple-300 border border-purple-400/20">
               <Scale className="h-4 w-4 mr-1.5" /> Comparison Tool
             </div>
           </div>
@@ -240,7 +240,7 @@ export default function OddsComparisonPage() {
       </section>
 
       {/* Game selector */}
-      <section className="border-b border-gray-100 bg-gray-50 sticky top-16 z-30">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 sticky top-16 z-30">
         <div className="container-main py-4">
           <div className="flex flex-wrap items-center gap-2">
             {selectedIds.map((id, idx) => {
@@ -249,18 +249,18 @@ export default function OddsComparisonPage() {
               return (
                 <div
                   key={id}
-                  className="flex items-center gap-2 rounded-full border border-gray-300 bg-white px-1.5 py-1 text-sm"
+                  className="flex items-center gap-2 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-950 px-1.5 py-1 text-sm"
                   style={{ borderLeftColor: COMPARE_COLORS[idx], borderLeftWidth: 3 }}
                 >
                   <div className="flex-shrink-0 w-6 h-6 rounded-full overflow-hidden">
                     <GameAvatar gameName={game.title} size="sm" aspectRatio="square" />
                   </div>
-                  <span className="font-medium text-gray-800 truncate max-w-[140px]">
+                  <span className="font-medium text-gray-800 dark:text-gray-100 truncate max-w-[140px]">
                     {game.title}
                   </span>
                   <button
                     onClick={() => removeGame(id)}
-                    className="text-gray-400 hover:text-red-500 transition-colors"
+                    className="text-gray-400 dark:text-gray-500 hover:text-red-500 transition-colors"
                   >
                     <X className="h-3.5 w-3.5" />
                   </button>
@@ -274,7 +274,7 @@ export default function OddsComparisonPage() {
                 onChange={(e) => {
                   if (e.target.value) addGame(e.target.value);
                 }}
-                className="rounded-lg border border-dashed border-gray-300 bg-white px-3 py-2 text-sm text-gray-500 focus:border-purple-300 focus:outline-none"
+                className="rounded-lg border border-dashed border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-950 px-3 py-2 text-sm text-gray-500 dark:text-gray-400 focus:border-purple-300 focus:outline-none"
                 disabled={loading}
               >
                 <option value="">
@@ -296,7 +296,7 @@ export default function OddsComparisonPage() {
           </div>
 
           {selectedIds.length > 0 && (
-            <p className="text-[11px] text-gray-400 mt-2 flex items-center gap-1">
+            <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-2 flex items-center gap-1">
               <Trophy className="h-3 w-3 text-emerald-500" />
               Green highlights = best in category
             </p>
@@ -308,7 +308,7 @@ export default function OddsComparisonPage() {
       {error && !loading && (
         <section className="py-8">
           <div className="container-main">
-            <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center">
+            <div className="rounded-xl border border-red-200 bg-red-50 dark:bg-red-950/30 p-8 text-center">
               <AlertCircle className="h-10 w-10 text-red-400 mx-auto mb-3" />
               <h2 className="text-lg font-bold text-red-800 mb-2">Failed to Load Games</h2>
               <p className="text-sm text-red-600 mb-4">{error}</p>
@@ -328,7 +328,7 @@ export default function OddsComparisonPage() {
         <section className="py-16">
           <div className="container-main text-center">
             <Loader2 className="h-8 w-8 animate-spin text-purple-400 mx-auto mb-3" />
-            <p className="text-gray-500">Loading game database...</p>
+            <p className="text-gray-500 dark:text-gray-400">Loading game database...</p>
           </div>
         </section>
       )}
@@ -338,12 +338,12 @@ export default function OddsComparisonPage() {
         <section className="py-8">
           <div className="container-main">
             {selectedData.length === 0 ? (
-              <div className="rounded-2xl border-2 border-dashed border-gray-200 p-16 text-center">
+              <div className="rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 p-16 text-center">
                 <Scale className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                <h2 className="text-xl font-bold text-gray-900 mb-2">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
                   Select games to compare
                 </h2>
-                <p className="text-gray-500 max-w-md mx-auto mb-6">
+                <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto mb-6">
                   Choose up to 4 games from the dropdown above to see their drop rates,
                   costs, and pity systems compared side-by-side.
                 </p>
@@ -351,7 +351,7 @@ export default function OddsComparisonPage() {
                 {/* Suggested comparisons */}
                 {allGames.length >= 4 && (
                   <div>
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+                    <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-3">
                       Quick Comparisons
                     </p>
                     <div className="flex flex-wrap justify-center gap-2">
@@ -360,7 +360,7 @@ export default function OddsComparisonPage() {
                           const gachaGames = allGames.filter((g) => g.loot_system_type === "gacha").slice(0, 4);
                           gachaGames.forEach((g) => addGame(g.id));
                         }}
-                        className="rounded-full border border-purple-200 bg-purple-50 px-4 py-2 text-sm font-medium text-purple-700 hover:bg-purple-100 transition-colors"
+                        className="rounded-full border border-purple-200 dark:border-purple-700/30 bg-purple-50 dark:bg-purple-950/30 px-4 py-2 text-sm font-medium text-purple-700 hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors"
                       >
                         Top Gacha Games
                       </button>
@@ -369,7 +369,7 @@ export default function OddsComparisonPage() {
                           const lootGames = allGames.filter((g) => g.loot_system_type === "loot_box").slice(0, 4);
                           lootGames.forEach((g) => addGame(g.id));
                         }}
-                        className="rounded-full border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-100 transition-colors"
+                        className="rounded-full border border-red-200 bg-red-50 dark:bg-red-950/30 px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-100 transition-colors"
                       >
                         Top Loot Box Games
                       </button>
@@ -378,7 +378,7 @@ export default function OddsComparisonPage() {
                           const shopGames = allGames.filter((g) => g.loot_system_type === "cosmetic_shop").slice(0, 4);
                           shopGames.forEach((g) => addGame(g.id));
                         }}
-                        className="rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-100 transition-colors"
+                        className="rounded-full border border-emerald-200 dark:border-emerald-700/30 bg-emerald-50 dark:bg-emerald-950/30 px-4 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors"
                       >
                         Top Cosmetic Shops
                       </button>
@@ -389,11 +389,11 @@ export default function OddsComparisonPage() {
             ) : (
               <>
                 {/* Overview comparison table */}
-                <div className="rounded-2xl border border-gray-200 overflow-x-auto mb-8 shadow-sm">
+                <div className="rounded-2xl border border-gray-200 dark:border-gray-700 overflow-x-auto mb-8 shadow-sm">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="bg-gray-50 border-b border-gray-200">
-                        <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-gray-500 sticky left-0 bg-gray-50 z-10">
+                      <tr className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                        <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400 sticky left-0 bg-gray-50 dark:bg-gray-900 z-10">
                           Metric
                         </th>
                         {selectedData.map(({ game }, idx) => (
@@ -413,9 +413,9 @@ export default function OddsComparisonPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className="border-b border-gray-100">
-                        <td className="px-4 py-3 font-medium text-gray-700 sticky left-0 bg-white z-10">
-                          <span className="flex items-center gap-1.5"><Info className="h-3.5 w-3.5 text-gray-400" /> System Type</span>
+                      <tr className="border-b border-gray-100 dark:border-gray-800">
+                        <td className="px-4 py-3 font-medium text-gray-700 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-950 z-10">
+                          <span className="flex items-center gap-1.5"><Info className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" /> System Type</span>
                         </td>
                         {selectedData.map(({ game }) => (
                           <td key={game.id} className="px-4 py-3 text-center">
@@ -429,8 +429,8 @@ export default function OddsComparisonPage() {
                           </td>
                         ))}
                       </tr>
-                      <tr className="border-b border-gray-100">
-                        <td className="px-4 py-3 font-medium text-gray-700 sticky left-0 bg-white z-10">
+                      <tr className="border-b border-gray-100 dark:border-gray-800">
+                        <td className="px-4 py-3 font-medium text-gray-700 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-950 z-10">
                           <span className="flex items-center gap-1.5"><Star className="h-3.5 w-3.5 text-amber-400" /> Overall Score</span>
                         </td>
                         {selectedData.map(({ game }) => (
@@ -438,26 +438,26 @@ export default function OddsComparisonPage() {
                             <span className={`text-lg font-black ${scoreColor(game.lootboxes_score)}`}>
                               {game.lootboxes_score.toFixed(1)}
                             </span>
-                            <span className="text-gray-400 text-xs">/10</span>
+                            <span className="text-gray-400 dark:text-gray-500 text-xs">/10</span>
                             {game.id === bestOverall && <Trophy className="h-3 w-3 text-emerald-500 inline ml-1" />}
                           </td>
                         ))}
                       </tr>
-                      <tr className="border-b border-gray-100">
-                        <td className="px-4 py-3 font-medium text-gray-700 sticky left-0 bg-white z-10">
+                      <tr className="border-b border-gray-100 dark:border-gray-800">
+                        <td className="px-4 py-3 font-medium text-gray-700 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-950 z-10">
                           <span className="flex items-center gap-1.5"><DollarSign className="h-3.5 w-3.5 text-green-500" /> Cost Per Pull</span>
                         </td>
                         {selectedData.map(({ game }) => (
-                          <td key={game.id} className={`px-4 py-3 text-center font-semibold text-gray-900 ${cellHighlight(game.id, bestCost)}`}>
+                          <td key={game.id} className={`px-4 py-3 text-center font-semibold text-gray-900 dark:text-white ${cellHighlight(game.id, bestCost)}`}>
                             {game.cost_per_pull != null
                               ? `$${game.cost_per_pull.toFixed(2)}`
-                              : <span className="text-gray-400">N/A</span>}
+                              : <span className="text-gray-400 dark:text-gray-500">N/A</span>}
                             {game.id === bestCost && game.cost_per_pull != null && <Trophy className="h-3 w-3 text-emerald-500 inline ml-1" />}
                           </td>
                         ))}
                       </tr>
-                      <tr className="border-b border-gray-100">
-                        <td className="px-4 py-3 font-medium text-gray-700 sticky left-0 bg-white z-10">
+                      <tr className="border-b border-gray-100 dark:border-gray-800">
+                        <td className="px-4 py-3 font-medium text-gray-700 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-950 z-10">
                           <span className="flex items-center gap-1.5"><Shield className="h-3.5 w-3.5 text-blue-500" /> Pity System</span>
                         </td>
                         {selectedData.map(({ game }) => (
@@ -472,8 +472,8 @@ export default function OddsComparisonPage() {
                           </td>
                         ))}
                       </tr>
-                      <tr className="border-b border-gray-100">
-                        <td className="px-4 py-3 font-medium text-gray-700 sticky left-0 bg-white z-10">
+                      <tr className="border-b border-gray-100 dark:border-gray-800">
+                        <td className="px-4 py-3 font-medium text-gray-700 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-950 z-10">
                           <span className="flex items-center gap-1.5"><Eye className="h-3.5 w-3.5 text-indigo-500" /> Transparency</span>
                         </td>
                         {selectedData.map(({ game }) => (
@@ -486,7 +486,7 @@ export default function OddsComparisonPage() {
                         ))}
                       </tr>
                       <tr>
-                        <td className="px-4 py-3 font-medium text-gray-700 sticky left-0 bg-white z-10">
+                        <td className="px-4 py-3 font-medium text-gray-700 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-950 z-10">
                           <span className="flex items-center gap-1.5"><DollarSign className="h-3.5 w-3.5 text-emerald-500" /> Value Score</span>
                         </td>
                         {selectedData.map(({ game }) => (
@@ -504,9 +504,9 @@ export default function OddsComparisonPage() {
 
                 {/* Winner summary */}
                 {selectedData.length >= 2 && bestOverall && (
-                  <div className="rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50 p-6 mb-8 shadow-sm">
+                  <div className="rounded-2xl border border-emerald-200 dark:border-emerald-700/30 bg-gradient-to-r from-emerald-50 dark:from-emerald-950/30 to-teal-50 dark:to-teal-950/20 p-6 mb-8 shadow-sm">
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-50 dark:from-emerald-950/300 to-teal-600">
                         <Trophy className="h-5 w-5 text-white" />
                       </div>
                       <h3 className="text-lg font-bold text-emerald-900">Best Overall</h3>
@@ -525,8 +525,8 @@ export default function OddsComparisonPage() {
                 )}
 
                 {/* Drop rate bars per game */}
-                <h2 className="text-xl font-bold text-gray-900 mb-1">Drop Rate Breakdown</h2>
-                <p className="text-sm text-gray-500 mb-4">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">Drop Rate Breakdown</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                   Item-level drop rate data for each game. Bars are scaled relative to the highest rate across
                   all selected games for easy visual comparison. Source quality is shown next to each rate.
                 </p>
@@ -534,27 +534,27 @@ export default function OddsComparisonPage() {
                   {selectedData.map(({ game, rates, error: rateError }, idx) => (
                     <div
                       key={game.id}
-                      className="rounded-2xl border border-gray-200 p-5 hover:shadow-lg transition-shadow"
+                      className="rounded-2xl border border-gray-200 dark:border-gray-700 p-5 hover:shadow-lg transition-shadow"
                       style={{ borderTopWidth: 3, borderTopColor: COMPARE_COLORS[idx] }}
                     >
                       <div className="flex items-center gap-2 mb-1">
                         <div className="flex-shrink-0 w-8 h-8 rounded-lg overflow-hidden" style={{ boxShadow: `0 0 0 2px ${COMPARE_COLORS[idx]}` }}>
                           <GameAvatar gameName={game.title} size="sm" aspectRatio="square" />
                         </div>
-                        <h3 className="font-bold text-gray-900">{game.title}</h3>
+                        <h3 className="font-bold text-gray-900 dark:text-white">{game.title}</h3>
                       </div>
-                      <p className="text-[11px] text-gray-400 mb-4">
+                      <p className="text-[11px] text-gray-400 dark:text-gray-500 mb-4">
                         {SYSTEM_LABELS[game.loot_system_type] || game.loot_system_type} •{" "}
                         {game.cost_per_pull != null ? `$${game.cost_per_pull.toFixed(2)}/pull` : "Price N/A"}
                       </p>
 
                       {loadingRates.has(game.id) ? (
-                        <div className="flex items-center gap-2 py-8 justify-center text-gray-400">
+                        <div className="flex items-center gap-2 py-8 justify-center text-gray-400 dark:text-gray-500">
                           <Loader2 className="h-5 w-5 animate-spin" />
                           Loading drop rates...
                         </div>
                       ) : rateError ? (
-                        <div className="rounded-lg bg-red-50 border border-red-200 p-4 text-center">
+                        <div className="rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 p-4 text-center">
                           <AlertCircle className="h-5 w-5 text-red-400 mx-auto mb-2" />
                           <p className="text-sm text-red-600 mb-2">Failed to load drop rates</p>
                           <button
@@ -565,10 +565,10 @@ export default function OddsComparisonPage() {
                           </button>
                         </div>
                       ) : rates.length === 0 ? (
-                        <div className="rounded-lg bg-gray-50 border border-gray-200 p-6 text-center">
+                        <div className="rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-6 text-center">
                           <HelpCircle className="h-6 w-6 text-gray-300 mx-auto mb-2" />
-                          <p className="text-sm text-gray-500 font-medium">No drop rate data yet</p>
-                          <p className="text-[11px] text-gray-400 mt-1">
+                          <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">No drop rate data yet</p>
+                          <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">
                             We haven&apos;t cataloged drop rates for this game.
                             Check back soon or view the{" "}
                             <Link href={`/lootbox/${game.slug}`} className="text-brand-600 hover:underline">
@@ -584,24 +584,24 @@ export default function OddsComparisonPage() {
                             return (
                               <div key={i}>
                                 <div className="flex items-center justify-between mb-0.5">
-                                  <p className="text-xs font-medium text-gray-700 truncate max-w-[150px]">
+                                  <p className="text-xs font-medium text-gray-700 dark:text-gray-200 truncate max-w-[150px]">
                                     {rate.rarity}
                                     {rate.item_name !== rate.rarity && (
-                                      <span className="text-gray-400 font-normal"> — {rate.item_name}</span>
+                                      <span className="text-gray-400 dark:text-gray-500 font-normal"> — {rate.item_name}</span>
                                     )}
                                   </p>
                                   <div className="flex items-center gap-2">
                                     <span className={`text-[9px] font-bold rounded px-1 py-0.5 ${src.color}`}>
                                       {src.label}
                                     </span>
-                                    <span className="text-xs font-mono text-gray-600 w-16 text-right">
+                                    <span className="text-xs font-mono text-gray-600 dark:text-gray-300 w-16 text-right">
                                       {rate.drop_rate_pct < 1
                                         ? `${rate.drop_rate_pct.toFixed(2)}%`
                                         : `${rate.drop_rate_pct.toFixed(1)}%`}
                                     </span>
                                   </div>
                                 </div>
-                                <div className="bg-gray-100 rounded-full h-4 overflow-hidden">
+                                <div className="bg-gray-100 dark:bg-gray-800 rounded-full h-4 overflow-hidden">
                                   <div
                                     className="h-full rounded-full transition-all duration-500"
                                     style={{
@@ -614,7 +614,7 @@ export default function OddsComparisonPage() {
                             );
                           })}
                           {rates.length > 10 && (
-                            <p className="text-[11px] text-gray-400 pt-1">
+                            <p className="text-[11px] text-gray-400 dark:text-gray-500 pt-1">
                               + {rates.length - 10} more items.{" "}
                               <Link href={`/lootbox/${game.slug}`} className="text-brand-600 hover:underline">
                                 View all
@@ -640,9 +640,9 @@ export default function OddsComparisonPage() {
       )}
 
       {/* How it works */}
-      <section className="border-t border-gray-100 bg-gradient-to-b from-gray-50 to-white py-12">
+      <section className="border-t border-gray-100 dark:border-gray-800 bg-gradient-to-b from-gray-50 dark:from-gray-900 to-white dark:to-gray-950 py-12">
         <div className="container-main">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">How the Comparison Works</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">How the Comparison Works</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-3xl mx-auto">
             {[
               { num: "1", title: "Pick Games", desc: "Select up to 4 games from our database of analyzed titles. Use quick-compare buttons to load preset groups.", gradient: "from-purple-500 to-indigo-600" },
@@ -653,8 +653,8 @@ export default function OddsComparisonPage() {
                 <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${step.gradient} text-white mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform`}>
                   <span className="text-lg font-black">{step.num}</span>
                 </div>
-                <h3 className="font-bold text-gray-900 mb-1">{step.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{step.desc}</p>
+                <h3 className="font-bold text-gray-900 dark:text-white mb-1">{step.title}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -662,12 +662,12 @@ export default function OddsComparisonPage() {
       </section>
 
       {/* SEO content */}
-      <section className="border-t border-gray-100 bg-white py-10">
+      <section className="border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 py-10">
         <div className="container-main max-w-3xl">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
             Why Compare Loot Box Odds?
           </h2>
-          <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
+          <div className="space-y-4 text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
             <p>
               Not all loot box systems are created equal. A gacha game with a guaranteed pity system
               at 90 pulls and published drop rates is fundamentally different from a loot box game
@@ -691,12 +691,12 @@ export default function OddsComparisonPage() {
       </section>
 
       {/* Explore CTA */}
-      <section className="border-t border-gray-100 bg-gradient-to-r from-purple-50 to-indigo-50 py-10">
+      <section className="border-t border-gray-100 dark:border-gray-800 bg-gradient-to-r from-purple-50 dark:from-purple-950/30 to-indigo-50 py-10">
         <div className="container-main text-center">
-          <h2 className="text-xl font-bold text-gray-900">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             Want a quick value verdict instead?
           </h2>
-          <p className="text-sm text-gray-600 mt-2 mb-6 max-w-md mx-auto">
+          <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 mb-6 max-w-md mx-auto">
             Our value calculator gives you an instant &ldquo;Worth It / Caution / Avoid&rdquo; verdict
             for any game based on its scores.
           </p>
@@ -709,7 +709,7 @@ export default function OddsComparisonPage() {
             </Link>
             <Link
               href="/lootbox"
-              className="inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-sm"
+              className="inline-flex items-center gap-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-950 px-6 py-3 font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors shadow-sm"
             >
               Browse All Games <ArrowRight className="h-4 w-4" />
             </Link>

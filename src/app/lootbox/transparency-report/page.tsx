@@ -162,9 +162,9 @@ export default async function TransparencyReportPage() {
       : "0";
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Hero */}
-      <section className="relative border-b border-gray-100 bg-gradient-to-br from-slate-900 via-indigo-900 to-violet-900 py-16 overflow-hidden">
+      <section className="relative border-b border-gray-100 dark:border-gray-800 bg-gradient-to-br from-slate-900 via-indigo-900 to-violet-900 py-16 overflow-hidden">
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)",
           backgroundSize: "24px 24px",
@@ -178,10 +178,10 @@ export default async function TransparencyReportPage() {
           </Link>
 
           <div className="flex items-center gap-4 mb-5">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-500/20 backdrop-blur-sm border border-indigo-400/20">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 dark:bg-indigo-950/300/20 backdrop-blur-sm border border-indigo-400/20">
               <Eye className="h-7 w-7 text-indigo-400" />
             </div>
-            <div className="inline-flex rounded-full bg-indigo-500/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-indigo-300 border border-indigo-400/20">
+            <div className="inline-flex rounded-full bg-indigo-50 dark:bg-indigo-950/300/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-indigo-300 border border-indigo-400/20">
               <BarChart3 className="h-4 w-4 mr-1.5" /> {totalGames} Games Graded
             </div>
           </div>
@@ -202,7 +202,7 @@ export default async function TransparencyReportPage() {
       </section>
 
       {/* Summary stats */}
-      <section className="border-b border-gray-100 bg-gray-50/50">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
         <div className="container-main py-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[
@@ -211,12 +211,12 @@ export default async function TransparencyReportPage() {
               { value: `${opaquePct}%`, label: "Grade D or Below", gradient: "from-red-500 to-rose-600", icon: AlertTriangle },
               { value: avgScore, label: "Average Score / 10", gradient: "from-indigo-500 to-violet-600", icon: BarChart3 },
             ].map((stat) => (
-              <div key={stat.label} className="relative rounded-2xl border border-gray-200 bg-white p-5 text-center overflow-hidden hover:shadow-lg transition-shadow">
+              <div key={stat.label} className="relative rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 text-center overflow-hidden hover:shadow-lg transition-shadow">
                 <div className={`mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${stat.gradient}`}>
                   <stat.icon className="h-5 w-5 text-white" />
                 </div>
-                <p className="text-3xl font-black text-gray-900">{stat.value}</p>
-                <p className="text-xs text-gray-500 font-medium mt-0.5">{stat.label}</p>
+                <p className="text-3xl font-black text-gray-900 dark:text-white">{stat.value}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium mt-0.5">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -224,9 +224,9 @@ export default async function TransparencyReportPage() {
       </section>
 
       {/* Grade distribution bar */}
-      <section className="border-b border-gray-100 bg-white">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950">
         <div className="container-main py-6">
-          <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">
+          <h2 className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
             Grade Distribution
           </h2>
           <div className="flex items-center gap-2 overflow-x-auto pb-2">
@@ -254,7 +254,7 @@ export default async function TransparencyReportPage() {
                     <p className={`text-xs font-semibold ${info.color}`}>
                       {info.label}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
                       {gradeCounts[grade]} game
                       {gradeCounts[grade] !== 1 ? "s" : ""}
                     </p>
@@ -269,35 +269,35 @@ export default async function TransparencyReportPage() {
             <div className="mt-4 flex h-4 rounded-full overflow-hidden">
               {gradeCounts.A > 0 && (
                 <div
-                  className="bg-emerald-500"
+                  className="bg-emerald-50 dark:bg-emerald-950/300"
                   style={{ width: `${(gradeCounts.A / totalGames) * 100}%` }}
                   title={`Grade A: ${gradeCounts.A}`}
                 />
               )}
               {gradeCounts.B > 0 && (
                 <div
-                  className="bg-blue-500"
+                  className="bg-blue-50 dark:bg-blue-950/300"
                   style={{ width: `${(gradeCounts.B / totalGames) * 100}%` }}
                   title={`Grade B: ${gradeCounts.B}`}
                 />
               )}
               {gradeCounts.C > 0 && (
                 <div
-                  className="bg-amber-500"
+                  className="bg-amber-50 dark:bg-amber-950/300"
                   style={{ width: `${(gradeCounts.C / totalGames) * 100}%` }}
                   title={`Grade C: ${gradeCounts.C}`}
                 />
               )}
               {gradeCounts.D > 0 && (
                 <div
-                  className="bg-orange-500"
+                  className="bg-orange-50 dark:bg-orange-950/300"
                   style={{ width: `${(gradeCounts.D / totalGames) * 100}%` }}
                   title={`Grade D: ${gradeCounts.D}`}
                 />
               )}
               {gradeCounts.F > 0 && (
                 <div
-                  className="bg-red-500"
+                  className="bg-red-50 dark:bg-red-950/300"
                   style={{ width: `${(gradeCounts.F / totalGames) * 100}%` }}
                   title={`Grade F: ${gradeCounts.F}`}
                 />
@@ -352,19 +352,19 @@ export default async function TransparencyReportPage() {
                   ) : (
                     <Shield className={`h-5 w-5 ${info.color}`} />
                   )}
-                  <h2 className="text-xl font-bold text-gray-900">
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                     Grade {targetGrade} — {info.label}
                   </h2>
-                  <span className="text-sm text-gray-400">
+                  <span className="text-sm text-gray-400 dark:text-gray-500">
                     ({gamesInGrade.length})
                   </span>
                 </div>
-                <p className="text-sm text-gray-500 mb-4 ml-8">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 ml-8">
                   {info.description}
                 </p>
 
                 {isShame && (
-                  <div className="mb-4 ml-8 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50/50 px-4 py-3">
+                  <div className="mb-4 ml-8 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/30/50 px-4 py-3">
                     <EyeOff className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
                     <p className="text-sm text-red-700">
                       {targetGrade === "F"
@@ -392,7 +392,7 @@ export default async function TransparencyReportPage() {
                           />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-gray-900 truncate text-sm group-hover:text-blue-600 transition-colors">
+                          <p className="font-semibold text-gray-900 dark:text-white truncate text-sm group-hover:text-blue-600 transition-colors">
                             {game.title}
                           </p>
                           <div className="flex items-center gap-2 mt-0.5">
@@ -401,7 +401,7 @@ export default async function TransparencyReportPage() {
                             >
                               {sys.label}
                             </span>
-                            <span className="text-[10px] text-gray-400">
+                            <span className="text-[10px] text-gray-400 dark:text-gray-500">
                               Overall: {game.lootboxes_score}/10
                             </span>
                           </div>
@@ -410,7 +410,7 @@ export default async function TransparencyReportPage() {
                           <span className={`text-2xl font-black ${g.color}`}>
                             {g.grade}
                           </span>
-                          <p className="text-[10px] text-gray-400">
+                          <p className="text-[10px] text-gray-400 dark:text-gray-500">
                             {transparencyScore}/10
                           </p>
                         </div>
@@ -424,12 +424,12 @@ export default async function TransparencyReportPage() {
           })}
 
           {totalGames === 0 && (
-            <div className="rounded-xl border border-gray-200 bg-gray-50 p-12 text-center">
+            <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-12 text-center">
               <Search className="h-8 w-8 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500 font-medium">
+              <p className="text-gray-500 dark:text-gray-400 font-medium">
                 No games graded yet.
               </p>
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
                 Check back soon — we&apos;re actively analyzing games.
               </p>
             </div>
@@ -438,18 +438,18 @@ export default async function TransparencyReportPage() {
       </section>
 
       {/* Methodology */}
-      <section className="border-t border-gray-100 bg-gradient-to-b from-gray-50 to-white py-12">
+      <section className="border-t border-gray-100 dark:border-gray-800 bg-gradient-to-b from-gray-50 dark:from-gray-900 to-white dark:to-gray-950 py-12">
         <div className="container-main">
           <div className="flex items-center gap-3 mb-6">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-50 dark:from-indigo-950/300 to-violet-600">
               <BarChart3 className="h-5 w-5 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
               How We Grade Transparency
             </h2>
           </div>
 
-          <div className="max-w-3xl space-y-4 text-gray-700 leading-relaxed mb-8">
+          <div className="max-w-3xl space-y-4 text-gray-700 dark:text-gray-200 leading-relaxed mb-8">
             <p>
               Our transparency score (1–10) measures how much a game&apos;s publisher
               voluntarily reveals about their monetization mechanics. We evaluate
@@ -459,7 +459,7 @@ export default async function TransparencyReportPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5">
+            <div className="rounded-xl border border-emerald-200 dark:border-emerald-700/30 bg-emerald-50 dark:bg-emerald-950/30 p-5">
               <div className="flex items-center gap-2 mb-3">
                 <CheckCircle className="h-5 w-5 text-emerald-600" />
                 <h3 className="font-bold text-emerald-900">
@@ -490,7 +490,7 @@ export default async function TransparencyReportPage() {
               </ul>
             </div>
 
-            <div className="rounded-xl border border-red-200 bg-red-50 p-5">
+            <div className="rounded-xl border border-red-200 bg-red-50 dark:bg-red-950/30 p-5">
               <div className="flex items-center gap-2 mb-3">
                 <XCircle className="h-5 w-5 text-red-600" />
                 <h3 className="font-bold text-red-900">What Loses Points</h3>
@@ -519,7 +519,7 @@ export default async function TransparencyReportPage() {
               </ul>
             </div>
 
-            <div className="rounded-xl border border-blue-200 bg-blue-50 p-5">
+            <div className="rounded-xl border border-blue-200 bg-blue-50 dark:bg-blue-950/30 p-5">
               <div className="flex items-center gap-2 mb-3">
                 <HelpCircle className="h-5 w-5 text-blue-600" />
                 <h3 className="font-bold text-blue-900">Data Sources</h3>
@@ -549,9 +549,9 @@ export default async function TransparencyReportPage() {
             </div>
           </div>
 
-          <div className="flex items-start gap-3 rounded-xl border border-indigo-100 bg-indigo-50/50 p-4 max-w-3xl">
+          <div className="flex items-start gap-3 rounded-xl border border-indigo-100 dark:border-indigo-800/30 bg-indigo-50 dark:bg-indigo-950/30/50 p-4 max-w-3xl">
             <Info className="h-5 w-5 text-indigo-500 mt-0.5 flex-shrink-0" />
-            <p className="text-sm text-gray-600 leading-relaxed">
+            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
               Transparency scores are updated whenever a game changes its
               disclosure practices. If a publisher begins (or stops) publishing
               drop rates, we re-evaluate their grade. Want to report a change?{" "}
@@ -568,9 +568,9 @@ export default async function TransparencyReportPage() {
       </section>
 
       {/* Why transparency matters */}
-      <section className="border-t border-gray-100 bg-white py-12">
+      <section className="border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 py-12">
         <div className="container-main">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
             Why Transparency Matters
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -579,12 +579,12 @@ export default async function TransparencyReportPage() {
               { icon: Shield, gradient: "from-blue-500 to-indigo-600", title: "Holding Publishers Accountable", text: "Public transparency reports create market pressure. When players can compare games, publishers with poor practices face reputational consequences that encourage improvement." },
               { icon: AlertTriangle, gradient: "from-amber-500 to-orange-600", title: "Protecting Vulnerable Players", text: "Transparency is especially important for younger players and those susceptible to gambling-like mechanics. Knowing the odds helps players set realistic expectations and budgets." },
             ].map((card) => (
-              <div key={card.title} className="rounded-2xl border border-gray-200 p-6 hover:shadow-lg transition-shadow group">
+              <div key={card.title} className="rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-shadow group">
                 <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${card.gradient} mb-4 group-hover:scale-110 transition-transform`}>
                   <card.icon className="h-5 w-5 text-white" />
                 </div>
-                <h3 className="font-bold text-gray-900 text-lg mb-2">{card.title}</h3>
-                <p className="text-sm text-gray-600 leading-relaxed">{card.text}</p>
+                <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-2">{card.title}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{card.text}</p>
               </div>
             ))}
           </div>
@@ -592,17 +592,17 @@ export default async function TransparencyReportPage() {
       </section>
 
       {/* CTA */}
-      <section className="border-t border-gray-100 bg-gradient-to-r from-indigo-50 to-blue-50 py-10">
+      <section className="border-t border-gray-100 dark:border-gray-800 bg-gradient-to-r from-indigo-50 dark:from-indigo-950/30 to-blue-50 py-10">
         <div className="container-main">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <EyeOff className="h-5 w-5 text-indigo-400" />
-                <h2 className="text-lg font-bold text-gray-900">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                   Think a game should be more transparent?
                 </h2>
               </div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-300">
                 Help us hold publishers accountable. Request a game analysis or
                 report inaccurate data.
               </p>

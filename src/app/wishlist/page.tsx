@@ -126,7 +126,7 @@ export default function WishlistPage() {
                   </Link>
                   <button
                     onClick={() => toggle(game.slug)}
-                    className="rounded-lg p-2 text-gray-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20"
+                    className="rounded-lg p-2 text-gray-400 dark:text-gray-500 hover:bg-red-50 dark:bg-red-950/30 hover:text-red-500 dark:hover:bg-red-900/20"
                     aria-label="Remove from wishlist"
                   >
                     <Trash2 className="h-4 w-4" />

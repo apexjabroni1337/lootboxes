@@ -164,16 +164,16 @@ export default function DealsHubClient({
       {/* Search + Sort row */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
           <input
             type="text"
             value={search}
             onChange={(e) => { setSearch(e.target.value); setVisibleCount(40); }}
             placeholder="Search games..."
-            className="w-full rounded-xl border border-gray-200 bg-white pl-10 pr-9 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all"
+            className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 pl-10 pr-9 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all"
           />
           {search && (
-            <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+            <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-gray-300">
               <X className="h-4 w-4" />
             </button>
           )}
@@ -182,16 +182,16 @@ export default function DealsHubClient({
         <div className="relative">
           <button
             onClick={() => setShowSortMenu(!showSortMenu)}
-            className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           >
-            <ArrowUpDown className="h-3.5 w-3.5 text-gray-400" />
+            <ArrowUpDown className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />
             {SORT_OPTIONS.find((s) => s.id === sortBy)?.label}
-            <ChevronDown className="h-3.5 w-3.5 text-gray-400" />
+            <ChevronDown className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />
           </button>
           {showSortMenu && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setShowSortMenu(false)} />
-              <div className="absolute right-0 top-full z-20 mt-1 w-48 rounded-xl border border-gray-200 bg-white py-1 shadow-lg">
+              <div className="absolute right-0 top-full z-20 mt-1 w-48 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 py-1 shadow-lg">
                 {SORT_OPTIONS.map((opt) => (
                   <button
                     key={opt.id}
@@ -212,7 +212,7 @@ export default function DealsHubClient({
       </div>
 
       {/* Tab bar */}
-      <div className="mt-4 flex gap-1 overflow-x-auto rounded-xl border border-gray-200 bg-gray-50 p-1 scrollbar-hide">
+      <div className="mt-4 flex gap-1 overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-1 scrollbar-hide">
         {TABS.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -235,7 +235,7 @@ export default function DealsHubClient({
 
       {/* Genre filter pills */}
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <span className="text-xs font-medium text-gray-400 uppercase tracking-wider mr-1">Genre:</span>
+        <span className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mr-1">Genre:</span>
         {GENRE_OPTIONS.map((genre) => {
           const Icon = genre.icon;
           const isActive = activeGenre === genre.id;
@@ -256,7 +256,7 @@ export default function DealsHubClient({
           );
         })}
         {activeGenre && (
-          <button onClick={() => setActiveGenre(null)} className="text-xs text-gray-400 hover:text-gray-600 underline ml-1">
+          <button onClick={() => setActiveGenre(null)} className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-300 underline ml-1">
             Clear
           </button>
         )}
@@ -264,11 +264,11 @@ export default function DealsHubClient({
 
       {/* Results count */}
       <div className="mt-4 flex items-center justify-between">
-        <p className="text-sm text-gray-500">
-          Showing <span className="font-medium text-gray-900">{Math.min(visibleCount, filtered.length)}</span> of{" "}
-          <span className="font-medium text-gray-900">{filtered.length}</span> deals
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Showing <span className="font-medium text-gray-900 dark:text-white">{Math.min(visibleCount, filtered.length)}</span> of{" "}
+          <span className="font-medium text-gray-900 dark:text-white">{filtered.length}</span> deals
           {activeGenre && (
-            <span className="text-gray-400">
+            <span className="text-gray-400 dark:text-gray-500">
               {" "}in <span className="font-medium text-brand-600">{GENRE_OPTIONS.find(g => g.id === activeGenre)?.label}</span>
             </span>
           )}
@@ -277,8 +277,8 @@ export default function DealsHubClient({
 
       {/* Deals list */}
       {filtered.length === 0 ? (
-        <div className="mt-4 rounded-xl border border-gray-200 bg-white p-12 text-center">
-          <p className="text-gray-500">
+        <div className="mt-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-12 text-center">
+          <p className="text-gray-500 dark:text-gray-400">
             No deals match this filter.{activeGenre ? " Try removing the genre filter or switching tabs!" : " Try another tab!"}
           </p>
         </div>
@@ -302,10 +302,10 @@ export default function DealsHubClient({
             <div className="mt-8 text-center">
               <button
                 onClick={() => setVisibleCount((prev) => prev + 40)}
-                className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-8 py-3 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 hover:shadow-md transition-all"
+                className="inline-flex items-center gap-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-8 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 hover:shadow-md transition-all"
               >
                 Load More Deals
-                <span className="text-xs text-gray-400">({filtered.length - visibleCount} remaining)</span>
+                <span className="text-xs text-gray-400 dark:text-gray-500">({filtered.length - visibleCount} remaining)</span>
               </button>
             </div>
           )}

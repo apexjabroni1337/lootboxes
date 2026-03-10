@@ -152,7 +152,7 @@ function RankedGameRow({
               {game.title}
             </span>
           </div>
-          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white/15 text-white/70 backdrop-blur-sm flex-shrink-0">
+          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white dark:bg-gray-950/15 text-white/70 backdrop-blur-sm flex-shrink-0">
             {systemLabel(game.loot_system_type).label}
           </span>
           <span className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-extrabold border-2 border-white/70 shadow-lg ${
@@ -336,7 +336,7 @@ export default async function RankingsPage() {
 
           {/* Most Rewarding */}
           <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden dark:border-gray-700 dark:bg-gray-900">
-            <div className="h-1 bg-emerald-500" />
+            <div className="h-1 bg-emerald-50 dark:bg-emerald-950/300" />
             <div className="p-6">
               <div className="flex items-center gap-2 mb-6">
                 <DollarSign className="w-5 h-5 text-emerald-600" />
@@ -352,7 +352,7 @@ export default async function RankingsPage() {
 
           {/* Non-Game-Breaking */}
           <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden dark:border-gray-700 dark:bg-gray-900">
-            <div className="h-1 bg-purple-500" />
+            <div className="h-1 bg-purple-50 dark:bg-purple-950/300" />
             <div className="p-6">
               <div className="flex items-center gap-2 mb-6">
                 <Swords className="w-5 h-5 text-purple-600" />
@@ -393,8 +393,8 @@ export default async function RankingsPage() {
           <table className="w-full min-w-full">
             <thead className="bg-gray-50 border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-gray-50 w-8">#</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 sticky left-12 bg-gray-50 w-48">Game</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-gray-50 dark:bg-gray-900 w-8">#</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 sticky left-12 bg-gray-50 dark:bg-gray-900 w-48">Game</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 w-32">Type</th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 w-20">Overall</th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 w-20">Protection</th>
@@ -430,13 +430,13 @@ export default async function RankingsPage() {
                           </td>
                         </tr>
                       )}
-                      <tr className="hover:bg-blue-50/50 dark:hover:bg-blue-950/20 transition-colors">
+                      <tr className="hover:bg-blue-50 dark:bg-blue-950/30/50 dark:hover:bg-blue-950/20 transition-colors">
                         <td className={`px-4 py-3 text-sm font-medium sticky left-0 bg-inherit ${rankBadge.bgClass}`}>
                           <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style={{ backgroundColor: rankBadge.bgClass }}>
                             <span className={rankBadge.textClass}>{idx + 1}</span>
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-sm sticky left-12 bg-inherit hover:bg-blue-50/50">
+                        <td className="px-4 py-3 text-sm sticky left-12 bg-inherit hover:bg-blue-50 dark:bg-blue-950/30/50">
                           <Link href={`/lootbox/${item.game.slug}`} className="flex items-center gap-2 font-medium text-gray-900 dark:text-white hover:text-[#0074c5] transition-colors">
                             <GameThumb game={item.game} />
                             {item.game.title}
@@ -506,7 +506,7 @@ export default async function RankingsPage() {
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{systemLabel(item.type).label}</p>
                 <div className="flex items-baseline gap-2 mt-2">
                   <span className="text-2xl font-bold text-gray-900 dark:text-white">{item.avg}</span>
-                  <span className="text-xs text-gray-500">avg ({item.count} games)</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">avg ({item.count} games)</span>
                 </div>
               </div>
             ))}

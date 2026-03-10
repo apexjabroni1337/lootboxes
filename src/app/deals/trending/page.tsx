@@ -108,18 +108,18 @@ export default async function TrendingPage() {
   return (
     <div className="pb-12">
       {/* ─── Hero ─── */}
-      <section className="border-b border-gray-100 bg-gradient-to-b from-orange-50 to-white py-8 sm:py-10">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-b from-orange-50 dark:from-orange-950/30 to-white dark:to-gray-950 py-8 sm:py-10">
         <div className="container-main">
-          <div className="inline-flex items-center gap-2 bg-white border border-orange-200 rounded-full px-4 py-1.5 mb-4 shadow-sm">
+          <div className="inline-flex items-center gap-2 bg-white dark:bg-gray-950 border border-orange-200 dark:border-orange-700/30 rounded-full px-4 py-1.5 mb-4 shadow-sm">
             <Flame className="w-3.5 h-3.5 text-orange-500" />
             <span className="text-[11px] font-bold text-orange-600 uppercase tracking-wider">
               Trending Now
             </span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
             What&apos;s Hot Right Now
           </h1>
-          <p className="text-gray-500 mt-2 max-w-lg text-sm">
+          <p className="text-gray-500 dark:text-gray-400 mt-2 max-w-lg text-sm">
             The most popular games and biggest deals happening right now, ranked by community activity and price drops.
           </p>
         </div>
@@ -130,7 +130,7 @@ export default async function TrendingPage() {
         <section className="container-main mt-8">
           <div className="flex items-center gap-2 mb-5">
             <TrendingUp className="h-5 w-5 text-orange-500" />
-            <h2 className="text-xl font-bold text-gray-900">Hot Right Now</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Hot Right Now</h2>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
             {spotlightDeals.map((deal: any, idx: number) => {
@@ -141,7 +141,7 @@ export default async function TrendingPage() {
               return (
                 <div
                   key={deal.id}
-                  className="group relative overflow-hidden rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl transition-all"
+                  className="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-xl transition-all"
                 >
                   {/* Background */}
                   <div className="relative aspect-[16/10] overflow-hidden">
@@ -158,7 +158,7 @@ export default async function TrendingPage() {
 
                     {/* Rank badge */}
                     <div className="absolute top-3 left-3">
-                      <span className="flex items-center justify-center w-8 h-8 rounded-full bg-orange-500 text-white text-sm font-bold shadow-lg">
+                      <span className="flex items-center justify-center w-8 h-8 rounded-full bg-orange-50 dark:bg-orange-950/300 text-white text-sm font-bold shadow-lg">
                         #{idx + 1}
                       </span>
                     </div>
@@ -227,7 +227,7 @@ export default async function TrendingPage() {
                             </div>
                             <Link
                               href={`/games/${game?.slug}`}
-                              className="flex items-center gap-1 rounded-lg bg-white/20 backdrop-blur-sm px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/30"
+                              className="flex items-center gap-1 rounded-lg bg-white dark:bg-gray-950/20 backdrop-blur-sm px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white dark:bg-gray-950/30"
                             >
                               View Game
                             </Link>
@@ -252,18 +252,18 @@ export default async function TrendingPage() {
       <div className="container-main mt-8">
         <Link
           href="/deals"
-          className="group flex items-center justify-between rounded-2xl bg-gradient-to-r from-orange-50 via-amber-50 to-yellow-50 border border-orange-200 px-6 md:px-8 py-5 hover:border-orange-300 hover:shadow-lg transition-all"
+          className="group flex items-center justify-between rounded-2xl bg-gradient-to-r from-orange-50 dark:from-orange-950/30 via-amber-50 dark:via-amber-950/20 to-yellow-50 dark:to-yellow-950/20 border border-orange-200 dark:border-orange-700/30 px-6 md:px-8 py-5 hover:border-orange-300 hover:shadow-lg transition-all"
         >
           <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-orange-50 dark:from-orange-950/300 to-amber-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
               <Flame className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="font-bold text-gray-900 text-base">Browse All Deals</h2>
-              <p className="text-sm text-gray-500">See every deal across every store, filtered your way</p>
+              <h2 className="font-bold text-gray-900 dark:text-white text-base">Browse All Deals</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400">See every deal across every store, filtered your way</p>
             </div>
           </div>
-          <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-gray-900 group-hover:translate-x-1 transition-all" />
+          <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-gray-900 dark:text-white group-hover:translate-x-1 transition-all" />
         </Link>
       </div>
 

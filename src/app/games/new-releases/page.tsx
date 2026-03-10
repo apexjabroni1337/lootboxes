@@ -200,18 +200,18 @@ export default async function NewReleasesPage({
   return (
     <div className="pb-12">
       {/* ─── Hero ─── */}
-      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 sm:py-10">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-b from-gray-50 dark:from-gray-900 to-white dark:to-gray-950 py-8 sm:py-10">
         <div className="container-main">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-200 rounded-full px-4 py-1.5 mb-4 shadow-sm">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-50 dark:from-indigo-950/30 to-violet-50 border border-indigo-200 dark:border-indigo-700/30 rounded-full px-4 py-1.5 mb-4 shadow-sm">
             <Rocket className="w-3.5 h-3.5 text-indigo-500" />
             <span className="text-[11px] font-bold text-indigo-600 uppercase tracking-wider">
               New Releases
             </span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
             New Releases &amp; Coming Soon
           </h1>
-          <p className="text-gray-500 mt-2 max-w-lg text-sm">
+          <p className="text-gray-500 dark:text-gray-400 mt-2 max-w-lg text-sm">
             {newReleases.length} games released in the last 90 days, plus {comingSoon.length} upcoming titles. Prices tracked from day one.
           </p>
         </div>
@@ -222,7 +222,7 @@ export default async function NewReleasesPage({
         <section className="container-main mt-8">
           <div className="flex items-center gap-2 mb-5">
             <Star className="h-5 w-5 text-amber-500" />
-            <h2 className="text-xl font-bold text-gray-900">Just Dropped</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Just Dropped</h2>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
             {spotlightGames.map((game: any) => (

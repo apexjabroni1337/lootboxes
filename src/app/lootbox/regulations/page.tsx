@@ -82,12 +82,12 @@ function RegulationCard({ reg }: { reg: Regulation }) {
 
   return (
     <div
-      className="rounded-xl border border-gray-200 bg-white overflow-hidden transition-all hover:shadow-lg group"
+      className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 overflow-hidden transition-all hover:shadow-lg group"
       style={{ borderLeftWidth: 4, borderLeftColor: statusAccentColor(reg.status) }}
     >
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full px-5 py-4 flex items-center gap-4 text-left hover:bg-gray-50/50 transition-colors"
+        className="w-full px-5 py-4 flex items-center gap-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-900/50 transition-colors"
       >
         {/* Flag */}
         <div className="flex-shrink-0">
@@ -96,46 +96,46 @@ function RegulationCard({ reg }: { reg: Regulation }) {
 
         {/* Country name + status */}
         <div className="flex items-center gap-3 flex-1 min-w-0">
-          <h3 className="font-bold text-gray-900 truncate text-base">
+          <h3 className="font-bold text-gray-900 dark:text-white truncate text-base">
             {reg.country}
           </h3>
           <StatusBadge status={reg.status} />
         </div>
 
         {/* Region chip */}
-        <span className="hidden sm:inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-500">
+        <span className="hidden sm:inline-flex items-center rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1 text-[11px] font-medium text-gray-500 dark:text-gray-400">
           {reg.region}
         </span>
 
         {/* Expand icon */}
-        <div className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors ${expanded ? "bg-blue-100" : "bg-gray-100 group-hover:bg-gray-200"}`}>
+        <div className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors ${expanded ? "bg-blue-100" : "bg-gray-100 dark:bg-gray-800 group-hover:bg-gray-200"}`}>
           {expanded ? (
             <ChevronUp className="h-4 w-4 text-blue-600" />
           ) : (
-            <ChevronDown className="h-4 w-4 text-gray-500" />
+            <ChevronDown className="h-4 w-4 text-gray-500 dark:text-gray-400" />
           )}
         </div>
       </button>
 
       {expanded && (
-        <div className="px-5 pb-5 border-t border-gray-100">
+        <div className="px-5 pb-5 border-t border-gray-100 dark:border-gray-800">
           {/* Summary */}
-          <p className="text-sm text-gray-700 mt-4 leading-relaxed">
+          <p className="text-sm text-gray-700 dark:text-gray-200 mt-4 leading-relaxed">
             {reg.summary}
           </p>
 
           <div className="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-5">
             {/* Requirements */}
             {reg.requirements.length > 0 && (
-              <div className="rounded-lg bg-gray-50 p-4">
-                <h4 className="text-xs font-bold uppercase tracking-wide text-gray-500 mb-3 flex items-center gap-1.5">
+              <div className="rounded-lg bg-gray-50 dark:bg-gray-900 p-4">
+                <h4 className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-3 flex items-center gap-1.5">
                   <Shield className="h-3.5 w-3.5" /> Key Requirements
                 </h4>
                 <ul className="space-y-2">
                   {reg.requirements.map((req, i) => (
                     <li
                       key={i}
-                      className="flex items-start gap-2 text-sm text-gray-600"
+                      className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300"
                     >
                       <div className="mt-1.5 h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: statusAccentColor(reg.status) }} />
                       {req}
@@ -147,8 +147,8 @@ function RegulationCard({ reg }: { reg: Regulation }) {
 
             {/* Timeline */}
             {reg.keyEvents.length > 0 && (
-              <div className="rounded-lg bg-gray-50 p-4">
-                <h4 className="text-xs font-bold uppercase tracking-wide text-gray-500 mb-3 flex items-center gap-1.5">
+              <div className="rounded-lg bg-gray-50 dark:bg-gray-900 p-4">
+                <h4 className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-3 flex items-center gap-1.5">
                   <Calendar className="h-3.5 w-3.5" /> Timeline
                 </h4>
                 <div className="relative ml-2 border-l-2 pl-4 space-y-3" style={{ borderColor: statusAccentColor(reg.status) + "40" }}>
@@ -158,10 +158,10 @@ function RegulationCard({ reg }: { reg: Regulation }) {
                         className="absolute -left-[21px] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-white"
                         style={{ backgroundColor: statusAccentColor(reg.status) }}
                       />
-                      <p className="text-[11px] font-mono text-gray-400">
+                      <p className="text-[11px] font-mono text-gray-400 dark:text-gray-500">
                         {event.date}
                       </p>
-                      <p className="text-sm text-gray-700">{event.description}</p>
+                      <p className="text-sm text-gray-700 dark:text-gray-200">{event.description}</p>
                     </div>
                   ))}
                 </div>
@@ -169,7 +169,7 @@ function RegulationCard({ reg }: { reg: Regulation }) {
             )}
           </div>
 
-          <p className="mt-4 text-[10px] text-gray-400">
+          <p className="mt-4 text-[10px] text-gray-400 dark:text-gray-500">
             Last updated: {reg.lastUpdated}
           </p>
         </div>
@@ -206,9 +206,9 @@ export default function RegulationsPage() {
   const totalCountries = REGULATIONS.length;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Hero */}
-      <section className="relative border-b border-gray-100 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 py-16 overflow-hidden">
+      <section className="relative border-b border-gray-100 dark:border-gray-800 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 py-16 overflow-hidden">
         {/* Decorative grid dots */}
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)",
@@ -233,11 +233,11 @@ export default function RegulationsPage() {
           </Link>
 
           <div className="flex items-center gap-4 mb-5">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500/20 backdrop-blur-sm border border-blue-400/20">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 dark:bg-blue-950/300/20 backdrop-blur-sm border border-blue-400/20">
               <Scale className="h-7 w-7 text-blue-400" />
             </div>
             <div>
-              <div className="inline-flex rounded-full bg-blue-500/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-blue-300 border border-blue-400/20">
+              <div className="inline-flex rounded-full bg-blue-50 dark:bg-blue-950/300/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-blue-300 border border-blue-400/20">
                 <Globe className="h-4 w-4 mr-1.5" />
                 {totalCountries} Countries Tracked
               </div>
@@ -263,7 +263,7 @@ export default function RegulationsPage() {
               return (
                 <div
                   key={r.iso}
-                  className="flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm px-3 py-1.5 flex-shrink-0 border border-white/10"
+                  className="flex items-center gap-2 rounded-full bg-white dark:bg-gray-950/10 backdrop-blur-sm px-3 py-1.5 flex-shrink-0 border border-white/10"
                 >
                   <FlagImg iso={r.iso} size={16} />
                   <span className="text-xs font-semibold text-white/80">{r.country.replace(" (Federal)", "")}</span>
@@ -276,7 +276,7 @@ export default function RegulationsPage() {
       </section>
 
       {/* Global summary — status cards */}
-      <section className="border-b border-gray-100 bg-gray-50/50">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
         <div className="container-main py-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             {(
@@ -303,14 +303,14 @@ export default function RegulationsPage() {
                 >
                   {/* Background gradient */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-${isActive ? "15" : "8"} transition-opacity`} />
-                  <div className="absolute inset-0 bg-white/90" />
+                  <div className="absolute inset-0 bg-white dark:bg-gray-950/90" />
 
                   <div className="relative z-10">
                     <div className={`mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${item.gradient}`}>
                       <item.icon className="h-5 w-5 text-white" />
                     </div>
-                    <p className="text-3xl font-black text-gray-900">{count}</p>
-                    <p className="text-xs text-gray-500 font-semibold mt-0.5">
+                    <p className="text-3xl font-black text-gray-900 dark:text-white">{count}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 font-semibold mt-0.5">
                       {item.label}
                     </p>
 
@@ -327,14 +327,14 @@ export default function RegulationsPage() {
           </div>
 
           {/* World overview prose */}
-          <div className="rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 p-6">
+          <div className="rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 dark:from-blue-950/30 to-indigo-50 p-6">
             <div className="flex items-start gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500 flex-shrink-0 mt-0.5">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/300 flex-shrink-0 mt-0.5">
                 <Globe className="h-5 w-5 text-white" />
               </div>
-              <div className="text-sm text-gray-700 leading-relaxed space-y-2">
+              <div className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed space-y-2">
                 <p>
-                  <span className="font-bold text-gray-900">
+                  <span className="font-bold text-gray-900 dark:text-white">
                     The global picture:
                   </span>{" "}
                   Of the {totalCountries} jurisdictions we track,{" "}
@@ -350,7 +350,7 @@ export default function RegulationsPage() {
                     {statusCounts.pending} have pending legislation
                   </span>
                   , and{" "}
-                  <span className="font-bold text-gray-600">
+                  <span className="font-bold text-gray-600 dark:text-gray-300">
                     {statusCounts.legal} have no specific rules
                   </span>
                   .
@@ -370,23 +370,23 @@ export default function RegulationsPage() {
       </section>
 
       {/* Search + Filter bar */}
-      <section className="border-b border-gray-100 bg-white sticky top-16 z-30 shadow-sm">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 sticky top-16 z-30 shadow-sm">
         <div className="container-main py-3 flex items-center gap-3 flex-wrap">
           <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search countries..."
-              className="w-full rounded-lg border border-gray-200 bg-gray-50 pl-9 pr-3 py-2 text-sm placeholder:text-gray-400 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 pl-9 pr-3 py-2 text-sm placeholder:text-gray-400 dark:text-gray-500 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-100"
             />
           </div>
 
           <select
             value={regionFilter}
             onChange={(e) => setRegionFilter(e.target.value)}
-            className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-blue-300 focus:outline-none"
+            className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 py-2 text-sm focus:border-blue-300 focus:outline-none"
           >
             {REGION_LIST.map((r) => (
               <option key={r} value={r}>
@@ -410,7 +410,7 @@ export default function RegulationsPage() {
             </button>
           )}
 
-          <span className="ml-auto text-sm text-gray-400 font-medium">
+          <span className="ml-auto text-sm text-gray-400 dark:text-gray-500 font-medium">
             {filtered.length} of {totalCountries} countries
           </span>
         </div>
@@ -424,12 +424,12 @@ export default function RegulationsPage() {
           ))}
 
           {filtered.length === 0 && (
-            <div className="rounded-xl border border-gray-200 bg-gray-50 p-12 text-center">
+            <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-12 text-center">
               <Search className="h-8 w-8 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500 font-medium">
+              <p className="text-gray-500 dark:text-gray-400 font-medium">
                 No countries match your search.
               </p>
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
                 Try a different search term or clear filters.
               </p>
             </div>
@@ -438,17 +438,17 @@ export default function RegulationsPage() {
       </section>
 
       {/* Recent regulatory events timeline */}
-      <section className="border-t border-gray-100 bg-gradient-to-b from-gray-50 to-white py-12">
+      <section className="border-t border-gray-100 dark:border-gray-800 bg-gradient-to-b from-gray-50 dark:from-gray-900 to-white dark:to-gray-950 py-12">
         <div className="container-main">
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-50 dark:from-blue-950/300 to-indigo-600">
               <Calendar className="h-5 w-5 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
               Recent Regulatory Events
             </h2>
           </div>
-          <p className="text-sm text-gray-600 mb-8 max-w-2xl ml-[52px]">
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-8 max-w-2xl ml-[52px]">
             The most significant loot box regulatory actions worldwide — from the
             latest developments going back through the history of this evolving
             legal landscape.
@@ -465,17 +465,17 @@ export default function RegulationsPage() {
                     style={{ backgroundColor: accent }}
                   />
 
-                  <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm group-hover:shadow-md transition-shadow">
+                  <div className="rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 p-4 shadow-sm group-hover:shadow-md transition-shadow">
                     <div className="flex items-center gap-3 mb-2">
                       <FlagImg iso={event.iso} size={18} />
-                      <span className="text-sm font-bold text-gray-900">
+                      <span className="text-sm font-bold text-gray-900 dark:text-white">
                         {event.country}
                       </span>
-                      <span className="text-xs font-mono text-gray-400 ml-auto">
+                      <span className="text-xs font-mono text-gray-400 dark:text-gray-500 ml-auto">
                         {event.date}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 leading-relaxed">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
                       {event.description}
                     </p>
                   </div>
@@ -487,9 +487,9 @@ export default function RegulationsPage() {
       </section>
 
       {/* Key takeaways */}
-      <section className="border-t border-gray-100 bg-white py-12">
+      <section className="border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 py-12">
         <div className="container-main">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">
             Key Takeaways for Players
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -513,12 +513,12 @@ export default function RegulationsPage() {
                 text: "Most regulatory efforts focus on protecting minors. China\u2019s strict 3-hour weekly limit for under-18s is the most extreme example, but age verification and spending caps are being discussed worldwide.",
               },
             ].map((card) => (
-              <div key={card.title} className="rounded-2xl border border-gray-200 p-6 hover:shadow-lg transition-shadow group">
+              <div key={card.title} className="rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-shadow group">
                 <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${card.gradient} mb-4 group-hover:scale-110 transition-transform`}>
                   <card.icon className="h-5 w-5 text-white" />
                 </div>
-                <h3 className="font-bold text-gray-900 text-lg mb-2">{card.title}</h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
+                <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-2">{card.title}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
                   {card.text}
                 </p>
               </div>
@@ -528,12 +528,12 @@ export default function RegulationsPage() {
       </section>
 
       {/* SEO prose — why this matters */}
-      <section className="border-t border-gray-100 bg-gradient-to-r from-blue-50 to-indigo-50 py-12">
+      <section className="border-t border-gray-100 dark:border-gray-800 bg-gradient-to-r from-blue-50 dark:from-blue-950/30 to-indigo-50 py-12">
         <div className="container-main">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
             Why Loot Box Regulation Matters
           </h2>
-          <div className="max-w-3xl space-y-4 text-gray-700 leading-relaxed">
+          <div className="max-w-3xl space-y-4 text-gray-700 dark:text-gray-200 leading-relaxed">
             <p>
               Loot boxes generate billions in annual revenue for game publishers,
               but growing evidence links them to problem gambling behaviors —
@@ -568,16 +568,16 @@ export default function RegulationsPage() {
       </section>
 
       {/* CTA */}
-      <section className="border-t border-gray-100 bg-white py-10">
+      <section className="border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 py-10">
         <div className="container-main flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <Gavel className="h-5 w-5 text-blue-500" />
-              <h2 className="text-lg font-bold text-gray-900">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                 Want to see how transparent your game is?
               </h2>
             </div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
               Check our transparency report to see how your games stack up.
             </p>
           </div>
@@ -591,10 +591,10 @@ export default function RegulationsPage() {
       </section>
 
       {/* Disclaimer */}
-      <div className="border-t border-gray-100 bg-gray-50/70">
+      <div className="border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/70">
         <div className="container-main py-4">
-          <p className="text-[11px] text-gray-400 leading-relaxed text-center">
-            <span className="font-semibold text-gray-500">Disclaimer:</span>{" "}
+          <p className="text-[11px] text-gray-400 dark:text-gray-500 leading-relaxed text-center">
+            <span className="font-semibold text-gray-500 dark:text-gray-400">Disclaimer:</span>{" "}
             This tracker is for informational purposes only and does not
             constitute legal advice. Regulations change frequently — always
             consult official sources for the latest information in your

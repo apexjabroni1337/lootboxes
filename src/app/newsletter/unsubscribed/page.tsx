@@ -12,13 +12,13 @@ export default function UnsubscribedPage() {
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-success-100">
           <CheckCircle className="h-7 w-7 text-success-600" />
         </div>
-        <h1 className="mt-6 text-2xl font-bold text-gray-900">
+        <h1 className="mt-6 text-2xl font-bold text-gray-900 dark:text-white">
           You&apos;ve been unsubscribed
         </h1>
-        <p className="mt-3 text-gray-500">
+        <p className="mt-3 text-gray-500 dark:text-gray-400">
           We&apos;re sorry to see you go. You won&apos;t receive any more emails from us.
         </p>
-        <p className="mt-1 text-sm text-gray-400">
+        <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">
           Changed your mind? You can always{" "}
           <Link href="/newsletter" className="text-brand-600 hover:underline">
             re-subscribe

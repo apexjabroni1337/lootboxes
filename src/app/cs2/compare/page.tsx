@@ -143,27 +143,27 @@ const Cross = () => <XCircle className="h-4 w-4 text-gray-300" />;
 
 export default function ComparePage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-r from-gray-50 via-slate-50 to-gray-100 py-10">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-gray-50 dark:from-gray-900 via-slate-50 to-gray-100 py-10">
         <div className="container-main">
-          <Link href="/cs2" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4">
+          <Link href="/cs2" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-200 mb-4">
             <ChevronLeft className="h-4 w-4" /> CS2 Skins Hub
           </Link>
           <div className="flex items-center gap-3 mb-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-700 text-white">
               <ExternalLink className="h-5 w-5" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">Marketplace Comparison</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Marketplace Comparison</h1>
           </div>
-          <p className="text-gray-600 max-w-2xl">
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl">
             Side-by-side comparison of every major CS2 skin marketplace. Fees, cashout options, features, and trust ratings — updated for 2026.
           </p>
         </div>
       </section>
 
       {/* Quick recommendation banner */}
-      <section className="border-b border-blue-100 bg-blue-50/60 py-4">
+      <section className="border-b border-blue-100 bg-blue-50 dark:bg-blue-950/30/60 py-4">
         <div className="container-main flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
           <div className="flex items-center gap-2">
             <Shield className="h-5 w-5 text-blue-600" />
@@ -190,7 +190,7 @@ export default function ComparePage() {
             {MARKETPLACES.map((mp) => (
               <div
                 key={mp.name}
-                className={`rounded-xl border bg-white p-6 shadow-sm relative ${
+                className={`rounded-xl border bg-white dark:bg-gray-950 p-6 shadow-sm relative ${
                   mp.editorPick ? "border-blue-300 ring-2 ring-blue-100" : "border-gray-200"
                 }`}
               >
@@ -208,58 +208,58 @@ export default function ComparePage() {
                     {mp.logo}
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-gray-900">{mp.name}</h3>
-                    <p className="text-xs text-gray-500">{mp.highlight}</p>
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">{mp.name}</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{mp.highlight}</p>
                   </div>
                 </div>
 
                 {/* Trust score */}
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="flex-1 h-2 rounded-full bg-gray-100 overflow-hidden">
+                  <div className="flex-1 h-2 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-emerald-500"
+                      className="h-full rounded-full bg-emerald-50 dark:bg-emerald-950/300"
                       style={{ width: `${mp.trustScore * 10}%` }}
                     />
                   </div>
-                  <span className="text-sm font-bold text-gray-900">{mp.trustScore}/10</span>
+                  <span className="text-sm font-bold text-gray-900 dark:text-white">{mp.trustScore}/10</span>
                 </div>
 
                 {/* Key details */}
                 <div className="space-y-3 mb-4">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Seller Fee</span>
-                    <span className={`font-bold ${parseFloat(mp.sellerFee) <= 2 ? "text-emerald-600" : parseFloat(mp.sellerFee) >= 10 ? "text-red-500" : "text-gray-900"}`}>
+                    <span className="text-gray-500 dark:text-gray-400">Seller Fee</span>
+                    <span className={`font-bold ${parseFloat(mp.sellerFee) <= 2 ? "text-emerald-600" : parseFloat(mp.sellerFee) >= 10 ? "text-red-500" : "text-gray-900 dark:text-white"}`}>
                       {mp.sellerFee}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Min Cashout</span>
-                    <span className="font-medium text-gray-900">{mp.minCashout}</span>
+                    <span className="text-gray-500 dark:text-gray-400">Min Cashout</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{mp.minCashout}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Payment</span>
-                    <span className="text-xs text-gray-700 text-right">{mp.payment.join(", ")}</span>
+                    <span className="text-gray-500 dark:text-gray-400">Payment</span>
+                    <span className="text-xs text-gray-700 dark:text-gray-200 text-right">{mp.payment.join(", ")}</span>
                   </div>
                 </div>
 
                 {/* Feature checks */}
-                <div className="border-t border-gray-100 pt-3 mb-4">
+                <div className="border-t border-gray-100 dark:border-gray-800 pt-3 mb-4">
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="flex items-center gap-1.5">
                       {mp.hasApi ? <Check /> : <Cross />}
-                      <span className="text-gray-700">API Access</span>
+                      <span className="text-gray-700 dark:text-gray-200">API Access</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       {mp.hasBargain ? <Check /> : <Cross />}
-                      <span className="text-gray-700">Bargain System</span>
+                      <span className="text-gray-700 dark:text-gray-200">Bargain System</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       {mp.hasInspect ? <Check /> : <Cross />}
-                      <span className="text-gray-700">In-Game Inspect</span>
+                      <span className="text-gray-700 dark:text-gray-200">In-Game Inspect</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       {mp.p2p ? <Check /> : <Cross />}
-                      <span className="text-gray-700">P2P Trading</span>
+                      <span className="text-gray-700 dark:text-gray-200">P2P Trading</span>
                     </div>
                   </div>
                 </div>
@@ -284,11 +284,11 @@ export default function ComparePage() {
       </section>
 
       {/* Fee comparison summary */}
-      <section className="py-10 border-t border-gray-100 bg-gray-50">
+      <section className="py-10 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
         <div className="container-main">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">Quick Fee Comparison</h2>
-          <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
-            <div className="grid grid-cols-4 gap-0 border-b border-gray-100 bg-gray-50 px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Quick Fee Comparison</h2>
+          <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 overflow-hidden">
+            <div className="grid grid-cols-4 gap-0 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 px-5 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
               <span>Marketplace</span>
               <span>Seller Fee</span>
               <span>You Keep ($100)</span>
@@ -305,10 +305,10 @@ export default function ComparePage() {
                       <div className="h-6 w-6 rounded text-white text-[10px] font-bold flex items-center justify-center" style={{ backgroundColor: mp.color }}>
                         {mp.logo}
                       </div>
-                      <span className="text-sm font-medium text-gray-900">{mp.name}</span>
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">{mp.name}</span>
                     </div>
                     <span className={`text-sm font-bold ${feeNum <= 3 ? "text-emerald-600" : feeNum >= 10 ? "text-red-500" : "text-amber-600"}`}>{mp.sellerFee}</span>
-                    <span className="text-sm font-bold text-gray-900">{isNaN(keep) ? "Varies" : `$${keep.toFixed(0)}`}</span>
+                    <span className="text-sm font-bold text-gray-900 dark:text-white">{isNaN(keep) ? "Varies" : `$${keep.toFixed(0)}`}</span>
                     <div className="text-right">
                       <a
                         href={`/go/cs2/${mp.dealId}?from=compare-table`}

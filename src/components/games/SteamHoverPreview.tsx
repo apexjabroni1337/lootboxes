@@ -40,7 +40,7 @@ export default function SteamHoverPreview({ game }: SteamHoverPreviewProps) {
         {/* Review / Metacritic line */}
         {game.metacritic && (
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-[11px] text-gray-400">Overall Reviews:</span>
+            <span className="text-[11px] text-gray-400 dark:text-gray-500">Overall Reviews:</span>
             <span
               className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${
                 game.metacritic >= 75
@@ -56,15 +56,15 @@ export default function SteamHoverPreview({ game }: SteamHoverPreviewProps) {
                 ? "Mixed"
                 : "Mostly Negative"}
             </span>
-            <span className="text-[10px] text-gray-500">({game.metacritic})</span>
+            <span className="text-[10px] text-gray-500 dark:text-gray-400">({game.metacritic})</span>
           </div>
         )}
 
         {/* Release date */}
         {game.release_date && (
           <div className="flex items-center gap-1.5 mb-2">
-            <Calendar className="h-3 w-3 text-gray-500" />
-            <span className="text-[11px] text-gray-400">Release Date:</span>
+            <Calendar className="h-3 w-3 text-gray-500 dark:text-gray-400" />
+            <span className="text-[11px] text-gray-400 dark:text-gray-500">Release Date:</span>
             <span className="text-[11px] text-[#8F98A0]">{formatDate(game.release_date)}</span>
           </div>
         )}
@@ -94,7 +94,7 @@ export default function SteamHoverPreview({ game }: SteamHoverPreviewProps) {
               )}
               <div>
                 {hasDiscount && game.original_price != null && (
-                  <span className="text-[10px] text-gray-500 line-through mr-1.5">
+                  <span className="text-[10px] text-gray-500 dark:text-gray-400 line-through mr-1.5">
                     {formatPrice(game.original_price, game.currency)}
                   </span>
                 )}

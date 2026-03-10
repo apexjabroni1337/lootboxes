@@ -120,7 +120,7 @@ const StatCard = ({
     return (
       <Wrapper
         {...(wrapperProps as any)}
-        className={`group relative rounded-xl border border-gray-200 border-l-4 ${accentBorder[accent]} overflow-hidden shadow-sm hover:shadow-lg transition-all min-h-[120px] flex flex-col justify-end`}
+        className={`group relative rounded-xl border border-gray-200 dark:border-gray-700 border-l-4 ${accentBorder[accent]} overflow-hidden shadow-sm hover:shadow-lg transition-all min-h-[120px] flex flex-col justify-end`}
       >
         <img
           src={bgImage}
@@ -138,10 +138,10 @@ const StatCard = ({
   }
 
   return (
-    <div className={`rounded-xl border border-gray-200 border-l-4 ${accentBorder[accent]} ${accentPlain[accent]} p-6 shadow-sm`}>
-      <p className="text-sm font-medium text-gray-600">{label}</p>
-      <p className="mt-2 text-3xl font-bold text-gray-900">{value}</p>
-      {subtitle && <p className="mt-1 text-xs text-gray-500">{subtitle}</p>}
+    <div className={`rounded-xl border border-gray-200 dark:border-gray-700 border-l-4 ${accentBorder[accent]} ${accentPlain[accent]} p-6 shadow-sm`}>
+      <p className="text-sm font-medium text-gray-600 dark:text-gray-300">{label}</p>
+      <p className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">{value}</p>
+      {subtitle && <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{subtitle}</p>}
     </div>
   );
 };
@@ -151,7 +151,7 @@ const ScoreBadge = ({ score }: { score: number }) => {
   const bgColor = getScoreBgColor(score);
   return (
     <div
-      className={`flex h-10 w-10 items-center justify-center rounded-full ${bgColor} text-sm font-bold text-gray-900`}
+      className={`flex h-10 w-10 items-center justify-center rounded-full ${bgColor} text-sm font-bold text-gray-900 dark:text-white`}
     >
       {score.toFixed(1)}
     </div>
@@ -167,7 +167,7 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
     <div className="space-y-10">
       {/* Stats Hero Row */}
       <section>
-        <h2 className="mb-6 text-2xl font-bold text-gray-900">Overview</h2>
+        <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Overview</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard
             label="Total Games Analyzed"
@@ -209,22 +209,22 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
 
       {/* Score Distribution */}
       <section className="mt-10">
-        <h2 className="mb-6 text-2xl font-bold text-gray-900">
+        <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">
           Score Distribution
         </h2>
-        <div className="rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-6 shadow-sm">
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-gray-50 dark:from-gray-900 to-white dark:to-gray-950 p-6 shadow-sm">
           <div className="space-y-5">
             {props.scoreDistribution.map((dist) => (
-              <div key={dist.range} className="rounded-lg bg-white p-4 border border-gray-100 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+              <div key={dist.range} className="rounded-lg bg-white dark:bg-gray-950 p-4 border border-gray-100 dark:border-gray-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
                 <div className="mb-2 flex items-center justify-between">
-                  <span className="text-sm font-semibold text-gray-800">
+                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">
                     {dist.range}
                   </span>
                   <span className="text-sm font-bold tabular-nums" style={{ color: dist.color }}>
                     {dist.count} games
                   </span>
                 </div>
-                <div className="h-7 w-full overflow-hidden rounded-full bg-gray-100">
+                <div className="h-7 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
                   <div
                     className="h-full rounded-full transition-all duration-300"
                     style={{
@@ -241,24 +241,24 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
 
       {/* System Type Breakdown */}
       <section className="mt-10">
-        <h2 className="mb-6 text-2xl font-bold text-gray-900">
+        <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">
           Monetization System Breakdown
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {props.systemBreakdown.map((system) => (
             <div
               key={system.type}
-              className="rounded-xl border border-gray-200 bg-gradient-to-br from-slate-50 to-white p-6 shadow-sm hover:shadow-md transition-shadow"
+              className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-slate-50 to-white dark:to-gray-950 p-6 shadow-sm hover:shadow-md transition-shadow"
             >
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50 dark:bg-brand-950/30 text-brand-600">
                 {getSystemIcon(system.type)}
               </div>
-              <h3 className="font-semibold text-gray-900">{SYSTEM_LABELS[system.type] || system.type}</h3>
-              <p className="mt-2 text-sm text-gray-600">
+              <h3 className="font-semibold text-gray-900 dark:text-white">{SYSTEM_LABELS[system.type] || system.type}</h3>
+              <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
                 {system.count} game{system.count !== 1 ? 's' : ''}
               </p>
-              <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
-                <span className="text-xs font-medium text-gray-500">Avg Score</span>
+              <div className="mt-4 flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-3">
+                <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Avg Score</span>
                 <ScoreBadge score={system.avgScore} />
               </div>
             </div>
@@ -268,12 +268,12 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
 
       {/* Best & Worst Games */}
       <section className="mt-10">
-        <h2 className="mb-6 text-2xl font-bold text-gray-900">
+        <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">
           Featured Games
         </h2>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Top Games */}
-          <div className="rounded-xl border border-green-200 bg-gradient-to-br from-green-50 to-white p-6 shadow-sm">
+          <div className="rounded-xl border border-green-200 bg-gradient-to-br from-green-50 dark:from-green-950/30 to-white dark:to-gray-950 p-6 shadow-sm">
             <h3 className="mb-6 text-lg font-bold text-green-900">
               Consumer-Friendly
             </h3>
@@ -308,7 +308,7 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
                           {SYSTEM_LABELS[game.loot_system_type] || game.loot_system_type}
                         </p>
                       </div>
-                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white text-sm font-extrabold border-2 border-white/80 shadow-lg">
+                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-950/300 flex items-center justify-center text-white text-sm font-extrabold border-2 border-white/80 shadow-lg">
                         {game.score.toFixed(1)}
                       </div>
                     </div>
@@ -319,7 +319,7 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
           </div>
 
           {/* Bottom Games */}
-          <div className="rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-white p-6 shadow-sm">
+          <div className="rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-white dark:to-gray-950 p-6 shadow-sm">
             <h3 className="mb-6 text-lg font-bold text-red-900">
               Most Aggressive
             </h3>
@@ -354,7 +354,7 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
                           {SYSTEM_LABELS[game.loot_system_type] || game.loot_system_type}
                         </p>
                       </div>
-                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white text-sm font-extrabold border-2 border-white/80 shadow-lg">
+                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-50 dark:bg-red-950/300 flex items-center justify-center text-white text-sm font-extrabold border-2 border-white/80 shadow-lg">
                         {game.score.toFixed(1)}
                       </div>
                     </div>
@@ -370,7 +370,7 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
       <section className="mt-10">
         <button
           onClick={() => setInsightsOpen(!insightsOpen)}
-          className="mb-6 flex w-full items-center gap-3 text-2xl font-bold text-gray-900 hover:text-blue-600"
+          className="mb-6 flex w-full items-center gap-3 text-2xl font-bold text-gray-900 dark:text-white hover:text-blue-600"
         >
           Industry Insights
           <ChevronDown
@@ -390,14 +390,14 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
             {props.industryInsights.map((insight, idx) => (
               <div
                 key={idx}
-                className="rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-6 shadow-sm"
+                className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-gray-50 dark:from-gray-900 to-white dark:to-gray-950 p-6 shadow-sm"
               >
-                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 text-2xl">{insight.icon}</div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{insight.label}</p>
-                <p className="mt-2 text-2xl font-bold text-gray-900">
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-2xl">{insight.icon}</div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{insight.label}</p>
+                <p className="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
                   {insight.value}
                 </p>
-                <p className="mt-2 text-sm text-gray-600 leading-relaxed">{insight.description}</p>
+                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{insight.description}</p>
               </div>
             ))}
           </div>
@@ -406,11 +406,11 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
 
       {/* CTA Section */}
       <section className="mt-10">
-        <div className="overflow-hidden rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-white p-8 shadow-sm">
-          <h3 className="text-2xl font-bold text-gray-900">
+        <div className="overflow-hidden rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 dark:from-blue-950/30 to-white dark:to-gray-950 p-8 shadow-sm">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
             Explore the Full Database
           </h3>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-gray-600 dark:text-gray-300">
             Dive deeper into monetization trends and analyze individual games
           </p>
           <div className="mt-6 flex flex-wrap gap-4">
@@ -422,7 +422,7 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
             </Link>
             <Link
               href="/lootbox/rankings"
-              className="inline-flex items-center justify-center rounded-lg border border-blue-600 bg-white px-6 py-3 font-semibold text-blue-600 hover:bg-blue-50 transition-colors"
+              className="inline-flex items-center justify-center rounded-lg border border-blue-600 bg-white dark:bg-gray-950 px-6 py-3 font-semibold text-blue-600 hover:bg-blue-50 transition-colors"
             >
               View Rankings
             </Link>

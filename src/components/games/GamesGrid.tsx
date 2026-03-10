@@ -238,16 +238,16 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
       {/* Search + Sort */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={`Search all ${totalCount.toLocaleString()} games...`}
-            className="w-full rounded-xl border border-gray-200 bg-white pl-10 pr-9 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all"
+            className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 pl-10 pr-9 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all"
           />
           {search && (
-            <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+            <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-gray-300">
               <X className="h-4 w-4" />
             </button>
           )}
@@ -256,16 +256,16 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
         <div className="relative">
           <button
             onClick={() => setShowSortMenu(!showSortMenu)}
-            className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           >
-            <ArrowUpDown className="h-3.5 w-3.5 text-gray-400" />
+            <ArrowUpDown className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />
             {SORT_OPTIONS.find((s) => s.id === sortBy)?.label}
-            <ChevronDown className="h-3.5 w-3.5 text-gray-400" />
+            <ChevronDown className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />
           </button>
           {showSortMenu && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setShowSortMenu(false)} />
-              <div className="absolute right-0 top-full z-20 mt-1 w-48 rounded-xl border border-gray-200 bg-white py-1 shadow-lg">
+              <div className="absolute right-0 top-full z-20 mt-1 w-48 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 py-1 shadow-lg">
                 {SORT_OPTIONS.map((opt) => (
                   <button
                     key={opt.id}
@@ -287,7 +287,7 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
 
       {/* Genre filter pills */}
       <div className="mt-4 flex flex-wrap items-center gap-2">
-        <span className="text-xs font-medium text-gray-400 uppercase tracking-wider mr-1">Genre:</span>
+        <span className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mr-1">Genre:</span>
         {GENRE_OPTIONS.map((genre) => {
           const Icon = genre.icon;
           const isActive = activeGenre === genre.id;
@@ -308,7 +308,7 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
           );
         })}
         {activeGenre && (
-          <button onClick={() => setActiveGenre(null)} className="text-xs text-gray-400 hover:text-gray-600 underline ml-1">
+          <button onClick={() => setActiveGenre(null)} className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-300 underline ml-1">
             Clear
           </button>
         )}
@@ -316,7 +316,7 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
 
       {/* Results count */}
       <div className="mt-4 flex items-center justify-between">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-500 dark:text-gray-400">
           {isSearching ? (
             <span className="flex items-center gap-2">
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -324,16 +324,16 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
             </span>
           ) : (
             <>
-              Showing <span className="font-medium text-gray-900">{showingCount.toLocaleString()}</span>
+              Showing <span className="font-medium text-gray-900 dark:text-white">{showingCount.toLocaleString()}</span>
               {displayCount > showingCount && (
-                <> of <span className="font-medium text-gray-900">{displayCount.toLocaleString()}</span></>
+                <> of <span className="font-medium text-gray-900 dark:text-white">{displayCount.toLocaleString()}</span></>
               )}
               {" "}games
               {search.length >= 2 && (
-                <span className="text-gray-400"> matching &ldquo;{search}&rdquo;</span>
+                <span className="text-gray-400 dark:text-gray-500"> matching &ldquo;{search}&rdquo;</span>
               )}
               {activeGenre && (
-                <span className="text-gray-400">
+                <span className="text-gray-400 dark:text-gray-500">
                   {" "}in <span className="font-medium text-brand-600">{GENRE_OPTIONS.find(g => g.id === activeGenre)?.label}</span>
                 </span>
               )}
@@ -368,8 +368,8 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
 
           {/* Empty state */}
           {displayGames.length === 0 && !isSearching && (
-            <div className="mt-6 rounded-xl border border-gray-200 bg-white p-12 text-center">
-              <p className="text-gray-500">
+            <div className="mt-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-12 text-center">
+              <p className="text-gray-500 dark:text-gray-400">
                 No games found{search.length >= 2 ? <> for &ldquo;{search}&rdquo;</> : ""}{activeGenre ? ". Try removing the genre filter." : ""}
               </p>
             </div>
@@ -379,7 +379,7 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
           {useApiMode && apiHasMore && (
             <div ref={sentinelRef} className="mt-8 flex justify-center py-4">
               {isLoadingMore && (
-                <div className="flex items-center gap-2 text-sm text-gray-500">
+                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                   <Loader2 className="h-4 w-4 animate-spin" />
                   Loading more games...
                 </div>
@@ -392,7 +392,7 @@ export default function GamesGrid({ games: initialGames, totalCount, initialGenr
             <div className="mt-8 text-center">
               <button
                 onClick={() => fetchGames({ offset: 0, sort: sortBy })}
-                className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-8 py-3 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 hover:shadow-md transition-all"
+                className="inline-flex items-center gap-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-8 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 hover:shadow-md transition-all"
               >
                 Browse All {totalCount.toLocaleString()} Games
               </button>

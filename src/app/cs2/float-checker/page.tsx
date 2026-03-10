@@ -239,35 +239,35 @@ export default function FloatCheckerPage() {
   const lowestFloat = results.length > 0 ? results[0] : null;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 py-10">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-blue-50 dark:from-blue-950/30 via-indigo-50 to-purple-50 py-10">
         <div className="container-main">
-          <Link href="/cs2" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4">
+          <Link href="/cs2" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-200 mb-4">
             <ChevronLeft className="h-4 w-4" /> CS2 Skins Hub
           </Link>
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500 text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/300 text-white">
               <Search className="h-5 w-5" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">Float Value Checker</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Float Value Checker</h1>
           </div>
-          <p className="text-gray-600 max-w-2xl">
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl">
             Look up float values, wear tiers, and pattern indices for any CS2 skin. Find low-float gems across all major marketplaces.
           </p>
         </div>
       </section>
 
       {/* Search */}
-      <section className="border-b border-gray-100 bg-white py-8">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 py-8">
         <div className="container-main max-w-3xl mx-auto">
-          <label className="text-sm font-semibold text-gray-700 block mb-2">
+          <label className="text-sm font-semibold text-gray-700 dark:text-gray-200 block mb-2">
             Search by Skin Name
           </label>
           <div className="relative">
             <div className="flex gap-2">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <input
                   type="text"
                   placeholder="e.g. AK-47 Asiimov, AWP Dragon Lore, Butterfly Fade..."
@@ -281,16 +281,16 @@ export default function FloatCheckerPage() {
                     if (e.key === "Enter") handleSearch();
                   }}
                   onFocus={() => setShowSuggestions(true)}
-                  className="w-full rounded-lg border border-gray-200 bg-gray-50 py-3 pl-10 pr-4 text-sm focus:border-blue-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 py-3 pl-10 pr-4 text-sm focus:border-blue-300 focus:bg-white dark:bg-gray-950 focus:outline-none focus:ring-2 focus:ring-blue-100"
                 />
                 {/* Suggestions dropdown */}
                 {showSuggestions && suggestions.length > 0 && (
-                  <div className="absolute z-50 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg overflow-hidden">
+                  <div className="absolute z-50 mt-1 w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 shadow-lg overflow-hidden">
                     {suggestions.map((s) => (
                       <button
                         key={s}
                         onClick={() => handleSelect(s)}
-                        className="block w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-900 transition-colors"
+                        className="block w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:bg-blue-950/30 hover:text-blue-900 transition-colors"
                       >
                         {s}
                       </button>
@@ -300,12 +300,12 @@ export default function FloatCheckerPage() {
               </div>
               <button
                 onClick={handleSearch}
-                className="rounded-lg bg-blue-500 px-6 py-3 font-semibold text-white hover:bg-blue-600 transition-colors"
+                className="rounded-lg bg-blue-50 dark:bg-blue-950/300 px-6 py-3 font-semibold text-white hover:bg-blue-600 transition-colors"
               >
                 Check
               </button>
             </div>
-            <p className="mt-2 text-xs text-gray-400">
+            <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
               {UNIQUE_SKINS.length} skins in database — prices from Skinport, Buff163 & DMarket
             </p>
           </div>
@@ -325,7 +325,7 @@ export default function FloatCheckerPage() {
                 {results[0].weapon.charAt(0)}
               </div>
               <div>
-                <h2 className="text-xl font-bold text-gray-900">{selectedSkin}</h2>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">{selectedSkin}</h2>
                 <div className="flex items-center gap-2 mt-1">
                   <span
                     className="inline-block rounded px-2 py-0.5 text-[10px] font-bold text-white"
@@ -333,9 +333,9 @@ export default function FloatCheckerPage() {
                   >
                     {results[0].rarity}
                   </span>
-                  <span className="text-sm text-gray-500">{results.length} listings found</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">{results.length} listings found</span>
                   {livePriceLoading ? (
-                    <span className="flex items-center gap-1 text-[10px] text-gray-400">
+                    <span className="flex items-center gap-1 text-[10px] text-gray-400 dark:text-gray-500">
                       <Loader2 className="h-3 w-3 animate-spin" /> Loading live prices...
                     </span>
                   ) : isLive ? (
@@ -343,7 +343,7 @@ export default function FloatCheckerPage() {
                       <Wifi className="h-3 w-3" /> LIVE PRICES
                     </span>
                   ) : (
-                    <span className="flex items-center gap-1 text-[10px] text-gray-400">
+                    <span className="flex items-center gap-1 text-[10px] text-gray-400 dark:text-gray-500">
                       <WifiOff className="h-3 w-3" /> Estimated prices
                     </span>
                   )}
@@ -353,30 +353,30 @@ export default function FloatCheckerPage() {
 
             {/* Live prices panel */}
             {isLive && liveData.length > 0 && (
-              <div className="mb-6 rounded-xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50 p-5">
+              <div className="mb-6 rounded-xl border border-emerald-200 dark:border-emerald-700/30 bg-gradient-to-r from-emerald-50 dark:from-emerald-950/30 to-teal-50 dark:to-teal-950/20 p-5">
                 <h3 className="text-sm font-bold text-emerald-900 mb-3 flex items-center gap-2">
                   <Wifi className="h-4 w-4 text-emerald-500" />
                   Live Prices by Wear
                 </h3>
                 <div className="space-y-2">
                   {liveData.map((item) => (
-                    <div key={item.name} className="flex flex-col sm:flex-row sm:items-center gap-2 rounded-lg bg-white/70 p-3">
+                    <div key={item.name} className="flex flex-col sm:flex-row sm:items-center gap-2 rounded-lg bg-white dark:bg-gray-950/70 p-3">
                       <div className="flex items-center gap-2 sm:w-36 flex-shrink-0">
-                        <span className="text-xs font-medium text-gray-600">{item.wear}</span>
+                        <span className="text-xs font-medium text-gray-600 dark:text-gray-300">{item.wear}</span>
                       </div>
                       <div className="flex-1 flex items-center gap-4">
                         {/* Skinport Price */}
                         <div className="text-center">
-                          <p className="text-[9px] font-medium text-gray-500">Skinport</p>
-                          <p className="text-sm font-bold text-gray-900">{formatPrice(item.skinportPrice)}</p>
+                          <p className="text-[9px] font-medium text-gray-500 dark:text-gray-400">Skinport</p>
+                          <p className="text-sm font-bold text-gray-900 dark:text-white">{formatPrice(item.skinportPrice)}</p>
                           {item.quantity > 0 && (
-                            <p className="text-[9px] text-gray-400">{item.quantity} listed</p>
+                            <p className="text-[9px] text-gray-400 dark:text-gray-500">{item.quantity} listed</p>
                           )}
                         </div>
                         {/* Market Value */}
                         <div className="text-center">
-                          <p className="text-[9px] font-medium text-gray-500">Market Value</p>
-                          <p className="text-sm font-medium text-gray-500">{formatPrice(item.marketValue)}</p>
+                          <p className="text-[9px] font-medium text-gray-500 dark:text-gray-400">Market Value</p>
+                          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{formatPrice(item.marketValue)}</p>
                         </div>
                         {/* Savings */}
                         {item.savings > 0.5 && (
@@ -403,7 +403,7 @@ export default function FloatCheckerPage() {
                             href={`/go/cs2/${mp.dealId}?from=float-checker`}
                             target="_blank"
                             rel="noopener noreferrer nofollow"
-                            className="hidden sm:flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-[9px] font-medium text-gray-500 hover:bg-gray-50 transition-colors"
+                            className="hidden sm:flex items-center gap-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-2 py-1.5 text-[9px] font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                           >
                             <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: mp.color }} />
                             {mp.name}
@@ -418,22 +418,22 @@ export default function FloatCheckerPage() {
 
             {/* Lowest float highlight */}
             {lowestFloat && (
-              <div className="mb-6 rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-5">
+              <div className="mb-6 rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 dark:from-blue-950/30 to-indigo-50 p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <Sparkles className="h-4 w-4 text-blue-600" />
                   <span className="text-sm font-bold text-blue-900">Lowest Float Found</span>
                 </div>
                 <div className="flex flex-wrap items-center gap-6">
                   <div>
-                    <p className="text-3xl font-black text-gray-900 font-mono">{lowestFloat.float.toFixed(10)}</p>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-3xl font-black text-gray-900 dark:text-white font-mono">{lowestFloat.float.toFixed(10)}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                       {getWearTier(lowestFloat.float).name} — Pattern #{lowestFloat.patternIndex}
                     </p>
                   </div>
                   <div className="ml-auto flex items-center gap-3">
                     <div className="text-right">
-                      <p className="text-lg font-bold text-gray-900">${lowestFloat.price.toLocaleString()}</p>
-                      <p className="text-xs text-gray-500">on {lowestFloat.marketplace}</p>
+                      <p className="text-lg font-bold text-gray-900 dark:text-white">${lowestFloat.price.toLocaleString()}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">on {lowestFloat.marketplace}</p>
                     </div>
                     <a
                       href={`/go/cs2/${lowestFloat.dealId}?from=float-checker`}
@@ -466,7 +466,7 @@ export default function FloatCheckerPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex justify-between mt-1 text-[9px] text-gray-400 font-mono">
+                  <div className="flex justify-between mt-1 text-[9px] text-gray-400 dark:text-gray-500 font-mono">
                     <span>0.00</span>
                     <span>0.07</span>
                     <span>0.15</span>
@@ -479,7 +479,7 @@ export default function FloatCheckerPage() {
             )}
 
             {/* All listings */}
-            <h3 className="text-lg font-bold text-gray-900 mb-4">All Listings</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">All Listings</h3>
             <div className="space-y-3">
               {results.map((listing, idx) => {
                 const tier = getWearTier(listing.float);
@@ -495,7 +495,7 @@ export default function FloatCheckerPage() {
                       {/* Float + tier */}
                       <div className="sm:w-52 flex-shrink-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-lg font-bold font-mono text-gray-900">
+                          <span className="text-lg font-bold font-mono text-gray-900 dark:text-white">
                             {listing.float.toFixed(10)}
                           </span>
                           {isLowest && <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />}
@@ -513,7 +513,7 @@ export default function FloatCheckerPage() {
                       {/* Pattern + spectrum */}
                       <div className="flex-1">
                         <div className="flex items-center gap-4 mb-2">
-                          <div className="flex items-center gap-1.5 text-sm text-gray-600">
+                          <div className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-300">
                             <Target className="h-3.5 w-3.5" />
                             Pattern #{listing.patternIndex}
                           </div>
@@ -533,8 +533,8 @@ export default function FloatCheckerPage() {
                       {/* Price + CTA */}
                       <div className="flex items-center gap-4 sm:w-56 flex-shrink-0 justify-end">
                         <div className="text-right">
-                          <p className="text-lg font-bold text-gray-900">${listing.price.toLocaleString()}</p>
-                          <p className="text-xs text-gray-500">{listing.marketplace}</p>
+                          <p className="text-lg font-bold text-gray-900 dark:text-white">${listing.price.toLocaleString()}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{listing.marketplace}</p>
                         </div>
                         <a
                           href={`/go/cs2/${listing.dealId}?from=float-checker`}
@@ -556,7 +556,7 @@ export default function FloatCheckerPage() {
               <Link href="/cs2/prices" className="inline-flex items-center gap-2 rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-gray-800 transition-colors">
                 Compare All Prices
               </Link>
-              <Link href="/cs2/compare" className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
+              <Link href="/cs2/compare" className="inline-flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-5 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                 Compare Marketplaces
               </Link>
             </div>
@@ -571,8 +571,8 @@ export default function FloatCheckerPage() {
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-100 mx-auto mb-4">
               <Search className="h-7 w-7 text-blue-600" />
             </div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">Search for a skin to check its float</h2>
-            <p className="text-sm text-gray-500 mb-6">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Search for a skin to check its float</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
               Type a skin name above to see available listings with float values, wear tiers, and prices across marketplaces.
             </p>
             <div className="flex flex-wrap justify-center gap-2">
@@ -580,7 +580,7 @@ export default function FloatCheckerPage() {
                 <button
                   key={s}
                   onClick={() => handleSelect(s)}
-                  className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 transition-colors"
+                  className="rounded-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 transition-colors"
                 >
                   {s}
                 </button>
@@ -591,32 +591,32 @@ export default function FloatCheckerPage() {
       )}
 
       {/* Wear tier reference — collapsible */}
-      <section className="py-8 border-t border-gray-100">
+      <section className="py-8 border-t border-gray-100 dark:border-gray-800">
         <div className="container-main max-w-3xl mx-auto">
           <button
             onClick={() => setShowWearRef(!showWearRef)}
-            className="flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors"
+            className="flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-gray-900 dark:text-white transition-colors"
           >
             <ChevronDown className={`h-4 w-4 transition-transform ${showWearRef ? "rotate-180" : ""}`} />
             Wear Tier Reference
           </button>
 
           {showWearRef && (
-            <div className="mt-4 rounded-xl border border-gray-200 bg-white overflow-hidden">
+            <div className="mt-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 overflow-hidden">
               <div className="flex h-6">
                 {WEAR_TIERS.map((tier) => (
                   <div key={tier.name} className="h-full" style={{ width: tier.width, backgroundColor: tier.color }} title={`${tier.name}: ${tier.min.toFixed(2)} – ${tier.max.toFixed(2)}`} />
                 ))}
               </div>
-              <div className="divide-y divide-gray-100">
+              <div className="divide-y divide-gray-100 dark:divide-gray-800">
                 {WEAR_TIERS.map((tier) => (
                   <div key={tier.name} className="flex items-center justify-between px-5 py-3">
                     <div className="flex items-center gap-3">
                       <div className="h-3 w-3 rounded-full" style={{ backgroundColor: tier.color }} />
-                      <span className="text-sm font-medium text-gray-900">{tier.name}</span>
-                      <span className="text-[10px] font-bold text-gray-400 bg-gray-100 rounded px-1.5 py-0.5">{tier.abbr}</span>
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">{tier.name}</span>
+                      <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 rounded px-1.5 py-0.5">{tier.abbr}</span>
                     </div>
-                    <span className="text-sm text-gray-500 font-mono">{tier.min.toFixed(2)} – {tier.max.toFixed(2)}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 font-mono">{tier.min.toFixed(2)} – {tier.max.toFixed(2)}</span>
                   </div>
                 ))}
               </div>

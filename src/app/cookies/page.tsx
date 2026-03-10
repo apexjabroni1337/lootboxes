@@ -18,11 +18,11 @@ export default function CookiePolicyPage() {
   return (
     <div className="pb-16">
       {/* Hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-b from-gray-50 dark:from-gray-900 to-white dark:to-gray-950 py-8">
         <div className="container-main">
           <div className="mx-auto max-w-3xl">
-            <h1 className="text-3xl font-bold text-gray-900">Cookie Policy</h1>
-            <p className="mt-2 text-sm text-gray-500">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Cookie Policy</h1>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
               Last updated: March 1, 2026
             </p>
           </div>
@@ -32,7 +32,7 @@ export default function CookiePolicyPage() {
       <div className="container-main mt-8">
         <div className="mx-auto max-w-3xl">
           {/* Summary box */}
-          <div className="rounded-xl border border-brand-200 bg-brand-50 p-5 mb-8">
+          <div className="rounded-xl border border-brand-200 dark:border-brand-700/30 bg-brand-50 dark:bg-brand-950/30 p-5 mb-8">
             <p className="text-sm font-semibold text-brand-800">In short:</p>
             <p className="mt-1 text-sm text-brand-700 leading-relaxed">
               We use a minimal number of cookies — only what&apos;s necessary
@@ -42,7 +42,7 @@ export default function CookiePolicyPage() {
             </p>
           </div>
 
-          <article className="prose prose-gray max-w-none prose-headings:text-gray-900 prose-a:text-brand-600 hover:prose-a:text-brand-700">
+          <article className="prose prose-gray max-w-none prose-headings:text-gray-900 dark:text-white prose-a:text-brand-600 hover:prose-a:text-brand-700">
             <h2>What Are Cookies?</h2>
             <p>
               Cookies are small text files that are stored on your device
@@ -67,38 +67,38 @@ export default function CookiePolicyPage() {
               functionality.
             </p>
             <div className="not-prose overflow-x-auto mb-6">
-              <table className="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
-                <thead className="bg-gray-50">
+              <table className="w-full text-sm border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                <thead className="bg-gray-50 dark:bg-gray-900">
                   <tr>
-                    <th className="px-4 py-2.5 text-left font-semibold text-gray-900 border-b border-gray-200">
+                    <th className="px-4 py-2.5 text-left font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700">
                       Cookie
                     </th>
-                    <th className="px-4 py-2.5 text-left font-semibold text-gray-900 border-b border-gray-200">
+                    <th className="px-4 py-2.5 text-left font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700">
                       Purpose
                     </th>
-                    <th className="px-4 py-2.5 text-left font-semibold text-gray-900 border-b border-gray-200">
+                    <th className="px-4 py-2.5 text-left font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700">
                       Duration
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                   <tr>
-                    <td className="px-4 py-2.5 text-gray-700 font-mono text-xs">
+                    <td className="px-4 py-2.5 text-gray-700 dark:text-gray-200 font-mono text-xs">
                       __vercel_live_token
                     </td>
-                    <td className="px-4 py-2.5 text-gray-600">
+                    <td className="px-4 py-2.5 text-gray-600 dark:text-gray-300">
                       Vercel deployment and routing
                     </td>
-                    <td className="px-4 py-2.5 text-gray-500">Session</td>
+                    <td className="px-4 py-2.5 text-gray-500 dark:text-gray-400">Session</td>
                   </tr>
                   <tr>
-                    <td className="px-4 py-2.5 text-gray-700 font-mono text-xs">
+                    <td className="px-4 py-2.5 text-gray-700 dark:text-gray-200 font-mono text-xs">
                       theme
                     </td>
-                    <td className="px-4 py-2.5 text-gray-600">
+                    <td className="px-4 py-2.5 text-gray-600 dark:text-gray-300">
                       Remembers your light/dark mode preference
                     </td>
-                    <td className="px-4 py-2.5 text-gray-500">1 year</td>
+                    <td className="px-4 py-2.5 text-gray-500 dark:text-gray-400">1 year</td>
                   </tr>
                 </tbody>
               </table>
@@ -111,30 +111,30 @@ export default function CookiePolicyPage() {
               individual users.
             </p>
             <div className="not-prose overflow-x-auto mb-6">
-              <table className="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
-                <thead className="bg-gray-50">
+              <table className="w-full text-sm border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                <thead className="bg-gray-50 dark:bg-gray-900">
                   <tr>
-                    <th className="px-4 py-2.5 text-left font-semibold text-gray-900 border-b border-gray-200">
+                    <th className="px-4 py-2.5 text-left font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700">
                       Cookie
                     </th>
-                    <th className="px-4 py-2.5 text-left font-semibold text-gray-900 border-b border-gray-200">
+                    <th className="px-4 py-2.5 text-left font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700">
                       Purpose
                     </th>
-                    <th className="px-4 py-2.5 text-left font-semibold text-gray-900 border-b border-gray-200">
+                    <th className="px-4 py-2.5 text-left font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700">
                       Duration
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                   <tr>
-                    <td className="px-4 py-2.5 text-gray-700 font-mono text-xs">
+                    <td className="px-4 py-2.5 text-gray-700 dark:text-gray-200 font-mono text-xs">
                       va_*
                     </td>
-                    <td className="px-4 py-2.5 text-gray-600">
+                    <td className="px-4 py-2.5 text-gray-600 dark:text-gray-300">
                       Vercel Analytics — anonymous page views and performance
                       metrics
                     </td>
-                    <td className="px-4 py-2.5 text-gray-500">1 year</td>
+                    <td className="px-4 py-2.5 text-gray-500 dark:text-gray-400">1 year</td>
                   </tr>
                 </tbody>
               </table>

@@ -225,7 +225,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
       />
 
       {/* ── Full-width screenshot hero ── */}
-      <section className="relative overflow-hidden bg-gray-100">
+      <section className="relative overflow-hidden bg-gray-100 dark:bg-gray-800">
         {heroImage ? (
           <>
             <div className="aspect-[21/9] max-h-[400px] w-full">
@@ -236,7 +236,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
               />
             </div>
             {/* Light overlay from bottom for text readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-gray-950 via-white/40 to-transparent" />
           </>
         ) : (
           <div className="aspect-[21/9] max-h-[400px] w-full">
@@ -247,12 +247,12 @@ export default async function GamePage({ params }: { params: { slug: string } })
         {/* Breadcrumb overlay */}
         <div className="absolute left-0 top-0 w-full">
           <div className="container-main py-4">
-            <nav className="inline-flex items-center gap-1 rounded-lg bg-white/80 px-3 py-1.5 text-xs backdrop-blur-sm">
-              <Link href="/" className="text-gray-500 hover:text-gray-700">Home</Link>
-              <ChevronRight className="h-3 w-3 text-gray-400" />
-              <Link href="/games" className="text-gray-500 hover:text-gray-700">Game Deals</Link>
-              <ChevronRight className="h-3 w-3 text-gray-400" />
-              <span className="font-medium text-gray-700">{game.title}</span>
+            <nav className="inline-flex items-center gap-1 rounded-lg bg-white dark:bg-gray-950/80 px-3 py-1.5 text-xs backdrop-blur-sm">
+              <Link href="/" className="text-gray-500 hover:text-gray-700 dark:text-gray-200">Home</Link>
+              <ChevronRight className="h-3 w-3 text-gray-400 dark:text-gray-500" />
+              <Link href="/games" className="text-gray-500 hover:text-gray-700 dark:text-gray-200">Game Deals</Link>
+              <ChevronRight className="h-3 w-3 text-gray-400 dark:text-gray-500" />
+              <span className="font-medium text-gray-700 dark:text-gray-200">{game.title}</span>
             </nav>
           </div>
         </div>
@@ -260,24 +260,24 @@ export default async function GamePage({ params }: { params: { slug: string } })
         {/* Game info overlaid at bottom */}
         <div className="absolute bottom-0 left-0 w-full">
           <div className="container-main pb-6">
-            <h1 className="text-3xl font-bold text-gray-900 drop-shadow-sm sm:text-4xl">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white drop-shadow-sm sm:text-4xl">
               {game.title}
             </h1>
-            <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-gray-600">
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
               {game.release_date && (
-                <span className="flex items-center gap-1 rounded-full bg-white/80 px-2.5 py-1 backdrop-blur-sm">
+                <span className="flex items-center gap-1 rounded-full bg-white dark:bg-gray-950/80 px-2.5 py-1 backdrop-blur-sm">
                   <Calendar className="h-3.5 w-3.5" />
                   {formatDate(game.release_date)}
                 </span>
               )}
               {game.metacritic && (
-                <span className="flex items-center gap-1 rounded-full bg-white/80 px-2.5 py-1 backdrop-blur-sm">
+                <span className="flex items-center gap-1 rounded-full bg-white dark:bg-gray-950/80 px-2.5 py-1 backdrop-blur-sm">
                   <Star className="h-3.5 w-3.5 text-yellow-500" />
                   Metacritic: {game.metacritic}
                 </span>
               )}
               {platforms.length > 0 && (
-                <span className="flex items-center gap-1 rounded-full bg-white/80 px-2.5 py-1 backdrop-blur-sm">
+                <span className="flex items-center gap-1 rounded-full bg-white dark:bg-gray-950/80 px-2.5 py-1 backdrop-blur-sm">
                   <Monitor className="h-3.5 w-3.5" />
                   {platforms.join(", ")}
                 </span>
@@ -286,7 +286,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
             {genres.length > 0 && (
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {genres.map((g: string) => (
-                  <span key={g} className="rounded-full bg-white/80 px-2.5 py-1 text-xs font-medium text-gray-600 backdrop-blur-sm">
+                  <span key={g} className="rounded-full bg-white dark:bg-gray-950/80 px-2.5 py-1 text-xs font-medium text-gray-600 dark:text-gray-300 backdrop-blur-sm">
                     {g}
                   </span>
                 ))}
@@ -352,7 +352,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
                     </span>
                     {bestDeal.discount_pct > 0 && (
                       <>
-                        <span className="text-sm text-gray-400 line-through">
+                        <span className="text-sm text-gray-400 dark:text-gray-500 line-through">
                           {formatPrice(bestDeal.original_price, bestDeal.currency)}
                         </span>
                         <span className="rounded-lg bg-success-600 px-2 py-0.5 text-xs font-bold text-white">
@@ -390,7 +390,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                   Price Comparison
                 </h2>
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                   {deals.length} current deals across every store.
                 </p>
 
@@ -398,11 +398,11 @@ export default async function GamePage({ params }: { params: { slug: string } })
                   <table className="w-full">
                     <thead className="border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800">
                       <tr>
-                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500">Store</th>
-                        <th className="px-4 py-3 text-right text-xs font-semibold uppercase text-gray-500">Price</th>
-                        <th className="hidden px-4 py-3 text-right text-xs font-semibold uppercase text-gray-500 sm:table-cell">Discount</th>
-                        <th className="hidden px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500 sm:table-cell">Notes</th>
-                        <th className="px-4 py-3 text-right text-xs font-semibold uppercase text-gray-500">&nbsp;</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">Store</th>
+                        <th className="px-4 py-3 text-right text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">Price</th>
+                        <th className="hidden px-4 py-3 text-right text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:table-cell">Discount</th>
+                        <th className="hidden px-4 py-3 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:table-cell">Notes</th>
+                        <th className="px-4 py-3 text-right text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">&nbsp;</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
@@ -423,11 +423,11 @@ export default async function GamePage({ params }: { params: { slug: string } })
                               {deal.discount_pct > 0 ? (
                                 <span className="badge-discount">{formatDiscount(deal.discount_pct)}</span>
                               ) : (
-                                <span className="text-xs text-gray-400">—</span>
+                                <span className="text-xs text-gray-400 dark:text-gray-500">—</span>
                               )}
                             </td>
                             <td className="hidden px-4 py-3 sm:table-cell">
-                              <div className="flex items-center gap-2 text-xs text-gray-500">
+                              <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                                 {deal.is_historic_low && (
                                   <span className="badge-historic-low flex items-center gap-1">
                                     <TrendingDown className="h-3 w-3" /> Historic Low
@@ -465,7 +465,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
             {priceHistory.length > 0 && (
               <section className="mt-10">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Price History</h2>
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                   Track how the price has changed over time across stores.
                 </p>
                 <div className="mt-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
@@ -481,7 +481,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
                   <Zap className="h-5 w-5 text-brand-600" />
                   <h2 className="text-xl font-bold text-gray-900 dark:text-white">Loot Box Drop Rates</h2>
                 </div>
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                   Verified probabilities for in-game items. Know your odds before you spend.
                 </p>
 
@@ -490,11 +490,11 @@ export default async function GamePage({ params }: { params: { slug: string } })
                     <table className="w-full">
                       <thead className="border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800">
                         <tr>
-                          <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase text-gray-500">Item</th>
-                          <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase text-gray-500">Rarity</th>
-                          <th className="px-4 py-2.5 text-right text-xs font-semibold uppercase text-gray-500">Drop Rate</th>
-                          <th className="hidden px-4 py-2.5 text-right text-xs font-semibold uppercase text-gray-500 sm:table-cell">~Avg. Opens</th>
-                          <th className="hidden px-4 py-2.5 text-left text-xs font-semibold uppercase text-gray-500 md:table-cell">Source</th>
+                          <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">Item</th>
+                          <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">Rarity</th>
+                          <th className="px-4 py-2.5 text-right text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">Drop Rate</th>
+                          <th className="hidden px-4 py-2.5 text-right text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:table-cell">~Avg. Opens</th>
+                          <th className="hidden px-4 py-2.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 md:table-cell">Source</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-50 dark:divide-gray-800">
@@ -522,7 +522,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
                                       : `${Number(rate.drop_rate_pct).toFixed(1)}%`}
                                 </span>
                               </td>
-                              <td className="hidden px-4 py-3 text-right text-sm text-gray-500 sm:table-cell">
+                              <td className="hidden px-4 py-3 text-right text-sm text-gray-500 dark:text-gray-400 sm:table-cell">
                                 {typeof avgOpens === "number" ? `~${avgOpens.toLocaleString()} opens` : avgOpens}
                               </td>
                               <td className="hidden px-4 py-3 md:table-cell">
@@ -551,11 +551,11 @@ export default async function GamePage({ params }: { params: { slug: string } })
             {game.lootboxes_score && (
               <section className="mt-10">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Monetization Analysis</h2>
-                <div className="mt-4 card border-brand-200 bg-brand-50">
+                <div className="mt-4 card border-brand-200 dark:border-brand-700/30 bg-brand-50 dark:bg-brand-950/30">
                   <div className="flex items-center gap-4">
                     <ScoreBadge score={game.lootboxes_score} size="md" showLabel />
                     <div className="flex-1">
-                      <p className="text-sm text-gray-700">
+                      <p className="text-sm text-gray-700 dark:text-gray-200">
                         We&apos;ve analyzed this game&apos;s in-game monetization system.
                         Read our full breakdown with drop rates, value calculations, and spending recommendations.
                       </p>
@@ -573,9 +573,9 @@ export default async function GamePage({ params }: { params: { slug: string } })
           <div className="space-y-6">
             {/* Lootboxes Score */}
             {game.lootboxes_score && (
-              <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-                <div className="bg-gray-50 px-5 py-3 border-b border-gray-100">
-                  <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Monetization Rating</h3>
+              <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 shadow-sm">
+                <div className="bg-gray-50 dark:bg-gray-900 px-5 py-3 border-b border-gray-100 dark:border-gray-800">
+                  <h3 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Monetization Rating</h3>
                 </div>
                 <div className="px-5 py-5">
                   <ScoreBadge score={game.lootboxes_score} size="lg" showLabel />
@@ -596,30 +596,30 @@ export default async function GamePage({ params }: { params: { slug: string } })
               <dl className="mt-3 space-y-3 text-sm">
                 {game.release_date && (
                   <div className="flex justify-between">
-                    <dt className="text-gray-500">Release Date</dt>
+                    <dt className="text-gray-500 dark:text-gray-400">Release Date</dt>
                     <dd className="font-medium text-gray-900 dark:text-white">{formatDate(game.release_date)}</dd>
                   </div>
                 )}
                 {game.metacritic && (
                   <div className="flex justify-between">
-                    <dt className="text-gray-500">Metacritic</dt>
+                    <dt className="text-gray-500 dark:text-gray-400">Metacritic</dt>
                     <dd className="font-medium text-gray-900 dark:text-white">{game.metacritic}/100</dd>
                   </div>
                 )}
                 {platforms.length > 0 && (
                   <div className="flex justify-between">
-                    <dt className="text-gray-500">Platforms</dt>
+                    <dt className="text-gray-500 dark:text-gray-400">Platforms</dt>
                     <dd className="font-medium text-gray-900 dark:text-white">{platforms.join(", ")}</dd>
                   </div>
                 )}
                 {genres.length > 0 && (
                   <div className="flex justify-between">
-                    <dt className="text-gray-500">Genres</dt>
+                    <dt className="text-gray-500 dark:text-gray-400">Genres</dt>
                     <dd className="font-medium text-gray-900 dark:text-white">{genres.join(", ")}</dd>
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Deals Available</dt>
+                  <dt className="text-gray-500 dark:text-gray-400">Deals Available</dt>
                   <dd className="font-medium text-gray-900 dark:text-white">{deals.length}</dd>
                 </div>
               </dl>
@@ -640,7 +640,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
                     href={`/games/${g.slug}`}
                     className="group overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-900"
                   >
-                    <div className="aspect-video overflow-hidden bg-gray-100">
+                    <div className="aspect-video overflow-hidden bg-gray-100 dark:bg-gray-800">
                       {img ? (
                         <img
                           src={img}

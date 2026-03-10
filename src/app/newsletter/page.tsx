@@ -26,7 +26,7 @@ export default function NewsletterPage() {
         {/* Signup form */}
         <NewsletterForm variant="stacked" className="mx-auto mt-8 max-w-md" />
 
-        <p className="mt-3 text-xs text-gray-400">
+        <p className="mt-3 text-xs text-gray-400 dark:text-gray-500">
           Join 0 gamers saving money every week. (We just launched — be the
           first!)
         </p>
@@ -38,7 +38,7 @@ export default function NewsletterPage() {
             <h3 className="mt-3 text-sm font-semibold text-gray-900 dark:text-white">
               Top 5 Deals
             </h3>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
               Hand-picked best deals of the week with affiliate links to save
               you time.
             </p>
@@ -48,7 +48,7 @@ export default function NewsletterPage() {
             <h3 className="mt-3 text-sm font-semibold text-gray-900 dark:text-white">
               Featured Analysis
             </h3>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
               One deep-dive battle pass or loot box review with our LootBoxes
               Score.
             </p>
@@ -58,7 +58,7 @@ export default function NewsletterPage() {
             <h3 className="mt-3 text-sm font-semibold text-gray-900 dark:text-white">
               Quick Hits
             </h3>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
               Industry news, deal trends, and data points you won&apos;t find
               anywhere else.
             </p>

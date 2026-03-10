@@ -27,7 +27,7 @@ export default function ScoreBadge({
           {score.toFixed(1)}
         </div>
         {showLabel && (
-          <span className="text-[10px] font-medium text-gray-500">{getScoreLabel(score)}</span>
+          <span className="text-[10px] font-medium text-gray-500 dark:text-gray-400">{getScoreLabel(score)}</span>
         )}
       </div>
     );
@@ -41,8 +41,8 @@ export default function ScoreBadge({
         </div>
         {showLabel && (
           <div className="flex flex-col">
-            <span className="text-xs font-semibold text-gray-900">Lootboxes Score</span>
-            <span className="text-xs text-gray-500">{getScoreLabel(score)}</span>
+            <span className="text-xs font-semibold text-gray-900 dark:text-white">Lootboxes Score</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">{getScoreLabel(score)}</span>
           </div>
         )}
       </div>
@@ -59,7 +59,7 @@ export default function ScoreBadge({
         <span className="text-2xl font-black text-white leading-none">
           {score.toFixed(1)}
         </span>
-        <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 rounded-full bg-white px-2.5 py-0.5 text-[10px] font-bold shadow-sm border border-gray-100 whitespace-nowrap"
+        <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 rounded-full bg-white dark:bg-gray-950 px-2.5 py-0.5 text-[10px] font-bold shadow-sm border border-gray-100 dark:border-gray-800 whitespace-nowrap"
           style={{ color: `var(--tw-ring-color, currentColor)` }}
         >
           <span className={colors.text}>{getScoreLabel(score)}</span>
@@ -69,19 +69,19 @@ export default function ScoreBadge({
       {showLabel && (
         <div className="w-full mt-1">
           {/* Score bar */}
-          <div className="flex items-center justify-between text-[10px] text-gray-400 mb-1">
+          <div className="flex items-center justify-between text-[10px] text-gray-400 dark:text-gray-500 mb-1">
             <span>0</span>
-            <span className="font-medium text-gray-500">Lootboxes Score</span>
+            <span className="font-medium text-gray-500 dark:text-gray-400">Lootboxes Score</span>
             <span>10</span>
           </div>
-          <div className="h-2 w-full rounded-full bg-gray-100 overflow-hidden">
+          <div className="h-2 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
             <div
               className={`h-full rounded-full ${colors.bar} transition-all duration-500`}
               style={{ width: `${pct}%` }}
             />
           </div>
           {/* Scale labels */}
-          <div className="flex justify-between mt-1.5 text-[9px] text-gray-400">
+          <div className="flex justify-between mt-1.5 text-[9px] text-gray-400 dark:text-gray-500">
             <span>Poor</span>
             <span>Average</span>
             <span>Good</span>

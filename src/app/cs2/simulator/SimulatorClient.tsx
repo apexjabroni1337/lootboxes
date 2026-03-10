@@ -200,25 +200,25 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
         {/* Main area */}
         <div className="lg:col-span-2 space-y-6">
           {/* Case selector — two-column scrollable list */}
-          <div className="rounded-xl border border-gray-200 bg-white p-4">
+          <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-4">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-semibold text-gray-500">
+              <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
                 Select a Case ({cases.length})
               </span>
               <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3 w-3 text-gray-400" />
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3 w-3 text-gray-400 dark:text-gray-500" />
                 <input
                   type="text"
                   placeholder="Filter..."
                   value={caseSearch}
                   onChange={(e) => setCaseSearch(e.target.value)}
-                  className="w-32 rounded-lg border border-gray-200 bg-gray-50 py-1.5 pl-7 pr-2 text-xs focus:border-purple-300 focus:outline-none"
+                  className="w-32 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 py-1.5 pl-7 pr-2 text-xs focus:border-purple-300 focus:outline-none"
                 />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-1 max-h-40 overflow-y-auto pr-1">
               {filteredCases.length === 0 ? (
-                <p className="col-span-2 text-xs text-gray-400 text-center py-3">No cases found</p>
+                <p className="col-span-2 text-xs text-gray-400 dark:text-gray-500 text-center py-3">No cases found</p>
               ) : (
                 filteredCases.map((c) => {
                   const origIdx = cases.indexOf(c);
@@ -243,7 +243,7 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
                           className="h-7 w-7 object-contain flex-shrink-0"
                         />
                       ) : (
-                        <Package className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                        <Package className="h-4 w-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                       )}
                       <span
                         className={`text-xs font-medium truncate ${
@@ -258,7 +258,7 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
               )}
             </div>
             {/* Selected case info */}
-            <div className="mt-3 flex items-center gap-3 rounded-lg bg-purple-50 border border-purple-200 px-3 py-2">
+            <div className="mt-3 flex items-center gap-3 rounded-lg bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-700/30 px-3 py-2">
               {selectedCase?.image && (
                 <img
                   src={selectedCase.image}
@@ -276,10 +276,10 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
           </div>
 
           {/* Opening area */}
-          <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-gray-900 to-gray-800 p-8 text-center relative overflow-hidden">
+          <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-gray-900 to-gray-800 p-8 text-center relative overflow-hidden">
             {/* Glow effect on knife */}
             {lastResult?.isKnife && (
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-transparent animate-pulse" />
+              <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 dark:from-yellow-950/300/20 to-transparent animate-pulse" />
             )}
 
             <div className="relative z-10">
@@ -316,9 +316,9 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
                       className="h-24 w-24 mx-auto mb-4 object-contain opacity-60"
                     />
                   ) : (
-                    <Dices className="h-16 w-16 text-gray-600 mx-auto mb-4" />
+                    <Dices className="h-16 w-16 text-gray-600 dark:text-gray-300 mx-auto mb-4" />
                   )}
-                  <p className="text-gray-400 text-lg">Click below to open a case</p>
+                  <p className="text-gray-400 dark:text-gray-500 text-lg">Click below to open a case</p>
                 </div>
               )}
             </div>
@@ -334,7 +334,7 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
               <button
                 onClick={openTen}
                 disabled={opening || caseItems.length === 0}
-                className="rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 px-8 py-3 text-sm font-bold text-white hover:from-yellow-600 hover:to-orange-600 disabled:opacity-50 transition-all hover:scale-105 active:scale-95"
+                className="rounded-xl bg-gradient-to-r from-yellow-50 dark:from-yellow-950/300 to-orange-50 dark:to-orange-950/200 px-8 py-3 text-sm font-bold text-white hover:from-yellow-600 hover:to-orange-600 disabled:opacity-50 transition-all hover:scale-105 active:scale-95"
               >
                 {opening ? "Opening..." : `Open 10x — $${(CASE_COST * 10).toFixed(2)}`}
               </button>
@@ -342,14 +342,14 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
           </div>
 
           {/* Drop rates reference */}
-          <div className="rounded-xl border border-gray-200 bg-gray-50 p-5">
-            <h3 className="text-sm font-bold text-gray-700 mb-3">Official Drop Rates (Valve)</h3>
+          <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-5">
+            <h3 className="text-sm font-bold text-gray-700 dark:text-gray-200 mb-3">Official Drop Rates (Valve)</h3>
             <div className="flex flex-wrap gap-3">
               {RARITY_TIERS.map((tier) => (
                 <div key={tier.name} className="flex items-center gap-2">
                   <div className="h-3 w-3 rounded-full" style={{ backgroundColor: tier.color }} />
-                  <span className="text-xs text-gray-700">{tier.name.split(" (")[0]}</span>
-                  <span className="text-xs font-bold text-gray-500">
+                  <span className="text-xs text-gray-700 dark:text-gray-200">{tier.name.split(" (")[0]}</span>
+                  <span className="text-xs font-bold text-gray-500 dark:text-gray-400">
                     {(tier.chance * 100).toFixed(2)}%
                   </span>
                 </div>
@@ -359,30 +359,30 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
 
           {/* Case contents preview */}
           {caseItems.length > 0 && (
-            <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
+            <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 overflow-hidden">
               <button
                 onClick={() => setShowContents(!showContents)}
-                className="flex w-full items-center justify-between px-5 py-3 text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors"
+                className="flex w-full items-center justify-between px-5 py-3 text-sm font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-900 transition-colors"
               >
                 <div className="flex items-center gap-2">
                   <Package className="h-4 w-4 text-purple-500" />
                   What&apos;s Inside {selectedCase?.name} ({caseItems.length} items)
                 </div>
                 {showContents ? (
-                  <ChevronUp className="h-4 w-4 text-gray-400" />
+                  <ChevronUp className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                 ) : (
-                  <ChevronDown className="h-4 w-4 text-gray-400" />
+                  <ChevronDown className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                 )}
               </button>
 
               {showContents && (
-                <div className="border-t border-gray-100 p-4">
+                <div className="border-t border-gray-100 dark:border-gray-800 p-4">
                   {/* Normal items */}
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                     {contentsGrouped.normal.map((item) => (
                       <div
                         key={item.id}
-                        className="flex flex-col items-center rounded-lg border border-gray-100 bg-gray-50 p-2"
+                        className="flex flex-col items-center rounded-lg border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-2"
                       >
                         {item.image ? (
                           <img
@@ -399,7 +399,7 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
                             {item.name.charAt(0)}
                           </div>
                         )}
-                        <p className="text-[10px] font-medium text-gray-700 text-center leading-tight line-clamp-2">
+                        <p className="text-[10px] font-medium text-gray-700 dark:text-gray-200 text-center leading-tight line-clamp-2">
                           {item.name}
                         </p>
                         <span
@@ -425,7 +425,7 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
                         {contentsGrouped.rare.map((item) => (
                           <div
                             key={item.id}
-                            className="flex flex-col items-center rounded-lg border border-yellow-200 bg-yellow-50 p-2"
+                            className="flex flex-col items-center rounded-lg border border-yellow-200 dark:border-yellow-700/30 bg-yellow-50 dark:bg-yellow-950/30 p-2"
                           >
                             {item.image ? (
                               <img
@@ -435,11 +435,11 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
                                 loading="lazy"
                               />
                             ) : (
-                              <div className="h-16 w-16 rounded flex items-center justify-center text-white text-xs font-bold mb-1 bg-yellow-500">
+                              <div className="h-16 w-16 rounded flex items-center justify-center text-white text-xs font-bold mb-1 bg-yellow-50 dark:bg-yellow-950/300">
                                 ★
                               </div>
                             )}
-                            <p className="text-[10px] font-medium text-gray-700 text-center leading-tight line-clamp-2">
+                            <p className="text-[10px] font-medium text-gray-700 dark:text-gray-200 text-center leading-tight line-clamp-2">
                               {item.name}
                             </p>
                             <span className="mt-0.5 text-[9px] font-bold text-yellow-600">
@@ -459,17 +459,17 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
           {results.length > 0 && (
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-bold text-gray-700">
+                <h3 className="text-sm font-bold text-gray-700 dark:text-gray-200">
                   Opening History ({results.length} cases)
                 </h3>
                 <button
                   onClick={reset}
-                  className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-500 transition-colors"
+                  className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-red-500 transition-colors"
                 >
                   <RotateCcw className="h-3 w-3" /> Reset
                 </button>
               </div>
-              <div className="max-h-96 overflow-y-auto space-y-1.5 rounded-xl border border-gray-200 bg-white p-3">
+              <div className="max-h-96 overflow-y-auto space-y-1.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-3">
                 {results.map((r) => (
                   <div
                     key={r.id}
@@ -493,14 +493,14 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                         {r.skinName}
                       </p>
                       <p className="text-[10px]" style={{ color: r.rarityColor }}>
                         {r.rarity}
                       </p>
                     </div>
-                    <p className="text-sm font-bold text-gray-900">${r.value.toFixed(2)}</p>
+                    <p className="text-sm font-bold text-gray-900 dark:text-white">${r.value.toFixed(2)}</p>
                   </div>
                 ))}
               </div>
@@ -510,29 +510,29 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
 
         {/* Sidebar stats */}
         <div className="space-y-4">
-          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm sticky top-24">
-            <h3 className="font-bold text-gray-900 mb-4">Your Session</h3>
+          <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 shadow-sm sticky top-24">
+            <h3 className="font-bold text-gray-900 dark:text-white mb-4">Your Session</h3>
 
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                   <DollarSign className="h-4 w-4" />
                   Total Spent
                 </div>
-                <p className="text-lg font-bold text-gray-900">${totalSpent.toFixed(2)}</p>
+                <p className="text-lg font-bold text-gray-900 dark:text-white">${totalSpent.toFixed(2)}</p>
               </div>
 
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                   <TrendingUp className="h-4 w-4" />
                   Total Value
                 </div>
-                <p className="text-lg font-bold text-gray-900">${totalValue.toFixed(2)}</p>
+                <p className="text-lg font-bold text-gray-900 dark:text-white">${totalValue.toFixed(2)}</p>
               </div>
 
-              <div className="border-t border-gray-100 pt-3">
+              <div className="border-t border-gray-100 dark:border-gray-800 pt-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-gray-700">Profit / Loss</span>
+                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">Profit / Loss</span>
                   <p
                     className={`text-xl font-black ${
                       profit >= 0 ? "text-emerald-600" : "text-red-500"
@@ -543,7 +543,7 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
                   </p>
                 </div>
                 {results.length > 0 && (
-                  <div className="mt-2 h-2 rounded-full bg-gray-100 overflow-hidden">
+                  <div className="mt-2 h-2 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all ${
                         profit >= 0 ? "bg-emerald-500" : "bg-red-400"
@@ -559,8 +559,8 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
                 )}
               </div>
 
-              <div className="flex items-center justify-between border-t border-gray-100 pt-3">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+              <div className="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-3">
+                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                   <Sparkles className="h-4 w-4 text-yellow-500" />
                   Knives / Gloves
                 </div>
@@ -568,14 +568,14 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Cases Opened</span>
-                <p className="text-lg font-bold text-gray-900">{results.length}</p>
+                <span className="text-sm text-gray-600 dark:text-gray-300">Cases Opened</span>
+                <p className="text-lg font-bold text-gray-900 dark:text-white">{results.length}</p>
               </div>
             </div>
 
             {/* Reality check */}
             {results.length >= 5 && (
-              <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4">
+              <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/30 p-4">
                 <p className="text-xs font-semibold text-amber-800 mb-1">Reality Check</p>
                 <p className="text-xs text-amber-700 leading-relaxed">
                   {profit < 0
@@ -604,12 +604,12 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
               </Link>
               <Link
                 href="/cs2/cases"
-                className="block w-full rounded-lg border border-gray-200 px-4 py-2.5 text-center text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+                className="block w-full rounded-lg border border-gray-200 dark:border-gray-700 px-4 py-2.5 text-center text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-900 transition-colors"
               >
                 Browse All Cases & Capsules
               </Link>
             </div>
-            <p className="mt-3 text-[10px] text-gray-400 text-center">
+            <p className="mt-3 text-[10px] text-gray-400 dark:text-gray-500 text-center">
               Affiliate link — we may earn a commission at no cost to you.
             </p>
           </div>

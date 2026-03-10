@@ -47,7 +47,7 @@ export default function WishlistButton({ dealId, className = "" }: WishlistButto
   return (
     <button
       onClick={toggle}
-      className={`flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur-sm transition-all hover:scale-110 hover:bg-white ${className}`}
+      className={`flex h-8 w-8 items-center justify-center rounded-full bg-white dark:bg-gray-950/90 shadow-sm backdrop-blur-sm transition-all hover:scale-110 hover:bg-white dark:bg-gray-950 ${className}`}
       aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
     >
       <Heart

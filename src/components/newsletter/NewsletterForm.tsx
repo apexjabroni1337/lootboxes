@@ -62,7 +62,7 @@ export default function NewsletterForm({
       <form onSubmit={handleSubmit} className={className}>
         <div className="flex flex-col gap-3">
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+            <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
             <input
               type="email"
               value={email}
@@ -92,7 +92,7 @@ export default function NewsletterForm({
         {status === "error" && (
           <p className="mt-2 text-sm text-danger-600">{message}</p>
         )}
-        <p className="mt-2 text-xs text-gray-400">
+        <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
           No spam. Unsubscribe anytime. We respect your inbox.
         </p>
       </form>

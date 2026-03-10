@@ -61,11 +61,11 @@ export default async function ScoresPage() {
   if (error) {
     console.error("Error fetching games:", error);
     return (
-      <div className="min-h-screen bg-gray-50 px-4 py-12">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 px-4 py-12">
         <div className="mx-auto max-w-7xl">
-          <div className="rounded-lg bg-white p-8 text-center">
-            <h1 className="text-2xl font-bold text-gray-900">Error Loading Scores</h1>
-            <p className="mt-2 text-gray-600">
+          <div className="rounded-lg bg-white dark:bg-gray-950 p-8 text-center">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Error Loading Scores</h1>
+            <p className="mt-2 text-gray-600 dark:text-gray-300">
               Unable to fetch game scores. Please try again later.
             </p>
           </div>
@@ -77,15 +77,15 @@ export default async function ScoresPage() {
   const typedGames = (games || []) as Game[];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-b from-gray-50 to-white px-4 py-16 sm:py-24">
+      <div className="relative overflow-hidden bg-gradient-to-b from-gray-50 dark:from-gray-900 to-white dark:to-gray-950 px-4 py-16 sm:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
               Score Explorer
             </h1>
-            <p className="mt-4 text-lg text-gray-600">
+            <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">
               Browse and compare monetization scores across all analyzed games.
             </p>
           </div>
@@ -95,45 +95,45 @@ export default async function ScoresPage() {
       {/* Main Content */}
       <div className="mx-auto max-w-7xl px-4 py-12">
         {/* Games Table */}
-        <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50">
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 w-12">
+                <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white w-12">
                     #
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
                     Game
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
                     System
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 w-20">
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white w-20">
                     Score
                   </th>
-                  <th className="hidden px-4 py-3 text-left text-sm font-semibold text-gray-900 sm:table-cell w-24">
+                  <th className="hidden px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white sm:table-cell w-24">
                     Metacritic
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
                     Genres
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                 {typedGames.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="px-4 py-8 text-center">
-                      <p className="text-gray-500">No scored games found.</p>
+                      <p className="text-gray-500 dark:text-gray-400">No scored games found.</p>
                     </td>
                   </tr>
                 ) : (
                   typedGames.map((game, index) => (
                     <tr
                       key={game.id}
-                      className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                      className={index % 2 === 0 ? "bg-white dark:bg-gray-950" : "bg-gray-50"}
                     >
-                      <td className="px-4 py-3 text-sm text-gray-600 font-medium">
+                      <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-300 font-medium">
                         {index + 1}
                       </td>
                       <td className="px-4 py-3">
@@ -157,7 +157,7 @@ export default async function ScoresPage() {
                           <div>
                             <Link
                               href={`/lootbox/${game.slug}`}
-                              className="font-medium text-gray-900 hover:text-blue-600 transition-colors"
+                              className="font-medium text-gray-900 dark:text-white hover:text-blue-600 transition-colors"
                             >
                               {game.title}
                             </Link>
@@ -165,7 +165,7 @@ export default async function ScoresPage() {
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+                        <span className="inline-flex items-center rounded-full bg-blue-50 dark:bg-blue-950/30 px-3 py-1 text-xs font-medium text-blue-700">
                           {SYSTEM_LABELS[game.loot_system_type] ||
                             game.loot_system_type}
                         </span>
@@ -179,16 +179,16 @@ export default async function ScoresPage() {
                           >
                             {game.lootboxes_score.toFixed(1)}
                           </div>
-                          <span className="hidden text-xs text-gray-500 sm:inline">
+                          <span className="hidden text-xs text-gray-500 dark:text-gray-400 sm:inline">
                             {scoreLabel(game.lootboxes_score)}
                           </span>
                         </div>
                       </td>
-                      <td className="hidden px-4 py-3 text-sm text-gray-600 sm:table-cell">
+                      <td className="hidden px-4 py-3 text-sm text-gray-600 dark:text-gray-300 sm:table-cell">
                         {game.metacritic ? (
                           <span className="font-medium">{game.metacritic}</span>
                         ) : (
-                          <span className="text-gray-400">—</span>
+                          <span className="text-gray-400 dark:text-gray-500">—</span>
                         )}
                       </td>
                       <td className="px-4 py-3">
@@ -197,14 +197,14 @@ export default async function ScoresPage() {
                             ? game.genres.slice(0, 2).map((genre, i) => (
                                 <span
                                   key={i}
-                                  className="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-700"
+                                  className="inline-flex items-center rounded-md bg-gray-100 dark:bg-gray-800 px-2 py-1 text-xs text-gray-700 dark:text-gray-200"
                                 >
                                   {genre}
                                 </span>
                               ))
                             : null}
                           {game.genres && game.genres.length > 2 && (
-                            <span className="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600">
+                            <span className="inline-flex items-center rounded-md bg-gray-100 dark:bg-gray-800 px-2 py-1 text-xs text-gray-600 dark:text-gray-300">
                               +{game.genres.length - 2}
                             </span>
                           )}
@@ -219,35 +219,35 @@ export default async function ScoresPage() {
         </div>
 
         {/* Score Legend */}
-        <div className="mt-12 rounded-lg border border-gray-200 bg-gray-50 p-6">
-          <h2 className="text-sm font-semibold text-gray-900 mb-4">Score Legend</h2>
+        <div className="mt-12 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-6">
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Score Legend</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500"></div>
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/300"></div>
               <div className="text-sm">
-                <p className="font-medium text-gray-900">8–10</p>
-                <p className="text-gray-600">Great Value</p>
+                <p className="font-medium text-gray-900 dark:text-white">8–10</p>
+                <p className="text-gray-600 dark:text-gray-300">Great Value</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500"></div>
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-950/300"></div>
               <div className="text-sm">
-                <p className="font-medium text-gray-900">6–7.9</p>
-                <p className="text-gray-600">Good Value</p>
+                <p className="font-medium text-gray-900 dark:text-white">6–7.9</p>
+                <p className="text-gray-600 dark:text-gray-300">Good Value</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-500"></div>
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-50 dark:bg-orange-950/300"></div>
               <div className="text-sm">
-                <p className="font-medium text-gray-900">4–5.9</p>
-                <p className="text-gray-600">Average</p>
+                <p className="font-medium text-gray-900 dark:text-white">4–5.9</p>
+                <p className="text-gray-600 dark:text-gray-300">Average</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-red-500"></div>
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-red-50 dark:bg-red-950/300"></div>
               <div className="text-sm">
-                <p className="font-medium text-gray-900">0–3.9</p>
-                <p className="text-gray-600">Poor Value</p>
+                <p className="font-medium text-gray-900 dark:text-white">0–3.9</p>
+                <p className="text-gray-600 dark:text-gray-300">Poor Value</p>
               </div>
             </div>
           </div>
@@ -257,7 +257,7 @@ export default async function ScoresPage() {
         <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:justify-center">
           <Link
             href="/analytics"
-            className="inline-flex items-center justify-center rounded-lg bg-gray-100 px-6 py-3 font-medium text-gray-900 hover:bg-gray-200 transition-colors"
+            className="inline-flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 px-6 py-3 font-medium text-gray-900 dark:text-white hover:bg-gray-200 transition-colors"
           >
             Back to Analytics
           </Link>

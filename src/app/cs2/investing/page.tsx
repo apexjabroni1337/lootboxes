@@ -238,9 +238,9 @@ const RISKS = [
 
 export default function CS2InvestingPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* ── DISCLAIMER BANNER ── */}
-      <div className="bg-red-50 border-b border-red-200">
+      <div className="bg-red-50 dark:bg-red-950/30 border-b border-red-200">
         <div className="container-main py-3 flex items-start gap-3">
           <AlertTriangle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
           <div>
@@ -263,25 +263,25 @@ export default function CS2InvestingPage() {
       </div>
 
       {/* ── Hero with side accent bar ── */}
-      <section className="border-b border-gray-100">
+      <section className="border-b border-gray-100 dark:border-gray-800">
         <div className="container-main py-10">
           <Link
             href="/cs2"
-            className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-600 transition-colors mb-6"
+            className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-600 dark:text-gray-300 transition-colors mb-6"
           >
             <ChevronLeft className="h-4 w-4" /> CS2 Skins Hub
           </Link>
 
-          <div className="flex rounded-2xl overflow-hidden border border-gray-200 shadow-md">
+          <div className="flex rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-md">
             <div className="w-1.5 bg-gradient-to-b from-teal-500 via-blue-500 to-purple-500 flex-shrink-0" />
             <div className="p-8 flex-1">
               <span className="text-[11px] font-bold text-teal-600 uppercase tracking-widest">
                 Market Intelligence
               </span>
-              <h1 className="text-3xl font-serif font-bold text-gray-900 mt-2">
+              <h1 className="text-3xl font-serif font-bold text-gray-900 dark:text-white mt-2">
                 CS2 Skin Market Data &amp; Trends
               </h1>
-              <p className="text-gray-500 mt-3 max-w-2xl leading-relaxed">
+              <p className="text-gray-500 dark:text-gray-400 mt-3 max-w-2xl leading-relaxed">
                 An educational overview of the CS2 skin economy using publicly available data.
                 Explore skin categories, supply mechanics, and market factors documented across
                 Steam, SteamDB, and third-party platforms.
@@ -292,22 +292,22 @@ export default function CS2InvestingPage() {
       </section>
 
       {/* ── How the CS2 skin economy works ── */}
-      <section className="py-10 border-b border-gray-100">
+      <section className="py-10 border-b border-gray-100 dark:border-gray-800">
         <div className="container-main">
-          <div className="flex rounded-2xl overflow-hidden border border-brand-200 shadow-sm">
+          <div className="flex rounded-2xl overflow-hidden border border-brand-200 dark:border-brand-700/30 shadow-sm">
             <div className="w-1.5 bg-gradient-to-b from-brand-400 to-blue-500 flex-shrink-0" />
-            <div className="p-6 flex-1 bg-gradient-to-r from-brand-50/50 to-white">
-              <h2 className="text-xl font-serif font-bold text-gray-900 mb-3">
+            <div className="p-6 flex-1 bg-gradient-to-r from-brand-50 dark:from-brand-950/30/50 to-white dark:to-gray-950">
+              <h2 className="text-xl font-serif font-bold text-gray-900 dark:text-white mb-3">
                 How the CS2 Skin Economy Works
               </h2>
-              <p className="text-sm text-gray-700 leading-relaxed mb-3">
+              <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed mb-3">
                 Unlike cosmetics in most other games, CS2 skins are tradeable digital items that can
                 be bought, sold, and exchanged between players on the Steam Community Market and
                 third-party platforms. The Steam Community Market processes billions in transactions
                 annually. Skins have different rarities, wear conditions (float values), and visual
                 patterns — all of which are publicly inspectable and influence market pricing.
               </p>
-              <p className="text-sm text-gray-700 leading-relaxed">
+              <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
                 Skin prices are determined entirely by supply and demand on open marketplaces. Valve
                 does not set or control individual skin prices. Some skins have fixed supply (from
                 discontinued cases or past operations), while others continue to enter circulation
@@ -322,10 +322,10 @@ export default function CS2InvestingPage() {
       {/* ── Skin categories ── */}
       <section className="py-12">
         <div className="container-main">
-          <h2 className="text-2xl font-serif font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-serif font-bold text-gray-900 dark:text-white mb-2">
             Skin Categories by Market Characteristics
           </h2>
-          <p className="text-sm text-gray-500 mb-8">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
             Based on publicly available marketplace data. Volatility and liquidity assessments
             reflect observed market behavior, not predictions.
           </p>
@@ -335,7 +335,7 @@ export default function CS2InvestingPage() {
               return (
                 <div
                   key={cat.name}
-                  className="flex rounded-xl overflow-hidden bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+                  className="flex rounded-xl overflow-hidden bg-white dark:bg-gray-950 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow"
                 >
                   {/* Left color bar */}
                   <div className={`w-1.5 bg-gradient-to-b ${colors.bar} flex-shrink-0`} />
@@ -351,7 +351,7 @@ export default function CS2InvestingPage() {
                     </div>
 
                     {/* Description */}
-                    <p className="text-sm text-gray-600 leading-relaxed mb-4">{cat.notes}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4">{cat.notes}</p>
 
                     {/* Market characteristic badges */}
                     <div className="flex flex-wrap gap-2 mb-4">
@@ -361,21 +361,21 @@ export default function CS2InvestingPage() {
                       <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${colors.badge}`}>
                         {cat.liquidity} liquidity
                       </span>
-                      <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-gray-100 text-gray-600">
+                      <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
                         {cat.supply.split(" (")[0]}
                       </span>
                     </div>
 
                     {/* Examples */}
                     <div>
-                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
+                      <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-2">
                         Notable Examples
                       </p>
                       <ul className="space-y-1.5">
                         {cat.examples.map((ex) => (
                           <li
                             key={ex}
-                            className="text-sm text-gray-600 flex items-start gap-2"
+                            className="text-sm text-gray-600 dark:text-gray-300 flex items-start gap-2"
                           >
                             <span className={`mt-1.5 h-1.5 w-1.5 rounded-full ${colors.text.replace("text-", "bg-")} flex-shrink-0`} />
                             {ex}
@@ -392,12 +392,12 @@ export default function CS2InvestingPage() {
       </section>
 
       {/* ── Supply mechanics ── */}
-      <section className="py-12 border-t border-gray-100 bg-[#fafbfc]">
+      <section className="py-12 border-t border-gray-100 dark:border-gray-800 bg-[#fafbfc]">
         <div className="container-main">
-          <h2 className="text-2xl font-serif font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-serif font-bold text-gray-900 dark:text-white mb-2">
             Supply Mechanics
           </h2>
-          <p className="text-sm text-gray-500 mb-8">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
             How skin supply works in CS2 — documented game mechanics that affect the number
             of tradeable items in circulation.
           </p>
@@ -405,7 +405,7 @@ export default function CS2InvestingPage() {
             {SUPPLY_MECHANICS.map((item, i) => (
               <div
                 key={item.title}
-                className="flex rounded-xl overflow-hidden bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+                className="flex rounded-xl overflow-hidden bg-white dark:bg-gray-950 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="w-1 bg-gradient-to-b from-blue-400 to-cyan-400 flex-shrink-0" />
                 <div className="p-5 flex-1">
@@ -413,9 +413,9 @@ export default function CS2InvestingPage() {
                     <span className="text-lg font-black text-blue-100">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <h3 className="font-bold text-gray-900">{item.title}</h3>
+                    <h3 className="font-bold text-gray-900 dark:text-white">{item.title}</h3>
                   </div>
-                  <p className="text-sm text-gray-600 leading-relaxed">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
@@ -426,12 +426,12 @@ export default function CS2InvestingPage() {
       </section>
 
       {/* ── Market factors ── */}
-      <section className="py-12 border-t border-gray-100">
+      <section className="py-12 border-t border-gray-100 dark:border-gray-800">
         <div className="container-main">
-          <h2 className="text-2xl font-serif font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-serif font-bold text-gray-900 dark:text-white mb-2">
             Key Market Factors
           </h2>
-          <p className="text-sm text-gray-500 mb-8">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
             Publicly observable factors that influence CS2 skin market activity. These are
             informational observations, not predictive indicators.
           </p>
@@ -439,15 +439,15 @@ export default function CS2InvestingPage() {
             {MARKET_FACTORS.map((factor) => (
               <div
                 key={factor.title}
-                className={`rounded-xl border border-gray-100 bg-[#fafbfc] border-t-[3px] ${factor.accentTop} p-5 hover:shadow-md transition-shadow`}
+                className={`rounded-xl border border-gray-100 dark:border-gray-800 bg-[#fafbfc] border-t-[3px] ${factor.accentTop} p-5 hover:shadow-md transition-shadow`}
               >
                 <div className="flex items-center gap-2.5 mb-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white border border-gray-200">
-                    <factor.icon className="h-4 w-4 text-gray-600" />
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-700">
+                    <factor.icon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
                   </div>
-                  <h3 className="font-serif font-bold text-gray-900">{factor.title}</h3>
+                  <h3 className="font-serif font-bold text-gray-900 dark:text-white">{factor.title}</h3>
                 </div>
-                <p className="text-sm text-gray-600 leading-relaxed">
+                <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
                   {factor.desc}
                 </p>
               </div>
@@ -457,27 +457,27 @@ export default function CS2InvestingPage() {
       </section>
 
       {/* ── Marketplace comparison ── */}
-      <section className="py-12 border-t border-gray-100 bg-[#fafbfc]">
+      <section className="py-12 border-t border-gray-100 dark:border-gray-800 bg-[#fafbfc]">
         <div className="container-main">
-          <h2 className="text-xl font-serif font-bold text-gray-900 mb-2">
+          <h2 className="text-xl font-serif font-bold text-gray-900 dark:text-white mb-2">
             Marketplace Fee Comparison
           </h2>
-          <p className="text-sm text-gray-500 mb-6">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
             Publicly listed fee structures across major CS2 skin trading platforms.
             Transaction costs vary and should be considered when buying or selling.
           </p>
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+          <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 shadow-sm">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="px-5 py-3.5 text-left font-semibold text-gray-600">Platform</th>
-                  <th className="px-5 py-3.5 text-left font-semibold text-gray-600">Seller Fee</th>
-                  <th className="px-5 py-3.5 text-left font-semibold text-gray-600">Buyer Fee</th>
-                  <th className="px-5 py-3.5 text-left font-semibold text-gray-600 hidden sm:table-cell">Cash Out</th>
-                  <th className="px-5 py-3.5 text-left font-semibold text-gray-600 hidden sm:table-cell">Notes</th>
+                <tr className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                  <th className="px-5 py-3.5 text-left font-semibold text-gray-600 dark:text-gray-300">Platform</th>
+                  <th className="px-5 py-3.5 text-left font-semibold text-gray-600 dark:text-gray-300">Seller Fee</th>
+                  <th className="px-5 py-3.5 text-left font-semibold text-gray-600 dark:text-gray-300">Buyer Fee</th>
+                  <th className="px-5 py-3.5 text-left font-semibold text-gray-600 dark:text-gray-300 hidden sm:table-cell">Cash Out</th>
+                  <th className="px-5 py-3.5 text-left font-semibold text-gray-600 dark:text-gray-300 hidden sm:table-cell">Notes</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                 {[
                   { name: "Steam Market", seller: "15% (combined)", buyer: "0%", cash: "Steam Wallet only", notes: "Cannot withdraw to real money" },
                   { name: "Buff163", seller: "2.5%", buyer: "0%", cash: "Alipay / bank transfer (China)", notes: "Highest volume globally" },
@@ -486,18 +486,18 @@ export default function CS2InvestingPage() {
                   { name: "Tradeit.gg", seller: "0% (trade)", buyer: "Spread varies", cash: "Crypto, gift cards", notes: "Instant skin-to-skin trading" },
                   { name: "Mannco.store", seller: "0% (trade)", buyer: "Spread varies", cash: "Crypto, PayPal", notes: "TF2 + CS2 items" },
                 ].map((row, i) => (
-                  <tr key={row.name} className={i % 2 === 1 ? "bg-gray-50/50" : ""}>
-                    <td className="px-5 py-3 font-semibold text-gray-900">{row.name}</td>
-                    <td className="px-5 py-3 text-gray-700">{row.seller}</td>
-                    <td className="px-5 py-3 text-gray-700">{row.buyer}</td>
-                    <td className="px-5 py-3 text-gray-500 hidden sm:table-cell">{row.cash}</td>
-                    <td className="px-5 py-3 text-gray-500 hidden sm:table-cell">{row.notes}</td>
+                  <tr key={row.name} className={i % 2 === 1 ? "bg-gray-50 dark:bg-gray-900/50" : ""}>
+                    <td className="px-5 py-3 font-semibold text-gray-900 dark:text-white">{row.name}</td>
+                    <td className="px-5 py-3 text-gray-700 dark:text-gray-200">{row.seller}</td>
+                    <td className="px-5 py-3 text-gray-700 dark:text-gray-200">{row.buyer}</td>
+                    <td className="px-5 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell">{row.cash}</td>
+                    <td className="px-5 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell">{row.notes}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p className="text-xs text-gray-400 mt-3">
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-3">
             Fee information sourced from each platform&apos;s public documentation as of March 2026.
             Fees are subject to change. Always verify current rates directly on each platform.
           </p>
@@ -505,12 +505,12 @@ export default function CS2InvestingPage() {
       </section>
 
       {/* ── Risks section ── */}
-      <section className="py-12 border-t border-gray-100">
+      <section className="py-12 border-t border-gray-100 dark:border-gray-800">
         <div className="container-main">
-          <h2 className="text-2xl font-serif font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-serif font-bold text-gray-900 dark:text-white mb-2">
             Risks &amp; Important Considerations
           </h2>
-          <p className="text-sm text-gray-500 mb-6">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
             Anyone participating in the CS2 skin market should understand these risks.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -520,12 +520,12 @@ export default function CS2InvestingPage() {
                 className="flex rounded-xl overflow-hidden border border-red-100 hover:shadow-sm transition-shadow"
               >
                 <div className="w-1 bg-red-400 flex-shrink-0" />
-                <div className="p-5 flex-1 bg-red-50/30">
+                <div className="p-5 flex-1 bg-red-50 dark:bg-red-950/30/30">
                   <div className="flex items-center gap-2 mb-2">
                     <AlertTriangle className="h-4 w-4 text-red-400 flex-shrink-0" />
-                    <h3 className="font-serif font-bold text-gray-900">{risk.title}</h3>
+                    <h3 className="font-serif font-bold text-gray-900 dark:text-white">{risk.title}</h3>
                   </div>
-                  <p className="text-sm text-gray-600 leading-relaxed">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
                     {risk.desc}
                   </p>
                 </div>
@@ -536,12 +536,12 @@ export default function CS2InvestingPage() {
       </section>
 
       {/* ── Data sources ── */}
-      <section className="py-10 border-t border-gray-100 bg-[#fafbfc]">
+      <section className="py-10 border-t border-gray-100 dark:border-gray-800 bg-[#fafbfc]">
         <div className="container-main">
-          <h2 className="text-lg font-serif font-bold text-gray-900 mb-4">
+          <h2 className="text-lg font-serif font-bold text-gray-900 dark:text-white mb-4">
             Where This Data Comes From
           </h2>
-          <p className="text-sm text-gray-600 leading-relaxed mb-4">
+          <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
             All information on this page is compiled from publicly available sources. We aggregate
             and present this data for educational purposes — we do not generate proprietary
             predictions or recommendations.
@@ -558,7 +558,7 @@ export default function CS2InvestingPage() {
             ].map((source) => (
               <span
                 key={source}
-                className="rounded-full border border-gray-200 bg-white px-3.5 py-1.5 text-xs font-medium text-gray-600 shadow-sm"
+                className="rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-3.5 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 shadow-sm"
               >
                 {source}
               </span>
@@ -568,12 +568,12 @@ export default function CS2InvestingPage() {
       </section>
 
       {/* ── Tools CTA ── */}
-      <section className="py-12 border-t border-gray-100 bg-white">
+      <section className="py-12 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950">
         <div className="container-main text-center">
-          <h2 className="text-xl font-serif font-bold text-gray-900 mb-3">
+          <h2 className="text-xl font-serif font-bold text-gray-900 dark:text-white mb-3">
             Explore CS2 Market Data
           </h2>
-          <p className="text-sm text-gray-500 mb-6">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
             Use our free tools to browse publicly available price data across multiple marketplaces.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
@@ -585,7 +585,7 @@ export default function CS2InvestingPage() {
             </Link>
             <Link
               href="/cs2/compare"
-              className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-950 px-6 py-3 font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
             >
               Compare Marketplaces
             </Link>
@@ -594,11 +594,11 @@ export default function CS2InvestingPage() {
       </section>
 
       {/* ── Bottom disclaimer ── */}
-      <section className="border-t border-gray-200 bg-[#fafbfc] py-8">
+      <section className="border-t border-gray-200 dark:border-gray-700 bg-[#fafbfc] py-8">
         <div className="container-main">
           <div className="flex rounded-xl overflow-hidden border border-amber-200 shadow-sm">
             <div className="w-1.5 bg-gradient-to-b from-amber-400 to-orange-400 flex-shrink-0" />
-            <div className="p-5 flex-1 bg-amber-50">
+            <div className="p-5 flex-1 bg-amber-50 dark:bg-amber-950/30">
               <div className="flex items-start gap-3">
                 <Shield className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
                 <div>
@@ -642,7 +642,7 @@ export default function CS2InvestingPage() {
       </section>
 
       {/* Newsletter */}
-      <section className="py-10 border-t border-gray-100">
+      <section className="py-10 border-t border-gray-100 dark:border-gray-800">
         <div className="container-main">
           <CS2NewsletterCTA />
         </div>

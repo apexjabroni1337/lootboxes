@@ -112,7 +112,7 @@ export default function SearchDialog({
 
       <div className="relative w-full max-w-xl rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-gray-700 dark:bg-gray-900">
         <div className="flex items-center gap-3 border-b border-gray-100 px-4 py-3 dark:border-gray-800">
-          <Search className="h-5 w-5 text-gray-400" />
+          <Search className="h-5 w-5 text-gray-400 dark:text-gray-500" />
           <input
             ref={inputRef}
             type="text"
@@ -123,7 +123,7 @@ export default function SearchDialog({
           />
           <button
             onClick={onClose}
-            className="rounded-lg border border-gray-200 px-2 py-0.5 text-xs text-gray-400 dark:border-gray-700"
+            className="rounded-lg border border-gray-200 px-2 py-0.5 text-xs text-gray-400 dark:text-gray-500 dark:border-gray-700"
           >
             ESC
           </button>
@@ -131,13 +131,13 @@ export default function SearchDialog({
 
         <div className="max-h-96 overflow-y-auto p-2">
           {loading && (
-            <div className="py-8 text-center text-sm text-gray-400">
+            <div className="py-8 text-center text-sm text-gray-400 dark:text-gray-500">
               Searching...
             </div>
           )}
 
           {!loading && query.length >= 2 && !hasResults && (
-            <div className="py-8 text-center text-sm text-gray-400">
+            <div className="py-8 text-center text-sm text-gray-400 dark:text-gray-500">
               No results found for &ldquo;{query}&rdquo;
             </div>
           )}
@@ -147,7 +147,7 @@ export default function SearchDialog({
               {/* Games */}
               {results!.games?.length > 0 && (
                 <div>
-                  <div className="px-3 py-2 text-xs font-semibold uppercase text-gray-400">
+                  <div className="px-3 py-2 text-xs font-semibold uppercase text-gray-400 dark:text-gray-500">
                     Games
                   </div>
                   {results!.games.map((game) => (
@@ -155,7 +155,7 @@ export default function SearchDialog({
                       key={game.id}
                       href={`/games/${game.slug}`}
                       onClick={onClose}
-                      className="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800"
+                      className="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800"
                     >
                       <div className="h-8 w-6 flex-shrink-0 overflow-hidden rounded">
                         {game.cover_image ? (
@@ -166,7 +166,7 @@ export default function SearchDialog({
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-medium text-gray-900 truncate dark:text-gray-100">{game.title}</div>
-                        <div className="text-xs text-gray-500">{game.platforms?.join(", ")}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{game.platforms?.join(", ")}</div>
                       </div>
                     </Link>
                   ))}
@@ -176,7 +176,7 @@ export default function SearchDialog({
               {/* Deals */}
               {results!.deals?.length > 0 && (
                 <div className="mt-1">
-                  <div className="px-3 py-2 text-xs font-semibold uppercase text-gray-400">
+                  <div className="px-3 py-2 text-xs font-semibold uppercase text-gray-400 dark:text-gray-500">
                     Best Deals
                   </div>
                   {results!.deals.map((deal) => {
@@ -186,13 +186,13 @@ export default function SearchDialog({
                         key={deal.id}
                         href={`/games/${deal.game.slug}`}
                         onClick={onClose}
-                        className="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800"
+                        className="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800"
                       >
                         <div className="h-8 w-6 flex-shrink-0 overflow-hidden rounded">
                           {deal.game.cover_image ? (
                             <img src={deal.game.cover_image} alt={deal.game.title} className="h-full w-full object-cover" />
                           ) : (
-                            <Tag className="h-4 w-4 text-gray-400 mx-auto mt-2" />
+                            <Tag className="h-4 w-4 text-gray-400 dark:text-gray-500 mx-auto mt-2" />
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -201,7 +201,7 @@ export default function SearchDialog({
                             <span className="rounded px-1 py-0.5 text-[10px] font-medium text-white" style={{ backgroundColor: store.color }}>
                               {store.name}
                             </span>
-                            <span className="text-gray-400 line-through">{formatPrice(deal.original_price)}</span>
+                            <span className="text-gray-400 dark:text-gray-500 line-through">{formatPrice(deal.original_price)}</span>
                             <span className="font-bold text-gray-900 dark:text-gray-100">{formatPrice(deal.price)}</span>
                           </div>
                         </div>
@@ -215,7 +215,7 @@ export default function SearchDialog({
               {/* Analytics */}
               {results!.analytics?.length > 0 && (
                 <div className="mt-1">
-                  <div className="px-3 py-2 text-xs font-semibold uppercase text-gray-400">
+                  <div className="px-3 py-2 text-xs font-semibold uppercase text-gray-400 dark:text-gray-500">
                     Articles
                   </div>
                   {results!.analytics.map((article) => (
@@ -223,12 +223,12 @@ export default function SearchDialog({
                       key={article.id}
                       href={`/analytics/${article.slug}`}
                       onClick={onClose}
-                      className="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800"
+                      className="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800"
                     >
-                      <FileText className="h-4 w-4 flex-shrink-0 text-gray-400" />
+                      <FileText className="h-4 w-4 flex-shrink-0 text-gray-400 dark:text-gray-500" />
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-medium text-gray-900 truncate dark:text-gray-100">{article.title}</div>
-                        <div className="text-xs text-gray-500">{article.type}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{article.type}</div>
                       </div>
                     </Link>
                   ))}
@@ -240,7 +240,7 @@ export default function SearchDialog({
           {/* Quick links when empty */}
           {!query && (
             <div className="py-4">
-              <div className="px-3 py-2 text-xs font-semibold uppercase text-gray-400">
+              <div className="px-3 py-2 text-xs font-semibold uppercase text-gray-400 dark:text-gray-500">
                 Quick links
               </div>
               {[
@@ -253,7 +253,7 @@ export default function SearchDialog({
                   key={link.href}
                   href={link.href}
                   onClick={onClose}
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800"
+                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800"
                 >
                   <span>{link.icon}</span>
                   {link.label}

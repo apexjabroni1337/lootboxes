@@ -169,7 +169,7 @@ export default function SeedCS2Page() {
   return (
     <div className="min-h-screen bg-gray-950 text-white p-8 font-mono">
       <h1 className="text-2xl font-bold mb-6">CS2 Case Seeder</h1>
-      <p className="text-gray-400 mb-4 text-sm">
+      <p className="text-gray-400 dark:text-gray-500 mb-4 text-sm">
         Fetches all CS2 cases/capsules from ByMykel API in your browser, then uploads
         them in small batches to avoid serverless timeouts.
       </p>
@@ -205,7 +205,7 @@ export default function SeedCS2Page() {
 
       {progress.total > 0 && (
         <div className="mb-4">
-          <div className="flex justify-between text-sm text-gray-400 mb-1">
+          <div className="flex justify-between text-sm text-gray-400 dark:text-gray-500 mb-1">
             <span>
               {progress.current} / {progress.total} crates
             </span>
@@ -213,7 +213,7 @@ export default function SeedCS2Page() {
           </div>
           <div className="w-full bg-gray-800 rounded-full h-3">
             <div
-              className="bg-blue-500 h-3 rounded-full transition-all duration-300"
+              className="bg-blue-50 dark:bg-blue-950/300 h-3 rounded-full transition-all duration-300"
               style={{ width: `${pct}%` }}
             />
           </div>
@@ -222,7 +222,7 @@ export default function SeedCS2Page() {
 
       <div className="bg-gray-900 border border-gray-800 rounded p-4 h-96 overflow-y-auto text-sm">
         {log.length === 0 ? (
-          <span className="text-gray-600">Logs will appear here...</span>
+          <span className="text-gray-600 dark:text-gray-300">Logs will appear here...</span>
         ) : (
           log.map((line, i) => (
             <div key={i} className={line.includes("ERROR") ? "text-red-400" : "text-green-400"}>

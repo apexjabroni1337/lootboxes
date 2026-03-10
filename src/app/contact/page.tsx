@@ -72,11 +72,11 @@ export default function ContactPage() {
   return (
     <div className="pb-16">
       {/* Hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-b from-gray-50 dark:from-gray-900 to-white dark:to-gray-950 py-8">
         <div className="container-main">
           <div className="mx-auto max-w-3xl">
-            <h1 className="text-3xl font-bold text-gray-900">Contact Us</h1>
-            <p className="mt-2 text-gray-600">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Contact Us</h1>
+            <p className="mt-2 text-gray-600 dark:text-gray-300">
               Have a question, feedback, or business inquiry? We&apos;d love to
               hear from you. Choose the most relevant channel below and
               we&apos;ll get back to you as soon as we can.
@@ -91,15 +91,15 @@ export default function ContactPage() {
             {CONTACT_CHANNELS.map((channel) => (
               <div
                 key={channel.title}
-                className="rounded-xl border border-gray-200 bg-white p-5 transition-all hover:border-gray-300 hover:shadow-sm"
+                className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 transition-all hover:border-gray-300 hover:shadow-sm"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50 border border-brand-100">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50 dark:bg-brand-950/30 border border-brand-100 dark:border-brand-800/30">
                   <channel.icon className="h-5 w-5 text-brand-600" />
                 </div>
-                <h3 className="mt-3 font-semibold text-gray-900">
+                <h3 className="mt-3 font-semibold text-gray-900 dark:text-white">
                   {channel.title}
                 </h3>
-                <p className="mt-1 text-sm text-gray-500 leading-relaxed">
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
                   {channel.description}
                 </p>
                 {channel.email && (
@@ -116,7 +116,7 @@ export default function ContactPage() {
                       href="https://discord.gg/lootboxes"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:border-brand-300 hover:text-brand-600"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 transition-colors hover:border-brand-300 hover:text-brand-600"
                     >
                       Discord
                     </a>
@@ -124,7 +124,7 @@ export default function ContactPage() {
                       href="https://twitter.com/lootboxescom"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:border-brand-300 hover:text-brand-600"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 transition-colors hover:border-brand-300 hover:text-brand-600"
                     >
                       Twitter/X
                     </a>
@@ -132,7 +132,7 @@ export default function ContactPage() {
                       href="https://youtube.com/@lootboxes"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:border-brand-300 hover:text-brand-600"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 transition-colors hover:border-brand-300 hover:text-brand-600"
                     >
                       YouTube
                     </a>
@@ -143,11 +143,11 @@ export default function ContactPage() {
           </div>
 
           {/* Response time note */}
-          <div className="mt-8 rounded-xl border border-gray-200 bg-gray-50 p-5">
-            <h3 className="text-sm font-semibold text-gray-900">
+          <div className="mt-8 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-5">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
               Response Times
             </h3>
-            <p className="mt-2 text-sm text-gray-500 leading-relaxed">
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
               We aim to respond to all inquiries within 48 hours during business
               days. Partnership and press inquiries are typically prioritized.
               For urgent technical issues (site outages, broken deal links),
@@ -157,7 +157,7 @@ export default function ContactPage() {
 
           {/* Legal note */}
           <div className="mt-6 text-center">
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-400 dark:text-gray-500">
               For legal inquiries, please refer to our{" "}
               <Link
                 href="/privacy"

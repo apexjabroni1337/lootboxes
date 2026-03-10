@@ -62,7 +62,7 @@ function CountdownTimer() {
   return (
     <div className="flex items-center gap-1">
       <Clock className="mr-1 h-4 w-4 text-amber-500" />
-      <span className="text-xs font-medium text-gray-500">Ends in</span>
+      <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Ends in</span>
       {[
         { value: timeLeft.hours, label: "h" },
         { value: timeLeft.minutes, label: "m" },
@@ -72,7 +72,7 @@ function CountdownTimer() {
           <span className="rounded bg-gray-900 px-1.5 py-0.5 text-xs font-bold tabular-nums text-white">
             {pad(unit.value)}
           </span>
-          <span className="ml-0.5 text-[10px] text-gray-400">{unit.label}</span>
+          <span className="ml-0.5 text-[10px] text-gray-400 dark:text-gray-500">{unit.label}</span>
         </span>
       ))}
     </div>
@@ -116,7 +116,7 @@ export default function FlashDeals({ deals }: FlashDealsProps) {
                 className="group overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg dark:border-gray-700 dark:bg-gray-900"
               >
                 {/* Landscape image */}
-                <div className="relative aspect-[16/9] overflow-hidden bg-gray-100">
+                <div className="relative aspect-[16/9] overflow-hidden bg-gray-100 dark:bg-gray-800">
                   {bgImage ? (
                     <img
                       src={bgImage}
@@ -171,7 +171,7 @@ export default function FlashDeals({ deals }: FlashDealsProps) {
 
                   <div className="mt-3 flex items-center justify-between">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-sm text-gray-400 line-through">
+                      <span className="text-sm text-gray-400 dark:text-gray-500 line-through">
                         {formatPrice(deal.original_price)}
                       </span>
                       <span className="text-xl font-bold text-gray-900 dark:text-white">

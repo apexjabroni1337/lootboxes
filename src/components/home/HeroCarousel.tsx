@@ -76,7 +76,7 @@ export default function HeroCarousel({ deals }: HeroCarouselProps) {
         )}
 
         {/* Minimal left-side scrim for text readability only */}
-        <div className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/30 to-transparent w-1/2" />
+        <div className="absolute inset-0 bg-gradient-to-r from-white dark:from-gray-950/80 via-white/30 to-transparent w-1/2" />
 
         {/* Content overlay */}
         <div className="container-main relative flex h-full items-center">
@@ -90,7 +90,7 @@ export default function HeroCarousel({ deals }: HeroCarouselProps) {
             </span>
 
             {/* Game title */}
-            <h2 className="mt-2 text-2xl font-extrabold text-gray-900 sm:text-3xl drop-shadow-sm">
+            <h2 className="mt-2 text-2xl font-extrabold text-gray-900 dark:text-white sm:text-3xl drop-shadow-sm">
               {deal.game.title}
             </h2>
 
@@ -99,10 +99,10 @@ export default function HeroCarousel({ deals }: HeroCarouselProps) {
               <span className="inline-flex items-center rounded-lg bg-success-600 px-2.5 py-1 text-sm font-bold text-white">
                 {formatDiscount(deal.discount_pct)}
               </span>
-              <span className="text-sm text-gray-400 line-through">
+              <span className="text-sm text-gray-400 dark:text-gray-500 line-through">
                 {formatPrice(deal.original_price)}
               </span>
-              <span className="text-xl font-bold text-gray-900">
+              <span className="text-xl font-bold text-gray-900 dark:text-white">
                 {formatPrice(deal.price)}
               </span>
             </div>
@@ -132,17 +132,17 @@ export default function HeroCarousel({ deals }: HeroCarouselProps) {
           <>
             <button
               onClick={prev}
-              className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-lg backdrop-blur-sm transition-colors hover:bg-white"
+              className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white dark:bg-gray-950/80 p-2 shadow-lg backdrop-blur-sm transition-colors hover:bg-white dark:bg-gray-950"
               aria-label="Previous slide"
             >
-              <ChevronLeft className="h-5 w-5 text-gray-700" />
+              <ChevronLeft className="h-5 w-5 text-gray-700 dark:text-gray-200" />
             </button>
             <button
               onClick={next}
-              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-lg backdrop-blur-sm transition-colors hover:bg-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white dark:bg-gray-950/80 p-2 shadow-lg backdrop-blur-sm transition-colors hover:bg-white dark:bg-gray-950"
               aria-label="Next slide"
             >
-              <ChevronRight className="h-5 w-5 text-gray-700" />
+              <ChevronRight className="h-5 w-5 text-gray-700 dark:text-gray-200" />
             </button>
           </>
         )}

@@ -8,7 +8,7 @@ export default function BlogLoading() {
         <Skeleton className="mt-2 h-4 w-80" />
 
         {/* Featured post skeleton */}
-        <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200">
+        <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700">
           <Skeleton className="h-56 w-full" />
           <div className="space-y-3 p-6">
             <Skeleton className="h-3 w-16" />

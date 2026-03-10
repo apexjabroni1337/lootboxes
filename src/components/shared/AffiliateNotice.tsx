@@ -7,10 +7,10 @@ import Link from "next/link";
  */
 export default function AffiliateNotice() {
   return (
-    <div className="border-t border-gray-100 bg-gray-50/70">
+    <div className="border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/70">
       <div className="container-main py-4">
-        <p className="text-[11px] text-gray-400 leading-relaxed text-center max-w-3xl mx-auto">
-          <span className="font-semibold text-gray-500">
+        <p className="text-[11px] text-gray-400 dark:text-gray-500 leading-relaxed text-center max-w-3xl mx-auto">
+          <span className="font-semibold text-gray-500 dark:text-gray-400">
             Affiliate Disclosure:
           </span>{" "}
           Some links on this page are affiliate links. LootBoxes.com may earn a
@@ -20,7 +20,7 @@ export default function AffiliateNotice() {
           recommendations.{" "}
           <Link
             href="/affiliate-disclosure"
-            className="underline hover:text-gray-600"
+            className="underline hover:text-gray-600 dark:text-gray-300"
           >
             Learn more
           </Link>

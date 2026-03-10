@@ -138,20 +138,20 @@ export default function DealsPage() {
   }, [items]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-r from-emerald-50 via-green-50 to-teal-50 py-10">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-emerald-50 dark:from-emerald-950/30 via-green-50 dark:via-green-950/20 to-teal-50 dark:to-teal-950/20 py-10">
         <div className="container-main">
-          <Link href="/cs2" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4">
+          <Link href="/cs2" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-200 mb-4">
             <ChevronLeft className="h-4 w-4" /> CS2 Skins Hub
           </Link>
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500 text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/300 text-white">
               <Tag className="h-5 w-5" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">Best Deals</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Best Deals</h1>
           </div>
-          <p className="text-gray-600 max-w-2xl">
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl">
             Real-time skin deals across every major CS2 marketplace. We compare prices from Skinport, Buff163,
             DMarket, Waxpeer and Steam Market to find you the biggest savings — updated every 10 minutes.
           </p>
@@ -159,17 +159,17 @@ export default function DealsPage() {
           {/* Stat cards */}
           {isLive && (
             <div className="grid grid-cols-3 gap-4 mt-6 max-w-lg">
-              <div className="rounded-xl bg-white/80 border border-emerald-100 p-3 text-center">
+              <div className="rounded-xl bg-white dark:bg-gray-950/80 border border-emerald-100 dark:border-emerald-800/30 p-3 text-center">
                 <p className="text-2xl font-bold text-emerald-600">{items.length}</p>
-                <p className="text-[10px] text-gray-500 uppercase font-semibold">Deals Found</p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-semibold">Deals Found</p>
               </div>
-              <div className="rounded-xl bg-white/80 border border-emerald-100 p-3 text-center">
+              <div className="rounded-xl bg-white dark:bg-gray-950/80 border border-emerald-100 dark:border-emerald-800/30 p-3 text-center">
                 <p className="text-2xl font-bold text-emerald-600">{topSavingsPct}%</p>
-                <p className="text-[10px] text-gray-500 uppercase font-semibold">Top Savings</p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-semibold">Top Savings</p>
               </div>
-              <div className="rounded-xl bg-white/80 border border-emerald-100 p-3 text-center">
+              <div className="rounded-xl bg-white dark:bg-gray-950/80 border border-emerald-100 dark:border-emerald-800/30 p-3 text-center">
                 <p className="text-2xl font-bold text-emerald-600">{formatPrice(avgSavings)}</p>
-                <p className="text-[10px] text-gray-500 uppercase font-semibold">Avg Savings</p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-semibold">Avg Savings</p>
               </div>
             </div>
           )}
@@ -177,7 +177,7 @@ export default function DealsPage() {
       </section>
 
       {/* Tab bar */}
-      <section className="border-b border-gray-100 bg-white sticky top-16 z-30">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 sticky top-16 z-30">
         <div className="container-main py-3 flex flex-col sm:flex-row gap-3">
           <div className="flex items-center gap-2">
             <button
@@ -214,21 +214,21 @@ export default function DealsPage() {
 
           <div className="flex items-center gap-2 sm:ml-auto">
             <div className="relative flex-1 sm:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
               <input
                 type="text"
                 placeholder="Search..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2 pl-9 pr-4 text-sm focus:border-brand-300 focus:bg-white focus:outline-none"
+                className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 py-2 pl-9 pr-4 text-sm focus:border-brand-300 focus:bg-white dark:bg-gray-950 focus:outline-none"
               />
             </div>
             <div className="flex items-center gap-1">
-              <Filter className="h-4 w-4 text-gray-400" />
+              <Filter className="h-4 w-4 text-gray-400 dark:text-gray-500" />
               <select
                 value={wearFilter}
                 onChange={(e) => setWearFilter(e.target.value)}
-                className="rounded-lg border border-gray-200 bg-gray-50 px-2 py-2 text-sm"
+                className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-2 py-2 text-sm"
               >
                 {WEARS.map((w) => (
                   <option key={w} value={w}>{w === "All" ? "All Wears" : w}</option>
@@ -240,7 +240,7 @@ export default function DealsPage() {
       </section>
 
       {/* Live status */}
-      <section className="border-b border-gray-50 bg-gray-50/50">
+      <section className="border-b border-gray-50 bg-gray-50 dark:bg-gray-900/50">
         <div className="container-main py-2 flex items-center gap-3 text-[11px]">
           {isLive ? (
             <>
@@ -249,14 +249,14 @@ export default function DealsPage() {
             </>
           ) : (
             <>
-              <WifiOff className="h-3 w-3 text-gray-400" />
-              <span className="text-gray-400">Loading...</span>
+              <WifiOff className="h-3 w-3 text-gray-400 dark:text-gray-500" />
+              <span className="text-gray-400 dark:text-gray-500">Loading...</span>
             </>
           )}
           {lastUpdated && (
-            <span className="text-gray-400 flex items-center gap-1 ml-auto">
+            <span className="text-gray-400 dark:text-gray-500 flex items-center gap-1 ml-auto">
               <Clock className="h-3 w-3" /> Updated {lastUpdated}
-              <button onClick={() => fetchDeals()} className="ml-1 text-gray-400 hover:text-gray-600">
+              <button onClick={() => fetchDeals()} className="ml-1 text-gray-400 hover:text-gray-600 dark:text-gray-300">
                 <RefreshCw className="h-3 w-3" />
               </button>
             </span>
@@ -270,11 +270,11 @@ export default function DealsPage() {
           {loading ? (
             <div className="flex items-center justify-center py-20">
               <Loader2 className="h-8 w-8 animate-spin text-gray-300" />
-              <span className="ml-3 text-sm text-gray-500">Finding the best deals...</span>
+              <span className="ml-3 text-sm text-gray-500 dark:text-gray-400">Finding the best deals...</span>
             </div>
           ) : (
             <>
-              <p className="text-sm text-gray-500 mb-4">{items.length} deals found</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{items.length} deals found</p>
 
               <div className="space-y-2">
                 {displayed.map((item, idx) => {
@@ -284,12 +284,12 @@ export default function DealsPage() {
                   return (
                     <div
                       key={item.name}
-                      className="rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm hover:shadow-md transition-shadow"
+                      className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-5 py-4 shadow-sm hover:shadow-md transition-shadow"
                     >
                       <div className="flex flex-col lg:flex-row lg:items-center gap-4">
                         {/* Rank + skin info */}
                         <div className="flex items-center gap-3 lg:w-72 flex-shrink-0">
-                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-500 flex-shrink-0">
+                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-sm font-bold text-gray-500 dark:text-gray-400 flex-shrink-0">
                             {idx + 1}
                           </span>
                           {item.image ? (
@@ -311,8 +311,8 @@ export default function DealsPage() {
                             </div>
                           )}
                           <div className="min-w-0">
-                            <p className="font-semibold text-gray-900 truncate text-sm">{item.weapon} | {item.skin}</p>
-                            <span className="text-xs text-gray-500">{item.wear}</span>
+                            <p className="font-semibold text-gray-900 dark:text-white truncate text-sm">{item.weapon} | {item.skin}</p>
+                            <span className="text-xs text-gray-500 dark:text-gray-400">{item.wear}</span>
                           </div>
                         </div>
 
@@ -320,8 +320,8 @@ export default function DealsPage() {
                         <div className="flex items-center gap-4 flex-1">
                           {/* Steam price (crossed out if savings) */}
                           <div className="text-center">
-                            <p className="text-[10px] text-gray-400 uppercase font-semibold">Steam</p>
-                            <p className={`text-sm font-medium ${pct > 0 ? "text-gray-400 line-through" : "text-gray-700"}`}>
+                            <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase font-semibold">Steam</p>
+                            <p className={`text-sm font-medium ${pct > 0 ? "text-gray-400 line-through" : "text-gray-700 dark:text-gray-200"}`}>
                               {formatPrice(item.steamPrice)}
                             </p>
                           </div>
@@ -375,7 +375,7 @@ export default function DealsPage() {
                           )}
                           <Link
                             href={`/cs2/prices?q=${encodeURIComponent(item.weapon + " " + item.skin)}`}
-                            className="flex items-center gap-1 rounded-lg border border-gray-200 px-3 py-2.5 text-xs font-medium text-gray-600 hover:bg-gray-50"
+                            className="flex items-center gap-1 rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2.5 text-xs font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-900"
                           >
                             Compare <ExternalLink className="h-3 w-3" />
                           </Link>
@@ -390,7 +390,7 @@ export default function DealsPage() {
                 <div className="mt-6 text-center">
                   <button
                     onClick={() => setDisplayLimit((prev) => prev + 50)}
-                    className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-6 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="inline-flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-6 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                   >
                     Load More ({items.length - displayLimit} remaining)
                   </button>
@@ -398,8 +398,8 @@ export default function DealsPage() {
               )}
 
               {items.length === 0 && !loading && (
-                <div className="rounded-xl border border-gray-200 bg-gray-50 p-12 text-center">
-                  <p className="text-gray-500">
+                <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-12 text-center">
+                  <p className="text-gray-500 dark:text-gray-400">
                     {tab === "undervalued"
                       ? "No high-demand skins found right now. Check back soon!"
                       : "No deals match your search. Try a different query."}
@@ -412,9 +412,9 @@ export default function DealsPage() {
       </section>
 
       {/* SEO prose */}
-      <section className="border-t border-gray-100 bg-gray-50 py-10">
+      <section className="border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 py-10">
         <div className="container-main max-w-3xl">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">How We Find CS2 Skin Deals</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">How We Find CS2 Skin Deals</h2>
           <div className="prose prose-gray prose-sm max-w-none">
             <p>
               Our deals engine compares real-time prices across every major CS2 skin marketplace including
@@ -437,17 +437,17 @@ export default function DealsPage() {
       </section>
 
       {/* Disclaimers */}
-      <div className="border-t border-gray-100 bg-gray-50/70">
+      <div className="border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/70">
         <div className="container-main py-4 space-y-2">
-          <p className="text-[11px] text-gray-400 leading-relaxed text-center">
-            <span className="font-semibold text-gray-500">Disclaimer:</span>{" "}
+          <p className="text-[11px] text-gray-400 dark:text-gray-500 leading-relaxed text-center">
+            <span className="font-semibold text-gray-500 dark:text-gray-400">Disclaimer:</span>{" "}
             LootBoxes.com is not a financial advisor and does not provide investment, financial, or trading advice of any kind.
             All price data and comparisons shown on this page are for informational purposes only and should not be
             interpreted as a recommendation to buy, sell, or trade any virtual items. Virtual item markets are volatile
             and carry risk. If you need financial guidance, please consult a qualified financial professional.
           </p>
-          <p className="text-[11px] text-gray-400 leading-relaxed text-center">
-            <span className="font-semibold text-gray-500">Affiliate Disclosure:</span>{" "}
+          <p className="text-[11px] text-gray-400 dark:text-gray-500 leading-relaxed text-center">
+            <span className="font-semibold text-gray-500 dark:text-gray-400">Affiliate Disclosure:</span>{" "}
             Some links on this page are affiliate links. LootBoxes.com may earn a commission
             if you make a purchase, at no extra cost to you.
           </p>

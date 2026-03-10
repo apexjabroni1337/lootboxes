@@ -25,7 +25,7 @@ const ScoreBadge = ({ score }: { score: number }) => {
   const bgColor = getScoreBgColor(score);
   return (
     <div
-      className={`flex h-8 w-8 items-center justify-center rounded-full ${bgColor} text-xs font-bold text-gray-900`}
+      className={`flex h-8 w-8 items-center justify-center rounded-full ${bgColor} text-xs font-bold text-gray-900 dark:text-white`}
     >
       {score.toFixed(1)}
     </div>
@@ -48,30 +48,30 @@ export default function ScoreExplorerPreview(
   const totalGames = props.games.length;
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
-      <div className="border-b border-gray-200 p-6">
-        <h2 className="mb-4 text-xl font-bold text-gray-900">
+    <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 shadow-sm">
+      <div className="border-b border-gray-200 dark:border-gray-700 p-6">
+        <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
           Explore Games
         </h2>
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
           <input
             type="text"
             placeholder="Search by game name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-950 py-2 pl-10 pr-4 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           />
         </div>
       </div>
 
       <div className="max-h-96 overflow-y-auto">
         {filteredGames.length > 0 ? (
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-gray-100 dark:divide-gray-800">
             {filteredGames.map((game) => (
               <div
                 key={game.slug}
-                className="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-900 transition-colors"
               >
                 {game.cover_image && (
                   <img
@@ -84,10 +84,10 @@ export default function ScoreExplorerPreview(
                   <div className="h-10 w-10 rounded bg-gray-200 flex-shrink-0" />
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-gray-900 truncate">
+                  <p className="font-medium text-gray-900 dark:text-white truncate">
                     {game.title}
                   </p>
-                  <p className="text-xs text-gray-600">
+                  <p className="text-xs text-gray-600 dark:text-gray-300">
                     {game.loot_system_type}
                   </p>
                 </div>
@@ -97,7 +97,7 @@ export default function ScoreExplorerPreview(
           </div>
         ) : (
           <div className="px-6 py-8 text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
               {searchQuery
                 ? 'No games found matching your search'
                 : 'No games available'}
@@ -106,7 +106,7 @@ export default function ScoreExplorerPreview(
         )}
       </div>
 
-      <div className="border-t border-gray-200 bg-gray-50 px-6 py-4">
+      <div className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-6 py-4">
         <Link
           href="/lootbox"
           className="flex items-center justify-center gap-2 font-semibold text-blue-600 hover:text-blue-700 transition-colors"

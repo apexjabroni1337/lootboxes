@@ -141,7 +141,7 @@ function BentoGameCard({
 
       <div className={`absolute bottom-0 left-0 right-0 ${featured ? "p-6" : "p-4"}`}>
         {featured && (
-          <span className="inline-block text-[10px] font-bold uppercase tracking-widest text-emerald-400 bg-emerald-500/20 border border-emerald-400/30 rounded-full px-3 py-1 mb-3">
+          <span className="inline-block text-[10px] font-bold uppercase tracking-widest text-emerald-400 bg-emerald-50 dark:bg-emerald-950/300/20 border border-emerald-400/30 rounded-full px-3 py-1 mb-3">
             Top Rated
           </span>
         )}
@@ -156,7 +156,7 @@ function BentoGameCard({
         </h3>
 
         <div className={`flex items-center gap-1.5 flex-wrap ${featured ? "mt-3" : "mt-2"}`}>
-          <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-white/15 text-white/80 backdrop-blur-sm">
+          <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-white dark:bg-gray-950/15 text-white/80 backdrop-blur-sm">
             {sys.label}
           </span>
           {tags.includes("mobile") && (
@@ -165,12 +165,12 @@ function BentoGameCard({
             </span>
           )}
           {tags.includes("multi_system") && (
-            <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-orange-500/20 text-orange-300 backdrop-blur-sm">
+            <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-orange-50 dark:bg-orange-950/300/20 text-orange-300 backdrop-blur-sm">
               Multi-System
             </span>
           )}
           {featured && content?.has_pity_system && (
-            <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 backdrop-blur-sm">
+            <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/300/20 text-emerald-300 backdrop-blur-sm">
               Pity System
             </span>
           )}
@@ -252,18 +252,18 @@ export default function LootboxDatabaseClient({
         <div className="flex flex-col gap-3">
           {/* Search Box */}
           <div className="relative max-w-md">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500 pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search games on this page..."
-              className="w-full pl-10 pr-10 py-2.5 text-sm rounded-xl border border-gray-200 bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300 transition-all"
+              className="w-full pl-10 pr-10 py-2.5 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300 transition-all"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full bg-gray-200 text-gray-500 hover:bg-gray-300 hover:text-gray-700 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full bg-gray-200 text-gray-500 hover:bg-gray-300 hover:text-gray-700 dark:text-gray-200 transition-colors"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -302,7 +302,7 @@ export default function LootboxDatabaseClient({
             {activeGenre && (
               <button
                 onClick={() => setActiveGenre(null)}
-                className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-gray-700 px-2 py-2 transition-colors"
+                className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-gray-700 dark:text-gray-200 px-2 py-2 transition-colors"
               >
                 <X className="w-3 h-3" />
                 Clear genre
@@ -313,7 +313,7 @@ export default function LootboxDatabaseClient({
 
         {/* Filtering result count */}
         {isFiltering && (
-          <p className="text-xs text-gray-400 mt-2">
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
             Showing {filteredGames.length} of {games.length} games
             {searchQuery.trim() && (
               <span>
@@ -334,7 +334,7 @@ export default function LootboxDatabaseClient({
       {/* ── Empty State ── */}
       {filteredGames.length === 0 && (
         <div className="container-main text-center py-16">
-          <p className="text-gray-500 mb-3 text-sm">
+          <p className="text-gray-500 dark:text-gray-400 mb-3 text-sm">
             No games match your filters.
           </p>
           <button
@@ -369,26 +369,26 @@ export default function LootboxDatabaseClient({
       {filteredGames.length > 5 && (
         <div className="container-main pb-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            <div className="col-span-2 rounded-2xl bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-200 p-6 md:p-8 flex items-center">
+            <div className="col-span-2 rounded-2xl bg-gradient-to-br from-indigo-50 dark:from-indigo-950/30 to-violet-50 border border-indigo-200 dark:border-indigo-700/30 p-6 md:p-8 flex items-center">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 w-full">
                 <div className="text-center md:text-left">
-                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900">
+                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">
                     {filteredGames.length}
                   </p>
                   <p className="text-xs text-indigo-400 font-medium mt-1">Games Analyzed</p>
                 </div>
                 <div className="text-center md:text-left">
-                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900">
+                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">
                     {totalDropRates}+
                   </p>
                   <p className="text-xs text-indigo-400 font-medium mt-1">Drop Rates</p>
                 </div>
                 <div className="text-center md:text-left">
-                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900">{avgScore}</p>
+                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">{avgScore}</p>
                   <p className="text-xs text-indigo-400 font-medium mt-1">Avg Score</p>
                 </div>
                 <div className="text-center md:text-left">
-                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900">8</p>
+                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">8</p>
                   <p className="text-xs text-indigo-400 font-medium mt-1">Dimensions</p>
                 </div>
               </div>

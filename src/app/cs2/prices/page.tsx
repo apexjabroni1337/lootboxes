@@ -41,6 +41,7 @@ export default async function CS2PricesPage() {
     <CS2PricesClient
       initialMultiItems={multiItems}
       initialFallbackItems={fallbackItems}
+      defaultMode="default"
     />
   );
 }

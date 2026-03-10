@@ -151,10 +151,10 @@ export default async function LootboxGamePage({
       : "";
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">
       {/* ─── BREADCRUMB ─── */}
-      <div className="bg-white border-b border-gray-100">
-        <nav className="container-main flex items-center gap-1.5 text-sm text-gray-400 py-3">
+      <div className="bg-white dark:bg-gray-950 border-b border-gray-100 dark:border-gray-800">
+        <nav className="container-main flex items-center gap-1.5 text-sm text-gray-400 dark:text-gray-500 py-3">
           <Link href="/" className="hover:text-brand-600 transition-colors">
             Home
           </Link>
@@ -163,12 +163,12 @@ export default async function LootboxGamePage({
             Loot Box Database
           </Link>
           <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-gray-900 font-semibold">{game.title}</span>
+          <span className="text-gray-900 dark:text-white font-semibold">{game.title}</span>
         </nav>
       </div>
 
       {/* ─── COMPACT HERO ─── */}
-      <section className="bg-white border-b border-gray-200">
+      <section className="bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-700">
         <div className="container-main py-6">
           <div className="flex items-center gap-6">
             {/* Cover image — compact */}
@@ -208,20 +208,20 @@ export default async function LootboxGamePage({
                 )}
               </div>
 
-              <h1 className="text-3xl lg:text-4xl font-black uppercase text-gray-900 tracking-tight leading-tight">
+              <h1 className="text-3xl lg:text-4xl font-black uppercase text-gray-900 dark:text-white tracking-tight leading-tight">
                 {game.title}
               </h1>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                 Full monetization analysis and consumer protection review.
               </p>
 
               {/* Meta row */}
-              <div className="flex items-center gap-4 mt-2 text-xs text-gray-400">
+              <div className="flex items-center gap-4 mt-2 text-xs text-gray-400 dark:text-gray-500">
                 {content.currency_name && (
                   <span>
-                    Currency: <span className="text-gray-700 font-semibold">{content.currency_name}</span>
+                    Currency: <span className="text-gray-700 dark:text-gray-200 font-semibold">{content.currency_name}</span>
                     {content.currency_per_dollar && (
-                      <span className="text-gray-400"> · {content.currency_per_dollar} per $1</span>
+                      <span className="text-gray-400 dark:text-gray-500"> · {content.currency_per_dollar} per $1</span>
                     )}
                   </span>
                 )}
@@ -239,35 +239,35 @@ export default async function LootboxGamePage({
       <div className="container-main -mt-5 relative z-10 mb-8">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {content.cost_per_pull !== null && content.cost_per_pull > 0 && (
-            <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
-              <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Cost Per Pull</span>
+            <div className="bg-white dark:bg-gray-950 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-sm hover:shadow-md transition-shadow">
+              <span className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block mb-1">Cost Per Pull</span>
               <div className="text-2xl font-extrabold text-brand-600">${content.cost_per_pull.toFixed(2)}</div>
               {content.currency_name && (
-                <div className="text-[11px] text-gray-400 mt-0.5">Per {content.currency_name}</div>
+                <div className="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5">Per {content.currency_name}</div>
               )}
             </div>
           )}
           {content.has_pity_system && content.pulls_to_pity && (
-            <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
-              <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Pulls to Pity</span>
+            <div className="bg-white dark:bg-gray-950 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-sm hover:shadow-md transition-shadow">
+              <span className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block mb-1">Pulls to Pity</span>
               <div className="text-2xl font-extrabold text-emerald-600">{content.pulls_to_pity}</div>
-              <div className="text-[11px] text-gray-400 mt-0.5">Guaranteed reward</div>
+              <div className="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5">Guaranteed reward</div>
             </div>
           )}
           {content.cost_to_pity !== null && content.cost_to_pity > 0 && (
-            <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
-              <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Cost to Pity</span>
+            <div className="bg-white dark:bg-gray-950 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-sm hover:shadow-md transition-shadow">
+              <span className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block mb-1">Cost to Pity</span>
               <div className="text-2xl font-extrabold text-amber-500">${content.cost_to_pity.toFixed(0)}</div>
-              <div className="text-[11px] text-gray-400 mt-0.5">Worst case spend</div>
+              <div className="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5">Worst case spend</div>
             </div>
           )}
           {game.lootboxes_score !== null && (
-            <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
-              <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Lootboxes Score</span>
+            <div className="bg-white dark:bg-gray-950 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-sm hover:shadow-md transition-shadow">
+              <span className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block mb-1">Lootboxes Score</span>
               <div className="text-2xl font-extrabold text-brand-600">
-                {game.lootboxes_score.toFixed(1)}<span className="text-base text-gray-400 font-semibold">/10</span>
+                {game.lootboxes_score.toFixed(1)}<span className="text-base text-gray-400 dark:text-gray-500 font-semibold">/10</span>
               </div>
-              <div className="text-[11px] text-gray-400 mt-0.5">{scoreLabel}</div>
+              <div className="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5">{scoreLabel}</div>
             </div>
           )}
         </div>
@@ -291,20 +291,20 @@ export default async function LootboxGamePage({
           {dropRates.length > 0 && (
             <section>
               <SectionHeader icon={BarChart3} title="Drop Rate Breakdown" />
-              <div className="bg-white rounded-xl border border-gray-200 p-5 mb-4 shadow-sm">
+              <div className="bg-white dark:bg-gray-950 rounded-xl border border-gray-200 dark:border-gray-700 p-5 mb-4 shadow-sm">
                 <DropRateBarChart items={dropRates} />
               </div>
 
               {/* Drop rate table */}
-              <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="bg-white dark:bg-gray-950 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b-2 border-gray-200">
-                      <th className="text-left py-3 px-4 font-bold text-gray-400 uppercase text-[11px] tracking-wider">Item</th>
-                      <th className="text-left py-3 px-4 font-bold text-gray-400 uppercase text-[11px] tracking-wider">Rarity</th>
-                      <th className="text-right py-3 px-4 font-bold text-gray-400 uppercase text-[11px] tracking-wider">Drop Rate</th>
-                      <th className="text-right py-3 px-4 font-bold text-gray-400 uppercase text-[11px] tracking-wider">~Avg. Opens</th>
-                      <th className="text-left py-3 px-4 font-bold text-gray-400 uppercase text-[11px] tracking-wider">Source</th>
+                    <tr className="border-b-2 border-gray-200 dark:border-gray-700">
+                      <th className="text-left py-3 px-4 font-bold text-gray-400 dark:text-gray-500 uppercase text-[11px] tracking-wider">Item</th>
+                      <th className="text-left py-3 px-4 font-bold text-gray-400 dark:text-gray-500 uppercase text-[11px] tracking-wider">Rarity</th>
+                      <th className="text-right py-3 px-4 font-bold text-gray-400 dark:text-gray-500 uppercase text-[11px] tracking-wider">Drop Rate</th>
+                      <th className="text-right py-3 px-4 font-bold text-gray-400 dark:text-gray-500 uppercase text-[11px] tracking-wider">~Avg. Opens</th>
+                      <th className="text-left py-3 px-4 font-bold text-gray-400 dark:text-gray-500 uppercase text-[11px] tracking-wider">Source</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -312,19 +312,19 @@ export default async function LootboxGamePage({
                       const src = SOURCE_META[rate.source] || SOURCE_META.user_reported;
                       const SrcIcon = src.icon;
                       return (
-                        <tr key={rate.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                          <td className="py-2.5 px-4 font-medium text-gray-900">{rate.item_name}</td>
+                        <tr key={rate.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-900 transition-colors">
+                          <td className="py-2.5 px-4 font-medium text-gray-900 dark:text-white">{rate.item_name}</td>
                           <td className="py-2.5 px-4">
                             <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${getRarityColor(rate.rarity)}`}>
                               {rate.rarity}
                             </span>
                           </td>
-                          <td className="py-2.5 px-4 text-right font-bold text-gray-900">
+                          <td className="py-2.5 px-4 text-right font-bold text-gray-900 dark:text-white">
                             {rate.drop_rate_pct < 1
                               ? `${rate.drop_rate_pct}%`
                               : `${Number(rate.drop_rate_pct).toFixed(1)}%`}
                           </td>
-                          <td className="py-2.5 px-4 text-right text-gray-500">
+                          <td className="py-2.5 px-4 text-right text-gray-500 dark:text-gray-400">
                             {rate.drop_rate_pct > 0 && rate.drop_rate_pct < 100
                               ? `~${Math.ceil(100 / rate.drop_rate_pct)} opens`
                               : "—"}
@@ -383,7 +383,7 @@ export default async function LootboxGamePage({
           {game.lootboxes_score !== null && (
             <section>
               <SectionHeader icon={Scale} title="Score Breakdown" />
-              <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+              <div className="bg-white dark:bg-gray-950 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
                 <ScoreBreakdown
                   overall={game.lootboxes_score}
                   transparency={content.score_transparency}
@@ -418,7 +418,7 @@ export default async function LootboxGamePage({
           {comparisons.length > 0 && (
             <section>
               <SectionHeader icon={BarChart3} title="Compared to Similar Games" />
-              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+              <div className="bg-white dark:bg-gray-950 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm">
                 <ComparisonTable
                   current={{
                     slug: game.slug,
@@ -450,7 +450,7 @@ export default async function LootboxGamePage({
           {content.tips_html && (
             <section>
               <SectionHeader icon={Lightbulb} title="Spending Tips & Advice" />
-              <div className="bg-amber-50 rounded-xl border border-amber-200 p-6">
+              <div className="bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 p-6">
                 <div
                   className="prose max-w-none [&_p]:text-amber-800 [&_strong]:text-amber-900"
                   dangerouslySetInnerHTML={{ __html: content.tips_html }}
@@ -492,25 +492,25 @@ export default async function LootboxGamePage({
           )}
 
           {/* Related Links */}
-          <section className="border-t border-gray-200 pt-8">
+          <section className="border-t border-gray-200 dark:border-gray-700 pt-8">
             <div className="flex flex-wrap gap-3">
               <Link
                 href={`/games/${game.slug}`}
-                className="flex items-center gap-2 bg-brand-50 rounded-lg px-4 py-2.5 text-sm font-semibold text-brand-700 hover:bg-brand-100 transition-colors"
+                className="flex items-center gap-2 bg-brand-50 dark:bg-brand-950/30 rounded-lg px-4 py-2.5 text-sm font-semibold text-brand-700 hover:bg-brand-100 dark:hover:bg-brand-900/40 transition-colors"
               >
                 View Deals for {game.title}
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/drop-rates"
-                className="flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-200 transition-colors"
+                className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-lg px-4 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-200 transition-colors"
               >
                 Drop Rate Database
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/lootbox"
-                className="flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-200 transition-colors"
+                className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-lg px-4 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-200 transition-colors"
               >
                 All Loot Box Analyses
                 <ArrowRight className="w-4 h-4" />
@@ -531,11 +531,11 @@ function SectionHeader({
   title: string;
 }) {
   return (
-    <div className="flex items-center gap-3 mb-5 pb-3 border-b-2 border-gray-200">
-      <div className="w-8 h-8 rounded-lg bg-brand-50 flex items-center justify-center">
+    <div className="flex items-center gap-3 mb-5 pb-3 border-b-2 border-gray-200 dark:border-gray-700">
+      <div className="w-8 h-8 rounded-lg bg-brand-50 dark:bg-brand-950/30 flex items-center justify-center">
         <Icon className="w-4 h-4 text-brand-600" />
       </div>
-      <h2 className="text-xl font-extrabold uppercase tracking-tight text-gray-900">{title}</h2>
+      <h2 className="text-xl font-extrabold uppercase tracking-tight text-gray-900 dark:text-white">{title}</h2>
     </div>
   );
 }

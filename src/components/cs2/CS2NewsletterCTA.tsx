@@ -40,7 +40,7 @@ export default function CS2NewsletterCTA() {
 
   if (status === "success") {
     return (
-      <div className="rounded-xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50 p-6 text-center">
+      <div className="rounded-xl border border-emerald-200 dark:border-emerald-700/30 bg-gradient-to-r from-emerald-50 dark:from-emerald-950/30 to-teal-50 dark:to-teal-950/20 p-6 text-center">
         <CheckCircle className="h-8 w-8 text-emerald-500 mx-auto mb-3" />
         <p className="font-semibold text-emerald-900">{message}</p>
       </div>
@@ -48,14 +48,14 @@ export default function CS2NewsletterCTA() {
   }
 
   return (
-    <div className="rounded-xl border border-orange-200 bg-gradient-to-r from-orange-50 via-amber-50 to-yellow-50 p-6 sm:p-8">
+    <div className="rounded-xl border border-orange-200 dark:border-orange-700/30 bg-gradient-to-r from-orange-50 dark:from-orange-950/30 via-amber-50 dark:via-amber-950/20 to-yellow-50 dark:to-yellow-950/20 p-6 sm:p-8">
       <div className="flex flex-col sm:flex-row sm:items-center gap-6">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
             <TrendingUp className="h-5 w-5 text-orange-500" />
-            <h3 className="text-lg font-bold text-gray-900">Get Weekly CS2 Market Reports</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Get Weekly CS2 Market Reports</h3>
           </div>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-gray-300">
             Price drops, trend alerts, and investment opportunities — delivered to your inbox every week.
           </p>
         </div>
@@ -65,13 +65,13 @@ export default function CS2NewsletterCTA() {
             placeholder="your@email.com"
             value={email}
             onChange={(e) => { setEmail(e.target.value); setStatus("idle"); }}
-            className="flex-1 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm focus:border-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-100"
+            className="flex-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-4 py-2.5 text-sm focus:border-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-100"
             required
           />
           <button
             type="submit"
             disabled={status === "loading"}
-            className="rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-600 transition-colors disabled:opacity-50"
+            className="rounded-lg bg-orange-50 dark:bg-orange-950/300 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-600 transition-colors disabled:opacity-50"
           >
             {status === "loading" ? <Loader2 className="h-4 w-4 animate-spin" /> : "Subscribe"}
           </button>

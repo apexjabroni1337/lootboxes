@@ -18,13 +18,13 @@ export default function TermsPage() {
   return (
     <div className="pb-16">
       {/* Hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-b from-gray-50 dark:from-gray-900 to-white dark:to-gray-950 py-8">
         <div className="container-main">
           <div className="mx-auto max-w-3xl">
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
               Terms of Service
             </h1>
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
               Last updated: March 1, 2026
             </p>
           </div>
@@ -33,7 +33,7 @@ export default function TermsPage() {
 
       <div className="container-main mt-8">
         <div className="mx-auto max-w-3xl">
-          <article className="prose prose-gray max-w-none prose-headings:text-gray-900 prose-a:text-brand-600 hover:prose-a:text-brand-700">
+          <article className="prose prose-gray max-w-none prose-headings:text-gray-900 dark:text-white prose-a:text-brand-600 hover:prose-a:text-brand-700">
             <h2>1. Acceptance of Terms</h2>
             <p>
               By accessing and using LootBoxes.com (the &quot;Site&quot;),

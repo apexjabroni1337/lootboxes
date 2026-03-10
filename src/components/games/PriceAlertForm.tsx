@@ -40,14 +40,14 @@ export default function PriceAlertForm({
   }
 
   return (
-    <div className="rounded-xl border border-brand-200 bg-brand-50 p-5">
+    <div className="rounded-xl border border-brand-200 dark:border-brand-700/30 bg-brand-50 dark:bg-brand-950/30 p-5">
       <div className="flex items-center gap-2">
         <Bell className="h-5 w-5 text-brand-600" />
-        <h3 className="text-sm font-semibold text-gray-900">
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
           Get Price Drop Alerts
         </h3>
       </div>
-      <p className="mt-1 text-xs text-gray-500">
+      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
         We&apos;ll notify you when {gameTitle} hits a new low price.
         {currentBestPrice !== undefined && (
           <> Current best: <strong>${currentBestPrice.toFixed(2)}</strong></>

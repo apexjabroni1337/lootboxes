@@ -106,20 +106,20 @@ export default async function CaseDetailPage({
   const isWeaponCase = crate.type === "Weapon Case";
 
   return (
-    <div className="min-h-screen bg-white pb-12">
+    <div className="min-h-screen bg-white dark:bg-gray-950 pb-12">
       {/* Hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-r from-gray-50 via-gray-50 to-amber-50 py-10">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-gray-50 dark:from-gray-900 via-gray-50 to-amber-50 dark:to-amber-950/20 py-10">
         <div className="container-main">
           <Link
             href="/cs2/cases"
-            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4"
+            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-200 mb-4"
           >
             <ChevronLeft className="h-4 w-4" /> All Cases & Capsules
           </Link>
 
           <div className="flex flex-col md:flex-row gap-8 items-start">
             {/* Case image */}
-            <div className="w-48 h-48 flex-shrink-0 rounded-2xl border border-gray-200 bg-white p-4 flex items-center justify-center shadow-sm">
+            <div className="w-48 h-48 flex-shrink-0 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-4 flex items-center justify-center shadow-sm">
               {crate.image ? (
                 <img
                   src={crate.image}
@@ -136,19 +136,19 @@ export default async function CaseDetailPage({
               <span className="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-semibold text-amber-700 mb-2">
                 {crate.type}
               </span>
-              <h1 className="text-3xl font-bold text-gray-900">{crate.name}</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{crate.name}</h1>
               {crate.description && (
-                <p className="text-gray-600 mt-1 max-w-lg">{crate.description}</p>
+                <p className="text-gray-600 dark:text-gray-300 mt-1 max-w-lg">{crate.description}</p>
               )}
 
               <div className="flex flex-wrap items-center gap-4 mt-4">
-                <div className="flex items-center gap-1.5 text-sm text-gray-600">
-                  <Layers className="h-4 w-4 text-gray-400" />
+                <div className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-300">
+                  <Layers className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <span className="font-semibold">{items.length}</span> items
                 </div>
                 {crate.first_sale_date && (
-                  <div className="flex items-center gap-1.5 text-sm text-gray-600">
-                    <Calendar className="h-4 w-4 text-gray-400" />
+                  <div className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-300">
+                    <Calendar className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                     Released {crate.first_sale_date}
                   </div>
                 )}
@@ -172,7 +172,7 @@ export default async function CaseDetailPage({
                   </Link>
                   <Link
                     href="/cs2/prices"
-                    className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="inline-flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-5 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                   >
                     Check Prices
                     <ExternalLink className="h-3.5 w-3.5" />
@@ -200,8 +200,8 @@ export default async function CaseDetailPage({
                     style={{ backgroundColor: sampleColor, ["--tw-ring-color" as any]: sampleColor }}
                   />
                 )}
-                <h2 className="text-lg font-bold text-gray-900">{rarity}</h2>
-                <span className="text-sm text-gray-400">({tierItems.length} skins)</span>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">{rarity}</h2>
+                <span className="text-sm text-gray-400 dark:text-gray-500">({tierItems.length} skins)</span>
               </div>
 
               <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -225,7 +225,7 @@ export default async function CaseDetailPage({
                         {item.name.split("|")[0]?.trim().charAt(0) || "?"}
                       </div>
                     )}
-                    <p className="text-xs font-semibold text-gray-800 text-center leading-tight line-clamp-2">
+                    <p className="text-xs font-semibold text-gray-800 dark:text-gray-100 text-center leading-tight line-clamp-2">
                       {item.name}
                     </p>
                     <span className={`mt-1 text-[10px] font-bold ${style.text}`}>
@@ -243,8 +243,8 @@ export default async function CaseDetailPage({
           <section>
             <div className="flex items-center gap-3 mb-4">
               <Sparkles className="h-5 w-5 text-yellow-500" />
-              <h2 className="text-lg font-bold text-gray-900">Rare Special Items</h2>
-              <span className="text-sm text-gray-400">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">Rare Special Items</h2>
+              <span className="text-sm text-gray-400 dark:text-gray-500">
                 ({rareItems.length} knives/gloves) — 0.26% drop chance
               </span>
             </div>
@@ -253,7 +253,7 @@ export default async function CaseDetailPage({
               {rareItems.map((item) => (
                 <div
                   key={item.id}
-                  className="group flex flex-col items-center rounded-xl border border-yellow-200 bg-yellow-50 p-3 hover:shadow-md transition-all"
+                  className="group flex flex-col items-center rounded-xl border border-yellow-200 dark:border-yellow-700/30 bg-yellow-50 dark:bg-yellow-950/30 p-3 hover:shadow-md transition-all"
                 >
                   {item.image ? (
                     <img
@@ -263,11 +263,11 @@ export default async function CaseDetailPage({
                       loading="lazy"
                     />
                   ) : (
-                    <div className="h-24 w-24 rounded-lg flex items-center justify-center text-white text-2xl font-bold mb-2 bg-yellow-500">
+                    <div className="h-24 w-24 rounded-lg flex items-center justify-center text-white text-2xl font-bold mb-2 bg-yellow-50 dark:bg-yellow-950/300">
                       ★
                     </div>
                   )}
-                  <p className="text-xs font-semibold text-gray-800 text-center leading-tight line-clamp-2">
+                  <p className="text-xs font-semibold text-gray-800 dark:text-gray-100 text-center leading-tight line-clamp-2">
                     {item.name}
                   </p>
                   <span className="mt-1 text-[10px] font-bold text-yellow-700">

@@ -129,7 +129,7 @@ const MARKETPLACES = [
 
 export default function CS2HubPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://lootboxes.com" },
@@ -138,18 +138,18 @@ export default function CS2HubPage() {
       />
       <FAQSchema faqs={CS2_FAQS} />
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-br from-gray-900 via-gray-800 to-yellow-900 py-16 sm:py-24">
+      <section className="relative overflow-hidden border-b border-gray-100 dark:border-gray-800 bg-gradient-to-br from-gray-900 via-gray-800 to-yellow-900 py-16 sm:py-24">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 right-0 h-96 w-96 rounded-full bg-yellow-500/10 blur-3xl" />
-          <div className="absolute -bottom-40 -left-20 h-80 w-80 rounded-full bg-orange-500/10 blur-3xl" />
+          <div className="absolute -top-40 right-0 h-96 w-96 rounded-full bg-yellow-50 dark:bg-yellow-950/300/10 blur-3xl" />
+          <div className="absolute -bottom-40 -left-20 h-80 w-80 rounded-full bg-orange-50 dark:bg-orange-950/300/10 blur-3xl" />
         </div>
 
         <div className="container-main relative z-10">
           <div className="flex items-center gap-3 mb-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-500/20 backdrop-blur-sm">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-50 dark:bg-yellow-950/300/20 backdrop-blur-sm">
               <Crosshair className="h-6 w-6 text-yellow-400" />
             </div>
-            <div className="inline-flex rounded-full bg-yellow-500/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-yellow-300">
+            <div className="inline-flex rounded-full bg-yellow-50 dark:bg-yellow-950/300/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-yellow-300">
               CS2 Skin Economy Hub
             </div>
           </div>
@@ -166,17 +166,17 @@ export default function CS2HubPage() {
           </p>
 
           {/* Score callout */}
-          <div className="mt-8 inline-flex items-center gap-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-sm px-6 py-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-xl font-black text-white">
+          <div className="mt-8 inline-flex items-center gap-4 rounded-xl border border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950/300/10 backdrop-blur-sm px-6 py-4">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/300 text-xl font-black text-white">
               8.5
             </div>
             <div>
               <p className="text-sm font-bold text-emerald-300">LootBoxes Score: Great</p>
-              <p className="text-sm text-gray-400">Tradeable skins, transparent odds, zero pay-to-win</p>
+              <p className="text-sm text-gray-400 dark:text-gray-500">Tradeable skins, transparent odds, zero pay-to-win</p>
             </div>
             <Link
               href="/lootbox/counter-strike-2"
-              className="ml-4 flex items-center gap-1 rounded-lg bg-emerald-500/20 px-3 py-2 text-sm font-semibold text-emerald-300 hover:bg-emerald-500/30 transition-colors"
+              className="ml-4 flex items-center gap-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/300/20 px-3 py-2 text-sm font-semibold text-emerald-300 hover:bg-emerald-50 dark:bg-emerald-950/300/30 transition-colors"
             >
               Read review <ArrowRight className="h-3.5 w-3.5" />
             </Link>
@@ -185,11 +185,11 @@ export default function CS2HubPage() {
       </section>
 
       {/* Why CS2 skins are different */}
-      <section className="py-12 border-b border-gray-100">
+      <section className="py-12 border-b border-gray-100 dark:border-gray-800">
         <div className="container-main">
           <div className="flex items-center gap-3 mb-8">
             <Shield className="h-6 w-6 text-emerald-600" />
-            <h2 className="text-2xl font-bold text-gray-900">Why CS2 Skins Score 8.5/10</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Why CS2 Skins Score 8.5/10</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
@@ -198,12 +198,12 @@ export default function CS2HubPage() {
               { title: "100% Cosmetic", desc: "Zero pay-to-win. Skins are purely visual — no gameplay advantage whatsoever." },
               { title: "Investment Potential", desc: "Many skins appreciate over time. Some players break even or profit on their collection." },
             ].map((item) => (
-              <div key={item.title} className="rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50/60 to-white p-5">
+              <div key={item.title} className="rounded-xl border border-emerald-200 dark:border-emerald-700/30 bg-gradient-to-br from-emerald-50 dark:from-emerald-950/30/60 to-white dark:to-gray-950 p-5">
                 <div className="flex items-center gap-2 mb-2">
                   <CheckCircle className="h-4 w-4 text-emerald-600" />
-                  <h3 className="font-semibold text-gray-900">{item.title}</h3>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">{item.title}</h3>
                 </div>
-                <p className="text-sm text-gray-600 leading-relaxed">{item.desc}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -213,21 +213,21 @@ export default function CS2HubPage() {
       {/* Tools Grid */}
       <section className="py-12">
         <div className="container-main">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Tools & Resources</h2>
-          <p className="text-gray-600 mb-8">Everything you need to navigate the CS2 skin economy.</p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Tools & Resources</h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-8">Everything you need to navigate the CS2 skin economy.</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {TOOLS.map((tool) => (
               <Link
                 key={tool.href}
                 href={tool.href}
-                className={`group rounded-xl border border-gray-200 ${tool.bg} p-6 transition-all hover:shadow-lg ${tool.hoverBg}`}
+                className={`group rounded-xl border border-gray-200 dark:border-gray-700 ${tool.bg} p-6 transition-all hover:shadow-lg ${tool.hoverBg}`}
               >
                 <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${tool.color} text-white mb-4 group-hover:scale-110 transition-transform`}>
                   <tool.icon className="h-5.5 w-5.5" />
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">{tool.title}</h3>
-                <p className="text-sm text-gray-600 leading-relaxed">{tool.description}</p>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{tool.title}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{tool.description}</p>
                 <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-600">
                   Explore <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                 </span>
@@ -238,33 +238,33 @@ export default function CS2HubPage() {
       </section>
 
       {/* Cases & Capsules CTA */}
-      <section className="py-12 border-t border-gray-100">
+      <section className="py-12 border-t border-gray-100 dark:border-gray-800">
         <div className="container-main">
           <Link
             href="/cs2/cases"
-            className="group flex items-center justify-between rounded-2xl bg-gradient-to-r from-amber-50 via-yellow-50 to-orange-50 border border-amber-200 px-6 md:px-8 py-6 hover:border-amber-300 hover:shadow-lg transition-all"
+            className="group flex items-center justify-between rounded-2xl bg-gradient-to-r from-amber-50 dark:from-amber-950/30 via-yellow-50 dark:via-yellow-950/20 to-orange-50 dark:to-orange-950/20 border border-amber-200 px-6 md:px-8 py-6 hover:border-amber-300 hover:shadow-lg transition-all"
           >
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-50 dark:from-amber-950/300 to-orange-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
                 <Package className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h2 className="font-bold text-gray-900 text-lg">Browse All Cases & Capsules</h2>
-                <p className="text-sm text-gray-500">
+                <h2 className="font-bold text-gray-900 dark:text-white text-lg">Browse All Cases & Capsules</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   Every weapon case, sticker capsule, and souvenir package with full item lists and skin images.
                 </p>
               </div>
             </div>
-            <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-gray-900 group-hover:translate-x-1 transition-all flex-shrink-0" />
+            <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-gray-900 dark:text-white group-hover:translate-x-1 transition-all flex-shrink-0" />
           </Link>
         </div>
       </section>
 
       {/* Marketplace overview — now with affiliate links */}
-      <section className="py-12 border-t border-gray-100 bg-gray-50">
+      <section className="py-12 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
         <div className="container-main">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Trusted Marketplaces</h2>
-          <p className="text-gray-600 mb-8">We track prices and availability across all major CS2 skin platforms.</p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Trusted Marketplaces</h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-8">We track prices and availability across all major CS2 skin platforms.</p>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             {MARKETPLACES.map((mp) => (
@@ -273,7 +273,7 @@ export default function CS2HubPage() {
                 href={`/go/cs2/${mp.dealId}?from=hub`}
                 target="_blank"
                 rel="noopener noreferrer nofollow"
-                className={`rounded-xl border bg-white p-5 text-center shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5 ${
+                className={`rounded-xl border bg-white dark:bg-gray-950 p-5 text-center shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5 ${
                   mp.pick ? "border-blue-200 ring-1 ring-blue-100" : "border-gray-200"
                 } relative`}
               >
@@ -288,8 +288,8 @@ export default function CS2HubPage() {
                 >
                   {mp.name.charAt(0)}
                 </div>
-                <p className="font-semibold text-gray-900">{mp.name}</p>
-                <p className="text-xs text-gray-500 mt-1">Seller fee: {mp.fee}</p>
+                <p className="font-semibold text-gray-900 dark:text-white">{mp.name}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Seller fee: {mp.fee}</p>
                 <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-brand-600">
                   Visit <ExternalLink className="h-2.5 w-2.5" />
                 </span>
@@ -312,24 +312,24 @@ export default function CS2HubPage() {
       {/* CTA */}
       <section className="py-12">
         <div className="container-main">
-          <div className="rounded-2xl bg-gradient-to-r from-yellow-50 via-orange-50 to-amber-50 border border-yellow-200 p-8 sm:p-12 text-center">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
+          <div className="rounded-2xl bg-gradient-to-r from-yellow-50 dark:from-yellow-950/30 via-orange-50 dark:via-orange-950/20 to-amber-50 dark:to-amber-950/20 border border-yellow-200 dark:border-yellow-700/30 p-8 sm:p-12 text-center">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
               Ready to dive into the CS2 skin economy?
             </h2>
-            <p className="mt-3 text-gray-600 max-w-xl mx-auto">
+            <p className="mt-3 text-gray-600 dark:text-gray-300 max-w-xl mx-auto">
               Start with our Price Tracker to find the best deals, or try the Case Simulator to test your luck without spending a dime.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link
                 href="/cs2/prices"
-                className="inline-flex items-center gap-2 rounded-lg bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600 transition-colors"
+                className="inline-flex items-center gap-2 rounded-lg bg-orange-50 dark:bg-orange-950/300 px-6 py-3 font-semibold text-white hover:bg-orange-600 transition-colors"
               >
                 <TrendingUp className="h-4 w-4" />
                 Track Prices
               </Link>
               <Link
                 href="/cs2/simulator"
-                className="inline-flex items-center gap-2 rounded-lg border border-purple-300 bg-white px-6 py-3 font-semibold text-purple-700 hover:bg-purple-50 transition-colors"
+                className="inline-flex items-center gap-2 rounded-lg border border-purple-300 bg-white dark:bg-gray-950 px-6 py-3 font-semibold text-purple-700 hover:bg-purple-50 transition-colors"
               >
                 <Dices className="h-4 w-4" />
                 Open Cases Free

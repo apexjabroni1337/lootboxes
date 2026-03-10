@@ -189,13 +189,13 @@ export default async function SpendingGuidePage({ params }: Props) {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Hero */}
-      <section className="border-b border-gray-100 bg-gradient-to-br from-slate-900 via-amber-900 to-slate-800 py-16">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-br from-slate-900 via-amber-900 to-slate-800 py-16">
         <div className="container-main">
           <Link
             href="/lootbox/spending-guides"
-            className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-200 mb-4"
+            className="inline-flex items-center gap-1 text-sm text-gray-400 dark:text-gray-500 hover:text-gray-200 mb-4"
           >
             <ChevronLeft className="h-4 w-4" /> All Spending Guides
           </Link>
@@ -209,7 +209,7 @@ export default async function SpendingGuidePage({ params }: Props) {
               )}
             </div>
             <div>
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-amber-300 mb-1">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 dark:bg-amber-950/300/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-amber-300 mb-1">
                 <SystemIcon className="h-3.5 w-3.5" />
                 {SYSTEM_LABELS[guide.systemType] || guide.systemType}
               </div>
@@ -222,7 +222,7 @@ export default async function SpendingGuidePage({ params }: Props) {
           <p className="mt-2 text-lg text-amber-300 font-semibold">
             Spending guide &amp; best value purchases
           </p>
-          <p className="mt-2 text-xs text-gray-400">
+          <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
             Last updated: {guide.updatedAt}
           </p>
         </div>
@@ -247,10 +247,10 @@ export default async function SpendingGuidePage({ params }: Props) {
       />
 
       {/* Intro + system explainer */}
-      <section className="border-b border-gray-100 bg-gray-50/50 py-8">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 py-8">
         <div className="container-main">
           <div className="max-w-3xl">
-            <p className="text-gray-700 leading-relaxed">
+            <p className="text-gray-700 dark:text-gray-200 leading-relaxed">
               {guide.gameName} uses a{" "}
               <span className="font-semibold">
                 {(SYSTEM_LABELS[guide.systemType] || guide.systemType).toLowerCase()}
@@ -260,13 +260,13 @@ export default async function SpendingGuidePage({ params }: Props) {
               — so you get the most value for your money.
             </p>
             {explainer && (
-              <div className="mt-4 flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50/50 p-4">
+              <div className="mt-4 flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50 dark:bg-blue-950/30/50 p-4">
                 <Info className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-xs font-bold text-blue-700 uppercase tracking-wide mb-1">
                     What is a {SYSTEM_LABELS[guide.systemType] || guide.systemType}?
                   </p>
-                  <p className="text-sm text-gray-600 leading-relaxed">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
                     {explainer}
                   </p>
                 </div>
@@ -277,54 +277,54 @@ export default async function SpendingGuidePage({ params }: Props) {
       </section>
 
       {/* Quick cost summary table */}
-      <section className="border-b border-gray-100 py-6">
+      <section className="border-b border-gray-100 dark:border-gray-800 py-6">
         <div className="container-main">
-          <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <Calculator className="h-5 w-5 text-amber-500" />
             Monthly Cost at a Glance
           </h2>
-          <div className="overflow-hidden rounded-xl border border-gray-200">
+          <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="px-4 py-3 text-left font-semibold text-gray-600">
+                <tr className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                  <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300">
                     Tier
                   </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-600">
+                  <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300">
                     Budget
                   </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-600 hidden sm:table-cell">
+                  <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 hidden sm:table-cell">
                     Est. Yearly
                   </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-600 hidden sm:table-cell">
+                  <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 hidden sm:table-cell">
                     What You Get
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                 <tr>
                   <td className="px-4 py-3 font-semibold text-emerald-700">
                     Free-to-Play
                   </td>
-                  <td className="px-4 py-3 text-gray-900 font-bold">$0</td>
-                  <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">
+                  <td className="px-4 py-3 text-gray-900 dark:text-white font-bold">$0</td>
+                  <td className="px-4 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell">
                     $0
                   </td>
-                  <td className="px-4 py-3 text-gray-600 hidden sm:table-cell">
+                  <td className="px-4 py-3 text-gray-600 dark:text-gray-300 hidden sm:table-cell">
                     Core gameplay, earned rewards
                   </td>
                 </tr>
-                <tr className="bg-gray-50/50">
+                <tr className="bg-gray-50 dark:bg-gray-900/50">
                   <td className="px-4 py-3 font-semibold text-blue-700">
                     Low Spend
                   </td>
-                  <td className="px-4 py-3 text-gray-900 font-bold">
+                  <td className="px-4 py-3 text-gray-900 dark:text-white font-bold">
                     {guide.lowSpend.budget}
                   </td>
-                  <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">
+                  <td className="px-4 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell">
                     {lowMid ? `~$${lowMid * 12}` : "—"}
                   </td>
-                  <td className="px-4 py-3 text-gray-600 hidden sm:table-cell">
+                  <td className="px-4 py-3 text-gray-600 dark:text-gray-300 hidden sm:table-cell">
                     Best-value subscriptions/passes
                   </td>
                 </tr>
@@ -332,25 +332,25 @@ export default async function SpendingGuidePage({ params }: Props) {
                   <td className="px-4 py-3 font-semibold text-amber-700">
                     Moderate
                   </td>
-                  <td className="px-4 py-3 text-gray-900 font-bold">
+                  <td className="px-4 py-3 text-gray-900 dark:text-white font-bold">
                     {guide.moderate.budget}
                   </td>
-                  <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">
+                  <td className="px-4 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell">
                     {modMid ? `~$${modMid * 12}` : "—"}
                   </td>
-                  <td className="px-4 py-3 text-gray-600 hidden sm:table-cell">
+                  <td className="px-4 py-3 text-gray-600 dark:text-gray-300 hidden sm:table-cell">
                     Passes + targeted premium items
                   </td>
                 </tr>
-                <tr className="bg-gray-50/50">
+                <tr className="bg-gray-50 dark:bg-gray-900/50">
                   <td className="px-4 py-3 font-semibold text-red-700">
                     Big Spend
                   </td>
-                  <td className="px-4 py-3 text-gray-900 font-bold">$$$$</td>
-                  <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">
+                  <td className="px-4 py-3 text-gray-900 dark:text-white font-bold">$$$$</td>
+                  <td className="px-4 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell">
                     $1,000+
                   </td>
-                  <td className="px-4 py-3 text-gray-600 hidden sm:table-cell">
+                  <td className="px-4 py-3 text-gray-600 dark:text-gray-300 hidden sm:table-cell">
                     Max collection / competitive edge
                   </td>
                 </tr>
@@ -363,7 +363,7 @@ export default async function SpendingGuidePage({ params }: Props) {
       {/* Spending tiers — detailed */}
       <section className="py-8">
         <div className="container-main">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
             Detailed Spending Tiers
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -390,9 +390,9 @@ export default async function SpendingGuidePage({ params }: Props) {
                       {tier.tips.map((tip, i) => (
                         <li
                           key={i}
-                          className="flex items-start gap-2 text-sm text-gray-700"
+                          className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200"
                         >
-                          <span className="text-gray-400 mt-0.5 flex-shrink-0">
+                          <span className="text-gray-400 dark:text-gray-500 mt-0.5 flex-shrink-0">
                             •
                           </span>
                           {tip}
@@ -409,9 +409,9 @@ export default async function SpendingGuidePage({ params }: Props) {
       </section>
 
       {/* Best Value + Avoid */}
-      <section className="border-t border-gray-100 py-8">
+      <section className="border-t border-gray-100 dark:border-gray-800 py-8">
         <div className="container-main grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-6">
+          <div className="rounded-xl border border-emerald-200 dark:border-emerald-700/30 bg-emerald-50 dark:bg-emerald-950/30 p-6">
             <div className="flex items-center gap-2 mb-4">
               <CheckCircle className="h-5 w-5 text-emerald-600" />
               <h2 className="text-lg font-bold text-emerald-900">
@@ -431,7 +431,7 @@ export default async function SpendingGuidePage({ params }: Props) {
             </ul>
           </div>
 
-          <div className="rounded-xl border border-red-200 bg-red-50 p-6">
+          <div className="rounded-xl border border-red-200 bg-red-50 dark:bg-red-950/30 p-6">
             <div className="flex items-center gap-2 mb-4">
               <XCircle className="h-5 w-5 text-red-600" />
               <h2 className="text-lg font-bold text-red-900">What to Avoid</h2>
@@ -453,12 +453,12 @@ export default async function SpendingGuidePage({ params }: Props) {
 
       {/* Related guides */}
       {allRelated.length > 0 && (
-        <section className="border-t border-gray-100 bg-gray-50/50 py-8">
+        <section className="border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 py-8">
           <div className="container-main">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
               Related Spending Guides
             </h2>
-            <p className="text-sm text-gray-500 mb-6">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
               {relatedGuides.length > 0
                 ? `Other ${(SYSTEM_LABELS[guide.systemType] || guide.systemType).toLowerCase()} games you might play`
                 : "More games with spending guides"}
@@ -470,7 +470,7 @@ export default async function SpendingGuidePage({ params }: Props) {
                   <Link
                     key={related.gameSlug}
                     href={`/lootbox/spending-guides/${related.gameSlug}`}
-                    className="group rounded-xl border border-gray-200 bg-white p-5 hover:shadow-lg transition-all hover:border-amber-200"
+                    className="group rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 hover:shadow-lg transition-all hover:border-amber-200"
                   >
                     <div className="flex items-center gap-3 mb-2">
                       <div className="flex-shrink-0 w-8 h-8 rounded-lg overflow-hidden">
@@ -480,12 +480,12 @@ export default async function SpendingGuidePage({ params }: Props) {
                           <GameAvatar gameName={related.gameName} size="sm" aspectRatio="square" />
                         )}
                       </div>
-                      <h3 className="flex-1 font-bold text-gray-900 group-hover:text-amber-700 transition-colors">
+                      <h3 className="flex-1 font-bold text-gray-900 dark:text-white group-hover:text-amber-700 transition-colors">
                         {related.gameName}
                       </h3>
                       <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-amber-500 transition-colors flex-shrink-0" />
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-500 ml-11">
+                    <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 ml-11">
                       <RelIcon className="h-3 w-3" />
                       <span>{SYSTEM_LABELS[related.systemType] || related.systemType}</span>
                       <span className="text-gray-300">•</span>
@@ -500,14 +500,14 @@ export default async function SpendingGuidePage({ params }: Props) {
       )}
 
       {/* CTA */}
-      <section className="border-t border-gray-100 bg-gradient-to-r from-amber-50 to-orange-50 py-10">
+      <section className="border-t border-gray-100 dark:border-gray-800 bg-gradient-to-r from-amber-50 dark:from-amber-950/30 to-orange-50 dark:to-orange-950/20 py-10">
         <div className="container-main">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <h2 className="text-lg font-bold text-gray-900">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                 See the full loot box analysis for {guide.gameName}
               </h2>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
                 Drop rates, score breakdown, pity system details, and community
                 insights.
               </p>

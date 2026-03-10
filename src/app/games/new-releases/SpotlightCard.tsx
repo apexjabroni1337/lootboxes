@@ -64,7 +64,7 @@ export default function SpotlightCard({ game, deal }: Props) {
       {/* ── Main card ── */}
       <Link
         href={`/games/${game.slug}`}
-        className="group relative block overflow-hidden rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl transition-all"
+        className="group relative block overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-xl transition-all"
       >
         <div className="relative aspect-[16/10] overflow-hidden">
           {bgImage ? (
@@ -81,7 +81,7 @@ export default function SpotlightCard({ game, deal }: Props) {
           {/* Release date badge */}
           {game.release_date && (
             <div className="absolute top-3 left-3">
-              <span className="flex items-center gap-1 rounded-lg bg-white/90 px-2.5 py-1 text-[11px] font-semibold text-gray-700 backdrop-blur-sm shadow-sm">
+              <span className="flex items-center gap-1 rounded-lg bg-white dark:bg-gray-950/90 px-2.5 py-1 text-[11px] font-semibold text-gray-700 dark:text-gray-200 backdrop-blur-sm shadow-sm">
                 <Calendar className="h-3 w-3" />
                 {formatDate(game.release_date)}
               </span>
@@ -106,7 +106,7 @@ export default function SpotlightCard({ game, deal }: Props) {
             </h3>
             <div className="mt-1 flex flex-wrap gap-1">
               {genres.slice(0, 3).map((g: string) => (
-                <span key={g} className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
+                <span key={g} className="rounded-full bg-white dark:bg-gray-950/20 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
                   {g}
                 </span>
               ))}
@@ -133,10 +133,10 @@ export default function SpotlightCard({ game, deal }: Props) {
       >
         <Link
           href={`/games/${game.slug}`}
-          className="block mt-1 rounded-2xl border border-gray-200 bg-white shadow-2xl overflow-hidden"
+          className="block mt-1 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 shadow-2xl overflow-hidden"
         >
           {/* Two images side by side */}
-          <div className="flex gap-px bg-gray-100">
+          <div className="flex gap-px bg-gray-100 dark:bg-gray-800">
             {game.screenshot_image && game.cover_image ? (
               <>
                 <div className="w-1/2 aspect-[16/10] overflow-hidden">
@@ -170,11 +170,11 @@ export default function SpotlightCard({ game, deal }: Props) {
             {/* Title + badges row */}
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <h4 className="font-bold text-gray-900 text-sm leading-tight line-clamp-1">
+                <h4 className="font-bold text-gray-900 dark:text-white text-sm leading-tight line-clamp-1">
                   {game.title}
                 </h4>
                 {game.release_date && (
-                  <p className="text-[11px] text-gray-400 mt-0.5">
+                  <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5">
                     Released {formatDate(game.release_date)}
                   </p>
                 )}
@@ -188,7 +188,7 @@ export default function SpotlightCard({ game, deal }: Props) {
                   </span>
                 )}
                 {game.hot_score != null && game.hot_score > 0 && (
-                  <span className="flex items-center gap-0.5 rounded-md bg-orange-50 px-1.5 py-0.5 text-[10px] font-bold text-orange-600">
+                  <span className="flex items-center gap-0.5 rounded-md bg-orange-50 dark:bg-orange-950/30 px-1.5 py-0.5 text-[10px] font-bold text-orange-600">
                     <TrendingUp className="h-2.5 w-2.5" />
                     {game.hot_score}
                   </span>
@@ -198,7 +198,7 @@ export default function SpotlightCard({ game, deal }: Props) {
 
             {/* Description */}
             {game.description && (
-              <p className="mt-2 text-xs leading-relaxed text-gray-500 line-clamp-3">
+              <p className="mt-2 text-xs leading-relaxed text-gray-500 dark:text-gray-400 line-clamp-3">
                 {game.description}
               </p>
             )}
@@ -207,13 +207,13 @@ export default function SpotlightCard({ game, deal }: Props) {
             <div className="mt-3 flex items-center justify-between gap-2">
               <div className="flex flex-wrap gap-1">
                 {genres.slice(0, 4).map((g: string) => (
-                  <span key={g} className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-600">
+                  <span key={g} className="rounded-full bg-gray-100 dark:bg-gray-800 px-2 py-0.5 text-[10px] font-medium text-gray-600 dark:text-gray-300">
                     {g}
                   </span>
                 ))}
               </div>
               {platforms.length > 0 && (
-                <div className="flex items-center gap-1 text-gray-400">
+                <div className="flex items-center gap-1 text-gray-400 dark:text-gray-500">
                   {platforms.slice(0, 4).map((p: string) => (
                     <span key={p} title={p}>
                       <PlatformIcon platform={p} />
@@ -225,10 +225,10 @@ export default function SpotlightCard({ game, deal }: Props) {
 
             {/* Price CTA */}
             {deal && (
-              <div className="mt-3 flex items-center justify-between rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 px-3 py-2">
+              <div className="mt-3 flex items-center justify-between rounded-lg bg-gradient-to-r from-emerald-50 dark:from-emerald-950/30 to-teal-50 dark:to-teal-950/20 border border-emerald-100 dark:border-emerald-800/30 px-3 py-2">
                 <div className="flex items-center gap-2">
                   <StoreIcon store={deal.store} size="sm" />
-                  <span className="text-xs text-gray-500">Best price</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">Best price</span>
                 </div>
                 <span className="text-sm font-bold text-emerald-700">
                   {formatPrice(deal.price)}

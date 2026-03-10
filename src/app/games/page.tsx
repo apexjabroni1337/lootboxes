@@ -91,18 +91,18 @@ export default async function GamesPage({
         ]}
       />
       {/* ─── Hero ─── */}
-      <section className="border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white py-8 sm:py-10">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-b from-gray-50 dark:from-gray-900 to-white dark:to-gray-950 py-8 sm:py-10">
         <div className="container-main">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-brand-50 to-indigo-50 border border-brand-200 rounded-full px-4 py-1.5 mb-4 shadow-sm">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-brand-50 dark:from-brand-950/30 to-indigo-50 border border-brand-200 dark:border-brand-700/30 rounded-full px-4 py-1.5 mb-4 shadow-sm">
             <Gamepad2 className="w-3.5 h-3.5 text-brand-600" />
             <span className="text-[11px] font-bold text-brand-600 uppercase tracking-wider">
               Game Database
             </span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
             Browse All Games
           </h1>
-          <p className="text-gray-500 mt-2 max-w-lg text-sm">
+          <p className="text-gray-500 dark:text-gray-400 mt-2 max-w-lg text-sm">
             {totalCount.toLocaleString()} games tracked across 15+ stores. Compare prices, find deals, and never overpay.
           </p>
         </div>
@@ -113,7 +113,7 @@ export default async function GamesPage({
         <section className="container-main mt-8">
           <div className="flex items-center gap-2 mb-5">
             <TrendingUp className="h-5 w-5 text-brand-600" />
-            <h2 className="text-xl font-bold text-gray-900">Featured</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Featured</h2>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {featured.map((game: any) => {
@@ -122,7 +122,7 @@ export default async function GamesPage({
                 <Link
                   key={game.id}
                   href={`/games/${game.slug}`}
-                  className="group relative overflow-hidden rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl transition-all"
+                  className="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-xl transition-all"
                 >
                   <div className="relative aspect-[16/10] overflow-hidden">
                     {bgImage ? (

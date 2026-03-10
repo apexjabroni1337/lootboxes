@@ -31,7 +31,7 @@ export default function FeaturedDeals({ deals }: FeaturedDealsProps) {
       <div className="container-main">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-50">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-50 dark:bg-brand-950/30">
               <Star className="h-4 w-4 text-brand-600" />
             </div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Featured Deals</h2>
@@ -55,7 +55,7 @@ export default function FeaturedDeals({ deals }: FeaturedDealsProps) {
                 className="group overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg dark:border-gray-700 dark:bg-gray-900"
               >
                 {/* Wide landscape image */}
-                <div className="relative aspect-[16/9] overflow-hidden bg-gray-100">
+                <div className="relative aspect-[16/9] overflow-hidden bg-gray-100 dark:bg-gray-800">
                   {bgImage ? (
                     <img
                       src={bgImage}
@@ -109,7 +109,7 @@ export default function FeaturedDeals({ deals }: FeaturedDealsProps) {
 
                   <div className="mt-3 flex items-center justify-between">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-sm text-gray-400 line-through">
+                      <span className="text-sm text-gray-400 dark:text-gray-500 line-through">
                         {formatPrice(deal.original_price)}
                       </span>
                       <span className="text-xl font-bold text-gray-900 dark:text-white">

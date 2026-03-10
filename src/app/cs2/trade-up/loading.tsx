@@ -1,8 +1,8 @@
 export default function Loading() {
   return (
-    <div className="min-h-screen bg-white animate-pulse">
+    <div className="min-h-screen bg-white dark:bg-gray-950 animate-pulse">
       {/* Hero skeleton */}
-      <section className="border-b border-gray-100 bg-gradient-to-r from-amber-50 via-yellow-50 to-orange-50 py-10">
+      <section className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-amber-50 dark:from-amber-950/30 via-yellow-50 dark:via-yellow-950/20 to-orange-50 dark:to-orange-950/20 py-10">
         <div className="container-main">
           <div className="h-4 w-32 bg-gray-200 rounded mb-4" />
           <div className="flex items-center gap-3 mb-2">
@@ -18,28 +18,28 @@ export default function Loading() {
         <div className="container-main">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Input skins */}
-            <div className="lg:col-span-2 rounded-xl border border-gray-200 p-6">
+            <div className="lg:col-span-2 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
               <div className="h-5 w-40 bg-gray-200 rounded mb-4" />
-              <div className="h-12 bg-gray-100 rounded-lg mb-4" />
+              <div className="h-12 bg-gray-100 dark:bg-gray-800 rounded-lg mb-4" />
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                 {Array.from({ length: 10 }).map((_, i) => (
                   <div
                     key={i}
-                    className="h-24 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50"
+                    className="h-24 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900"
                   />
                 ))}
               </div>
             </div>
 
             {/* Results panel */}
-            <div className="rounded-xl border border-gray-200 p-6">
+            <div className="rounded-xl border border-gray-200 dark:border-gray-700 p-6">
               <div className="h-5 w-36 bg-gray-200 rounded mb-6" />
               <div className="space-y-4">
-                <div className="h-20 bg-gray-100 rounded-xl" />
+                <div className="h-20 bg-gray-100 dark:bg-gray-800 rounded-xl" />
                 <div className="h-4 w-32 bg-gray-200 rounded" />
-                <div className="h-8 w-full bg-gray-100 rounded-lg" />
+                <div className="h-8 w-full bg-gray-100 dark:bg-gray-800 rounded-lg" />
                 <div className="h-4 w-24 bg-gray-200 rounded" />
-                <div className="h-8 w-full bg-gray-100 rounded-lg" />
+                <div className="h-8 w-full bg-gray-100 dark:bg-gray-800 rounded-lg" />
                 <div className="h-12 bg-amber-100 rounded-xl mt-4" />
               </div>
             </div>
