@@ -4,7 +4,7 @@ import GameAvatar from "@/components/ui/GameAvatar";
 import StoreIcon from "@/components/ui/StoreIcon";
 import { createServerClient } from "@/lib/supabase";
 import { formatDate, formatPrice } from "@/lib/utils";
-import { hasBadTitle, hasBadGenres, hasBadTags } from "@/lib/game-quality";
+import { hasBadTitle, hasBadGenres, hasBadTags, hasNonEnglishTitle } from "@/lib/game-quality";
 import NewReleasesClient from "./NewReleasesClient";
 import SpotlightCard from "./SpotlightCard";
 
@@ -65,6 +65,7 @@ function isQualityNewRelease(game: {
   tags?: string[] | null;
 }): boolean {
   if (!game.cover_image || game.cover_image.trim().length === 0) return false;
+  if (hasNonEnglishTitle(game.title)) return false;
   if (hasBadTitle(game.title)) return false;
   if (hasBadGenres(game.genres)) return false;
   if (hasBadTags(game.tags)) return false;

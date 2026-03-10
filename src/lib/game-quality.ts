@@ -93,6 +93,25 @@ const BLOCKED_TAGS = [
 ];
 
 /**
+ * Check if a game title is primarily Latin-script (English).
+ * Returns true if the title is NOT English (contains CJK, Cyrillic, Arabic, etc.)
+ *
+ * Allows common non-Latin chars that appear in English game titles:
+ *   ™ ® © — – é ü ö ñ etc. (Latin Extended)
+ *   ★ (used for CS2 knife prefixes)
+ */
+export function hasNonEnglishTitle(title: string): boolean {
+  if (!title) return false;
+  // Strip common symbols that appear in English game titles
+  const stripped = title.replace(/[™®©★†‡·•…—–\-:;,.'!?&@#$%^*()[\]{}/\\|~`"'<>=+_\d\s]/g, "");
+  if (stripped.length === 0) return false;
+  // Count characters that are NOT basic Latin or Latin Extended (accented chars)
+  const nonLatinChars = stripped.replace(/[\u0000-\u024F\u1E00-\u1EFF]/g, "").length;
+  // If more than 30% of meaningful characters are non-Latin, it's not English
+  return nonLatinChars / stripped.length > 0.3;
+}
+
+/**
  * Check if a game's title contains blocked patterns.
  */
 export function hasBadTitle(title: string): boolean {
@@ -158,6 +177,9 @@ export function isPromotableGame(game: {
   // Empty strings and whitespace-only values don't count
   if (!game.cover_image || game.cover_image.trim().length === 0) return false;
 
+  // Language check — only show English-titled games on curated pages
+  if (hasNonEnglishTitle(game.title)) return false;
+
   // Title check
   if (hasBadTitle(game.title)) return false;
 
@@ -199,7 +221,8 @@ export function filterPromotableDeals<T extends { games: any; is_historic_low?: 
     const game = deal.games;
     if (!game) return false;
 
-    // Always block NSFW / junk titles & genres
+    // Always block non-English / NSFW / junk titles & genres
+    if (hasNonEnglishTitle(game.title || "")) return false;
     if (hasBadTitle(game.title || "")) return false;
     if (hasBadGenres(game.genres)) return false;
     if (hasBadTags(game.tags)) return false;
