@@ -490,7 +490,7 @@ export default async function HomePage() {
                   {/* Content */}
                   <div className="relative flex h-full flex-col justify-between px-5 py-6" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.45)" }}>
                     <div>
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white dark:bg-gray-950/25 backdrop-blur-sm ring-1 ring-white/20 shadow-lg">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm ring-1 ring-white/20 shadow-lg">
                         <st.icon className="h-5 w-5 text-white drop-shadow-md" />
                       </div>
                       <h3 className="mt-3 text-lg font-extrabold text-white" style={{ textShadow: "0 2px 6px rgba(0,0,0,0.5)" }}>
@@ -873,12 +873,12 @@ export default async function HomePage() {
                   <p className="mt-1 text-lg font-medium text-brand-100">
                     Games analyzed
                   </p>
-                  <div className="mx-auto my-5 h-px w-20 bg-white dark:bg-gray-950/20" />
+                  <div className="mx-auto my-5 h-px w-20 bg-white/20" />
                   <p className="text-5xl font-extrabold">5</p>
                   <p className="mt-1 text-lg font-medium text-brand-100">
                     System types covered
                   </p>
-                  <div className="mx-auto my-5 h-px w-20 bg-white dark:bg-gray-950/20" />
+                  <div className="mx-auto my-5 h-px w-20 bg-white/20" />
                   <p className="text-5xl font-extrabold">100%</p>
                   <p className="mt-1 text-lg font-medium text-brand-100">
                     Free forever

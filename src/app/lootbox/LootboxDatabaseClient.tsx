@@ -156,7 +156,7 @@ function BentoGameCard({
         </h3>
 
         <div className={`flex items-center gap-1.5 flex-wrap ${featured ? "mt-3" : "mt-2"}`}>
-          <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-white dark:bg-gray-950/15 text-white/80 backdrop-blur-sm">
+          <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-white/15 text-white/80 backdrop-blur-sm">
             {sys.label}
           </span>
           {tags.includes("mobile") && (

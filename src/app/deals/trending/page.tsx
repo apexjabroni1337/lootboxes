@@ -227,7 +227,7 @@ export default async function TrendingPage() {
                             </div>
                             <Link
                               href={`/games/${game?.slug}`}
-                              className="flex items-center gap-1 rounded-lg bg-white dark:bg-gray-950/20 backdrop-blur-sm px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white dark:bg-gray-950/30"
+                              className="flex items-center gap-1 rounded-lg bg-white/20 backdrop-blur-sm px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/30"
                             >
                               View Game
                             </Link>

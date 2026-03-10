@@ -288,16 +288,16 @@ export default async function AnalyticsPage({
       {/* ─── Hero Section ─── */}
       <section className="relative overflow-hidden border-b border-gray-100 dark:border-gray-800 bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900 py-14 sm:py-20">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-white dark:bg-gray-950/10 blur-3xl" />
+          <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-white/10 blur-3xl" />
           <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-brand-400/10 blur-3xl" />
         </div>
 
         <div className="container-main relative z-10">
           <div className="flex items-center gap-3 mb-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white dark:bg-gray-950/20 backdrop-blur-sm">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
               <BarChart3 className="h-6 w-6 text-white" />
             </div>
-            <div className="inline-flex rounded-full bg-white dark:bg-gray-950/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-white">
+            <div className="inline-flex rounded-full bg-white/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-white">
               Data-Driven Analysis
             </div>
           </div>
@@ -311,7 +311,7 @@ export default async function AnalyticsPage({
           </p>
 
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl">
-            <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-white dark:bg-gray-950/10 backdrop-blur-md px-5 py-4 transition-all hover:bg-white dark:bg-gray-950/20 hover:scale-[1.02]">
+            <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-white/10 backdrop-blur-md px-5 py-4 transition-all hover:bg-white/20 hover:scale-[1.02]">
               <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-400/20 mb-2">
@@ -321,7 +321,7 @@ export default async function AnalyticsPage({
                 <p className="text-xs font-medium text-blue-200 uppercase tracking-wider mt-0.5">Games Analyzed</p>
               </div>
             </div>
-            <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-white dark:bg-gray-950/10 backdrop-blur-md px-5 py-4 transition-all hover:bg-white dark:bg-gray-950/20 hover:scale-[1.02]">
+            <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-white/10 backdrop-blur-md px-5 py-4 transition-all hover:bg-white/20 hover:scale-[1.02]">
               <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-400/20 mb-2">
@@ -331,7 +331,7 @@ export default async function AnalyticsPage({
                 <p className="text-xs font-medium text-blue-200 uppercase tracking-wider mt-0.5">System Types</p>
               </div>
             </div>
-            <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-white dark:bg-gray-950/10 backdrop-blur-md px-5 py-4 transition-all hover:bg-white dark:bg-gray-950/20 hover:scale-[1.02]">
+            <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-white/10 backdrop-blur-md px-5 py-4 transition-all hover:bg-white/20 hover:scale-[1.02]">
               <div className="absolute inset-0 bg-gradient-to-br from-purple-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-400/20 mb-2">
