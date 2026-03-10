@@ -47,7 +47,7 @@ export default function SteamGameRow({ game, rank }: SteamGameRowProps) {
             className="h-full w-full bg-gradient-to-br from-gray-700 to-gray-800 items-center justify-center"
             style={{ display: image ? "none" : "flex" }}
           >
-            <GameAvatar gameName={game.title} size="sm" />
+            <GameAvatar gameName={game.title} size="sm" src={game.cover_image || undefined} />
           </div>
         </div>
 
@@ -141,7 +141,7 @@ export function CompactGameCard({ game }: { game: GameRowData }) {
             loading="lazy"
           />
         ) : (
-          <GameAvatar gameName={game.title} size="sm" aspectRatio="video" />
+          <GameAvatar gameName={game.title} size="sm" aspectRatio="video" src={game.cover_image || undefined} />
         )}
 
         {hasDiscount && (

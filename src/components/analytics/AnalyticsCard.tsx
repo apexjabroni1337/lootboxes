@@ -46,6 +46,7 @@ export default function AnalyticsCard({ article }: AnalyticsCardProps) {
             size="lg"
             aspectRatio="video"
             className="h-full w-full rounded-none"
+            src={article.cover_image || undefined}
           />
         )}
 

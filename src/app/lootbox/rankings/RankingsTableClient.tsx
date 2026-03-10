@@ -87,11 +87,9 @@ function getRankBadge(rank: number) {
 }
 
 function GameThumb({ game }: { game: Game }) {
-  return game.cover_image ? (
-    <img src={game.cover_image} alt={game.title} className="w-8 h-11 rounded object-cover flex-shrink-0" loading="lazy" />
-  ) : (
+  return (
     <div className="w-8 h-11 flex-shrink-0">
-      <GameAvatar gameName={game.title} aspectRatio="portrait" size="sm" />
+      <GameAvatar gameName={game.title} src={game.cover_image} aspectRatio="portrait" size="sm" />
     </div>
   );
 }

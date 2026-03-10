@@ -49,10 +49,7 @@ interface GameData {
 }
 
 function GameIcon({ game, className = "w-full h-full" }: { game: GameOption; className?: string }) {
-  if (game.cover_image) {
-    return <img src={game.cover_image} alt={game.title} className={`${className} object-cover`} loading="lazy" />;
-  }
-  return <GameAvatar gameName={game.title} size="sm" aspectRatio="square" />;
+  return <GameAvatar gameName={game.title} src={game.cover_image} size="sm" aspectRatio="square" className={className} />;
 }
 
 const SYSTEM_COLORS: Record<string, string> = {

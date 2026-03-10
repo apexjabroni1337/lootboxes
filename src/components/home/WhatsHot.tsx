@@ -60,6 +60,7 @@ export default function WhatsHot({ deals }: WhatsHotProps) {
                       gameName={deal.game.title}
                       size="md"
                       aspectRatio="video"
+                      src={deal.game.cover_image || undefined}
                     />
                   )}
                   <div className="absolute right-2 top-2">

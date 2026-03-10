@@ -222,19 +222,12 @@ export default async function SpendingGuidesHub() {
                         {/* Card header with game image */}
                         <div className="flex items-center gap-3 p-4 pb-3">
                           <div className="flex-shrink-0 w-10 h-10 rounded-lg overflow-hidden">
-                            {imageMap[guide.gameSlug] ? (
-                              <img
-                                src={imageMap[guide.gameSlug]}
-                                alt={guide.gameName}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <GameAvatar
-                                gameName={guide.gameName}
-                                size="sm"
-                                aspectRatio="square"
-                              />
-                            )}
+                            <GameAvatar
+                              gameName={guide.gameName}
+                              src={imageMap[guide.gameSlug] || null}
+                              size="sm"
+                              aspectRatio="square"
+                            />
                           </div>
                           <div className="flex-1 min-w-0">
                             <h3 className="font-bold text-gray-900 dark:text-white truncate group-hover:text-amber-700 transition-colors">

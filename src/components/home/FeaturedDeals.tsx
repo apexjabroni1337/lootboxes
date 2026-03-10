@@ -68,6 +68,7 @@ export default function FeaturedDeals({ deals }: FeaturedDealsProps) {
                       gameName={deal.game.title}
                       size="lg"
                       aspectRatio="video"
+                      src={deal.game.cover_image || undefined}
                     />
                   )}
 

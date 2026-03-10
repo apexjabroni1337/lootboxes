@@ -240,7 +240,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
           </>
         ) : (
           <div className="aspect-[21/9] max-h-[400px] w-full">
-            <GameAvatar gameName={game.title} size="lg" aspectRatio="video" className="h-full w-full rounded-none" />
+            <GameAvatar gameName={game.title} size="lg" aspectRatio="video" className="h-full w-full rounded-none" src={game.cover_image || undefined} />
           </div>
         )}
 
@@ -649,7 +649,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
                           loading="lazy"
                         />
                       ) : (
-                        <GameAvatar gameName={g.title} size="sm" aspectRatio="video" />
+                        <GameAvatar gameName={g.title} size="sm" aspectRatio="video" src={g.cover_image || undefined} />
                       )}
                     </div>
                     <div className="p-3">

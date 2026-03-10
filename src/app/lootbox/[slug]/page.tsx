@@ -174,15 +174,7 @@ export default async function LootboxGamePage({
           <div className="flex items-center gap-6">
             {/* Cover image — compact */}
             <div className="flex-shrink-0 w-[140px] h-[180px] rounded-xl overflow-hidden shadow-lg">
-              {game.cover_image ? (
-                <img
-                  src={game.cover_image}
-                  alt={game.title}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <GameAvatar gameName={game.title} aspectRatio="portrait" size="lg" />
-              )}
+              <GameAvatar gameName={game.title} src={game.cover_image} aspectRatio="portrait" size="lg" />
             </div>
 
             {/* Text info */}

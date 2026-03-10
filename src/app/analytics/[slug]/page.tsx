@@ -1236,7 +1236,7 @@ export default async function AnalyticsArticlePage({ params }: { params: { slug:
                 {coverImage ? (
                   <img src={coverImage} alt={article.gameTitle} className="h-full w-full object-cover" />
                 ) : (
-                  <GameAvatar gameName={article.gameTitle} size="sm" aspectRatio="square" />
+                  <GameAvatar gameName={article.gameTitle} size="sm" aspectRatio="square" src={coverImage || undefined} />
                 )}
               </div>
               View {article.gameTitle} full analysis →

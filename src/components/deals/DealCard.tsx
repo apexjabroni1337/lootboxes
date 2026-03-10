@@ -34,6 +34,7 @@ export default function DealCard({ deal }: DealCardProps) {
             size="md"
             aspectRatio="video"
             className="transition-transform group-hover:scale-[1.02]"
+            src={(deal.game as any)?.cover_image || undefined}
           />
         )}
 

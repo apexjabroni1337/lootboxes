@@ -202,11 +202,7 @@ export default async function SpendingGuidePage({ params }: Props) {
 
           <div className="flex items-center gap-4 mb-4">
             <div className="flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden ring-2 ring-white/20">
-              {heroImage ? (
-                <img src={heroImage} alt={guide.gameName} className="w-full h-full object-cover" />
-              ) : (
-                <GameAvatar gameName={guide.gameName} size="sm" aspectRatio="square" />
-              )}
+              <GameAvatar gameName={guide.gameName} src={heroImage || null} size="sm" aspectRatio="square" />
             </div>
             <div>
               <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-amber-300 mb-1">

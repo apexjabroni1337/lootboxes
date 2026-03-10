@@ -151,6 +151,7 @@ export default async function ScoresPage() {
                                 gameName={game.title}
                                 size="sm"
                                 className="h-full w-full"
+                                src={game.cover_image || undefined}
                               />
                             )}
                           </div>

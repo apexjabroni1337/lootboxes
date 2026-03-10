@@ -384,9 +384,10 @@ export default async function TransparencyReportPage() {
                         href={`/lootbox/${game.slug}`}
                         className={`flex items-center gap-4 rounded-xl border ${g.borderColor} ${g.bgColor} px-4 py-3 hover:shadow-md transition-all group`}
                       >
-                        <div className="flex-shrink-0 w-10 h-10">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-lg overflow-hidden">
                           <GameAvatar
                             gameName={game.title}
+                            src={game.cover_image}
                             size="sm"
                             aspectRatio="square"
                           />

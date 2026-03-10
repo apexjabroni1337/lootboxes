@@ -28,6 +28,7 @@ interface GameOption {
   id: string;
   title: string;
   slug: string;
+  cover_image: string | null;
   lootboxes_score: number;
   loot_system_type: string;
   cost_per_pull: number | null;
@@ -281,7 +282,7 @@ export default function ValueCalculatorPage() {
                         <button key={g.id} onClick={() => setSelectedId(g.id)}
                           className="inline-flex items-center gap-2 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 pl-1.5 pr-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700 transition-colors">
                           <div className="flex-shrink-0 w-6 h-6 rounded-full overflow-hidden">
-                            <GameAvatar gameName={g.title} size="sm" aspectRatio="square" />
+                            <GameAvatar gameName={g.title} src={g.cover_image} size="sm" aspectRatio="square" />
                           </div>
                           {g.title}
                         </button>
@@ -299,7 +300,7 @@ export default function ValueCalculatorPage() {
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-3">
                         <div className="flex-shrink-0 w-12 h-12 rounded-xl overflow-hidden">
-                          <GameAvatar gameName={selected.title} size="sm" aspectRatio="square" />
+                          <GameAvatar gameName={selected.title} src={selected.cover_image} size="sm" aspectRatio="square" />
                         </div>
                         <div>
                           <h2 className="text-2xl font-black text-gray-900 dark:text-white">{selected.title}</h2>

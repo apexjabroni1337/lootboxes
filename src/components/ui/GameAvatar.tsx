@@ -40,6 +40,8 @@ function getInitials(name: string): string {
 
 interface GameAvatarProps {
   gameName: string;
+  /** When provided, renders an <img> instead of the gradient/initials fallback */
+  src?: string | null;
   size?: "sm" | "md" | "lg";
   aspectRatio?: "square" | "video" | "portrait";
   className?: string;
@@ -59,10 +61,31 @@ const aspectClasses = {
 
 export default function GameAvatar({
   gameName,
+  src,
   size = "md",
   aspectRatio = "video",
   className,
 }: GameAvatarProps) {
+  // If a real image URL is provided, render it with the gradient fallback behind
+  if (src) {
+    return (
+      <div
+        className={cn(
+          "relative overflow-hidden rounded-lg",
+          aspectClasses[aspectRatio],
+          className
+        )}
+      >
+        <img
+          src={src}
+          alt={gameName}
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
+        />
+      </div>
+    );
+  }
+
   const { from, to } = getGradient(gameName);
   const initials = getInitials(gameName);
 

@@ -564,6 +564,7 @@ export default async function HomePage() {
                         size="lg"
                         aspectRatio="video"
                         className="h-full w-full rounded-none"
+                        src={game.cover_image || undefined}
                       />
                     </div>
                   )}
@@ -677,7 +678,7 @@ export default async function HomePage() {
                                 loading="lazy"
                               />
                             ) : (
-                              <GameAvatar gameName={item.title} size="sm" aspectRatio="square" className="h-full w-full" />
+                              <GameAvatar gameName={item.title} size="sm" aspectRatio="square" className="h-full w-full" src={item.cover_image || undefined} />
                             )}
                           </div>
                           <span className="flex-1 text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
@@ -734,7 +735,7 @@ export default async function HomePage() {
                                 loading="lazy"
                               />
                             ) : (
-                              <GameAvatar gameName={item.title} size="sm" aspectRatio="square" className="h-full w-full" />
+                              <GameAvatar gameName={item.title} size="sm" aspectRatio="square" className="h-full w-full" src={item.cover_image || undefined} />
                             )}
                           </div>
                           <span className="flex-1 text-sm font-medium text-gray-700 dark:text-gray-300 truncate">

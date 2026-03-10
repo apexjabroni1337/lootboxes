@@ -243,6 +243,7 @@ export default function DealsFilter({
                       gameName={game?.title || "Unknown"}
                       size="sm"
                       aspectRatio="video"
+                      src={game?.cover_image || undefined}
                     />
                   )}
                 </div>

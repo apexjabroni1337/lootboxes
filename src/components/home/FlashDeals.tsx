@@ -129,6 +129,7 @@ export default function FlashDeals({ deals }: FlashDealsProps) {
                       gameName={deal.game.title}
                       size="lg"
                       aspectRatio="video"
+                      src={deal.game.cover_image || undefined}
                     />
                   )}
 

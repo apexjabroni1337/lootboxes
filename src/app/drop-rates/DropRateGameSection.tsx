@@ -160,7 +160,7 @@ export default function DropRateGameSection({
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <GameAvatar gameName={game.title} size="sm" aspectRatio="square" />
+                <GameAvatar gameName={game.title} size="sm" aspectRatio="square" src={game.cover_image || undefined} />
               )}
             </div>
 

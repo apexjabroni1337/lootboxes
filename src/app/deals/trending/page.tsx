@@ -152,7 +152,7 @@ export default async function TrendingPage() {
                         className="h-full w-full object-cover transition-transform group-hover:scale-105"
                       />
                     ) : (
-                      <GameAvatar gameName={game?.title || "Unknown"} size="md" aspectRatio="video" />
+                      <GameAvatar gameName={game?.title || "Unknown"} size="md" aspectRatio="video" src={game?.cover_image || undefined} />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
