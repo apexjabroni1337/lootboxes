@@ -138,7 +138,9 @@ export default function CS2PricesClient({
   const [fallbackTotal, setFallbackTotal] = useState(initialFallbackItems.length);
   const [fallbackLoading, setFallbackLoading] = useState(false);
 
-  const loading = multiLoading || fallbackLoading;
+  // Show loading state if we have no data yet (client-side fetch pending)
+  const noDataYet = initialMultiItems.length === 0 && initialFallbackItems.length === 0;
+  const loading = multiLoading || fallbackLoading || (noDataYet && !hasMultiData && fallbackItems.length === 0);
   const isLive = hasMultiData || fallbackItems.length > 0;
 
   /* ── Fetch multi-market prices (only on filter/sort/search changes) ── */
@@ -202,28 +204,41 @@ export default function CS2PricesClient({
     }
   }, [query, sortBy, wearFilter]);
 
-  /* ── Re-fetch only when user changes filters (not on initial mount) ── */
+  /* ── Fetch on mount if no server-side data was provided ── */
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    if (hasMounted) return;
+    // If server already gave us data, skip the initial fetch
+    if (initialMultiItems.length > 0 || initialFallbackItems.length > 0) {
+      setHasMounted(true);
+      return;
+    }
+    setHasMounted(true);
+
+    (async () => {
+      const gotMulti = await fetchMultiPrices();
+      if (!gotMulti) {
+        await fetchFallbackPrices();
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /* ── Re-fetch when user changes filters ── */
   const [hasInteracted, setHasInteracted] = useState(false);
 
   useEffect(() => {
     if (!hasInteracted) return;
 
     const timer = setTimeout(async () => {
-      const multiPromise = fetchMultiPrices();
-      const fallbackTimer = setTimeout(() => {
-        fetchFallbackPrices();
-      }, 3000);
-
-      const gotMulti = await multiPromise;
-      if (gotMulti) {
-        clearTimeout(fallbackTimer);
-      } else {
-        clearTimeout(fallbackTimer);
+      const gotMulti = await fetchMultiPrices();
+      if (!gotMulti) {
         await fetchFallbackPrices();
       }
     }, query ? 300 : 0);
     return () => clearTimeout(timer);
-  }, [hasInteracted, fetchMultiPrices, fetchFallbackPrices]);
+  }, [hasInteracted, fetchMultiPrices, fetchFallbackPrices, query]);
 
   // Mark as interacted when user changes any filter
   const handleQueryChange = (v: string) => { setQuery(v); setHasInteracted(true); };

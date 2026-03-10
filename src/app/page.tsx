@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import AnalyticsCard from "@/components/analytics/AnalyticsCard";
 import ScoreBadge from "@/components/analytics/ScoreBadge";
 import NewsletterForm from "@/components/newsletter/NewsletterForm";
@@ -372,10 +373,12 @@ export default async function HomePage() {
                   }}
                 />
                 {/* Back case — Kilowatt (rotated, faded) */}
-                <img
+                <Image
                   src="https://static.wikia.nocookie.net/cswikia/images/e/e7/Kilowatt-case.png/revision/latest?cb=20240210202000"
                   alt="CS2 Kilowatt Case"
-                  className="absolute drop-shadow-xl"
+                  width={200}
+                  height={200}
+                  className="absolute drop-shadow-xl object-contain"
                   style={{
                     maxHeight: 200,
                     top: 60,
@@ -386,10 +389,12 @@ export default async function HomePage() {
                   }}
                 />
                 {/* Middle case — Gallery (slight tilt) */}
-                <img
+                <Image
                   src="https://static.wikia.nocookie.net/cswikia/images/d/d1/Gallery-case.png/revision/latest?cb=20250925192158"
                   alt="CS2 Gallery Case"
-                  className="absolute drop-shadow-xl"
+                  width={200}
+                  height={200}
+                  className="absolute drop-shadow-xl object-contain"
                   style={{
                     maxHeight: 200,
                     top: 30,
@@ -400,10 +405,12 @@ export default async function HomePage() {
                   }}
                 />
                 {/* Front case — Dreams & Nightmares (prominent) */}
-                <img
+                <Image
                   src="https://static.wikia.nocookie.net/cswikia/images/f/f3/Dreams_nighmares_case.png/revision/latest?cb=20220121083639"
                   alt="CS2 Dreams and Nightmares Case"
-                  className="absolute drop-shadow-2xl"
+                  width={230}
+                  height={230}
+                  className="absolute drop-shadow-2xl object-contain"
                   style={{
                     maxHeight: 230,
                     top: 10,

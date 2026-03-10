@@ -10,6 +10,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'steamcdn-a.akamaihd.net' },
       { protocol: 'https', hostname: 'community.akamai.steamstatic.com' },
       { protocol: 'https', hostname: 'steamwebapi.ams3.cdn.digitaloceanspaces.com' },
+      { protocol: 'https', hostname: 'static.wikia.nocookie.net' },
     ],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 3600,
