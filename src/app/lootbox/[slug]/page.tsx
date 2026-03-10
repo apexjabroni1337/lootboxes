@@ -24,7 +24,7 @@ import CostCalculator from "@/components/lootbox/CostCalculator";
 import ScoreBreakdown from "@/components/lootbox/ScoreBreakdown";
 import ComparisonTable from "@/components/lootbox/ComparisonTable";
 
-export const revalidate = 3600;
+export const revalidate = 300; // 5 min — lowered to pick up content enrichment faster
 
 function systemLabel(type: string | null): { label: string; color: string; tagBg: string } {
   const map: Record<string, { label: string; color: string; tagBg: string }> = {
