@@ -39,19 +39,19 @@ async function getNewReleases() {
     .lte("release_date", today)
     .gte("release_date", sixMonthsAgo)
     .order("hot_score", { ascending: false, nullsFirst: false })
-    .limit(100);
+    .limit(1250);
 
-  // Approach 2: Recently added games (created_at in last 30 days) that have cover images
+  // Approach 2: Recently added games (created_at in last 60 days) that have cover images
   // This catches games imported by sync-new-releases with non-ISO release dates
-  const thirtyDaysAgo = new Date(Date.now() - 30 * 86_400_000).toISOString();
+  const sixtyDaysAgo = new Date(Date.now() - 60 * 86_400_000).toISOString();
 
   const { data: recentImports } = await supabase
     .from("games")
     .select("id, title, slug, cover_image, screenshot_image, release_date, genres, platforms, metacritic, hot_score, description")
-    .gte("created_at", thirtyDaysAgo)
+    .gte("created_at", sixtyDaysAgo)
     .not("cover_image", "is", null)
     .order("hot_score", { ascending: false, nullsFirst: false })
-    .limit(100);
+    .limit(1000);
 
   // Merge and deduplicate, prioritize by hot_score
   const seen = new Set<string>();
@@ -81,7 +81,7 @@ async function getNewReleases() {
     isPromotableGame({ title: game.title, cover_image: game.cover_image, hot_score: game.hot_score, genres: game.genres })
   );
 
-  return quality.slice(0, 150);
+  return quality.slice(0, 1500);
 }
 
 async function getComingSoon() {
@@ -93,7 +93,7 @@ async function getComingSoon() {
     .select("id, title, slug, cover_image, screenshot_image, release_date, genres, platforms, metacritic")
     .gt("release_date", today)
     .order("release_date", { ascending: true })
-    .limit(50);
+    .limit(250);
 
   return data || [];
 }
@@ -109,7 +109,7 @@ async function getRecentDeals() {
     .from("deals")
     .select("game_id, price, store")
     .order("price", { ascending: true })
-    .limit(500);
+    .limit(2000);
 
   return data || [];
 }

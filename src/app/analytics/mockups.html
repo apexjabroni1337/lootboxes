@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Analytics Dashboard Mockups — Overview &amp; Score Distribution</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        brand: { 50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#0074C5',600:'#0063a8',700:'#004d82' }
+      }
+    }
+  }
+}
+</script>
+<style>
+body { background: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
+.mockup-card { border: 2px solid #e2e8f0; border-radius: 16px; padding: 32px; background: white; }
+.mockup-label { font-size: 14px; font-weight: 700; color: #0074C5; margin-bottom: 16px; letter-spacing: 0.05em; text-transform: uppercase; }
+
+@keyframes growBar { from { width: 0%; } }
+.anim-bar { animation: growBar 1s ease-out forwards; }
+
+@keyframes countUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.anim-count { animation: countUp 0.5s ease-out forwards; }
+
+@keyframes pulse-ring { 0% { transform: scale(0.9); opacity: 1; } 100% { transform: scale(1.3); opacity: 0; } }
+.pulse-ring { animation: pulse-ring 2s ease-out infinite; }
+</style>
+</head>
+<body class="p-8 max-w-6xl mx-auto">
+<h1 class="text-3xl font-extrabold text-gray-900 mb-2">Analytics Dashboard Mockups</h1>
+<p class="text-gray-500 mb-10">10 redesign options for the Overview stats + Score Distribution. The Consumer-Friendly / Most Aggressive game cards are NOT changed.</p>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- MOCKUP 1: Glassmorphism Cards + Radial Gauge Bars -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="mockup-card mb-10">
+<p class="mockup-label">#1 — Glassmorphism + Radial Gauge</p>
+<h2 class="text-2xl font-bold text-gray-900 mb-6">Overview</h2>
+<div class="grid grid-cols-2 gap-5">
+  <!-- Total Games -->
+  <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 p-6 text-white shadow-lg">
+    <div class="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/10 blur-2xl"></div>
+    <div class="absolute right-4 bottom-4 h-20 w-20 rounded-full bg-white/5 blur-xl"></div>
+    <p class="text-xs font-semibold uppercase tracking-wider text-blue-200">Total Games Analyzed</p>
+    <p class="mt-3 text-5xl font-extrabold tracking-tight anim-count">316</p>
+    <p class="mt-1 text-sm text-blue-200/70">across all monetization types</p>
+  </div>
+  <!-- Avg Score -->
+  <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 p-6 text-white shadow-lg">
+    <div class="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/10 blur-2xl"></div>
+    <p class="text-xs font-semibold uppercase tracking-wider text-amber-100">Average Score</p>
+    <div class="mt-3 flex items-end gap-2">
+      <span class="text-5xl font-extrabold tracking-tight anim-count">4.94</span>
+      <span class="text-lg font-medium text-amber-200 mb-1">/ 10</span>
+    </div>
+    <div class="mt-3 h-2 w-full rounded-full bg-white/20">
+      <div class="h-full rounded-full bg-white/80 anim-bar" style="width:49.4%"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Score Distribution -->
+<h2 class="text-2xl font-bold text-gray-900 mt-10 mb-6">Score Distribution</h2>
+<div class="grid grid-cols-4 gap-4">
+  <div class="rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200 p-5 text-center">
+    <div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-white text-xl font-extrabold shadow-lg shadow-emerald-200">7</div>
+    <p class="text-xs font-bold text-emerald-700 uppercase tracking-wide">Great</p>
+    <p class="text-[10px] text-emerald-600/70 mt-1">8.0 — 10.0</p>
+    <div class="mt-3 h-2 w-full rounded-full bg-emerald-200">
+      <div class="h-full rounded-full bg-emerald-500 anim-bar" style="width:5%"></div>
+    </div>
+    <p class="mt-2 text-2xl font-extrabold text-emerald-700">7</p>
+    <p class="text-[10px] text-emerald-500">games</p>
+  </div>
+  <div class="rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100/50 border border-amber-200 p-5 text-center">
+    <div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-amber-500 text-white text-xl font-extrabold shadow-lg shadow-amber-200">89</div>
+    <p class="text-xs font-bold text-amber-700 uppercase tracking-wide">Good</p>
+    <p class="text-[10px] text-amber-600/70 mt-1">5.3 — 7.9</p>
+    <div class="mt-3 h-2 w-full rounded-full bg-amber-200">
+      <div class="h-full rounded-full bg-amber-500 anim-bar" style="width:60%"></div>
+    </div>
+    <p class="mt-2 text-2xl font-extrabold text-amber-700">89</p>
+    <p class="text-[10px] text-amber-500">games</p>
+  </div>
+  <div class="rounded-2xl bg-gradient-to-br from-orange-50 to-orange-100/50 border border-orange-200 p-5 text-center">
+    <div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-orange-500 text-white text-xl font-extrabold shadow-lg shadow-orange-200">189</div>
+    <p class="text-xs font-bold text-orange-700 uppercase tracking-wide">Average</p>
+    <p class="text-[10px] text-orange-600/70 mt-1">2.7 — 5.2</p>
+    <div class="mt-3 h-2 w-full rounded-full bg-orange-200">
+      <div class="h-full rounded-full bg-orange-500 anim-bar" style="width:100%"></div>
+    </div>
+    <p class="mt-2 text-2xl font-extrabold text-orange-700">189</p>
+    <p class="text-[10px] text-orange-500">games</p>
+  </div>
+  <div class="rounded-2xl bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200 p-5 text-center">
+    <div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-red-500 text-white text-xl font-extrabold shadow-lg shadow-red-200">31</div>
+    <p class="text-xs font-bold text-red-700 uppercase tracking-wide">Poor</p>
+    <p class="text-[10px] text-red-600/70 mt-1">0 — 2.6</p>
+    <div class="mt-3 h-2 w-full rounded-full bg-red-200">
+      <div class="h-full rounded-full bg-red-500 anim-bar" style="width:22%"></div>
+    </div>
+    <p class="mt-2 text-2xl font-extrabold text-red-700">31</p>
+    <p class="text-[10px] text-red-500">games</p>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- MOCKUP 2: Dark Cards + Horizontal Stacked Bar -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="mockup-card mb-10">
+<p class="mockup-label">#2 — Dark Hero Cards + Stacked Bar</p>
+<h2 class="text-2xl font-bold text-gray-900 mb-6">Overview</h2>
+<div class="grid grid-cols-2 gap-5">
+  <div class="rounded-2xl bg-gray-900 p-6 shadow-xl">
+    <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Total Analyzed</p>
+    <div class="mt-2 flex items-baseline gap-2">
+      <span class="text-5xl font-black text-white">316</span>
+      <span class="text-sm font-medium text-gray-500">games</span>
+    </div>
+    <div class="mt-4 flex gap-1">
+      <div class="h-1 flex-1 rounded-full bg-emerald-500"></div>
+      <div class="h-1 flex-[3] rounded-full bg-amber-500"></div>
+      <div class="h-1 flex-[6] rounded-full bg-orange-500"></div>
+      <div class="h-1 flex-1 rounded-full bg-red-500"></div>
+    </div>
+  </div>
+  <div class="rounded-2xl bg-gray-900 p-6 shadow-xl">
+    <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Average Score</p>
+    <div class="mt-2 flex items-baseline gap-3">
+      <span class="text-5xl font-black text-amber-400">4.94</span>
+      <span class="text-sm font-medium text-gray-500">out of 10</span>
+    </div>
+    <div class="mt-4 flex items-center gap-3">
+      <div class="h-3 flex-1 rounded-full bg-gray-800 overflow-hidden">
+        <div class="h-full rounded-full bg-gradient-to-r from-red-500 via-amber-400 to-emerald-500 anim-bar" style="width:49.4%"></div>
+      </div>
+      <span class="text-xs text-gray-500 font-mono">49%</span>
+    </div>
+  </div>
+</div>
+
+<h2 class="text-2xl font-bold text-gray-900 mt-10 mb-6">Score Distribution</h2>
+<div class="rounded-2xl bg-gray-900 p-6 shadow-xl">
+  <!-- Single stacked bar -->
+  <div class="flex h-16 overflow-hidden rounded-xl">
+    <div class="flex items-center justify-center bg-emerald-500 text-white text-xs font-bold" style="width:2.2%">
+    </div>
+    <div class="flex items-center justify-center bg-amber-500 text-white text-xs font-bold" style="width:28.2%">
+      <span>89</span>
+    </div>
+    <div class="flex items-center justify-center bg-orange-500 text-white text-xs font-bold" style="width:59.8%">
+      <span>189</span>
+    </div>
+    <div class="flex items-center justify-center bg-red-500 text-white text-xs font-bold" style="width:9.8%">
+      <span>31</span>
+    </div>
+  </div>
+  <div class="mt-4 flex justify-between text-xs text-gray-400">
+    <div class="flex items-center gap-1.5"><div class="h-2.5 w-2.5 rounded-full bg-emerald-500"></div> Great (7)</div>
+    <div class="flex items-center gap-1.5"><div class="h-2.5 w-2.5 rounded-full bg-amber-500"></div> Good (89)</div>
+    <div class="flex items-center gap-1.5"><div class="h-2.5 w-2.5 rounded-full bg-orange-500"></div> Average (189)</div>
+    <div class="flex items-center gap-1.5"><div class="h-2.5 w-2.5 rounded-full bg-red-500"></div> Poor (31)</div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- MOCKUP 3: Neumorphic + Donut Style -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="mockup-card mb-10">
+<p class="mockup-label">#3 — Soft Neumorphic + Ring Meter</p>
+<h2 class="text-2xl font-bold text-gray-900 mb-6">Overview</h2>
+<div class="grid grid-cols-2 gap-5">
+  <div class="rounded-2xl bg-gray-50 p-6 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff]">
+    <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Games Analyzed</p>
+    <p class="mt-3 text-5xl font-black text-gray-900">316</p>
+    <div class="mt-3 flex items-center gap-2">
+      <div class="h-2 w-2 rounded-full bg-brand-500 pulse-ring"></div>
+      <span class="text-xs text-gray-500">Live database</span>
+    </div>
+  </div>
+  <div class="rounded-2xl bg-gray-50 p-6 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] flex items-center gap-6">
+    <div class="relative h-24 w-24 flex-shrink-0">
+      <svg viewBox="0 0 100 100" class="h-full w-full -rotate-90">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#e5e7eb" stroke-width="10" />
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#f59e0b" stroke-width="10" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="133" />
+      </svg>
+      <div class="absolute inset-0 flex flex-col items-center justify-center">
+        <span class="text-xl font-black text-gray-900">4.94</span>
+      </div>
+    </div>
+    <div>
+      <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Average Score</p>
+      <p class="mt-1 text-sm text-gray-500">out of 10</p>
+      <p class="mt-2 text-xs text-amber-600 font-semibold">Below industry median</p>
+    </div>
+  </div>
+</div>
+
+<h2 class="text-2xl font-bold text-gray-900 mt-10 mb-6">Score Distribution</h2>
+<div class="rounded-2xl bg-gray-50 p-6 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff]">
+  <div class="space-y-4">
+    <div class="flex items-center gap-4">
+      <span class="w-20 text-right text-xs font-bold text-emerald-600">Great</span>
+      <div class="flex-1 h-8 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+        <div class="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-600 flex items-center justify-end pr-3 anim-bar" style="width:4%">
+        </div>
+      </div>
+      <span class="w-12 text-sm font-bold text-gray-700 tabular-nums">7</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="w-20 text-right text-xs font-bold text-amber-600">Good</span>
+      <div class="flex-1 h-8 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+        <div class="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-600 flex items-center justify-end pr-3 anim-bar" style="width:47%">
+        </div>
+      </div>
+      <span class="w-12 text-sm font-bold text-gray-700 tabular-nums">89</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="w-20 text-right text-xs font-bold text-orange-600">Average</span>
+      <div class="flex-1 h-8 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+        <div class="h-full rounded-full bg-gradient-to-r from-orange-400 to-orange-600 anim-bar" style="width:100%">
+        </div>
+      </div>
+      <span class="w-12 text-sm font-bold text-gray-700 tabular-nums">189</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="w-20 text-right text-xs font-bold text-red-600">Poor</span>
+      <div class="flex-1 h-8 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+        <div class="h-full rounded-full bg-gradient-to-r from-red-400 to-red-600 anim-bar" style="width:16%">
+        </div>
+      </div>
+      <span class="w-12 text-sm font-bold text-gray-700 tabular-nums">31</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- MOCKUP 4: Full-Width Gradient Banner + Pill Bars -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="mockup-card mb-10">
+<p class="mockup-label">#4 — Gradient Banner + Pill Bars</p>
+<div class="rounded-2xl bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 p-8 shadow-xl">
+  <h2 class="text-lg font-bold text-white/60 mb-6">Overview</h2>
+  <div class="flex items-center gap-12">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wider text-blue-300/60">Games Analyzed</p>
+      <p class="text-6xl font-black text-white mt-1">316</p>
+    </div>
+    <div class="h-16 w-px bg-white/10"></div>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wider text-blue-300/60">Avg. Score</p>
+      <div class="flex items-baseline gap-2 mt-1">
+        <span class="text-6xl font-black text-amber-400">4.94</span>
+        <span class="text-xl text-white/30">/ 10</span>
+      </div>
+    </div>
+    <div class="h-16 w-px bg-white/10"></div>
+    <div class="flex-1">
+      <p class="text-xs font-semibold uppercase tracking-wider text-blue-300/60 mb-3">Distribution</p>
+      <div class="flex h-5 overflow-hidden rounded-full bg-white/10">
+        <div class="bg-emerald-500" style="width:2.2%"></div>
+        <div class="bg-amber-500" style="width:28.2%"></div>
+        <div class="bg-orange-500" style="width:59.8%"></div>
+        <div class="bg-red-500" style="width:9.8%"></div>
+      </div>
+      <div class="mt-2 flex text-[10px] text-white/40 justify-between">
+        <span>Great 7</span><span>Good 89</span><span>Average 189</span><span>Poor 31</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 class="text-2xl font-bold text-gray-900 mt-10 mb-6">Score Distribution</h2>
+<div class="space-y-3">
+  <div class="flex items-center gap-4 rounded-xl border border-emerald-100 bg-emerald-50/50 p-4">
+    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500 text-white font-extrabold text-sm shadow-md">7</div>
+    <div class="flex-1">
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-sm font-bold text-emerald-800">Great <span class="font-normal text-emerald-600/70">8.0 — 10.0</span></span>
+      </div>
+      <div class="h-3 rounded-full bg-emerald-200/50 overflow-hidden">
+        <div class="h-full rounded-full bg-emerald-500 anim-bar" style="width:4%"></div>
+      </div>
+    </div>
+  </div>
+  <div class="flex items-center gap-4 rounded-xl border border-amber-100 bg-amber-50/50 p-4">
+    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500 text-white font-extrabold text-sm shadow-md">89</div>
+    <div class="flex-1">
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-sm font-bold text-amber-800">Good <span class="font-normal text-amber-600/70">5.3 — 7.9</span></span>
+      </div>
+      <div class="h-3 rounded-full bg-amber-200/50 overflow-hidden">
+        <div class="h-full rounded-full bg-amber-500 anim-bar" style="width:47%"></div>
+      </div>
+    </div>
+  </div>
+  <div class="flex items-center gap-4 rounded-xl border border-orange-100 bg-orange-50/50 p-4">
+    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500 text-white font-extrabold text-sm shadow-md">189</div>
+    <div class="flex-1">
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-sm font-bold text-orange-800">Average <span class="font-normal text-orange-600/70">2.7 — 5.2</span></span>
+      </div>
+      <div class="h-3 rounded-full bg-orange-200/50 overflow-hidden">
+        <div class="h-full rounded-full bg-orange-500 anim-bar" style="width:100%"></div>
+      </div>
+    </div>
+  </div>
+  <div class="flex items-center gap-4 rounded-xl border border-red-100 bg-red-50/50 p-4">
+    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-red-500 text-white font-extrabold text-sm shadow-md">31</div>
+    <div class="flex-1">
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-sm font-bold text-red-800">Poor <span class="font-normal text-red-600/70">0 — 2.6</span></span>
+      </div>
+      <div class="h-3 rounded-full bg-red-200/50 overflow-hidden">
+        <div class="h-full rounded-full bg-red-500 anim-bar" style="width:16%"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- MOCKUP 5: Compact Row + Vertical Bars -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="mockup-card mb-10">
+<p class="mockup-label">#5 — Compact Inline + Vertical Bars</p>
+<h2 class="text-2xl font-bold text-gray-900 mb-6">Overview</h2>
+<div class="flex gap-4">
+  <div class="flex-1 rounded-2xl border-2 border-brand-500 bg-brand-50/30 p-5 flex items-center gap-5">
+    <div class="h-16 w-16 rounded-2xl bg-brand-500 flex items-center justify-center shadow-lg shadow-brand-200">
+      <span class="text-2xl font-black text-white">316</span>
+    </div>
+    <div>
+      <p class="text-sm font-bold text-gray-900">Games Analyzed</p>
+      <p class="text-xs text-gray-500">Full database coverage</p>
+    </div>
+  </div>
+  <div class="flex-1 rounded-2xl border-2 border-amber-400 bg-amber-50/30 p-5 flex items-center gap-5">
+    <div class="h-16 w-16 rounded-2xl bg-amber-500 flex items-center justify-center shadow-lg shadow-amber-200">
+      <span class="text-2xl font-black text-white">4.94</span>
+    </div>
+    <div>
+      <p class="text-sm font-bold text-gray-900">Average Score</p>
+      <p class="text-xs text-gray-500">49.4% of maximum</p>
+    </div>
+  </div>
+</div>
+
+<h2 class="text-2xl font-bold text-gray-900 mt-10 mb-6">Score Distribution</h2>
+<div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+  <div class="flex items-end justify-center gap-6 h-48">
+    <div class="flex flex-col items-center gap-2 flex-1">
+      <span class="text-lg font-extrabold text-emerald-600">7</span>
+      <div class="w-full rounded-t-lg bg-emerald-500 shadow-md" style="height:14px"></div>
+      <div class="text-center">
+        <p class="text-xs font-bold text-gray-800">Great</p>
+        <p class="text-[10px] text-gray-400">8.0+</p>
+      </div>
+    </div>
+    <div class="flex flex-col items-center gap-2 flex-1">
+      <span class="text-lg font-extrabold text-amber-600">89</span>
+      <div class="w-full rounded-t-lg bg-amber-500 shadow-md" style="height:90px"></div>
+      <div class="text-center">
+        <p class="text-xs font-bold text-gray-800">Good</p>
+        <p class="text-[10px] text-gray-400">5.3–7.9</p>
+      </div>
+    </div>
+    <div class="flex flex-col items-center gap-2 flex-1">
+      <span class="text-lg font-extrabold text-orange-600">189</span>
+      <div class="w-full rounded-t-lg bg-orange-500 shadow-md" style="height:160px"></div>
+      <div class="text-center">
+        <p class="text-xs font-bold text-gray-800">Average</p>
+        <p class="text-[10px] text-gray-400">2.7–5.2</p>
+      </div>
+    </div>
+    <div class="flex flex-col items-center gap-2 flex-1">
+      <span class="text-lg font-extrabold text-red-600">31</span>
+      <div class="w-full rounded-t-lg bg-red-500 shadow-md" style="height:30px"></div>
+      <div class="text-center">
+        <p class="text-xs font-bold text-gray-800">Poor</p>
+        <p class="text-[10px] text-gray-400">0–2.6</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- MOCKUP 6: Metric Circles + Treemap-style -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="mockup-card mb-10">
+<p class="mockup-label">#6 — Metric Circles + Treemap Grid</p>
+<h2 class="text-2xl font-bold text-gray-900 mb-6">Overview</h2>
+<div class="flex gap-8 justify-center">
+  <div class="text-center">
+    <div class="h-28 w-28 rounded-full bg-gradient-to-br from-brand-500 to-indigo-600 flex items-center justify-center shadow-xl shadow-brand-200/50 mx-auto">
+      <div>
+        <p class="text-3xl font-black text-white">316</p>
+        <p class="text-[9px] uppercase tracking-widest text-white/60 font-bold">games</p>
+      </div>
+    </div>
+    <p class="mt-3 text-sm font-bold text-gray-700">Total Analyzed</p>
+  </div>
+  <div class="text-center">
+    <div class="h-28 w-28 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-xl shadow-amber-200/50 mx-auto relative">
+      <div>
+        <p class="text-3xl font-black text-white">4.94</p>
+        <p class="text-[9px] uppercase tracking-widest text-white/60 font-bold">/ 10</p>
+      </div>
+    </div>
+    <p class="mt-3 text-sm font-bold text-gray-700">Average Score</p>
+  </div>
+</div>
+
+<h2 class="text-2xl font-bold text-gray-900 mt-10 mb-6">Score Distribution</h2>
+<div class="grid grid-cols-12 grid-rows-2 gap-1.5 h-40">
+  <div class="col-span-1 row-span-2 rounded-xl bg-emerald-500 flex items-center justify-center">
+    <div class="text-center text-white">
+      <p class="text-lg font-black">7</p>
+      <p class="text-[8px] font-bold uppercase">Great</p>
+    </div>
+  </div>
+  <div class="col-span-3 row-span-2 rounded-xl bg-amber-500 flex items-center justify-center">
+    <div class="text-center text-white">
+      <p class="text-2xl font-black">89</p>
+      <p class="text-[10px] font-bold uppercase">Good</p>
+    </div>
+  </div>
+  <div class="col-span-7 row-span-2 rounded-xl bg-orange-500 flex items-center justify-center">
+    <div class="text-center text-white">
+      <p class="text-3xl font-black">189</p>
+      <p class="text-xs font-bold uppercase">Average</p>
+    </div>
+  </div>
+  <div class="col-span-1 row-span-2 rounded-xl bg-red-500 flex items-center justify-center">
+    <div class="text-center text-white">
+      <p class="text-lg font-black">31</p>
+      <p class="text-[8px] font-bold uppercase">Poor</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- MOCKUP 7: Clean Borderless + Thin Bars -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="mockup-card mb-10">
+<p class="mockup-label">#7 — Minimal Clean + Thin Bars</p>
+<h2 class="text-2xl font-bold text-gray-900 mb-6">Overview</h2>
+<div class="grid grid-cols-2 gap-8">
+  <div>
+    <p class="text-xs font-bold uppercase tracking-widest text-gray-400">Total Games Analyzed</p>
+    <p class="mt-2 text-6xl font-black text-gray-900 leading-none">316</p>
+    <div class="mt-3 h-1 w-24 rounded-full bg-brand-500"></div>
+  </div>
+  <div>
+    <p class="text-xs font-bold uppercase tracking-widest text-gray-400">Average Score</p>
+    <div class="mt-2 flex items-baseline gap-2">
+      <span class="text-6xl font-black text-gray-900 leading-none">4.94</span>
+      <span class="text-2xl font-medium text-gray-300">/ 10</span>
+    </div>
+    <div class="mt-3 h-1 w-full rounded-full bg-gray-200">
+      <div class="h-full rounded-full bg-amber-500" style="width:49.4%"></div>
+    </div>
+  </div>
+</div>
+
+<h2 class="text-2xl font-bold text-gray-900 mt-10 mb-6">Score Distribution</h2>
+<div class="space-y-6">
+  <div>
+    <div class="flex items-center justify-between mb-1.5">
+      <div class="flex items-center gap-2">
+        <div class="h-3 w-3 rounded-full bg-emerald-500"></div>
+        <span class="text-sm font-bold text-gray-900">Great</span>
+        <span class="text-xs text-gray-400">8.0 — 10.0</span>
+      </div>
+      <span class="text-sm font-extrabold text-gray-900 tabular-nums">7 games</span>
+    </div>
+    <div class="h-2 rounded-full bg-gray-100 overflow-hidden">
+      <div class="h-full rounded-full bg-emerald-500" style="width:4%"></div>
+    </div>
+  </div>
+  <div>
+    <div class="flex items-center justify-between mb-1.5">
+      <div class="flex items-center gap-2">
+        <div class="h-3 w-3 rounded-full bg-amber-500"></div>
+        <span class="text-sm font-bold text-gray-900">Good</span>
+        <span class="text-xs text-gray-400">5.3 — 7.9</span>
+      </div>
+      <span class="text-sm font-extrabold text-gray-900 tabular-nums">89 games</span>
+    </div>
+    <div class="h-2 rounded-full bg-gray-100 overflow-hidden">
+      <div class="h-full rounded-full bg-amber-500" style="width:47%"></div>
+    </div>
+  </div>
+  <div>
+    <div class="flex items-center justify-between mb-1.5">
+      <div class="flex items-center gap-2">
+        <div class="h-3 w-3 rounded-full bg-orange-500"></div>
+        <span class="text-sm font-bold text-gray-900">Average</span>
+        <span class="text-xs text-gray-400">2.7 — 5.2</span>
+      </div>
+      <span class="text-sm font-extrabold text-gray-900 tabular-nums">189 games</span>
+    </div>
+    <div class="h-2 rounded-full bg-gray-100 overflow-hidden">
+      <div class="h-full rounded-full bg-orange-500" style="width:100%"></div>
+    </div>
+  </div>
+  <div>
+    <div class="flex items-center justify-between mb-1.5">
+      <div class="flex items-center gap-2">
+        <div class="h-3 w-3 rounded-full bg-red-500"></div>
+        <span class="text-sm font-bold text-gray-900">Poor</span>
+        <span class="text-xs text-gray-400">0 — 2.6</span>
+      </div>
+      <span class="text-sm font-extrabold text-gray-900 tabular-nums">31 games</span>
+    </div>
+    <div class="h-2 rounded-full bg-gray-100 overflow-hidden">
+      <div class="h-full rounded-full bg-red-500" style="width:16%"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- MOCKUP 8: Vibrant Gradient Cards + Arc Gauge -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="mockup-card mb-10">
+<p class="mockup-label">#8 — Vibrant Gradient + Arc Gauge</p>
+<h2 class="text-2xl font-bold text-gray-900 mb-6">Overview</h2>
+<div class="rounded-2xl overflow-hidden shadow-xl">
+  <div class="flex">
+    <div class="flex-1 bg-gradient-to-br from-brand-500 to-blue-700 p-8">
+      <p class="text-xs font-bold uppercase tracking-widest text-blue-200/70">Games Analyzed</p>
+      <p class="mt-2 text-5xl font-black text-white">316</p>
+      <div class="mt-4 grid grid-cols-4 gap-2">
+        <div class="text-center"><p class="text-xs font-bold text-white">7</p><p class="text-[8px] text-blue-200/50">Great</p></div>
+        <div class="text-center"><p class="text-xs font-bold text-white">89</p><p class="text-[8px] text-blue-200/50">Good</p></div>
+        <div class="text-center"><p class="text-xs font-bold text-white">189</p><p class="text-[8px] text-blue-200/50">Avg</p></div>
+        <div class="text-center"><p class="text-xs font-bold text-white">31</p><p class="text-[8px] text-blue-200/50">Poor</p></div>
+      </div>
+    </div>
+    <div class="flex-1 bg-gradient-to-br from-amber-400 to-orange-600 p-8 flex items-center justify-center">
+      <div class="text-center">
+        <div class="relative inline-block">
+          <svg viewBox="0 0 120 70" class="w-40">
+            <path d="M10 60 A50 50 0 0 1 110 60" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="10" stroke-linecap="round"/>
+            <path d="M10 60 A50 50 0 0 1 110 60" fill="none" stroke="white" stroke-width="10" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="79"/>
+          </svg>
+          <div class="absolute bottom-0 left-1/2 -translate-x-1/2">
+            <p class="text-3xl font-black text-white">4.94</p>
+          </div>
+        </div>
+        <p class="text-xs font-bold text-white/70 mt-2">Average Score / 10</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 class="text-2xl font-bold text-gray-900 mt-10 mb-6">Score Distribution</h2>
+<div class="grid grid-cols-4 gap-3">
+  <div class="rounded-2xl overflow-hidden shadow-md">
+    <div class="h-2 bg-emerald-500"></div>
+    <div class="p-4 bg-white border border-gray-100 border-t-0 rounded-b-2xl">
+      <p class="text-3xl font-black text-gray-900">7</p>
+      <p class="text-xs font-bold text-emerald-600 mt-1">Great</p>
+      <p class="text-[10px] text-gray-400">8.0 — 10.0</p>
+      <p class="text-[10px] text-gray-400 mt-1">2.2% of games</p>
+    </div>
+  </div>
+  <div class="rounded-2xl overflow-hidden shadow-md">
+    <div class="h-2 bg-amber-500"></div>
+    <div class="p-4 bg-white border border-gray-100 border-t-0 rounded-b-2xl">
+      <p class="text-3xl font-black text-gray-900">89</p>
+      <p class="text-xs font-bold text-amber-600 mt-1">Good</p>
+      <p class="text-[10px] text-gray-400">5.3 — 7.9</p>
+      <p class="text-[10px] text-gray-400 mt-1">28.2% of games</p>
+    </div>
+  </div>
+  <div class="rounded-2xl overflow-hidden shadow-md">
+    <div class="h-2 bg-orange-500"></div>
+    <div class="p-4 bg-white border border-gray-100 border-t-0 rounded-b-2xl">
+      <p class="text-3xl font-black text-gray-900">189</p>
+      <p class="text-xs font-bold text-orange-600 mt-1">Average</p>
+      <p class="text-[10px] text-gray-400">2.7 — 5.2</p>
+      <p class="text-[10px] text-gray-400 mt-1">59.8% of games</p>
+    </div>
+  </div>
+  <div class="rounded-2xl overflow-hidden shadow-md">
+    <div class="h-2 bg-red-500"></div>
+    <div class="p-4 bg-white border border-gray-100 border-t-0 rounded-b-2xl">
+      <p class="text-3xl font-black text-gray-900">31</p>
+      <p class="text-xs font-bold text-red-600 mt-1">Poor</p>
+      <p class="text-[10px] text-gray-400">0 — 2.6</p>
+      <p class="text-[10px] text-gray-400 mt-1">9.8% of games</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- MOCKUP 9: Side-by-Side Dashboard Layout -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="mockup-card mb-10">
+<p class="mockup-label">#9 — Dashboard Layout with Sidebar Stats</p>
+<div class="flex gap-6">
+  <!-- Left: Overview -->
+  <div class="w-64 flex-shrink-0 space-y-4">
+    <h2 class="text-lg font-bold text-gray-900">Overview</h2>
+    <div class="rounded-2xl bg-gradient-to-br from-gray-900 to-gray-800 p-5 shadow-xl">
+      <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Total Games</p>
+      <p class="text-4xl font-black text-white mt-1">316</p>
+    </div>
+    <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+      <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Avg. Score</p>
+      <div class="flex items-baseline gap-2 mt-1">
+        <span class="text-4xl font-black text-gray-900">4.94</span>
+        <span class="text-sm text-gray-400">/ 10</span>
+      </div>
+      <div class="mt-3 h-2 rounded-full bg-gray-100">
+        <div class="h-full rounded-full bg-gradient-to-r from-red-400 via-amber-400 to-emerald-400" style="width:49.4%"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Right: Distribution -->
+  <div class="flex-1">
+    <h2 class="text-lg font-bold text-gray-900 mb-4">Score Distribution</h2>
+    <div class="space-y-3">
+      <div class="rounded-xl bg-emerald-50 border border-emerald-100 p-4 flex items-center gap-4">
+        <div class="h-12 w-12 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-lg font-black shadow">7</div>
+        <div class="flex-1">
+          <p class="text-sm font-bold text-gray-900">Great <span class="text-gray-400 font-normal">8.0+</span></p>
+          <div class="mt-1 h-2 rounded-full bg-emerald-100"><div class="h-full rounded-full bg-emerald-500" style="width:4%"></div></div>
+        </div>
+        <span class="text-xs text-gray-400">2.2%</span>
+      </div>
+      <div class="rounded-xl bg-amber-50 border border-amber-100 p-4 flex items-center gap-4">
+        <div class="h-12 w-12 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg font-black shadow">89</div>
+        <div class="flex-1">
+          <p class="text-sm font-bold text-gray-900">Good <span class="text-gray-400 font-normal">5.3–7.9</span></p>
+          <div class="mt-1 h-2 rounded-full bg-amber-100"><div class="h-full rounded-full bg-amber-500" style="width:47%"></div></div>
+        </div>
+        <span class="text-xs text-gray-400">28.2%</span>
+      </div>
+      <div class="rounded-xl bg-orange-50 border border-orange-100 p-4 flex items-center gap-4">
+        <div class="h-12 w-12 rounded-xl bg-orange-500 text-white flex items-center justify-center text-lg font-black shadow">189</div>
+        <div class="flex-1">
+          <p class="text-sm font-bold text-gray-900">Average <span class="text-gray-400 font-normal">2.7–5.2</span></p>
+          <div class="mt-1 h-2 rounded-full bg-orange-100"><div class="h-full rounded-full bg-orange-500" style="width:100%"></div></div>
+        </div>
+        <span class="text-xs text-gray-400">59.8%</span>
+      </div>
+      <div class="rounded-xl bg-red-50 border border-red-100 p-4 flex items-center gap-4">
+        <div class="h-12 w-12 rounded-xl bg-red-500 text-white flex items-center justify-center text-lg font-black shadow">31</div>
+        <div class="flex-1">
+          <p class="text-sm font-bold text-gray-900">Poor <span class="text-gray-400 font-normal">0–2.6</span></p>
+          <div class="mt-1 h-2 rounded-full bg-red-100"><div class="h-full rounded-full bg-red-500" style="width:16%"></div></div>
+        </div>
+        <span class="text-xs text-gray-400">9.8%</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- MOCKUP 10: Bold Split + Dot Matrix -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="mockup-card mb-10">
+<p class="mockup-label">#10 — Bold Split + Percentage Labels</p>
+<h2 class="text-2xl font-bold text-gray-900 mb-6">Overview</h2>
+<div class="grid grid-cols-2 gap-0 rounded-2xl overflow-hidden shadow-xl border border-gray-200">
+  <div class="p-8 bg-white border-r border-gray-100 relative">
+    <div class="absolute top-0 left-0 w-1.5 h-full bg-brand-500"></div>
+    <p class="text-[11px] font-bold uppercase tracking-widest text-brand-500 ml-4">Games Analyzed</p>
+    <p class="text-6xl font-black text-gray-900 mt-2 ml-4">316</p>
+    <p class="text-xs text-gray-400 mt-2 ml-4">Full monetization database</p>
+  </div>
+  <div class="p-8 bg-white relative">
+    <div class="absolute top-0 left-0 w-1.5 h-full bg-amber-500"></div>
+    <p class="text-[11px] font-bold uppercase tracking-widest text-amber-500 ml-4">Average Score</p>
+    <div class="flex items-baseline gap-3 mt-2 ml-4">
+      <span class="text-6xl font-black text-gray-900">4.94</span>
+      <span class="text-xl text-gray-300 font-medium">/10</span>
+    </div>
+    <p class="text-xs text-amber-600 mt-2 ml-4 font-medium">Below industry midpoint</p>
+  </div>
+</div>
+
+<h2 class="text-2xl font-bold text-gray-900 mt-10 mb-6">Score Distribution</h2>
+<div class="rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+  <div class="grid grid-cols-4 divide-x divide-gray-100">
+    <div class="p-6 text-center hover:bg-emerald-50 transition-colors cursor-default">
+      <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 mb-3">
+        <span class="text-xl font-black text-emerald-700">7</span>
+      </div>
+      <p class="text-xs font-bold text-emerald-700 uppercase">Great</p>
+      <p class="text-[10px] text-gray-400 mt-1">8.0 — 10.0</p>
+      <div class="mt-4 mx-auto h-1.5 w-3/4 rounded-full bg-emerald-100">
+        <div class="h-full rounded-full bg-emerald-500" style="width:4%"></div>
+      </div>
+      <p class="mt-2 text-lg font-extrabold text-gray-900">2.2%</p>
+    </div>
+    <div class="p-6 text-center hover:bg-amber-50 transition-colors cursor-default">
+      <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-100 mb-3">
+        <span class="text-xl font-black text-amber-700">89</span>
+      </div>
+      <p class="text-xs font-bold text-amber-700 uppercase">Good</p>
+      <p class="text-[10px] text-gray-400 mt-1">5.3 — 7.9</p>
+      <div class="mt-4 mx-auto h-1.5 w-3/4 rounded-full bg-amber-100">
+        <div class="h-full rounded-full bg-amber-500" style="width:47%"></div>
+      </div>
+      <p class="mt-2 text-lg font-extrabold text-gray-900">28.2%</p>
+    </div>
+    <div class="p-6 text-center hover:bg-orange-50 transition-colors cursor-default">
+      <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 mb-3">
+        <span class="text-xl font-black text-orange-700">189</span>
+      </div>
+      <p class="text-xs font-bold text-orange-700 uppercase">Average</p>
+      <p class="text-[10px] text-gray-400 mt-1">2.7 — 5.2</p>
+      <div class="mt-4 mx-auto h-1.5 w-3/4 rounded-full bg-orange-100">
+        <div class="h-full rounded-full bg-orange-500" style="width:100%"></div>
+      </div>
+      <p class="mt-2 text-lg font-extrabold text-gray-900">59.8%</p>
+    </div>
+    <div class="p-6 text-center hover:bg-red-50 transition-colors cursor-default">
+      <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-red-100 mb-3">
+        <span class="text-xl font-black text-red-700">31</span>
+      </div>
+      <p class="text-xs font-bold text-red-700 uppercase">Poor</p>
+      <p class="text-[10px] text-gray-400 mt-1">0 — 2.6</p>
+      <div class="mt-4 mx-auto h-1.5 w-3/4 rounded-full bg-red-100">
+        <div class="h-full rounded-full bg-red-500" style="width:16%"></div>
+      </div>
+      <p class="mt-2 text-lg font-extrabold text-gray-900">9.8%</p>
+    </div>
+  </div>
+</div>
+</div>
+
+</body>
+</html>

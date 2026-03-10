@@ -36,7 +36,7 @@ async function getTrendingDeals() {
     .not("cover_image", "is", null)
     .neq("cover_image", "")
     .order("hot_score", { ascending: false, nullsFirst: false })
-    .limit(300);
+    .limit(1500);
 
   if (!popularGames?.length) return [];
 
@@ -95,7 +95,7 @@ async function getTrendingDeals() {
   // Collapse DLC/edition variants so only one entry per base game shows
   const deduped = deduplicateByBaseTitle(combined);
 
-  return deduped.slice(0, 150);
+  return deduped.slice(0, 750);
 }
 
 export default async function TrendingPage() {

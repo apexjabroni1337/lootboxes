@@ -33,7 +33,7 @@ async function getGamesWithDeals() {
     .from("games")
     .select("id, title, slug, cover_image, screenshot_image, genres, platforms, metacritic, release_date, hot_score")
     .order("hot_score", { ascending: false, nullsFirst: false })
-    .limit(48);
+    .limit(120);
 
   if (error || !games) return { games: [], totalCount: totalCount || 0 };
 

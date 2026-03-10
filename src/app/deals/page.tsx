@@ -67,12 +67,12 @@ async function getDeals() {
       .from("deals")
       .select(DEAL_SELECT)
       .order("discount_pct", { ascending: false })
-      .limit(500),
+      .limit(2500),
     supabase
       .from("deals")
       .select(DEAL_SELECT)
       .eq("is_historic_low", true)
-      .limit(450),
+      .limit(2250),
   ]);
 
   if (discountResult.error) {
@@ -136,7 +136,7 @@ async function getDeals() {
     return (b.discount_pct || 0) - (a.discount_pct || 0);
   });
 
-  return deduped.slice(0, 600);
+  return deduped.slice(0, 3000);
 }
 
 export default async function DealsPage({
