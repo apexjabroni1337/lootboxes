@@ -5,6 +5,7 @@ import { createServerClient } from "@/lib/supabase";
 import {
   Zap,
   ChevronRight,
+  ChevronDown,
   Clock,
   CheckCircle,
   HelpCircle,
@@ -279,85 +280,88 @@ export default async function LootboxGamePage({
           {/* Section: Overview */}
           {content.overview_html && (
             <section>
-              <SectionHeader icon={BookOpen} title="Monetization Overview" />
-              <div
-                className="prose prose-gray max-w-none"
-                dangerouslySetInnerHTML={{ __html: content.overview_html }}
-              />
+              <SectionHeader icon={BookOpen} title="Monetization Overview">
+                <div
+                  className="prose prose-gray max-w-none"
+                  dangerouslySetInnerHTML={{ __html: content.overview_html }}
+                />
+              </SectionHeader>
             </section>
           )}
 
           {/* Section: Drop Rate Visualization */}
           {dropRates.length > 0 && (
             <section>
-              <SectionHeader icon={BarChart3} title="Drop Rate Breakdown" />
-              <div className="bg-white dark:bg-gray-950 rounded-xl border border-gray-200 dark:border-gray-700 p-5 mb-4 shadow-sm">
-                <DropRateBarChart items={dropRates} />
-              </div>
+              <SectionHeader icon={BarChart3} title="Drop Rate Breakdown">
+                <div className="bg-white dark:bg-gray-950 rounded-xl border border-gray-200 dark:border-gray-700 p-5 mb-4 shadow-sm">
+                  <DropRateBarChart items={dropRates} />
+                </div>
 
-              {/* Drop rate table */}
-              <div className="bg-white dark:bg-gray-950 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b-2 border-gray-200 dark:border-gray-700">
-                      <th className="text-left py-3 px-4 font-bold text-gray-400 dark:text-gray-500 uppercase text-[11px] tracking-wider">Item</th>
-                      <th className="text-left py-3 px-4 font-bold text-gray-400 dark:text-gray-500 uppercase text-[11px] tracking-wider">Rarity</th>
-                      <th className="text-right py-3 px-4 font-bold text-gray-400 dark:text-gray-500 uppercase text-[11px] tracking-wider">Drop Rate</th>
-                      <th className="text-right py-3 px-4 font-bold text-gray-400 dark:text-gray-500 uppercase text-[11px] tracking-wider">~Avg. Opens</th>
-                      <th className="text-left py-3 px-4 font-bold text-gray-400 dark:text-gray-500 uppercase text-[11px] tracking-wider">Source</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dropRates.map((rate: any) => {
-                      const src = SOURCE_META[rate.source] || SOURCE_META.user_reported;
-                      const SrcIcon = src.icon;
-                      return (
-                        <tr key={rate.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-900 transition-colors">
-                          <td className="py-2.5 px-4 font-medium text-gray-900 dark:text-white">{rate.item_name}</td>
-                          <td className="py-2.5 px-4">
-                            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${getRarityColor(rate.rarity)}`}>
-                              {rate.rarity}
-                            </span>
-                          </td>
-                          <td className="py-2.5 px-4 text-right font-bold text-gray-900 dark:text-white">
-                            {rate.drop_rate_pct < 1
-                              ? `${rate.drop_rate_pct}%`
-                              : `${Number(rate.drop_rate_pct).toFixed(1)}%`}
-                          </td>
-                          <td className="py-2.5 px-4 text-right text-gray-500 dark:text-gray-400">
-                            {rate.drop_rate_pct > 0 && rate.drop_rate_pct < 100
-                              ? `~${Math.ceil(100 / rate.drop_rate_pct)} opens`
-                              : "—"}
-                          </td>
-                          <td className="py-2.5 px-4">
-                            <span className={`flex items-center gap-1 text-xs font-medium ${src.color}`}>
-                              <SrcIcon className="w-3.5 h-3.5" />
-                              {src.label}
-                            </span>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                {/* Drop rate table */}
+                <div className="bg-white dark:bg-gray-950 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b-2 border-gray-200 dark:border-gray-700">
+                        <th className="text-left py-3 px-4 font-bold text-gray-400 dark:text-gray-500 uppercase text-[11px] tracking-wider">Item</th>
+                        <th className="text-left py-3 px-4 font-bold text-gray-400 dark:text-gray-500 uppercase text-[11px] tracking-wider">Rarity</th>
+                        <th className="text-right py-3 px-4 font-bold text-gray-400 dark:text-gray-500 uppercase text-[11px] tracking-wider">Drop Rate</th>
+                        <th className="text-right py-3 px-4 font-bold text-gray-400 dark:text-gray-500 uppercase text-[11px] tracking-wider">~Avg. Opens</th>
+                        <th className="text-left py-3 px-4 font-bold text-gray-400 dark:text-gray-500 uppercase text-[11px] tracking-wider">Source</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {dropRates.map((rate: any) => {
+                        const src = SOURCE_META[rate.source] || SOURCE_META.user_reported;
+                        const SrcIcon = src.icon;
+                        return (
+                          <tr key={rate.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-900 transition-colors">
+                            <td className="py-2.5 px-4 font-medium text-gray-900 dark:text-white">{rate.item_name}</td>
+                            <td className="py-2.5 px-4">
+                              <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${getRarityColor(rate.rarity)}`}>
+                                {rate.rarity}
+                              </span>
+                            </td>
+                            <td className="py-2.5 px-4 text-right font-bold text-gray-900 dark:text-white">
+                              {rate.drop_rate_pct < 1
+                                ? `${rate.drop_rate_pct}%`
+                                : `${Number(rate.drop_rate_pct).toFixed(1)}%`}
+                            </td>
+                            <td className="py-2.5 px-4 text-right text-gray-500 dark:text-gray-400">
+                              {rate.drop_rate_pct > 0 && rate.drop_rate_pct < 100
+                                ? `~${Math.ceil(100 / rate.drop_rate_pct)} opens`
+                                : "—"}
+                            </td>
+                            <td className="py-2.5 px-4">
+                              <span className={`flex items-center gap-1 text-xs font-medium ${src.color}`}>
+                                <SrcIcon className="w-3.5 h-3.5" />
+                                {src.label}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </SectionHeader>
             </section>
           )}
 
           {/* Section: Cost Calculator */}
           {(content.cost_per_pull !== null || content.cost_to_pity !== null) && (
             <section>
-              <SectionHeader icon={Zap} title="Expected Cost Analysis" />
-              <CostCalculator
-                costPerPull={content.cost_per_pull}
-                costToPity={content.cost_to_pity}
-                pullsToPity={content.pulls_to_pity}
-                hasPity={content.has_pity_system}
-                currencyName={content.currency_name}
-                currencyPerDollar={content.currency_per_dollar}
-                topRarityRate={rarestItem?.drop_rate_pct ?? 0}
-                topRarityName={rarestItem?.rarity ?? "Rare"}
-              />
+              <SectionHeader icon={Zap} title="Expected Cost Analysis">
+                <CostCalculator
+                  costPerPull={content.cost_per_pull}
+                  costToPity={content.cost_to_pity}
+                  pullsToPity={content.pulls_to_pity}
+                  hasPity={content.has_pity_system}
+                  currencyName={content.currency_name}
+                  currencyPerDollar={content.currency_per_dollar}
+                  topRarityRate={rarestItem?.drop_rate_pct ?? 0}
+                  topRarityName={rarestItem?.rarity ?? "Rare"}
+                />
+              </SectionHeader>
             </section>
           )}
 
@@ -371,123 +375,130 @@ export default async function LootboxGamePage({
                     ? "Pity System Explained"
                     : "No Pity System"
                 }
-              />
-              <div
-                className="prose prose-gray max-w-none"
-                dangerouslySetInnerHTML={{ __html: content.pity_explanation_html }}
-              />
+              >
+                <div
+                  className="prose prose-gray max-w-none"
+                  dangerouslySetInnerHTML={{ __html: content.pity_explanation_html }}
+                />
+              </SectionHeader>
             </section>
           )}
 
           {/* Section: Score Breakdown */}
           {game.lootboxes_score !== null && (
             <section>
-              <SectionHeader icon={Scale} title="Score Breakdown" />
-              <div className="bg-white dark:bg-gray-950 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
-                <ScoreBreakdown
-                  overall={game.lootboxes_score}
-                  transparency={content.score_transparency}
-                  compliance={content.score_compliance}
-                  ageGating={content.score_age_gating}
-                  value={content.score_value}
-                  fairness={content.score_fairness}
-                  p2wImpact={content.score_p2w_impact}
-                  playerControl={content.score_player_control}
-                  psychDesign={content.score_psych_design}
-                />
-              </div>
+              <SectionHeader icon={Scale} title="Score Breakdown">
+                <div className="bg-white dark:bg-gray-950 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+                  <ScoreBreakdown
+                    overall={game.lootboxes_score}
+                    transparency={content.score_transparency}
+                    compliance={content.score_compliance}
+                    ageGating={content.score_age_gating}
+                    value={content.score_value}
+                    fairness={content.score_fairness}
+                    p2wImpact={content.score_p2w_impact}
+                    playerControl={content.score_player_control}
+                    psychDesign={content.score_psych_design}
+                  />
+                </div>
+              </SectionHeader>
             </section>
           )}
 
           {/* Section: Historical Changes */}
           {content.history_html && (
             <section>
-              <SectionHeader icon={History} title="Historical Changes" />
-              <div className="relative pl-6">
-                {/* Timeline line */}
-                <div className="absolute left-0 top-1 bottom-1 w-0.5 bg-gray-200" />
-                <div
-                  className="prose prose-gray max-w-none [&_p]:relative [&_p]:pl-4 [&_p]:before:content-[''] [&_p]:before:absolute [&_p]:before:-left-[5px] [&_p]:before:top-[10px] [&_p]:before:w-2.5 [&_p]:before:h-2.5 [&_p]:before:bg-brand-600 [&_p]:before:rounded-full [&_p]:before:border-2 [&_p]:before:border-white [&_p]:before:shadow-[0_0_0_2px_theme(colors.blue.200)] [&_strong]:text-brand-700"
-                  dangerouslySetInnerHTML={{ __html: content.history_html }}
-                />
-              </div>
+              <SectionHeader icon={History} title="Historical Changes">
+                <div className="relative pl-6">
+                  {/* Timeline line */}
+                  <div className="absolute left-0 top-1 bottom-1 w-0.5 bg-gray-200" />
+                  <div
+                    className="prose prose-gray max-w-none [&_p]:relative [&_p]:pl-4 [&_p]:before:content-[''] [&_p]:before:absolute [&_p]:before:-left-[5px] [&_p]:before:top-[10px] [&_p]:before:w-2.5 [&_p]:before:h-2.5 [&_p]:before:bg-brand-600 [&_p]:before:rounded-full [&_p]:before:border-2 [&_p]:before:border-white [&_p]:before:shadow-[0_0_0_2px_theme(colors.blue.200)] [&_strong]:text-brand-700"
+                    dangerouslySetInnerHTML={{ __html: content.history_html }}
+                  />
+                </div>
+              </SectionHeader>
             </section>
           )}
 
           {/* Section: Comparison Table */}
           {comparisons.length > 0 && (
             <section>
-              <SectionHeader icon={BarChart3} title="Compared to Similar Games" />
-              <div className="bg-white dark:bg-gray-950 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm">
-                <ComparisonTable
-                  current={{
-                    slug: game.slug,
-                    title: game.title,
-                    lootboxes_score: game.lootboxes_score,
-                    loot_system_type: game.loot_system_type,
-                    cost_per_pull: content.cost_per_pull,
-                    has_pity_system: content.has_pity_system,
-                    pulls_to_pity: content.pulls_to_pity,
-                  }}
-                  comparisons={comparisons}
-                />
-              </div>
+              <SectionHeader icon={BarChart3} title="Compared to Similar Games">
+                <div className="bg-white dark:bg-gray-950 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm">
+                  <ComparisonTable
+                    current={{
+                      slug: game.slug,
+                      title: game.title,
+                      lootboxes_score: game.lootboxes_score,
+                      loot_system_type: game.loot_system_type,
+                      cost_per_pull: content.cost_per_pull,
+                      has_pity_system: content.has_pity_system,
+                      pulls_to_pity: content.pulls_to_pity,
+                    }}
+                    comparisons={comparisons}
+                  />
+                </div>
+              </SectionHeader>
             </section>
           )}
 
           {/* Section: Community Sentiment */}
           {content.controversy_html && (
             <section>
-              <SectionHeader icon={Users} title="Community Sentiment & Controversy" />
-              <div
-                className="prose prose-gray max-w-none"
-                dangerouslySetInnerHTML={{ __html: content.controversy_html }}
-              />
+              <SectionHeader icon={Users} title="Community Sentiment & Controversy">
+                <div
+                  className="prose prose-gray max-w-none"
+                  dangerouslySetInnerHTML={{ __html: content.controversy_html }}
+                />
+              </SectionHeader>
             </section>
           )}
 
           {/* Section: Spending Tips */}
           {content.tips_html && (
             <section>
-              <SectionHeader icon={Lightbulb} title="Spending Tips & Advice" />
-              <div className="bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 p-6">
-                <div
-                  className="prose max-w-none [&_p]:text-amber-800 [&_strong]:text-amber-900"
-                  dangerouslySetInnerHTML={{ __html: content.tips_html }}
-                />
-              </div>
+              <SectionHeader icon={Lightbulb} title="Spending Tips & Advice">
+                <div className="bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 p-6">
+                  <div
+                    className="prose max-w-none [&_p]:text-amber-800 [&_strong]:text-amber-900"
+                    dangerouslySetInnerHTML={{ __html: content.tips_html }}
+                  />
+                </div>
+              </SectionHeader>
             </section>
           )}
 
           {/* Section: Editorial / Verdict */}
           {content.editorial_html && (
             <section>
-              <SectionHeader icon={BookOpen} title="Our Verdict" />
-              <div
-                className="prose prose-gray prose-lg max-w-none mb-6"
-                dangerouslySetInnerHTML={{ __html: content.editorial_html }}
-              />
+              <SectionHeader icon={BookOpen} title="Our Verdict">
+                <div
+                  className="prose prose-gray prose-lg max-w-none mb-6"
+                  dangerouslySetInnerHTML={{ __html: content.editorial_html }}
+                />
 
-              {/* Verdict summary box */}
-              {game.lootboxes_score !== null && (
-                <div className="bg-gradient-to-br from-brand-600 to-brand-700 rounded-2xl p-8 text-center shadow-lg">
-                  <div className="text-xs text-white/60 uppercase tracking-[3px] font-semibold mb-2">
-                    Lootboxes Score
+                {/* Verdict summary box */}
+                {game.lootboxes_score !== null && (
+                  <div className="bg-gradient-to-br from-brand-600 to-brand-700 rounded-2xl p-8 text-center shadow-lg">
+                    <div className="text-xs text-white/60 uppercase tracking-[3px] font-semibold mb-2">
+                      Lootboxes Score
+                    </div>
+                    <div className="text-5xl font-black text-white mb-4">
+                      {game.lootboxes_score.toFixed(1)}/10
+                    </div>
+                    <p className="text-sm text-white/80 max-w-lg mx-auto leading-relaxed">
+                      {game.lootboxes_score >= 7
+                        ? `${game.title} demonstrates strong consumer-friendly practices with good transparency and fair value for players.`
+                        : game.lootboxes_score >= 5
+                        ? `${game.title} offers a mixed monetization experience — some consumer-friendly elements alongside areas for improvement.`
+                        : game.lootboxes_score >= 3
+                        ? `${game.title} falls below average in consumer protection. Players should exercise caution and set spending limits.`
+                        : `${game.title} scores poorly on consumer protection metrics. We recommend extreme caution with this monetization system.`}
+                    </p>
                   </div>
-                  <div className="text-5xl font-black text-white mb-4">
-                    {game.lootboxes_score.toFixed(1)}/10
-                  </div>
-                  <p className="text-sm text-white/80 max-w-lg mx-auto leading-relaxed">
-                    {game.lootboxes_score >= 7
-                      ? `${game.title} demonstrates strong consumer-friendly practices with good transparency and fair value for players.`
-                      : game.lootboxes_score >= 5
-                      ? `${game.title} offers a mixed monetization experience — some consumer-friendly elements alongside areas for improvement.`
-                      : game.lootboxes_score >= 3
-                      ? `${game.title} falls below average in consumer protection. Players should exercise caution and set spending limits.`
-                      : `${game.title} scores poorly on consumer protection metrics. We recommend extreme caution with this monetization system.`}
-                  </p>
-                </div>
-              )}
+                )}
+              </SectionHeader>
             </section>
           )}
 
@@ -496,7 +507,7 @@ export default async function LootboxGamePage({
             <div className="flex flex-wrap gap-3">
               <Link
                 href={`/games/${game.slug}`}
-                className="flex items-center gap-2 bg-brand-50 dark:bg-brand-950/30 rounded-lg px-4 py-2.5 text-sm font-semibold text-brand-700 hover:bg-brand-100 dark:hover:bg-brand-900/40 transition-colors"
+                className="flex items-center gap-2 bg-brand-50 dark:bg-brand-900/40 rounded-lg px-4 py-2.5 text-sm font-semibold text-brand-700 dark:text-brand-300 hover:bg-brand-100 dark:hover:bg-brand-900/60 transition-colors"
               >
                 View Deals for {game.title}
                 <ArrowRight className="w-4 h-4" />
@@ -526,16 +537,22 @@ export default async function LootboxGamePage({
 function SectionHeader({
   icon: Icon,
   title,
+  children,
 }: {
   icon: React.ElementType;
   title: string;
+  children?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center gap-3 mb-5 pb-3 border-b-2 border-gray-200 dark:border-gray-700">
-      <div className="w-8 h-8 rounded-lg bg-brand-50 dark:bg-brand-950/30 flex items-center justify-center">
-        <Icon className="w-4 h-4 text-brand-600" />
-      </div>
-      <h2 className="text-xl font-extrabold uppercase tracking-tight text-gray-900 dark:text-white">{title}</h2>
-    </div>
+    <details open className="group">
+      <summary className="flex items-center gap-3 mb-5 pb-3 border-b-2 border-gray-200 dark:border-gray-700 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+        <div className="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center">
+          <Icon className="w-4 h-4 text-white" />
+        </div>
+        <h2 className="text-xl font-extrabold uppercase tracking-tight text-gray-900 dark:text-white flex-1">{title}</h2>
+        <ChevronDown className="w-5 h-5 text-gray-400 transition-transform group-open:rotate-180" />
+      </summary>
+      {children}
+    </details>
   );
 }

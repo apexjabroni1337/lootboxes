@@ -302,7 +302,7 @@ export default function TradeUpClient({ cases, itemsByCase }: Props) {
             <ChevronLeft className="h-4 w-4" /> CS2 Skins Hub
           </Link>
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/300 text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-600 text-white">
               <Calculator className="h-5 w-5" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">

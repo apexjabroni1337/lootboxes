@@ -141,7 +141,7 @@ function BentoGameCard({
 
       <div className={`absolute bottom-0 left-0 right-0 ${featured ? "p-6" : "p-4"}`}>
         {featured && (
-          <span className="inline-block text-[10px] font-bold uppercase tracking-widest text-emerald-400 bg-emerald-50 dark:bg-emerald-950/300/20 border border-emerald-400/30 rounded-full px-3 py-1 mb-3">
+          <span className="inline-block text-[10px] font-bold uppercase tracking-widest text-emerald-400 bg-emerald-500/20 border border-emerald-400/30 rounded-full px-3 py-1 mb-3">
             Top Rated
           </span>
         )}
@@ -165,12 +165,12 @@ function BentoGameCard({
             </span>
           )}
           {tags.includes("multi_system") && (
-            <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-orange-50 dark:bg-orange-950/300/20 text-orange-300 backdrop-blur-sm">
+            <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-orange-500/20 text-orange-300 backdrop-blur-sm">
               Multi-System
             </span>
           )}
           {featured && content?.has_pity_system && (
-            <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/300/20 text-emerald-300 backdrop-blur-sm">
+            <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 backdrop-blur-sm">
               Pity System
             </span>
           )}
@@ -369,27 +369,30 @@ export default function LootboxDatabaseClient({
       {filteredGames.length > 5 && (
         <div className="container-main pb-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            <div className="col-span-2 rounded-2xl bg-gradient-to-br from-indigo-50 dark:from-indigo-950/30 to-violet-50 border border-indigo-200 dark:border-indigo-700/30 p-6 md:p-8 flex items-center">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 w-full">
+            <div className="col-span-2 relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 p-6 md:p-8 flex items-center">
+              {/* Decorative elements */}
+              <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-indigo-500/10 blur-2xl" />
+              <div className="absolute -left-8 -bottom-8 h-32 w-32 rounded-full bg-purple-500/10 blur-2xl" />
+              <div className="relative grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 w-full">
                 <div className="text-center md:text-left">
-                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">
+                  <p className="text-3xl md:text-4xl font-extrabold text-white">
                     {filteredGames.length}
                   </p>
-                  <p className="text-xs text-indigo-400 font-medium mt-1">Games Analyzed</p>
+                  <p className="text-xs text-indigo-300/70 font-medium mt-1">Games Analyzed</p>
                 </div>
                 <div className="text-center md:text-left">
-                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">
+                  <p className="text-3xl md:text-4xl font-extrabold text-white">
                     {totalDropRates}+
                   </p>
-                  <p className="text-xs text-indigo-400 font-medium mt-1">Drop Rates</p>
+                  <p className="text-xs text-indigo-300/70 font-medium mt-1">Drop Rates</p>
                 </div>
                 <div className="text-center md:text-left">
-                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">{avgScore}</p>
-                  <p className="text-xs text-indigo-400 font-medium mt-1">Avg Score</p>
+                  <p className="text-3xl md:text-4xl font-extrabold text-white">{avgScore}</p>
+                  <p className="text-xs text-indigo-300/70 font-medium mt-1">Avg Score</p>
                 </div>
                 <div className="text-center md:text-left">
-                  <p className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">8</p>
-                  <p className="text-xs text-indigo-400 font-medium mt-1">Dimensions</p>
+                  <p className="text-3xl md:text-4xl font-extrabold text-white">8</p>
+                  <p className="text-xs text-indigo-300/70 font-medium mt-1">Dimensions</p>
                 </div>
               </div>
             </div>

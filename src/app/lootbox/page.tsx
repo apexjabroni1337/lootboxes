@@ -329,7 +329,7 @@ export default async function LootboxHubPage({
           className="group flex items-center justify-between rounded-2xl bg-gradient-to-r from-indigo-50 dark:from-indigo-950/30 via-purple-50 dark:via-purple-950/20 to-pink-50 border border-indigo-200 dark:border-indigo-700/30 px-6 md:px-8 py-5 hover:border-indigo-300 hover:shadow-lg transition-all"
         >
           <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-50 dark:from-indigo-950/300 to-purple-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-50 dark:from-indigo-950 to-purple-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
               <Trophy className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -345,7 +345,7 @@ export default async function LootboxHubPage({
       <div className="container-main py-8 pb-16">
         <div className="rounded-2xl bg-gradient-to-br from-gray-50 dark:from-gray-900 to-slate-50 dark:to-slate-950/20 border border-gray-200 dark:border-gray-700 p-8">
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-50 dark:from-blue-950/300 to-indigo-600 flex items-center justify-center shadow-lg">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-50 dark:from-blue-950 to-indigo-600 flex items-center justify-center shadow-lg">
               <Shield className="w-5 h-5 text-white" />
             </div>
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">How We Rate Games</h2>

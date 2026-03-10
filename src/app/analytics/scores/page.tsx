@@ -223,28 +223,28 @@ export default async function ScoresPage() {
           <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Score Legend</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/300"></div>
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600"></div>
               <div className="text-sm">
                 <p className="font-medium text-gray-900 dark:text-white">8–10</p>
                 <p className="text-gray-600 dark:text-gray-300">Great Value</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-950/300"></div>
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-600"></div>
               <div className="text-sm">
                 <p className="font-medium text-gray-900 dark:text-white">6–7.9</p>
                 <p className="text-gray-600 dark:text-gray-300">Good Value</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-50 dark:bg-orange-950/300"></div>
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-600"></div>
               <div className="text-sm">
                 <p className="font-medium text-gray-900 dark:text-white">4–5.9</p>
                 <p className="text-gray-600 dark:text-gray-300">Average</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-red-50 dark:bg-red-950/300"></div>
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-red-600"></div>
               <div className="text-sm">
                 <p className="font-medium text-gray-900 dark:text-white">0–3.9</p>
                 <p className="text-gray-600 dark:text-gray-300">Poor Value</p>

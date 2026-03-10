@@ -279,7 +279,7 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
           <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-gray-900 to-gray-800 p-8 text-center relative overflow-hidden">
             {/* Glow effect on knife */}
             {lastResult?.isKnife && (
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 dark:from-yellow-950/300/20 to-transparent animate-pulse" />
+              <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-transparent animate-pulse" />
             )}
 
             <div className="relative z-10">
@@ -334,7 +334,7 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
               <button
                 onClick={openTen}
                 disabled={opening || caseItems.length === 0}
-                className="rounded-xl bg-gradient-to-r from-yellow-50 dark:from-yellow-950/300 to-orange-50 dark:to-orange-950/200 px-8 py-3 text-sm font-bold text-white hover:from-yellow-600 hover:to-orange-600 disabled:opacity-50 transition-all hover:scale-105 active:scale-95"
+                className="rounded-xl bg-gradient-to-r from-yellow-600 to-orange-600 px-8 py-3 text-sm font-bold text-white hover:from-yellow-700 hover:to-orange-700 disabled:opacity-50 transition-all hover:scale-105 active:scale-95"
               >
                 {opening ? "Opening..." : `Open 10x — $${(CASE_COST * 10).toFixed(2)}`}
               </button>
@@ -435,7 +435,7 @@ export default function SimulatorClient({ cases, itemsByCase }: SimulatorClientP
                                 loading="lazy"
                               />
                             ) : (
-                              <div className="h-16 w-16 rounded flex items-center justify-center text-white text-xs font-bold mb-1 bg-yellow-50 dark:bg-yellow-950/300">
+                              <div className="h-16 w-16 rounded flex items-center justify-center text-white text-xs font-bold mb-1 bg-yellow-600">
                                 ★
                               </div>
                             )}

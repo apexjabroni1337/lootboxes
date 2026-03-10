@@ -209,7 +209,7 @@ export default async function SpendingGuidePage({ params }: Props) {
               )}
             </div>
             <div>
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 dark:bg-amber-950/300/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-amber-300 mb-1">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-amber-300 mb-1">
                 <SystemIcon className="h-3.5 w-3.5" />
                 {SYSTEM_LABELS[guide.systemType] || guide.systemType}
               </div>
@@ -260,7 +260,7 @@ export default async function SpendingGuidePage({ params }: Props) {
               — so you get the most value for your money.
             </p>
             {explainer && (
-              <div className="mt-4 flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50 dark:bg-blue-950/30/50 p-4">
+              <div className="mt-4 flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50 dark:bg-blue-950/20 p-4">
                 <Info className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-xs font-bold text-blue-700 uppercase tracking-wide mb-1">

@@ -247,7 +247,7 @@ export default function FloatCheckerPage() {
             <ChevronLeft className="h-4 w-4" /> CS2 Skins Hub
           </Link>
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/300 text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white">
               <Search className="h-5 w-5" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Float Value Checker</h1>
@@ -300,7 +300,7 @@ export default function FloatCheckerPage() {
               </div>
               <button
                 onClick={handleSearch}
-                className="rounded-lg bg-blue-50 dark:bg-blue-950/300 px-6 py-3 font-semibold text-white hover:bg-blue-600 transition-colors"
+                className="rounded-lg bg-blue-500 px-6 py-3 font-semibold text-white hover:bg-blue-600 transition-colors"
               >
                 Check
               </button>

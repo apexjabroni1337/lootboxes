@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import {
   BarChart3,
@@ -18,6 +18,7 @@ import {
   HelpCircle,
   Info,
   RefreshCw,
+  Search,
 } from "lucide-react";
 import GameAvatar from "@/components/ui/GameAvatar";
 
@@ -25,6 +26,7 @@ interface GameOption {
   id: string;
   title: string;
   slug: string;
+  cover_image: string | null;
   lootboxes_score: number;
   loot_system_type: string;
   cost_per_pull: number | null;
@@ -44,6 +46,13 @@ interface GameData {
   game: GameOption;
   rates: DropRate[];
   error?: boolean;
+}
+
+function GameIcon({ game, className = "w-full h-full" }: { game: GameOption; className?: string }) {
+  if (game.cover_image) {
+    return <img src={game.cover_image} alt={game.title} className={`${className} object-cover`} loading="lazy" />;
+  }
+  return <GameAvatar gameName={game.title} size="sm" aspectRatio="square" />;
 }
 
 const SYSTEM_COLORS: Record<string, string> = {
@@ -103,6 +112,9 @@ export default function OddsComparisonPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [loadingRates, setLoadingRates] = useState<Set<string>>(new Set());
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   // Fetch game list
   useEffect(() => {
@@ -120,6 +132,17 @@ export default function OddsComparisonPage() {
         setError(err.message || "Failed to load games");
         setLoading(false);
       });
+  }, []);
+
+  // Close search dropdown on click outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setShowSearchDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   // Fetch drop rates for a game
@@ -216,10 +239,10 @@ export default function OddsComparisonPage() {
           </Link>
 
           <div className="flex items-center gap-4 mb-5">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-50 dark:bg-purple-950/300/20 backdrop-blur-sm border border-purple-400/20">
-              <BarChart3 className="h-7 w-7 text-purple-400" />
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-500/20 backdrop-blur-sm border border-purple-400/20">
+              <BarChart3 className="h-7 w-7 text-purple-300" />
             </div>
-            <div className="inline-flex rounded-full bg-purple-50 dark:bg-purple-950/300/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-purple-300 border border-purple-400/20">
+            <div className="inline-flex rounded-full bg-purple-500/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-white border border-purple-400/25">
               <Scale className="h-4 w-4 mr-1.5" /> Comparison Tool
             </div>
           </div>
@@ -253,7 +276,7 @@ export default function OddsComparisonPage() {
                   style={{ borderLeftColor: COMPARE_COLORS[idx], borderLeftWidth: 3 }}
                 >
                   <div className="flex-shrink-0 w-6 h-6 rounded-full overflow-hidden">
-                    <GameAvatar gameName={game.title} size="sm" aspectRatio="square" />
+                    <GameIcon game={game} />
                   </div>
                   <span className="font-medium text-gray-800 dark:text-gray-100 truncate max-w-[140px]">
                     {game.title}
@@ -269,29 +292,70 @@ export default function OddsComparisonPage() {
             })}
 
             {selectedIds.length < 4 && (
-              <select
-                value=""
-                onChange={(e) => {
-                  if (e.target.value) addGame(e.target.value);
-                }}
-                className="rounded-lg border border-dashed border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-950 px-3 py-2 text-sm text-gray-500 dark:text-gray-400 focus:border-purple-300 focus:outline-none"
-                disabled={loading}
-              >
-                <option value="">
-                  {loading
-                    ? "Loading games..."
-                    : error
-                      ? "Failed to load games"
-                      : `+ Add game (${4 - selectedIds.length} remaining)`}
-                </option>
-                {allGames
-                  .filter((g) => !selectedIds.includes(g.id))
-                  .map((g) => (
-                    <option key={g.id} value={g.id}>
-                      {g.title}
-                    </option>
-                  ))}
-              </select>
+              <div ref={searchRef} className="relative">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setShowSearchDropdown(true);
+                    }}
+                    onFocus={() => setShowSearchDropdown(true)}
+                    placeholder={
+                      loading
+                        ? "Loading games..."
+                        : error
+                          ? "Failed to load games"
+                          : `Search or browse games (${4 - selectedIds.length} remaining)`
+                    }
+                    className="rounded-lg border border-dashed border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-950 pl-9 pr-3 py-2 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-purple-400 focus:ring-1 focus:ring-purple-400/30 focus:outline-none w-64"
+                    disabled={loading}
+                  />
+                </div>
+                {showSearchDropdown && !loading && !error && (
+                  <div className="absolute top-full left-0 mt-1 w-72 max-h-60 overflow-y-auto rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-xl z-50">
+                    {allGames
+                      .filter(
+                        (g) =>
+                          !selectedIds.includes(g.id) &&
+                          g.title.toLowerCase().includes(searchQuery.toLowerCase())
+                      )
+                      .slice(0, 20)
+                      .map((g) => (
+                        <button
+                          key={g.id}
+                          onClick={() => {
+                            addGame(g.id);
+                            setSearchQuery("");
+                            setShowSearchDropdown(false);
+                          }}
+                          className="flex items-center gap-2.5 w-full px-3 py-2.5 text-left text-sm hover:bg-purple-50 dark:hover:bg-purple-950/30 transition-colors border-b border-gray-50 dark:border-gray-800 last:border-0"
+                        >
+                          <div className="flex-shrink-0 w-6 h-6 rounded overflow-hidden">
+                            <GameIcon game={g} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="font-medium text-gray-800 dark:text-gray-200 truncate block">{g.title}</span>
+                            <span className="text-[10px] text-gray-400">
+                              {SYSTEM_LABELS[g.loot_system_type] || g.loot_system_type} • Score: {g.lootboxes_score}
+                            </span>
+                          </div>
+                        </button>
+                      ))}
+                    {allGames.filter(
+                      (g) =>
+                        !selectedIds.includes(g.id) &&
+                        g.title.toLowerCase().includes(searchQuery.toLowerCase())
+                    ).length === 0 && (
+                      <div className="px-4 py-3 text-sm text-gray-400 text-center">
+                        No games found
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
@@ -404,7 +468,7 @@ export default function OddsComparisonPage() {
                           >
                             <div className="flex flex-col items-center gap-1.5">
                               <div className="w-8 h-8 rounded-lg overflow-hidden mx-auto">
-                                <GameAvatar gameName={game.title} size="sm" aspectRatio="square" />
+                                <GameIcon game={game} />
                               </div>
                               {game.title}
                             </div>
@@ -506,7 +570,7 @@ export default function OddsComparisonPage() {
                 {selectedData.length >= 2 && bestOverall && (
                   <div className="rounded-2xl border border-emerald-200 dark:border-emerald-700/30 bg-gradient-to-r from-emerald-50 dark:from-emerald-950/30 to-teal-50 dark:to-teal-950/20 p-6 mb-8 shadow-sm">
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-50 dark:from-emerald-950/300 to-teal-600">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-50 dark:from-emerald-950 to-teal-600">
                         <Trophy className="h-5 w-5 text-white" />
                       </div>
                       <h3 className="text-lg font-bold text-emerald-900">Best Overall</h3>
@@ -539,7 +603,7 @@ export default function OddsComparisonPage() {
                     >
                       <div className="flex items-center gap-2 mb-1">
                         <div className="flex-shrink-0 w-8 h-8 rounded-lg overflow-hidden" style={{ boxShadow: `0 0 0 2px ${COMPARE_COLORS[idx]}` }}>
-                          <GameAvatar gameName={game.title} size="sm" aspectRatio="square" />
+                          <GameIcon game={game} />
                         </div>
                         <h3 className="font-bold text-gray-900 dark:text-white">{game.title}</h3>
                       </div>

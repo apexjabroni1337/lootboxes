@@ -278,7 +278,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           {/* Author + nav row */}
           <div className="mt-6 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-brand-50 dark:from-brand-950/300 to-brand-700 flex items-center justify-center text-white font-bold text-sm">
+              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-brand-50 dark:from-brand-950 to-brand-700 flex items-center justify-center text-white font-bold text-sm">
                 LB
               </div>
               <div>

@@ -144,7 +144,7 @@ export default async function DropRatesPage() {
       <section className="border-b border-gray-100 dark:border-gray-800">
         <div className="container-main py-10">
           <div className="flex rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-md">
-            <div className="w-1.5 bg-gradient-to-b from-brand-50 dark:from-brand-950/300 via-purple-50 dark:via-purple-950/200 to-rose-500 flex-shrink-0" />
+            <div className="w-1.5 bg-gradient-to-b from-brand-50 dark:from-brand-950 via-purple-50 dark:via-purple-950 to-rose-500 flex-shrink-0" />
             <div className="p-8 flex-1 bg-gradient-to-r from-gray-50 dark:from-gray-900/50 to-white dark:to-gray-950">
               <span className="text-[11px] font-bold text-brand-600 uppercase tracking-widest">
                 Verified Data
@@ -184,7 +184,7 @@ export default async function DropRatesPage() {
         {/* ── Methodology callout with accent bar ── */}
         <div className="flex rounded-xl overflow-hidden border border-brand-200 dark:border-brand-700/30 shadow-sm">
           <div className="w-1.5 bg-gradient-to-b from-brand-400 to-blue-500 flex-shrink-0" />
-          <div className="p-5 flex-1 bg-brand-50 dark:bg-brand-950/30/50">
+          <div className="p-5 flex-1 bg-brand-50 dark:bg-brand-950/20">
             <div className="flex items-start gap-3">
               <Info className="mt-0.5 h-5 w-5 flex-shrink-0 text-brand-600" />
               <div>
@@ -249,7 +249,7 @@ export default async function DropRatesPage() {
 
         {/* ── CTA ── */}
         <div className="mt-12 flex rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
-          <div className="w-1.5 bg-gradient-to-b from-brand-50 dark:from-brand-950/300 to-purple-500 flex-shrink-0" />
+          <div className="w-1.5 bg-gradient-to-b from-brand-50 dark:from-brand-950 to-purple-500 flex-shrink-0" />
           <div className="p-6 flex-1 bg-gradient-to-r from-gray-50 dark:from-gray-900 to-white dark:to-gray-950 text-center">
             <Sparkles className="mx-auto h-6 w-6 text-brand-600" />
             <h3 className="mt-2 text-lg font-serif font-bold text-gray-900 dark:text-white">

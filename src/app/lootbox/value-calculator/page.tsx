@@ -194,10 +194,10 @@ export default function ValueCalculatorPage() {
             <ChevronLeft className="h-4 w-4" /> Loot Boxes
           </Link>
           <div className="flex items-center gap-4 mb-5">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 dark:bg-emerald-950/300/20 backdrop-blur-sm border border-emerald-400/20">
-              <Calculator className="h-7 w-7 text-emerald-400" />
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/20 backdrop-blur-sm border border-emerald-400/20">
+              <Calculator className="h-7 w-7 text-emerald-300" />
             </div>
-            <div className="inline-flex rounded-full bg-emerald-50 dark:bg-emerald-950/300/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-emerald-300 border border-emerald-400/20">
+            <div className="inline-flex rounded-full bg-emerald-500/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-white border border-emerald-400/25">
               <DollarSign className="h-4 w-4 mr-1.5" /> Value Tool
             </div>
           </div>
@@ -346,7 +346,7 @@ export default function ValueCalculatorPage() {
                   {/* Cost breakdown */}
                   <div className="rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-50 dark:from-emerald-950/300 to-teal-600">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-50 dark:from-emerald-950 to-teal-600">
                         <DollarSign className="h-5 w-5 text-white" />
                       </div>
                       Cost Breakdown
@@ -387,7 +387,7 @@ export default function ValueCalculatorPage() {
                   {/* Budget simulator */}
                   <div className="rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-50 dark:from-blue-950/300 to-indigo-600">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-50 dark:from-blue-950 to-indigo-600">
                         <Wallet className="h-5 w-5 text-white" />
                       </div>
                       Budget Simulator

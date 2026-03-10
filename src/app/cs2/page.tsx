@@ -140,16 +140,16 @@ export default function CS2HubPage() {
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-gray-100 dark:border-gray-800 bg-gradient-to-br from-gray-900 via-gray-800 to-yellow-900 py-16 sm:py-24">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 right-0 h-96 w-96 rounded-full bg-yellow-50 dark:bg-yellow-950/300/10 blur-3xl" />
-          <div className="absolute -bottom-40 -left-20 h-80 w-80 rounded-full bg-orange-50 dark:bg-orange-950/300/10 blur-3xl" />
+          <div className="absolute -top-40 right-0 h-96 w-96 rounded-full bg-yellow-500/10 blur-3xl" />
+          <div className="absolute -bottom-40 -left-20 h-80 w-80 rounded-full bg-orange-500/10 blur-3xl" />
         </div>
 
         <div className="container-main relative z-10">
           <div className="flex items-center gap-3 mb-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-50 dark:bg-yellow-950/300/20 backdrop-blur-sm">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-500/20 backdrop-blur-sm">
               <Crosshair className="h-6 w-6 text-yellow-400" />
             </div>
-            <div className="inline-flex rounded-full bg-yellow-50 dark:bg-yellow-950/300/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-yellow-300">
+            <div className="inline-flex rounded-full bg-yellow-500/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-yellow-300">
               CS2 Skin Economy Hub
             </div>
           </div>
@@ -166,8 +166,8 @@ export default function CS2HubPage() {
           </p>
 
           {/* Score callout */}
-          <div className="mt-8 inline-flex items-center gap-4 rounded-xl border border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950/300/10 backdrop-blur-sm px-6 py-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/300 text-xl font-black text-white">
+          <div className="mt-8 inline-flex items-center gap-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-sm px-6 py-4">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-600 text-xl font-black text-white">
               8.5
             </div>
             <div>
@@ -176,7 +176,7 @@ export default function CS2HubPage() {
             </div>
             <Link
               href="/lootbox/counter-strike-2"
-              className="ml-4 flex items-center gap-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/300/20 px-3 py-2 text-sm font-semibold text-emerald-300 hover:bg-emerald-50 dark:bg-emerald-950/300/30 transition-colors"
+              className="ml-4 flex items-center gap-1 rounded-lg bg-emerald-500/20 px-3 py-2 text-sm font-semibold text-emerald-300 hover:bg-emerald-500/30 transition-colors"
             >
               Read review <ArrowRight className="h-3.5 w-3.5" />
             </Link>
@@ -198,7 +198,7 @@ export default function CS2HubPage() {
               { title: "100% Cosmetic", desc: "Zero pay-to-win. Skins are purely visual — no gameplay advantage whatsoever." },
               { title: "Investment Potential", desc: "Many skins appreciate over time. Some players break even or profit on their collection." },
             ].map((item) => (
-              <div key={item.title} className="rounded-xl border border-emerald-200 dark:border-emerald-700/30 bg-gradient-to-br from-emerald-50 dark:from-emerald-950/30/60 to-white dark:to-gray-950 p-5">
+              <div key={item.title} className="rounded-xl border border-emerald-200 dark:border-emerald-700/30 bg-gradient-to-br from-emerald-50 dark:from-emerald-950/20 to-white dark:to-gray-950 p-5">
                 <div className="flex items-center gap-2 mb-2">
                   <CheckCircle className="h-4 w-4 text-emerald-600" />
                   <h3 className="font-semibold text-gray-900 dark:text-white">{item.title}</h3>
@@ -245,7 +245,7 @@ export default function CS2HubPage() {
             className="group flex items-center justify-between rounded-2xl bg-gradient-to-r from-amber-50 dark:from-amber-950/30 via-yellow-50 dark:via-yellow-950/20 to-orange-50 dark:to-orange-950/20 border border-amber-200 px-6 md:px-8 py-6 hover:border-amber-300 hover:shadow-lg transition-all"
           >
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-50 dark:from-amber-950/300 to-orange-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-50 dark:from-amber-950 to-orange-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
                 <Package className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -322,7 +322,7 @@ export default function CS2HubPage() {
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link
                 href="/cs2/prices"
-                className="inline-flex items-center gap-2 rounded-lg bg-orange-50 dark:bg-orange-950/300 px-6 py-3 font-semibold text-white hover:bg-orange-600 transition-colors"
+                className="inline-flex items-center gap-2 rounded-lg bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600 transition-colors"
               >
                 <TrendingUp className="h-4 w-4" />
                 Track Prices

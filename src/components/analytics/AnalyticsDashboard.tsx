@@ -308,7 +308,7 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
                           {SYSTEM_LABELS[game.loot_system_type] || game.loot_system_type}
                         </p>
                       </div>
-                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-950/300 flex items-center justify-center text-white text-sm font-extrabold border-2 border-white/80 shadow-lg">
+                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center text-white text-sm font-extrabold border-2 border-white/80 shadow-lg">
                         {game.score.toFixed(1)}
                       </div>
                     </div>
@@ -354,7 +354,7 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
                           {SYSTEM_LABELS[game.loot_system_type] || game.loot_system_type}
                         </p>
                       </div>
-                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-50 dark:bg-red-950/300 flex items-center justify-center text-white text-sm font-extrabold border-2 border-white/80 shadow-lg">
+                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white text-sm font-extrabold border-2 border-white/80 shadow-lg">
                         {game.score.toFixed(1)}
                       </div>
                     </div>

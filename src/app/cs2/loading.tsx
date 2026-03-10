@@ -5,7 +5,7 @@ export default function Loading() {
       <section className="relative overflow-hidden border-b border-gray-100 dark:border-gray-800 bg-gradient-to-br from-gray-900 via-gray-800 to-yellow-900 py-16 sm:py-24">
         <div className="container-main">
           <div className="flex items-center gap-3 mb-4">
-            <div className="h-12 w-12 rounded-xl bg-yellow-50 dark:bg-yellow-950/300/20" />
+            <div className="h-12 w-12 rounded-xl bg-yellow-500/20" />
             <div className="h-8 w-48 bg-gray-700 rounded-full" />
           </div>
           <div className="h-12 w-64 bg-gray-700 rounded mt-4" />

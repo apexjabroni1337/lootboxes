@@ -158,7 +158,7 @@ export default async function TrendingPage() {
 
                     {/* Rank badge */}
                     <div className="absolute top-3 left-3">
-                      <span className="flex items-center justify-center w-8 h-8 rounded-full bg-orange-50 dark:bg-orange-950/300 text-white text-sm font-bold shadow-lg">
+                      <span className="flex items-center justify-center w-8 h-8 rounded-full bg-orange-500 text-white text-sm font-bold shadow-lg">
                         #{idx + 1}
                       </span>
                     </div>
@@ -255,7 +255,7 @@ export default async function TrendingPage() {
           className="group flex items-center justify-between rounded-2xl bg-gradient-to-r from-orange-50 dark:from-orange-950/30 via-amber-50 dark:via-amber-950/20 to-yellow-50 dark:to-yellow-950/20 border border-orange-200 dark:border-orange-700/30 px-6 md:px-8 py-5 hover:border-orange-300 hover:shadow-lg transition-all"
         >
           <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-orange-50 dark:from-orange-950/300 to-amber-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-orange-50 dark:from-orange-950 to-amber-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
               <Flame className="w-5 h-5 text-white" />
             </div>
             <div>

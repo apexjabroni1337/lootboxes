@@ -17,7 +17,7 @@ export async function GET() {
   const { data, error } = await supabase
     .from("games")
     .select(
-      "id, title, slug, lootboxes_score, loot_system_type, lootbox_content(cost_per_pull, has_pity_system, score_transparency, score_value)"
+      "id, title, slug, cover_image, lootboxes_score, loot_system_type, lootbox_content(cost_per_pull, has_pity_system, score_transparency, score_value)"
     )
     .not("lootboxes_score", "is", null)
     .order("title")
@@ -36,6 +36,7 @@ export async function GET() {
       id: g.id,
       title: g.title,
       slug: g.slug,
+      cover_image: g.cover_image ?? null,
       lootboxes_score: g.lootboxes_score,
       loot_system_type: g.loot_system_type,
       cost_per_pull: content?.cost_per_pull ?? null,

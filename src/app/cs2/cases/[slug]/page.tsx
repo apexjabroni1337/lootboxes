@@ -263,7 +263,7 @@ export default async function CaseDetailPage({
                       loading="lazy"
                     />
                   ) : (
-                    <div className="h-24 w-24 rounded-lg flex items-center justify-center text-white text-2xl font-bold mb-2 bg-yellow-50 dark:bg-yellow-950/300">
+                    <div className="h-24 w-24 rounded-lg flex items-center justify-center text-white text-2xl font-bold mb-2 bg-yellow-600">
                       ★
                     </div>
                   )}

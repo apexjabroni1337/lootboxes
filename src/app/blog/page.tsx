@@ -121,7 +121,7 @@ export default function BlogPage() {
             </div>
           </div>
           {/* Bottom gradient bar */}
-          <div className="h-1 bg-gradient-to-r from-[#0074C5] via-purple-50 dark:via-purple-950/200 to-rose-500" />
+          <div className="h-1 bg-gradient-to-r from-[#0074C5] via-purple-50 dark:via-purple-950 to-rose-500" />
         </Link>
 
         {/* ─── Post grid ─── */}

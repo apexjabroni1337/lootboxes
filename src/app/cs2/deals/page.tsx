@@ -146,7 +146,7 @@ export default function DealsPage() {
             <ChevronLeft className="h-4 w-4" /> CS2 Skins Hub
           </Link>
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/300 text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white">
               <Tag className="h-5 w-5" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Best Deals</h1>

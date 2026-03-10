@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Trophy, Shield, DollarSign, Swords, AlertTriangle, TrendingUp } from 'lucide-react';
 import { createServerClient } from '@/lib/supabase';
 import GameAvatar from '@/components/ui/GameAvatar';
+import RankingsTableClient from './RankingsTableClient';
 
 export const revalidate = 3600;
 
@@ -303,13 +304,19 @@ export default async function RankingsPage() {
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">Category Leaderboards</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Best Overall */}
-          <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden dark:border-gray-700 dark:bg-gray-900">
-            <div className="h-1 bg-[#0074c5]" />
-            <div className="p-6">
-              <div className="flex items-center gap-2 mb-6">
-                <Trophy className="w-5 h-5 text-[#0074c5]" />
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Best Overall</h3>
+          <div className="rounded-2xl border border-gray-200 bg-white shadow-md overflow-hidden dark:border-gray-700 dark:bg-gray-900">
+            <div className="bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                  <Trophy className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">Best Overall</h3>
+                  <p className="text-[11px] text-white/70">Highest composite LootBoxes Score</p>
+                </div>
               </div>
+            </div>
+            <div className="p-4">
               <ol className="space-y-2">
                 {overallRanked.slice(0, 10).map((item, idx) => (
                   <RankedGameRow key={item.game.id} game={item.game} rank={idx + 1} score={item.score} />
@@ -319,13 +326,19 @@ export default async function RankingsPage() {
           </div>
 
           {/* Least Predatory */}
-          <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden dark:border-gray-700 dark:bg-gray-900">
-            <div className="h-1 bg-[#0074c5]" />
-            <div className="p-6">
-              <div className="flex items-center gap-2 mb-6">
-                <Shield className="w-5 h-5 text-[#0074c5]" />
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Least Predatory</h3>
+          <div className="rounded-2xl border border-gray-200 bg-white shadow-md overflow-hidden dark:border-gray-700 dark:bg-gray-900">
+            <div className="bg-gradient-to-r from-indigo-600 to-blue-500 px-6 py-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                  <Shield className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">Least Predatory</h3>
+                  <p className="text-[11px] text-white/70">Best transparency & player protection</p>
+                </div>
               </div>
+            </div>
+            <div className="p-4">
               <ol className="space-y-2">
                 {protectionRanked.slice(0, 10).map((item, idx) => (
                   <RankedGameRow key={item.game.id} game={item.game} rank={idx + 1} score={item.score} />
@@ -335,13 +348,19 @@ export default async function RankingsPage() {
           </div>
 
           {/* Most Rewarding */}
-          <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden dark:border-gray-700 dark:bg-gray-900">
-            <div className="h-1 bg-emerald-50 dark:bg-emerald-950/300" />
-            <div className="p-6">
-              <div className="flex items-center gap-2 mb-6">
-                <DollarSign className="w-5 h-5 text-emerald-600" />
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Most Rewarding</h3>
+          <div className="rounded-2xl border border-gray-200 bg-white shadow-md overflow-hidden dark:border-gray-700 dark:bg-gray-900">
+            <div className="bg-gradient-to-r from-emerald-600 to-teal-500 px-6 py-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                  <DollarSign className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">Most Rewarding</h3>
+                  <p className="text-[11px] text-white/70">Best value & fairness for your money</p>
+                </div>
               </div>
+            </div>
+            <div className="p-4">
               <ol className="space-y-2">
                 {valueRanked.slice(0, 10).map((item, idx) => (
                   <RankedGameRow key={item.game.id} game={item.game} rank={idx + 1} score={item.score} />
@@ -351,13 +370,19 @@ export default async function RankingsPage() {
           </div>
 
           {/* Non-Game-Breaking */}
-          <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden dark:border-gray-700 dark:bg-gray-900">
-            <div className="h-1 bg-purple-50 dark:bg-purple-950/300" />
-            <div className="p-6">
-              <div className="flex items-center gap-2 mb-6">
-                <Swords className="w-5 h-5 text-purple-600" />
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Non-Game-Breaking</h3>
+          <div className="rounded-2xl border border-gray-200 bg-white shadow-md overflow-hidden dark:border-gray-700 dark:bg-gray-900">
+            <div className="bg-gradient-to-r from-purple-600 to-fuchsia-500 px-6 py-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                  <Swords className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">Non-Game-Breaking</h3>
+                  <p className="text-[11px] text-white/70">Lowest pay-to-win impact</p>
+                </div>
               </div>
+            </div>
+            <div className="p-4">
               <ol className="space-y-2">
                 {p2wRanked.slice(0, 10).map((item, idx) => (
                   <RankedGameRow key={item.game.id} game={item.game} rank={idx + 1} score={item.score} />
@@ -386,93 +411,21 @@ export default async function RankingsPage() {
         </div>
       </section>
 
-      {/* Full Rankings Table */}
+      {/* Full Rankings Table — sortable + collapsible tiers */}
       <section className="container-main py-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Full Rankings</h2>
-        <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden overflow-x-auto dark:border-gray-700 dark:bg-gray-900">
-          <table className="w-full min-w-full">
-            <thead className="bg-gray-50 border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-gray-50 dark:bg-gray-900 w-8">#</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 sticky left-12 bg-gray-50 dark:bg-gray-900 w-48">Game</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 w-32">Type</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 w-20">Overall</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 w-20">Protection</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 w-20">Value</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 w-20">P2W</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 w-16">Pity</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 w-20">$/Pull</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(() => {
-                let lastTier = '';
-                return overallRanked.map((item, idx) => {
-                  const tier = getTier(item.score);
-                  const showTierHeader = tier.label !== lastTier;
-                  lastTier = tier.label;
-
-                  const protectionScore = avgScores(item.game.lootbox_content, ['score_transparency', 'score_compliance', 'score_age_gating']);
-                  const valueScore = avgScores(item.game.lootbox_content, ['score_value', 'score_fairness', 'score_p2w_impact']);
-                  const p2wScore = avgScores(item.game.lootbox_content, ['score_p2w_impact']);
-                  const hasPity = toArray(item.game.lootbox_content).some((c) => c.has_pity_system);
-                  const costPerPull = toArray(item.game.lootbox_content)[0]?.cost_per_pull;
-                  const rankBadge = getRankBadge(idx + 1);
-
-                  return (
-                    <React.Fragment key={item.game.id}>
-                      {showTierHeader && (
-                        <tr>
-                          <td colSpan={9} className={`px-4 py-2 ${tier.bgClass} border-y ${tier.borderClass}`}>
-                            <span className={`text-xs font-bold uppercase tracking-wider ${tier.textClass}`}>
-                              {tier.emoji} {tier.label} ({tier.scoreRange})
-                            </span>
-                          </td>
-                        </tr>
-                      )}
-                      <tr className="hover:bg-blue-50 dark:bg-blue-950/30/50 dark:hover:bg-blue-950/20 transition-colors">
-                        <td className={`px-4 py-3 text-sm font-medium sticky left-0 bg-inherit ${rankBadge.bgClass}`}>
-                          <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style={{ backgroundColor: rankBadge.bgClass }}>
-                            <span className={rankBadge.textClass}>{idx + 1}</span>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3 text-sm sticky left-12 bg-inherit hover:bg-blue-50 dark:bg-blue-950/30/50">
-                          <Link href={`/lootbox/${item.game.slug}`} className="flex items-center gap-2 font-medium text-gray-900 dark:text-white hover:text-[#0074c5] transition-colors">
-                            <GameThumb game={item.game} />
-                            {item.game.title}
-                          </Link>
-                        </td>
-                        <td className="px-4 py-3 text-sm">
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${systemLabel(item.game.loot_system_type).color}`}>
-                            {systemLabel(item.game.loot_system_type).label}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <span className="text-base font-bold text-gray-900 dark:text-white">{item.score}</span>
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <span className={`px-2 py-1 rounded text-xs font-bold inline-block ${scoreColor(protectionScore)}`}>{protectionScore}</span>
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <span className={`px-2 py-1 rounded text-xs font-bold inline-block ${scoreColor(valueScore)}`}>{valueScore}</span>
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <span className={`px-2 py-1 rounded text-xs font-bold inline-block ${scoreColor(p2wScore)}`}>{p2wScore}</span>
-                        </td>
-                        <td className="px-4 py-3 text-center text-sm">
-                          <span className="text-gray-700 dark:text-gray-300">{hasPity ? '✓' : '—'}</span>
-                        </td>
-                        <td className="px-4 py-3 text-center text-sm">
-                          <span className="text-gray-700 dark:text-gray-300">{costPerPull ? `$${costPerPull.toFixed(2)}` : '—'}</span>
-                        </td>
-                      </tr>
-                    </React.Fragment>
-                  );
-                });
-              })()}
-            </tbody>
-          </table>
-        </div>
+        <RankingsTableClient
+          rows={overallRanked.map((item, idx) => ({
+            game: item.game,
+            score: item.score,
+            rank: idx + 1,
+            protectionScore: avgScores(item.game.lootbox_content, ['score_transparency', 'score_compliance', 'score_age_gating']),
+            valueScore: avgScores(item.game.lootbox_content, ['score_value', 'score_fairness', 'score_p2w_impact']),
+            p2wScore: avgScores(item.game.lootbox_content, ['score_p2w_impact']),
+            hasPity: toArray(item.game.lootbox_content).some((c) => c.has_pity_system),
+            costPerPull: toArray(item.game.lootbox_content)[0]?.cost_per_pull ?? null,
+          }))}
+        />
       </section>
 
       {/* Stats Summary */}

@@ -178,10 +178,10 @@ export default async function TransparencyReportPage() {
           </Link>
 
           <div className="flex items-center gap-4 mb-5">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 dark:bg-indigo-950/300/20 backdrop-blur-sm border border-indigo-400/20">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-500/20 backdrop-blur-sm border border-indigo-400/20">
               <Eye className="h-7 w-7 text-indigo-400" />
             </div>
-            <div className="inline-flex rounded-full bg-indigo-50 dark:bg-indigo-950/300/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-indigo-300 border border-indigo-400/20">
+            <div className="inline-flex rounded-full bg-indigo-500/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-indigo-300 border border-indigo-400/20">
               <BarChart3 className="h-4 w-4 mr-1.5" /> {totalGames} Games Graded
             </div>
           </div>
@@ -269,35 +269,35 @@ export default async function TransparencyReportPage() {
             <div className="mt-4 flex h-4 rounded-full overflow-hidden">
               {gradeCounts.A > 0 && (
                 <div
-                  className="bg-emerald-50 dark:bg-emerald-950/300"
+                  className="bg-emerald-600"
                   style={{ width: `${(gradeCounts.A / totalGames) * 100}%` }}
                   title={`Grade A: ${gradeCounts.A}`}
                 />
               )}
               {gradeCounts.B > 0 && (
                 <div
-                  className="bg-blue-50 dark:bg-blue-950/300"
+                  className="bg-blue-600"
                   style={{ width: `${(gradeCounts.B / totalGames) * 100}%` }}
                   title={`Grade B: ${gradeCounts.B}`}
                 />
               )}
               {gradeCounts.C > 0 && (
                 <div
-                  className="bg-amber-50 dark:bg-amber-950/300"
+                  className="bg-amber-600"
                   style={{ width: `${(gradeCounts.C / totalGames) * 100}%` }}
                   title={`Grade C: ${gradeCounts.C}`}
                 />
               )}
               {gradeCounts.D > 0 && (
                 <div
-                  className="bg-orange-50 dark:bg-orange-950/300"
+                  className="bg-orange-600"
                   style={{ width: `${(gradeCounts.D / totalGames) * 100}%` }}
                   title={`Grade D: ${gradeCounts.D}`}
                 />
               )}
               {gradeCounts.F > 0 && (
                 <div
-                  className="bg-red-50 dark:bg-red-950/300"
+                  className="bg-red-600"
                   style={{ width: `${(gradeCounts.F / totalGames) * 100}%` }}
                   title={`Grade F: ${gradeCounts.F}`}
                 />
@@ -364,7 +364,7 @@ export default async function TransparencyReportPage() {
                 </p>
 
                 {isShame && (
-                  <div className="mb-4 ml-8 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/30/50 px-4 py-3">
+                  <div className="mb-4 ml-8 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/20 px-4 py-3">
                     <EyeOff className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
                     <p className="text-sm text-red-700">
                       {targetGrade === "F"
@@ -441,7 +441,7 @@ export default async function TransparencyReportPage() {
       <section className="border-t border-gray-100 dark:border-gray-800 bg-gradient-to-b from-gray-50 dark:from-gray-900 to-white dark:to-gray-950 py-12">
         <div className="container-main">
           <div className="flex items-center gap-3 mb-6">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-50 dark:from-indigo-950/300 to-violet-600">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-50 dark:from-indigo-950 to-violet-600">
               <BarChart3 className="h-5 w-5 text-white" />
             </div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -549,7 +549,7 @@ export default async function TransparencyReportPage() {
             </div>
           </div>
 
-          <div className="flex items-start gap-3 rounded-xl border border-indigo-100 dark:border-indigo-800/30 bg-indigo-50 dark:bg-indigo-950/30/50 p-4 max-w-3xl">
+          <div className="flex items-start gap-3 rounded-xl border border-indigo-100 dark:border-indigo-800/30 bg-indigo-50 dark:bg-indigo-950/20 p-4 max-w-3xl">
             <Info className="h-5 w-5 text-indigo-500 mt-0.5 flex-shrink-0" />
             <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
               Transparency scores are updated whenever a game changes its

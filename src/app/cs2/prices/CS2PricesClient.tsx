@@ -238,20 +238,28 @@ export default function CS2PricesClient({
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Hero */}
-      <section className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-orange-50 dark:from-orange-950/30 via-amber-50 dark:via-amber-950/20 to-yellow-50 dark:to-yellow-950/20 py-10">
-        <div className="container-main">
-          <Link href="/cs2" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-200 mb-4">
+      <section className="relative border-b border-gray-200 dark:border-gray-800 overflow-hidden">
+        {/* Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-orange-950 to-amber-950" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(251,146,60,0.3),transparent)]" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl" />
+
+        <div className="relative container-main py-10">
+          <Link href="/cs2" className="inline-flex items-center gap-1 text-sm text-orange-300/70 hover:text-orange-200 transition-colors mb-4">
             <ChevronLeft className="h-4 w-4" /> CS2 Skins Hub
           </Link>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 dark:bg-orange-950/300 text-white">
-              <TrendingUp className="h-5 w-5" />
+          <div className="flex items-center gap-3 mb-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 shadow-lg shadow-orange-500/25">
+              <TrendingUp className="h-6 w-6 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              {pageTitle || "Skin Price Tracker"}
-            </h1>
+            <div>
+              <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight">
+                {pageTitle || "Skin Price Tracker"}
+              </h1>
+            </div>
           </div>
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl">
+          <p className="text-orange-200/70 max-w-2xl leading-relaxed">
             {pageDescription || (
               <>
                 {hasMultiData
@@ -264,14 +272,28 @@ export default function CS2PricesClient({
             )}
           </p>
 
-          {/* View mode tabs — real links for SEO, each is its own page */}
-          <div className="flex items-center gap-2 mt-4">
+          {/* Live stats row */}
+          {totalItems > 0 && (
+            <div className="flex items-center gap-4 mt-4">
+              <div className="flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm px-3 py-1.5 border border-white/10">
+                <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-xs font-semibold text-white/80">{totalItems.toLocaleString()} skins tracked</span>
+              </div>
+              <div className="flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm px-3 py-1.5 border border-white/10">
+                <BarChart3 className="h-3 w-3 text-orange-400" />
+                <span className="text-xs font-semibold text-white/80">{Object.keys(MARKETPLACE_INFO).length} marketplaces</span>
+              </div>
+            </div>
+          )}
+
+          {/* View mode tabs */}
+          <div className="flex items-center gap-2 mt-5">
             <Link
               href={MODE_ROUTES.default}
               className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
                 viewMode === "default"
-                  ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
-                  : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  ? "bg-white text-gray-900 shadow-lg"
+                  : "bg-white/10 border border-white/10 text-white/80 hover:bg-white/20"
               }`}
             >
               <DollarSign className="h-3.5 w-3.5" /> All Skins
@@ -280,8 +302,8 @@ export default function CS2PricesClient({
               href={MODE_ROUTES.deals}
               className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
                 viewMode === "deals"
-                  ? "bg-emerald-600 text-white"
-                  : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/25"
+                  : "bg-white/10 border border-white/10 text-white/80 hover:bg-white/20"
               }`}
             >
               <Tag className="h-3.5 w-3.5" /> Best Deals
@@ -290,8 +312,8 @@ export default function CS2PricesClient({
               href={MODE_ROUTES.trending}
               className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
                 viewMode === "trending"
-                  ? "bg-orange-500 text-white"
-                  : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  ? "bg-orange-500 text-white shadow-lg shadow-orange-500/25"
+                  : "bg-white/10 border border-white/10 text-white/80 hover:bg-white/20"
               }`}
             >
               <Flame className="h-3.5 w-3.5" /> Trending
@@ -775,7 +797,7 @@ export default function CS2PricesClient({
           </p>
           <Link
             href="/newsletter"
-            className="inline-flex items-center gap-2 rounded-lg bg-orange-50 dark:bg-orange-950/300 px-6 py-3 font-semibold text-white hover:bg-orange-600 transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600 transition-colors"
           >
             Sign Up Free
           </Link>

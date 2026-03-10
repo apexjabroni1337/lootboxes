@@ -213,7 +213,7 @@ export default function SeedCS2Page() {
           </div>
           <div className="w-full bg-gray-800 rounded-full h-3">
             <div
-              className="bg-blue-50 dark:bg-blue-950/300 h-3 rounded-full transition-all duration-300"
+              className="bg-blue-600 h-3 rounded-full transition-all duration-300"
               style={{ width: `${pct}%` }}
             />
           </div>

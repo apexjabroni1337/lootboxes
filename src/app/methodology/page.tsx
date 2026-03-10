@@ -92,47 +92,49 @@ function ScaleVisualization() {
   ];
 
   return (
-    <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
-      <h3 className="font-semibold text-gray-900 dark:text-white mb-4">The 1-10 Scale</h3>
+    <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-6 md:p-8 shadow-lg">
+      <h3 className="font-bold text-white text-lg mb-5">The 1-10 Scale</h3>
 
       {/* Color bands */}
-      <div className="flex h-12 rounded-lg overflow-hidden mb-6 border border-gray-200 dark:border-gray-700">
-        <div className="flex-1 bg-red-50 dark:bg-red-950/300 flex items-center justify-center">
-          <span className="text-white text-xs font-bold">1-3: Poor</span>
+      <div className="flex h-14 rounded-xl overflow-hidden mb-8 ring-1 ring-white/10">
+        <div className="flex-1 bg-gradient-to-b from-red-500 to-red-600 flex items-center justify-center">
+          <span className="text-white text-xs font-bold drop-shadow">1-3: Poor</span>
         </div>
-        <div className="flex-1 bg-amber-400 flex items-center justify-center">
-          <span className="text-amber-900 text-xs font-bold">4-6: Fair</span>
+        <div className="flex-1 bg-gradient-to-b from-amber-400 to-amber-500 flex items-center justify-center">
+          <span className="text-amber-950 text-xs font-bold">4-6: Fair</span>
         </div>
-        <div className="flex-1 bg-emerald-400 flex items-center justify-center">
-          <span className="text-emerald-900 text-xs font-bold">7-8: Good</span>
+        <div className="flex-1 bg-gradient-to-b from-emerald-400 to-emerald-500 flex items-center justify-center">
+          <span className="text-emerald-950 text-xs font-bold">7-8: Good</span>
         </div>
-        <div className="flex-1 bg-emerald-50 dark:bg-emerald-950/300 flex items-center justify-center">
-          <span className="text-white text-xs font-bold">9-10: Excellent</span>
+        <div className="flex-1 bg-gradient-to-b from-emerald-500 to-teal-600 flex items-center justify-center">
+          <span className="text-white text-xs font-bold drop-shadow">9-10: Excellent</span>
         </div>
       </div>
 
       {/* Example games */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         {exampleGames.map((game) => (
           <div key={game.title}>
-            <div className="flex justify-between mb-1">
-              <span className="text-sm font-medium text-gray-900 dark:text-white">
+            <div className="flex justify-between mb-1.5">
+              <span className="text-sm font-semibold text-white">
                 {game.title}
               </span>
-              <span className="text-sm font-bold text-gray-600 dark:text-gray-300">
+              <span className={`text-sm font-bold ${
+                game.score >= 7 ? "text-emerald-400" : game.score >= 4 ? "text-amber-400" : "text-red-400"
+              }`}>
                 {game.score}
               </span>
             </div>
-            <div className="w-full h-6 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden relative border border-gray-200 dark:border-gray-700">
+            <div className="w-full h-7 bg-white/10 rounded-lg overflow-hidden relative ring-1 ring-white/5">
               <div
-                className={`h-full ${
+                className={`h-full rounded-lg ${
                   game.score >= 9
-                    ? "bg-emerald-500"
+                    ? "bg-gradient-to-r from-emerald-500 to-teal-400"
                     : game.score >= 7
-                      ? "bg-emerald-400"
+                      ? "bg-gradient-to-r from-emerald-500 to-emerald-400"
                       : game.score >= 4
-                        ? "bg-amber-400"
-                        : "bg-red-500"
+                        ? "bg-gradient-to-r from-amber-500 to-amber-400"
+                        : "bg-gradient-to-r from-red-500 to-red-400"
                 }`}
                 style={{ width: `${game.position}%` }}
               />
@@ -142,24 +144,34 @@ function ScaleVisualization() {
       </div>
 
       {/* Legend */}
-      <div className="mt-6 grid grid-cols-2 gap-3 text-xs">
-        <div>
-          <div className="font-semibold text-red-600 mb-1">1-3: Poor</div>
-          <p className="text-gray-600 dark:text-gray-300">Predatory or exploitative monetization</p>
-        </div>
-        <div>
-          <div className="font-semibold text-amber-600 mb-1">4-6: Fair</div>
-          <p className="text-gray-600 dark:text-gray-300">Mixed practices, room for improvement</p>
-        </div>
-        <div>
-          <div className="font-semibold text-emerald-600 mb-1">7-8: Good</div>
-          <p className="text-gray-600 dark:text-gray-300">Above-average, consumer-friendly</p>
-        </div>
-        <div>
-          <div className="font-semibold text-emerald-700 mb-1">
-            9-10: Excellent
+      <div className="mt-8 grid grid-cols-2 gap-4 text-xs">
+        <div className="flex items-start gap-2">
+          <span className="mt-0.5 h-3 w-3 rounded-sm bg-red-500 flex-shrink-0" />
+          <div>
+            <div className="font-bold text-red-400 mb-0.5">1-3: Poor</div>
+            <p className="text-gray-400">Predatory or exploitative monetization</p>
           </div>
-          <p className="text-gray-600 dark:text-gray-300">Industry-leading practices</p>
+        </div>
+        <div className="flex items-start gap-2">
+          <span className="mt-0.5 h-3 w-3 rounded-sm bg-amber-400 flex-shrink-0" />
+          <div>
+            <div className="font-bold text-amber-400 mb-0.5">4-6: Fair</div>
+            <p className="text-gray-400">Mixed practices, room for improvement</p>
+          </div>
+        </div>
+        <div className="flex items-start gap-2">
+          <span className="mt-0.5 h-3 w-3 rounded-sm bg-emerald-400 flex-shrink-0" />
+          <div>
+            <div className="font-bold text-emerald-400 mb-0.5">7-8: Good</div>
+            <p className="text-gray-400">Above-average, consumer-friendly</p>
+          </div>
+        </div>
+        <div className="flex items-start gap-2">
+          <span className="mt-0.5 h-3 w-3 rounded-sm bg-teal-500 flex-shrink-0" />
+          <div>
+            <div className="font-bold text-teal-400 mb-0.5">9-10: Excellent</div>
+            <p className="text-gray-400">Industry-leading practices</p>
+          </div>
         </div>
       </div>
     </div>

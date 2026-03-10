@@ -1,29 +1,39 @@
-import { Store, Clock, Heart, ShieldCheck } from "lucide-react";
+import { BarChart3, Eye, Shield, Gamepad2 } from "lucide-react";
 
-const signals = [
-  {
-    icon: Store,
-    value: "8+",
-    label: "Store Integrations",
-  },
-  {
-    icon: Clock,
-    value: "Hourly",
-    label: "Price Updates",
-  },
-  {
-    icon: Heart,
-    value: "100%",
-    label: "Free to Use",
-  },
-  {
-    icon: ShieldCheck,
-    value: "Always",
-    label: "Affiliate Disclosed",
-  },
-];
+interface TrustSignalsProps {
+  gamesAnalyzed?: number;
+  dropRatesTracked?: number;
+  systemTypes?: number;
+}
 
-export default function TrustSignals() {
+export default function TrustSignals({
+  gamesAnalyzed = 0,
+  dropRatesTracked = 0,
+  systemTypes = 5,
+}: TrustSignalsProps) {
+  const signals = [
+    {
+      icon: Gamepad2,
+      value: `${gamesAnalyzed}+`,
+      label: "Games Analyzed",
+    },
+    {
+      icon: Eye,
+      value: `${dropRatesTracked}+`,
+      label: "Drop Rates Tracked",
+    },
+    {
+      icon: Shield,
+      value: `${systemTypes}`,
+      label: "System Types Covered",
+    },
+    {
+      icon: BarChart3,
+      value: "8",
+      label: "Scoring Dimensions",
+    },
+  ];
+
   return (
     <section className="border-y border-gray-100 bg-gray-50/50 py-10 dark:border-gray-800 dark:bg-gray-900/50">
       <div className="container-main">

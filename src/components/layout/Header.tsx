@@ -193,7 +193,7 @@ export default function Header() {
                         onClick={() => setLootboxMegaOpen(false)}
                         className="flex items-center gap-3 rounded-lg bg-brand-50 dark:bg-brand-950/30 px-4 py-3 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40"
                       >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 dark:bg-brand-950/300 text-white">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white">
                           <Gamepad2 className="h-4.5 w-4.5" />
                         </div>
                         <div>
@@ -206,7 +206,7 @@ export default function Header() {
                         onClick={() => setLootboxMegaOpen(false)}
                         className="flex items-center gap-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 px-4 py-3 transition-colors hover:bg-amber-100 dark:hover:bg-amber-900/40"
                       >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 dark:bg-amber-950/300 text-white">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-600 text-white">
                           <Trophy className="h-4.5 w-4.5" />
                         </div>
                         <div>
@@ -245,7 +245,7 @@ export default function Header() {
                         onClick={() => setLootboxMegaOpen(false)}
                         className="flex items-center gap-3 rounded-lg bg-blue-50 dark:bg-blue-950/30 px-4 py-3 transition-colors hover:bg-blue-100 dark:hover:bg-blue-900/40"
                       >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-950/300 text-white">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white">
                           <Scale className="h-4.5 w-4.5" />
                         </div>
                         <div>
@@ -313,7 +313,7 @@ export default function Header() {
                         onClick={() => setAnalyticsMegaOpen(false)}
                         className="flex items-center gap-3 rounded-lg bg-indigo-50 dark:bg-indigo-950/30 px-4 py-3 transition-colors hover:bg-indigo-100 dark:hover:bg-indigo-900/40"
                       >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 dark:bg-indigo-950/300 text-white">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 text-white">
                           <LineChart className="h-4.5 w-4.5" />
                         </div>
                         <div>
@@ -339,7 +339,7 @@ export default function Header() {
                         onClick={() => setAnalyticsMegaOpen(false)}
                         className="flex items-center gap-3 rounded-lg bg-sky-50 dark:bg-sky-950/30 px-4 py-3 transition-colors hover:bg-sky-100 dark:hover:bg-sky-900/40"
                       >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-50 dark:bg-sky-950/300 text-white">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-600 text-white">
                           <Eye className="h-4.5 w-4.5" />
                         </div>
                         <div>
@@ -414,7 +414,7 @@ export default function Header() {
                         onClick={() => setCs2MegaOpen(false)}
                         className="flex items-center gap-3 rounded-lg bg-orange-50 dark:bg-orange-950/30 px-4 py-3 transition-colors hover:bg-orange-100 dark:hover:bg-orange-900/40"
                       >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-50 dark:bg-orange-950/300 text-white">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-600 text-white">
                           <TrendingUp className="h-4.5 w-4.5" />
                         </div>
                         <div>
@@ -466,7 +466,7 @@ export default function Header() {
                         onClick={() => setCs2MegaOpen(false)}
                         className="flex items-center gap-3 rounded-lg bg-green-50 dark:bg-green-950/30 px-4 py-3 transition-colors hover:bg-green-100 dark:hover:bg-green-900/40"
                       >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-950/300 text-white">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-600 text-white">
                           <Tag className="h-4.5 w-4.5" />
                         </div>
                         <div>
@@ -479,7 +479,7 @@ export default function Header() {
                         onClick={() => setCs2MegaOpen(false)}
                         className="flex items-center gap-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 px-4 py-3 transition-colors hover:bg-amber-100 dark:hover:bg-amber-900/40"
                       >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 dark:bg-amber-950/300 text-white">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-600 text-white">
                           <Calculator className="h-4.5 w-4.5" />
                         </div>
                         <div>
@@ -549,7 +549,7 @@ export default function Header() {
                         onClick={() => setMegaOpen(false)}
                         className="flex items-center gap-3 rounded-lg bg-blue-50 dark:bg-blue-950/30 px-4 py-3 transition-colors hover:bg-blue-100 dark:hover:bg-blue-900/40"
                       >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-950/300 text-white">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white">
                           <Clock className="h-4.5 w-4.5" />
                         </div>
                         <div>
@@ -562,7 +562,7 @@ export default function Header() {
                         onClick={() => setMegaOpen(false)}
                         className="flex items-center gap-3 rounded-lg bg-orange-50 dark:bg-orange-950/30 px-4 py-3 transition-colors hover:bg-orange-100 dark:hover:bg-orange-900/40"
                       >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-50 dark:bg-orange-950/300 text-white">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-600 text-white">
                           <TrendingUp className="h-4.5 w-4.5" />
                         </div>
                         <div>
@@ -575,7 +575,7 @@ export default function Header() {
                         onClick={() => setMegaOpen(false)}
                         className="flex items-center gap-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 px-4 py-3 transition-colors hover:bg-amber-100 dark:hover:bg-amber-900/40"
                       >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 dark:bg-amber-950/300 text-white">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-600 text-white">
                           <ArrowDownCircle className="h-4.5 w-4.5" />
                         </div>
                         <div>

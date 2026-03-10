@@ -1248,7 +1248,7 @@ export default async function AnalyticsArticlePage({ params }: { params: { slug:
             {article.sections.map((section, i) => (
               <section key={i}>
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                  <span className="w-1 h-6 bg-indigo-50 dark:bg-indigo-950/300 rounded-full inline-block" />
+                  <span className="w-1 h-6 bg-indigo-600 rounded-full inline-block" />
                   {section.heading}
                 </h2>
                 {section.content.map((para, j) => (

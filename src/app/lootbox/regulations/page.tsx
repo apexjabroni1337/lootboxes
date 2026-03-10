@@ -233,11 +233,11 @@ export default function RegulationsPage() {
           </Link>
 
           <div className="flex items-center gap-4 mb-5">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 dark:bg-blue-950/300/20 backdrop-blur-sm border border-blue-400/20">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500/20 backdrop-blur-sm border border-blue-400/20">
               <Scale className="h-7 w-7 text-blue-400" />
             </div>
             <div>
-              <div className="inline-flex rounded-full bg-blue-50 dark:bg-blue-950/300/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-blue-300 border border-blue-400/20">
+              <div className="inline-flex rounded-full bg-blue-500/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-blue-300 border border-blue-400/20">
                 <Globe className="h-4 w-4 mr-1.5" />
                 {totalCountries} Countries Tracked
               </div>
@@ -263,7 +263,7 @@ export default function RegulationsPage() {
               return (
                 <div
                   key={r.iso}
-                  className="flex items-center gap-2 rounded-full bg-white dark:bg-gray-950/10 backdrop-blur-sm px-3 py-1.5 flex-shrink-0 border border-white/10"
+                  className="flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm px-3 py-1.5 flex-shrink-0 border border-white/10"
                 >
                   <FlagImg iso={r.iso} size={16} />
                   <span className="text-xs font-semibold text-white/80">{r.country.replace(" (Federal)", "")}</span>
@@ -327,9 +327,9 @@ export default function RegulationsPage() {
           </div>
 
           {/* World overview prose */}
-          <div className="rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 dark:from-blue-950/30 to-indigo-50 p-6">
+          <div className="rounded-2xl border border-blue-100 dark:border-blue-800/30 bg-gradient-to-r from-blue-50 dark:from-blue-950/30 to-indigo-50 dark:to-indigo-950/30 p-6">
             <div className="flex items-start gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/300 flex-shrink-0 mt-0.5">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 flex-shrink-0 mt-0.5">
                 <Globe className="h-5 w-5 text-white" />
               </div>
               <div className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed space-y-2">
@@ -441,7 +441,7 @@ export default function RegulationsPage() {
       <section className="border-t border-gray-100 dark:border-gray-800 bg-gradient-to-b from-gray-50 dark:from-gray-900 to-white dark:to-gray-950 py-12">
         <div className="container-main">
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-50 dark:from-blue-950/300 to-indigo-600">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-50 dark:from-blue-950 to-indigo-600">
               <Calendar className="h-5 w-5 text-white" />
             </div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -486,84 +486,94 @@ export default function RegulationsPage() {
         </div>
       </section>
 
-      {/* Key takeaways */}
+      {/* Key takeaways — collapsible */}
       <section className="border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 py-12">
         <div className="container-main">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">
-            Key Takeaways for Players
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                icon: Info,
-                gradient: "from-blue-500 to-indigo-600",
-                title: "Know Your Rights",
-                text: "If you live in a country with disclosure requirements, publishers must show you the odds before you buy. If they don\u2019t, you may be able to report them to your consumer protection agency.",
-              },
-              {
-                icon: TrendingUp,
-                gradient: "from-emerald-500 to-teal-600",
-                title: "Trend Toward Regulation",
-                text: `The overall trend is toward more regulation, not less. ${statusCounts.pending} countries currently have pending legislation. Players should expect more transparency and consumer protections in the coming years.`,
-              },
-              {
-                icon: Users,
-                gradient: "from-amber-500 to-orange-600",
-                title: "Protecting Young Players",
-                text: "Most regulatory efforts focus on protecting minors. China\u2019s strict 3-hour weekly limit for under-18s is the most extreme example, but age verification and spending caps are being discussed worldwide.",
-              },
-            ].map((card) => (
-              <div key={card.title} className="rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-shadow group">
-                <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${card.gradient} mb-4 group-hover:scale-110 transition-transform`}>
-                  <card.icon className="h-5 w-5 text-white" />
+          <details open className="group">
+            <summary className="flex items-center justify-between cursor-pointer select-none mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                Key Takeaways for Players
+              </h2>
+              <ChevronDown className="h-5 w-5 text-gray-400 transition-transform group-open:rotate-180" />
+            </summary>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                {
+                  icon: Info,
+                  gradient: "from-blue-500 to-indigo-600",
+                  title: "Know Your Rights",
+                  text: "If you live in a country with disclosure requirements, publishers must show you the odds before you buy. If they don\u2019t, you may be able to report them to your consumer protection agency.",
+                },
+                {
+                  icon: TrendingUp,
+                  gradient: "from-emerald-500 to-teal-600",
+                  title: "Trend Toward Regulation",
+                  text: `The overall trend is toward more regulation, not less. ${statusCounts.pending} countries currently have pending legislation. Players should expect more transparency and consumer protections in the coming years.`,
+                },
+                {
+                  icon: Users,
+                  gradient: "from-amber-500 to-orange-600",
+                  title: "Protecting Young Players",
+                  text: "Most regulatory efforts focus on protecting minors. China\u2019s strict 3-hour weekly limit for under-18s is the most extreme example, but age verification and spending caps are being discussed worldwide.",
+                },
+              ].map((card) => (
+                <div key={card.title} className="rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-shadow group/card">
+                  <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${card.gradient} mb-4 group-hover/card:scale-110 transition-transform`}>
+                    <card.icon className="h-5 w-5 text-white" />
+                  </div>
+                  <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-2">{card.title}</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {card.text}
+                  </p>
                 </div>
-                <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-2">{card.title}</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                  {card.text}
-                </p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </details>
         </div>
       </section>
 
-      {/* SEO prose — why this matters */}
+      {/* SEO prose — why this matters — collapsible */}
       <section className="border-t border-gray-100 dark:border-gray-800 bg-gradient-to-r from-blue-50 dark:from-blue-950/30 to-indigo-50 py-12">
         <div className="container-main">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Why Loot Box Regulation Matters
-          </h2>
-          <div className="max-w-3xl space-y-4 text-gray-700 dark:text-gray-200 leading-relaxed">
-            <p>
-              Loot boxes generate billions in annual revenue for game publishers,
-              but growing evidence links them to problem gambling behaviors —
-              especially among younger players. A 2021 meta-analysis found a
-              consistent relationship between loot box spending and gambling
-              severity, prompting health organizations to call for stronger
-              protections.
-            </p>
-            <p>
-              Apple and Google both require apps on their stores to disclose drop
-              rates, which has pushed some transparency even in regions without
-              legislation. However, enforcement is inconsistent and many games
-              still obscure the true cost of their monetization systems through
-              premium currencies, bundle-only purchasing, and opaque pity
-              mechanics.
-            </p>
-            <p>
-              The most significant recent development is the February 2026 New York
-              Attorney General lawsuit against Valve, alleging that CS2, Dota 2,
-              and TF2 loot boxes constitute illegal gambling under state law. This
-              case could set a precedent that reshapes how loot boxes are treated
-              across the entire United States.
-            </p>
-            <p>
-              We maintain this tracker to help players, parents, and researchers
-              stay informed about the evolving legal landscape. All information is
-              sourced from official government publications, regulatory body
-              reports, and verified news outlets.
-            </p>
-          </div>
+          <details open className="group">
+            <summary className="flex items-center justify-between cursor-pointer select-none mb-4">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                Why Loot Box Regulation Matters
+              </h2>
+              <ChevronDown className="h-5 w-5 text-gray-400 transition-transform group-open:rotate-180" />
+            </summary>
+            <div className="max-w-3xl space-y-4 text-gray-700 dark:text-gray-200 leading-relaxed">
+              <p>
+                Loot boxes generate billions in annual revenue for game publishers,
+                but growing evidence links them to problem gambling behaviors —
+                especially among younger players. A 2021 meta-analysis found a
+                consistent relationship between loot box spending and gambling
+                severity, prompting health organizations to call for stronger
+                protections.
+              </p>
+              <p>
+                Apple and Google both require apps on their stores to disclose drop
+                rates, which has pushed some transparency even in regions without
+                legislation. However, enforcement is inconsistent and many games
+                still obscure the true cost of their monetization systems through
+                premium currencies, bundle-only purchasing, and opaque pity
+                mechanics.
+              </p>
+              <p>
+                The most significant recent development is the February 2026 New York
+                Attorney General lawsuit against Valve, alleging that CS2, Dota 2,
+                and TF2 loot boxes constitute illegal gambling under state law. This
+                case could set a precedent that reshapes how loot boxes are treated
+                across the entire United States.
+              </p>
+              <p>
+                We maintain this tracker to help players, parents, and researchers
+                stay informed about the evolving legal landscape. All information is
+                sourced from official government publications, regulatory body
+                reports, and verified news outlets.
+              </p>
+            </div>
+          </details>
         </div>
       </section>
 

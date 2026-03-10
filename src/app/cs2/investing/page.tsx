@@ -296,7 +296,7 @@ export default function CS2InvestingPage() {
         <div className="container-main">
           <div className="flex rounded-2xl overflow-hidden border border-brand-200 dark:border-brand-700/30 shadow-sm">
             <div className="w-1.5 bg-gradient-to-b from-brand-400 to-blue-500 flex-shrink-0" />
-            <div className="p-6 flex-1 bg-gradient-to-r from-brand-50 dark:from-brand-950/30/50 to-white dark:to-gray-950">
+            <div className="p-6 flex-1 bg-gradient-to-r from-brand-50 dark:from-brand-950/20 to-white dark:to-gray-950">
               <h2 className="text-xl font-serif font-bold text-gray-900 dark:text-white mb-3">
                 How the CS2 Skin Economy Works
               </h2>
@@ -520,7 +520,7 @@ export default function CS2InvestingPage() {
                 className="flex rounded-xl overflow-hidden border border-red-100 hover:shadow-sm transition-shadow"
               >
                 <div className="w-1 bg-red-400 flex-shrink-0" />
-                <div className="p-5 flex-1 bg-red-50 dark:bg-red-950/30/30">
+                <div className="p-5 flex-1 bg-red-50 dark:bg-red-950/20">
                   <div className="flex items-center gap-2 mb-2">
                     <AlertTriangle className="h-4 w-4 text-red-400 flex-shrink-0" />
                     <h3 className="font-serif font-bold text-gray-900 dark:text-white">{risk.title}</h3>

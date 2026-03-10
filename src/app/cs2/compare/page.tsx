@@ -163,7 +163,7 @@ export default function ComparePage() {
       </section>
 
       {/* Quick recommendation banner */}
-      <section className="border-b border-blue-100 bg-blue-50 dark:bg-blue-950/30/60 py-4">
+      <section className="border-b border-blue-100 bg-blue-50 dark:bg-blue-950/20 py-4">
         <div className="container-main flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
           <div className="flex items-center gap-2">
             <Shield className="h-5 w-5 text-blue-600" />
@@ -217,7 +217,7 @@ export default function ComparePage() {
                 <div className="flex items-center gap-2 mb-4">
                   <div className="flex-1 h-2 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-emerald-50 dark:bg-emerald-950/300"
+                      className="h-full rounded-full bg-emerald-600"
                       style={{ width: `${mp.trustScore * 10}%` }}
                     />
                   </div>

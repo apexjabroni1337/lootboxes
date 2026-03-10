@@ -134,10 +134,10 @@ export default async function SpendingGuidesHub() {
           </Link>
 
           <div className="flex items-center gap-4 mb-5">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50 dark:bg-amber-950/300/20 backdrop-blur-sm border border-amber-400/20">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500/20 backdrop-blur-sm border border-amber-400/20">
               <Wallet className="h-7 w-7 text-amber-400" />
             </div>
-            <div className="inline-flex rounded-full bg-amber-50 dark:bg-amber-950/300/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-amber-300 border border-amber-400/20">
+            <div className="inline-flex rounded-full bg-amber-500/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-amber-300 border border-amber-400/20">
               <DollarSign className="h-4 w-4 mr-1.5" /> {totalGuides} Games Covered
             </div>
           </div>
@@ -263,7 +263,7 @@ export default async function SpendingGuidesHub() {
                           </div>
 
                           <div className="grid grid-cols-2 gap-2 text-[11px]">
-                            <div className="rounded-lg bg-blue-50 dark:bg-blue-950/30/70 px-2.5 py-2">
+                            <div className="rounded-lg bg-blue-50 dark:bg-blue-950/20 px-2.5 py-2">
                               <p className="text-gray-400 dark:text-gray-500 font-medium">
                                 Low Spend
                               </p>
@@ -271,7 +271,7 @@ export default async function SpendingGuidesHub() {
                                 {guide.lowSpend.budget}
                               </p>
                             </div>
-                            <div className="rounded-lg bg-amber-50 dark:bg-amber-950/30/70 px-2.5 py-2">
+                            <div className="rounded-lg bg-amber-50 dark:bg-amber-950/20 px-2.5 py-2">
                               <p className="text-gray-400 dark:text-gray-500 font-medium">
                                 Moderate
                               </p>
