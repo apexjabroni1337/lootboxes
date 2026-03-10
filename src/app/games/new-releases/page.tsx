@@ -11,7 +11,7 @@ import SpotlightCard from "./SpotlightCard";
 export const metadata = {
   title: "New Releases & Coming Soon — Latest Games | LootBoxes",
   description:
-    "Browse the latest game releases and upcoming titles. Track prices from day one across Steam, Epic, GOG, and more.",
+    "Browse games released in the last 90 days and upcoming titles. Track prices from day one across Steam, Epic, GOG, and more.",
   alternates: {
     canonical: "https://lootboxes.com/games/new-releases",
   },
@@ -19,55 +19,85 @@ export const metadata = {
 
 export const revalidate = 300;
 
+/**
+ * Parse a release_date value (could be ISO "2026-03-08", Postgres DATE,
+ * or Steam-style "Mar 5, 2026") into a Date object. Returns null if
+ * the date is unparseable or clearly invalid.
+ */
+function parseReleaseDate(raw: string | null | undefined): Date | null {
+  if (!raw || typeof raw !== "string") return null;
+  const trimmed = raw.trim();
+  if (trimmed.length === 0) return null;
+
+  // Try native Date parsing — handles ISO dates and many Steam formats
+  const d = new Date(trimmed);
+  if (!isNaN(d.getTime()) && d.getFullYear() > 1990 && d.getFullYear() < 2100) {
+    return d;
+  }
+  return null;
+}
+
+/**
+ * Check if a game was released within the last `days` days.
+ * Games with unparseable release dates return false (they're not "new").
+ */
+function isRecentRelease(releaseDate: string | null | undefined, days: number): boolean {
+  const parsed = parseReleaseDate(releaseDate);
+  if (!parsed) return false;
+  const cutoff = Date.now() - days * 86_400_000;
+  const now = Date.now();
+  // Must be in the past (or today) AND within the window
+  return parsed.getTime() <= now && parsed.getTime() >= cutoff;
+}
+
+const NEW_RELEASE_WINDOW_DAYS = 90;
+
 async function getNewReleases() {
   const supabase = createServerClient();
 
-  // Strategy: fetch recently created games sorted by hot_score (popularity).
-  // We use created_at or release_date, but release_date may be in various formats
-  // (ISO "2026-03-08" or Steam-style "Mar 5, 2026"), so we cast a wider net
-  // and rely on the "created recently" heuristic + hot_score sorting.
-
-  // Approach 1: Games with ISO-formatted release dates in last 180 days
   const today = new Date().toISOString().slice(0, 10);
-  const sixMonthsAgo = new Date(Date.now() - 180 * 86_400_000)
+  const cutoffDate = new Date(Date.now() - NEW_RELEASE_WINDOW_DAYS * 86_400_000)
     .toISOString()
     .slice(0, 10);
 
-  const { data: isoReleases } = await supabase
+  // Primary query: games with release_date in last 90 days (DB-level filter)
+  // The release_date column is DATE type in Postgres, so comparisons are reliable
+  const { data: dateFiltered } = await supabase
     .from("games")
     .select("id, title, slug, cover_image, screenshot_image, release_date, genres, platforms, metacritic, hot_score, description")
     .lte("release_date", today)
-    .gte("release_date", sixMonthsAgo)
+    .gte("release_date", cutoffDate)
     .order("hot_score", { ascending: false, nullsFirst: false })
-    .limit(1250);
+    .limit(1500);
 
-  // Approach 2: Recently added games (created_at in last 60 days) that have cover images
-  // This catches games imported by sync-new-releases with non-ISO release dates
-  const sixtyDaysAgo = new Date(Date.now() - 60 * 86_400_000).toISOString();
+  // Secondary query: recently imported games (created_at in last 30 days)
+  // These ALSO get validated against release_date below — being "recently
+  // imported" alone does NOT qualify a game as a new release
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 86_400_000).toISOString();
 
   const { data: recentImports } = await supabase
     .from("games")
     .select("id, title, slug, cover_image, screenshot_image, release_date, genres, platforms, metacritic, hot_score, description")
-    .gte("created_at", sixtyDaysAgo)
+    .gte("created_at", thirtyDaysAgo)
     .not("cover_image", "is", null)
     .order("hot_score", { ascending: false, nullsFirst: false })
-    .limit(1000);
+    .limit(500);
 
-  // Merge and deduplicate, prioritize by hot_score
+  // Merge and deduplicate
   const seen = new Set<string>();
   const merged: any[] = [];
 
-  // Add ISO releases first (they have proper dates)
-  for (const game of isoReleases || []) {
+  for (const game of dateFiltered || []) {
     if (!seen.has(game.id)) {
       seen.add(game.id);
       merged.push(game);
     }
   }
 
-  // Then add recent imports that weren't already included
+  // Only add recent imports that ALSO have a recent release_date
+  // This prevents old games that were recently re-imported from appearing
   for (const game of recentImports || []) {
-    if (!seen.has(game.id)) {
+    if (!seen.has(game.id) && isRecentRelease(game.release_date, NEW_RELEASE_WINDOW_DAYS)) {
       seen.add(game.id);
       merged.push(game);
     }
@@ -81,7 +111,13 @@ async function getNewReleases() {
     isPromotableGame({ title: game.title, cover_image: game.cover_image, hot_score: game.hot_score, genres: game.genres })
   );
 
-  return quality.slice(0, 1500);
+  // Final safety net: double-check every game's release_date server-side
+  // This catches edge cases where Postgres date comparison let something through
+  const validated = quality.filter((game) =>
+    isRecentRelease(game.release_date, NEW_RELEASE_WINDOW_DAYS)
+  );
+
+  return validated.slice(0, 1500);
 }
 
 async function getComingSoon() {
