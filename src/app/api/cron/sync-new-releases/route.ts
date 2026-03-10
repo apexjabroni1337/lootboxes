@@ -49,20 +49,20 @@ function parseAppIdsFromHtml(html: string): number[] {
 }
 
 /**
- * Fetch newly released game IDs from Steam's search endpoint.
- * Uses the same endpoint as store.steampowered.com/search with JSON response.
+ * Fetch a single page of Steam search results.
  */
-async function fetchSteamNewReleases(): Promise<number[]> {
-  const appIds: number[] = [];
-
+async function fetchSteamSearchPage(
+  filter: string,
+  start: number,
+  count: number
+): Promise<number[]> {
   try {
-    // Popular New Releases — sorted by release date, most recent first
     const searchUrl = new URL("https://store.steampowered.com/search/results/");
     searchUrl.searchParams.set("query", "");
-    searchUrl.searchParams.set("start", "0");
-    searchUrl.searchParams.set("count", "100");
+    searchUrl.searchParams.set("start", String(start));
+    searchUrl.searchParams.set("count", String(count));
     searchUrl.searchParams.set("sort_by", "Released_DESC");
-    searchUrl.searchParams.set("filter", "popularnew");
+    searchUrl.searchParams.set("filter", filter);
     searchUrl.searchParams.set("os", "win");
     searchUrl.searchParams.set("infinite", "1");
     searchUrl.searchParams.set("category1", "998"); // Games only (not DLC/software)
@@ -79,12 +79,39 @@ async function fetchSteamNewReleases(): Promise<number[]> {
     if (res.ok) {
       const data: SteamSearchResponse = await res.json();
       if (data.results_html) {
-        appIds.push(...parseAppIdsFromHtml(data.results_html));
+        return parseAppIdsFromHtml(data.results_html);
       }
     }
   } catch {
-    // Silently continue — we have other sources
+    // Silently continue
   }
+  return [];
+}
+
+/**
+ * Fetch newly released game IDs from Steam's search endpoint.
+ * Fetches multiple pages from both the "Popular New Releases" curated list
+ * AND the broader "all recently released" feed to maximise coverage.
+ */
+async function fetchSteamNewReleases(): Promise<number[]> {
+  const appIds: number[] = [];
+
+  // Fetch 3 pages of Popular New Releases (curated by Steam — ~300 games)
+  const popularPages = await Promise.all([
+    fetchSteamSearchPage("popularnew", 0, 100),
+    fetchSteamSearchPage("popularnew", 100, 100),
+    fetchSteamSearchPage("popularnew", 200, 100),
+  ]);
+  for (const page of popularPages) appIds.push(...page);
+
+  // Also fetch 3 pages of ALL recently released games (not just curated)
+  // This catches noteworthy games Steam's "popular" filter hasn't picked up yet
+  const allNewPages = await Promise.all([
+    fetchSteamSearchPage("topsellers", 0, 100),   // Top sellers among new releases
+    fetchSteamSearchPage("topsellers", 100, 100),
+    fetchSteamSearchPage("topsellers", 200, 100),
+  ]);
+  for (const page of allNewPages) appIds.push(...page);
 
   return appIds;
 }
@@ -210,8 +237,9 @@ export async function GET(request: NextRequest) {
 
   try {
     // ── Step 1: Gather new release app IDs from multiple sources ──
+    // Runs all Steam fetches in parallel for speed
     const [searchIds, featuredIds] = await Promise.all([
-      fetchSteamNewReleases(),
+      fetchSteamNewReleases(),      // 6 pages: 3 popular + 3 top sellers
       fetchSteamFeaturedNewReleases(),
     ]);
 

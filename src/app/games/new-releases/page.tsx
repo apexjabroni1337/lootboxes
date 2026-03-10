@@ -4,7 +4,7 @@ import GameAvatar from "@/components/ui/GameAvatar";
 import StoreIcon from "@/components/ui/StoreIcon";
 import { createServerClient } from "@/lib/supabase";
 import { formatDate, formatPrice } from "@/lib/utils";
-import { isPromotableGame } from "@/lib/game-quality";
+import { hasBadTitle, hasBadGenres, hasBadTags } from "@/lib/game-quality";
 import NewReleasesClient from "./NewReleasesClient";
 import SpotlightCard from "./SpotlightCard";
 
@@ -51,6 +51,25 @@ function isRecentRelease(releaseDate: string | null | undefined, days: number): 
 }
 
 const NEW_RELEASE_WINDOW_DAYS = 90;
+
+/**
+ * Lighter quality filter for new releases. Unlike isPromotableGame(),
+ * this does NOT require a hot_score threshold — new games haven't had
+ * time to build popularity yet. We only block junk titles, NSFW, and
+ * games without cover art.
+ */
+function isQualityNewRelease(game: {
+  title: string;
+  cover_image?: string | null;
+  genres?: string[] | null;
+  tags?: string[] | null;
+}): boolean {
+  if (!game.cover_image || game.cover_image.trim().length === 0) return false;
+  if (hasBadTitle(game.title)) return false;
+  if (hasBadGenres(game.genres)) return false;
+  if (hasBadTags(game.tags)) return false;
+  return true;
+}
 
 async function getNewReleases() {
   const supabase = createServerClient();
@@ -106,9 +125,10 @@ async function getNewReleases() {
   // Sort by hot_score descending so popular new releases appear first
   merged.sort((a, b) => (b.hot_score || 0) - (a.hot_score || 0));
 
-  // Filter out junk/NSFW/unpopular games
+  // Filter out junk/NSFW games (but NOT by hot_score — new games haven't
+  // built popularity yet, so requiring hot_score kills legitimate new releases)
   const quality = merged.filter((game) =>
-    isPromotableGame({ title: game.title, cover_image: game.cover_image, hot_score: game.hot_score, genres: game.genres })
+    isQualityNewRelease({ title: game.title, cover_image: game.cover_image, genres: game.genres, tags: game.tags })
   );
 
   // Final safety net: double-check every game's release_date server-side
