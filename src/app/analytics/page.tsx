@@ -318,7 +318,7 @@ export default async function AnalyticsPage({
 
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl">
             {[
-              { value: analyticsData.totalGamesAnalyzed, label: "Games Analyzed", Icon: Zap, gradient: "from-yellow-400/20 to-amber-400/10", iconColor: "text-yellow-300", iconBg: "bg-yellow-400/20" },
+              { value: analyticsData.bestGame ? analyticsData.bestGame.score.toFixed(1) : "N/A", label: "Highest Score", Icon: Zap, gradient: "from-emerald-400/20 to-teal-400/10", iconColor: "text-emerald-300", iconBg: "bg-emerald-400/20" },
               { value: analyticsData.systemBreakdown.length, label: "System Types", Icon: BarChart3, gradient: "from-cyan-400/20 to-blue-400/10", iconColor: "text-cyan-300", iconBg: "bg-cyan-400/20" },
               { value: ARTICLES.length, label: "Deep Analyses", Icon: Sparkles, gradient: "from-purple-400/20 to-violet-400/10", iconColor: "text-purple-300", iconBg: "bg-purple-400/20" },
             ].map((stat) => (

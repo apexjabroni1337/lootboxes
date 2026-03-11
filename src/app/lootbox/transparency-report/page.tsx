@@ -206,36 +206,6 @@ export default async function TransparencyReportPage() {
             the odds before they spend.
           </p>
 
-          {/* Inline quick stats */}
-          <div className="mt-8 flex flex-wrap gap-6">
-            <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-                <CheckCircle className="h-4 w-4 text-emerald-400" />
-              </div>
-              <div>
-                <p className="text-lg font-black text-white">{transparentPct}%</p>
-                <p className="text-[10px] text-indigo-300/60 uppercase tracking-wider font-semibold">Grade B+</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-red-500/20 flex items-center justify-center">
-                <AlertTriangle className="h-4 w-4 text-red-400" />
-              </div>
-              <div>
-                <p className="text-lg font-black text-white">{opaquePct}%</p>
-                <p className="text-[10px] text-indigo-300/60 uppercase tracking-wider font-semibold">Grade D or F</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-indigo-500/20 flex items-center justify-center">
-                <BarChart3 className="h-4 w-4 text-indigo-400" />
-              </div>
-              <div>
-                <p className="text-lg font-black text-white">{avgScore}</p>
-                <p className="text-[10px] text-indigo-300/60 uppercase tracking-wider font-semibold">Avg / 10</p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
