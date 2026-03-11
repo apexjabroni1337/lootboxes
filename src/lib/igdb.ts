@@ -101,6 +101,10 @@ export interface IGDBGame {
     id: number;
     image_id: string;
   }[];
+  artworks?: {
+    id: number;
+    image_id: string;
+  }[];
 }
 
 /** Extended game type for bulk IGDB imports with full metadata */
@@ -151,7 +155,7 @@ export async function searchGame(title: string): Promise<IGDBGame | null> {
   let results = await igdbQuery<IGDBGame>(
     "games",
     `search "${escTitle(title)}";
-     fields name, cover.image_id, screenshots.image_id;
+     fields name, cover.image_id, screenshots.image_id, artworks.image_id;
      limit 10;`
   );
 
@@ -161,7 +165,7 @@ export async function searchGame(title: string): Promise<IGDBGame | null> {
     results = await igdbQuery<IGDBGame>(
       "games",
       `search "${escTitle(cleaned)}";
-       fields name, cover.image_id, screenshots.image_id;
+       fields name, cover.image_id, screenshots.image_id, artworks.image_id;
        limit 10;`
     );
   }
@@ -173,7 +177,7 @@ export async function searchGame(title: string): Promise<IGDBGame | null> {
       results = await igdbQuery<IGDBGame>(
         "games",
         `search "${escTitle(shortTitle)}";
-         fields name, cover.image_id, screenshots.image_id;
+         fields name, cover.image_id, screenshots.image_id, artworks.image_id;
          limit 10;`
       );
     }
@@ -248,6 +252,66 @@ export function igdbImageUrl(
     | "1080p" = "cover_big"
 ): string {
   return `https://images.igdb.com/igdb/image/upload/t_${size}/${imageId}.jpg`;
+}
+
+/**
+ * Select visually diverse images from an IGDB game result.
+ *
+ * Strategy:
+ * 1. Exclude any image whose image_id matches the cover (avoids hero duplication)
+ * 2. Spread-pick from screenshots (every Nth) instead of sequential first-N
+ * 3. Interleave artworks (concept art, promo art) for visual variety
+ * 4. Return up to `count` unique image URLs
+ */
+export function selectDiverseImages(
+  game: IGDBGame,
+  count = 6,
+  size: "screenshot_med" | "screenshot_big" | "720p" = "screenshot_big"
+): string[] {
+  const coverId = game.cover?.image_id ?? "";
+
+  // Dedupe and exclude cover
+  const ssIds = (game.screenshots ?? [])
+    .map((s) => s.image_id)
+    .filter((id) => id !== coverId);
+
+  const artIds = (game.artworks ?? [])
+    .map((a) => a.image_id)
+    .filter((id) => id !== coverId && !ssIds.includes(id));
+
+  // Spread-pick from screenshots: space them out evenly across the array
+  const spreadPick = (arr: string[], n: number): string[] => {
+    if (arr.length <= n) return arr;
+    const step = arr.length / n;
+    const picked: string[] = [];
+    for (let i = 0; i < n; i++) {
+      picked.push(arr[Math.floor(i * step)]);
+    }
+    return picked;
+  };
+
+  // Reserve ~1/3 of slots for artworks (if available), rest for screenshots
+  const artSlots = Math.min(artIds.length, Math.max(1, Math.floor(count / 3)));
+  const ssSlots = count - artSlots;
+
+  const pickedSS = spreadPick(ssIds, ssSlots);
+  const pickedArt = spreadPick(artIds, artSlots);
+
+  // Interleave: SS, SS, Art, SS, SS, Art...
+  const merged: string[] = [];
+  let si = 0;
+  let ai = 0;
+  for (let i = 0; merged.length < count && (si < pickedSS.length || ai < pickedArt.length); i++) {
+    if (i % 3 === 2 && ai < pickedArt.length) {
+      merged.push(pickedArt[ai++]);
+    } else if (si < pickedSS.length) {
+      merged.push(pickedSS[si++]);
+    } else if (ai < pickedArt.length) {
+      merged.push(pickedArt[ai++]);
+    }
+  }
+
+  return merged.map((id) => igdbImageUrl(id, size));
 }
 
 // ─── Bulk Import API ───

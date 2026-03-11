@@ -24,7 +24,7 @@ import CostCalculator from "@/components/lootbox/CostCalculator";
 import ScoreBreakdown from "@/components/lootbox/ScoreBreakdown";
 import ComparisonTable from "@/components/lootbox/ComparisonTable";
 import { PolaroidScatteredGroup, PolaroidFloat } from "@/components/lootbox/PolaroidImage";
-import { searchGame, igdbImageUrl } from "@/lib/igdb";
+import { searchGame, selectDiverseImages } from "@/lib/igdb";
 
 export const revalidate = 300; // 5 min — lowered to pick up content enrichment faster
 
@@ -108,16 +108,12 @@ async function getGameData(slug: string) {
     }
   }
 
-  // Fetch IGDB screenshots for Polaroid gallery (up to 6)
+  // Fetch IGDB screenshots + artworks for Polaroid gallery (up to 6, diverse)
   let screenshots: string[] = [];
   try {
     const igdbGame = await searchGame(game.title);
-    if (igdbGame?.screenshots?.length) {
-      screenshots = igdbGame.screenshots
-        .slice(0, 6)
-        .map((s: { image_id: string }) =>
-          igdbImageUrl(s.image_id, "screenshot_big")
-        );
+    if (igdbGame) {
+      screenshots = selectDiverseImages(igdbGame, 6, "screenshot_big");
     }
   } catch {
     // IGDB unavailable — skip screenshots gracefully
