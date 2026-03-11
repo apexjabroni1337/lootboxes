@@ -23,6 +23,8 @@ import DropRateBarChart from "@/components/lootbox/DropRateBarChart";
 import CostCalculator from "@/components/lootbox/CostCalculator";
 import ScoreBreakdown from "@/components/lootbox/ScoreBreakdown";
 import ComparisonTable from "@/components/lootbox/ComparisonTable";
+import { PolaroidScatteredGroup, PolaroidFloat } from "@/components/lootbox/PolaroidImage";
+import { searchGame, igdbImageUrl } from "@/lib/igdb";
 
 export const revalidate = 300; // 5 min — lowered to pick up content enrichment faster
 
@@ -106,7 +108,22 @@ async function getGameData(slug: string) {
     }
   }
 
-  return { game, content, dropRates: dropRates || [], comparisons };
+  // Fetch IGDB screenshots for Polaroid gallery (up to 6)
+  let screenshots: string[] = [];
+  try {
+    const igdbGame = await searchGame(game.title);
+    if (igdbGame?.screenshots?.length) {
+      screenshots = igdbGame.screenshots
+        .slice(0, 6)
+        .map((s: { image_id: string }) =>
+          igdbImageUrl(s.image_id, "screenshot_big")
+        );
+    }
+  } catch {
+    // IGDB unavailable — skip screenshots gracefully
+  }
+
+  return { game, content, dropRates: dropRates || [], comparisons, screenshots };
 }
 
 export async function generateMetadata({
@@ -131,7 +148,7 @@ export default async function LootboxGamePage({
   const data = await getGameData(params.slug);
   if (!data || !data.content) notFound();
 
-  const { game, content, dropRates, comparisons } = data;
+  const { game, content, dropRates, comparisons, screenshots } = data;
   const sys = systemLabel(game.loot_system_type);
 
   const rarestItem = dropRates.find(
@@ -281,6 +298,14 @@ export default async function LootboxGamePage({
             </section>
           )}
 
+          {/* ─── Polaroid Group 1 — after Overview ─── */}
+          {screenshots.length > 0 && (
+            <PolaroidScatteredGroup
+              screenshots={screenshots.slice(0, Math.min(3, screenshots.length))}
+              gameTitle={game.title}
+            />
+          )}
+
           {/* Section: Drop Rate Visualization */}
           {dropRates.length > 0 && (
             <section>
@@ -413,6 +438,14 @@ export default async function LootboxGamePage({
             </section>
           )}
 
+          {/* ─── Polaroid Group 2 — after History ─── */}
+          {screenshots.length > 3 && (
+            <PolaroidScatteredGroup
+              screenshots={screenshots.slice(3, 6)}
+              gameTitle={game.title}
+            />
+          )}
+
           {/* Section: Comparison Table */}
           {comparisons.length > 0 && (
             <section>
@@ -439,6 +472,13 @@ export default async function LootboxGamePage({
           {content.controversy_html && (
             <section>
               <SectionHeader icon={Users} title="Community Sentiment & Controversy">
+                {screenshots.length > 1 && (
+                  <PolaroidFloat
+                    src={screenshots[screenshots.length > 3 ? 3 : 1]}
+                    caption={`${game.title} — community & gameplay`}
+                    side="right"
+                  />
+                )}
                 <div
                   className="prose prose-gray max-w-none"
                   dangerouslySetInnerHTML={{ __html: content.controversy_html }}

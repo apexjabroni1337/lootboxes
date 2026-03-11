@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FFXI Lootbox Analysis - Mockup 9: Image Cards with Captions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+        }
+
+        header {
+            background-color: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #2563eb;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: #4b5563;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: #2563eb;
+        }
+
+        .variant-label {
+            background-color: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            align-items: center;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .hero-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background-color: #2563eb;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .cosmetic-tag {
+            display: inline-block;
+            background-color: #fef3c7;
+            color: #92400e;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .hero-image {
+            background-color: #e5e7eb;
+            height: 300px;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+        }
+
+        .currency-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .currency-item {
+            background-color: #f3f4f6;
+            padding: 1rem;
+            border-radius: 0.375rem;
+        }
+
+        .currency-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+
+        .currency-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        section {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #111827;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+
+        /* Image card styles */
+        .image-card {
+            margin: 2rem 0;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            background-color: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .image-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-card-caption {
+            padding: 1.5rem;
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #6b7280;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .score-bars {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .score-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .score-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .score-label span:first-child {
+            font-weight: 600;
+        }
+
+        .score-label span:last-child {
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .bar {
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background-color: #2563eb;
+        }
+
+        timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .timeline-item {
+            padding-left: 2rem;
+            border-left: 3px solid #2563eb;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background-color: #2563eb;
+            border-radius: 50%;
+        }
+
+        .timeline-year {
+            font-weight: 700;
+            color: #2563eb;
+            font-size: 0.9rem;
+        }
+
+        .timeline-text {
+            margin-top: 0.25rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background-color: #f3f4f6;
+            font-weight: 600;
+        }
+
+        .spending-tips {
+            background-color: #fef3c7;
+            border-left: 4px solid #d97706;
+            padding: 1.5rem;
+            border-radius: 0.375rem;
+        }
+
+        .spending-tips h3 {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #92400e;
+        }
+
+        .spending-tips ol {
+            margin-left: 1.5rem;
+        }
+
+        .spending-tips li {
+            margin-bottom: 0.5rem;
+            color: #92400e;
+        }
+
+        .verdict-box {
+            background-color: #2563eb;
+            color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .verdict-box h3 {
+            margin-bottom: 1rem;
+        }
+
+        .verdict-score {
+            font-size: 3rem;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .score-bars {
+                grid-template-columns: 1fr;
+            }
+
+            .image-card img {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">LootBoxes.com</div>
+            <ul>
+                <li><a href="#games">Games</a></li>
+                <li><a href="#analysis">Analysis</a></li>
+                <li><a href="#resources">Resources</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="variant-label">Mockup 9: Image Cards with Captions</div>
+
+    <div class="container">
+        <div class="hero">
+            <div class="hero-content">
+                <h1>Final Fantasy XI</h1>
+                <span class="hero-badge">8.8</span>
+                <span class="cosmetic-tag">COSMETIC SHOP</span>
+                <div class="currency-info">
+                    <div class="currency-item">
+                        <div class="currency-label">Primary Currency</div>
+                        <div class="currency-value">Mog Bonanza</div>
+                    </div>
+                    <div class="currency-item">
+                        <div class="currency-label">Model Type</div>
+                        <div class="currency-value">Subscription</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">Game Cover Art</div>
+        </div>
+
+        <section>
+            <h2>Overview</h2>
+            <p>Final Fantasy XI stands as one of the longest-running MMORPG experiences, featuring a unique monetization approach that balances subscription revenue with optional cosmetic purchases through the Mog Bonanza system. The game has evolved significantly since its 2002 launch, maintaining a dedicated community of players who appreciate its intricate job system and complex narratives.</p>
+
+            <div class="image-card">
+                <img src="https://picsum.photos/seed/ffxi-battle2/800/280" alt="Epic battles in Vana'diel">
+                <div class="image-card-caption">Epic battles and party dynamics define the core experience</div>
+            </div>
+
+            <p>The Mog Bonanza system operates as a time-limited raffle event where players can purchase chances to win rare cosmetic items, mounts, and housing decorations. Unlike many modern MMOs, FFXI's approach remains surprisingly consumer-friendly, with strict limits on per-player spending and no pay-to-win mechanics affecting gameplay balance or progression.</p>
+        </section>
+
+        <section>
+            <h2>Pity System</h2>
+            <p>Final Fantasy XI does not employ a traditional pity or guaranteed drop system for its cosmetic items. The Mog Bonanza operates as a pure chance-based lottery where each entry has an equal probability of winning specific prize tiers. This approach is transparent and clearly communicated to players before purchase, maintaining the community's trust despite the lack of safety net mechanics.</p>
+        </section>
+
+        <section>
+            <h2>Score Breakdown</h2>
+            <div class="score-bars">
+                <div class="score-bar">
+                    <div class="score-label">
+                        <span>Transparency</span>
+                        <span>8</span>
+                    </div>
+                    <div class="bar">
+                        <div class="bar-fill" style="width: 80%"></div>
+                    </div>
+                </div>
+                <div class="score-bar">
+                    <div class="score-label">
+                        <span>Value</span>
+                        <span>9</span>
+                    </div>
+                    <div class="bar">
+                        <div class="bar-fill" style="width: 90%"></div>
+                    </div>
+                </div>
+                <div class="score-bar">
+                    <div class="score-label">
+                        <span>Fairness</span>
+                        <span>9</span>
+                    </div>
+                    <div class="bar">
+                        <div class="bar-fill" style="width: 90%"></div>
+                    </div>
+                </div>
+                <div class="score-bar">
+                    <div class="score-label">
+                        <span>Player Control</span>
+                        <span>9</span>
+                    </div>
+                    <div class="bar">
+                        <div class="bar-fill" style="width: 90%"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Historical Changes</h2>
+            <timeline>
+                <div class="timeline-item">
+                    <div class="timeline-year">2002</div>
+                    <div class="timeline-text">Final Fantasy XI launches with subscription-only model, no cosmetic monetization</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2007</div>
+                    <div class="timeline-text">Introduction of Mog Bonanza system for limited cosmetic items</div>
+                </div>
+            </timeline>
+
+            <div class="image-card">
+                <img src="https://picsum.photos/seed/ffxi-town/800/280" alt="Social hubs in Bastok">
+                <div class="image-card-caption">Iconic social hubs where adventurers gather</div>
+            </div>
+
+            <timeline>
+                <div class="timeline-item">
+                    <div class="timeline-year">2011</div>
+                    <div class="timeline-text">Expansion of Mog Bonanza prizes and increased event frequency</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2020</div>
+                    <div class="timeline-text">Implementation of spending caps and transparency improvements</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2024</div>
+                    <div class="timeline-text">Housing system integration with cosmetic rewards</div>
+                </div>
+            </timeline>
+        </section>
+
+        <section>
+            <h2>Comparison Table</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>FFXI</th>
+                        <th>WoW</th>
+                        <th>FFXIV</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Subscription Required</td>
+                        <td>Yes</td>
+                        <td>Yes</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>Cosmetic Shop</td>
+                        <td>Mog Bonanza</td>
+                        <td>Blizzard Shop</td>
+                        <td>Mog Station</td>
+                    </tr>
+                    <tr>
+                        <td>Average Monthly Spend</td>
+                        <td>$15-20</td>
+                        <td>$20-35</td>
+                        <td>$15-25</td>
+                    </tr>
+                    <tr>
+                        <td>Pay-to-Win Risk</td>
+                        <td>None</td>
+                        <td>Minimal</td>
+                        <td>None</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Community Sentiment</h2>
+            <p>The FFXI community maintains exceptionally positive sentiment toward the game's monetization practices. Despite the existence of loot-box mechanics through Mog Bonanza, there have been minimal controversies compared to industry peers.</p>
+
+            <div class="image-card">
+                <img src="https://picsum.photos/seed/ffxi-crafting/800/280" alt="Synthesis and crafting">
+                <div class="image-card-caption">Complex crafting systems reward dedication and exploration</div>
+            </div>
+
+            <p>Players appreciate the game's respect for their time and money, as well as the clear communication from Square Enix regarding cosmetic item odds and spending limits.</p>
+        </section>
+
+        <section>
+            <h2>Spending Tips</h2>
+            <div class="spending-tips">
+                <h3>Smart Ways to Spend</h3>
+                <ol>
+                    <li>Set a monthly budget and stick to it—Mog Bonanza events happen regularly</li>
+                    <li>Focus on seasonal events where odds are more transparent and communicated clearly</li>
+                    <li>Consider housing items and mounts, which offer lasting cosmetic value</li>
+                    <li>Take advantage of special promotions that offer better value ratios</li>
+                    <li>Remember that cosmetics don't affect combat effectiveness or progression speed</li>
+                </ol>
+            </div>
+
+            <div class="image-card">
+                <img src="https://picsum.photos/seed/ffxi-dungeon/800/280" alt="Challenging dungeons">
+                <div class="image-card-caption">Challenging dungeons await those brave enough to explore</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Our Verdict</h2>
+            <p>Final Fantasy XI represents a gold standard for cosmetic monetization in the MMORPG space. The game's long history of treating players fairly, combined with transparent odds and reasonable pricing, makes it an excellent example of how loot-box systems can coexist with player satisfaction.</p>
+
+            <div class="image-card">
+                <img src="https://picsum.photos/seed/ffxi-sunset/800/280" alt="Vana'diel at sunset">
+                <div class="image-card-caption">A living, breathing world that respects player investment</div>
+            </div>
+
+            <p>The community's trust is well-earned through consistent developer communication and consumer-friendly policies.</p>
+
+            <div class="verdict-box">
+                <h3>Overall Score</h3>
+                <div class="verdict-score">8.8</div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

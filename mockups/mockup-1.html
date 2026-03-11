@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Fantasy XI - Loot Box Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #2563eb;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #6b7280;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: #2563eb;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header Section */
+        .header-section {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            align-items: flex-start;
+        }
+
+        .game-cover {
+            width: 150px;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .badges {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge.score {
+            background: #2563eb;
+            color: white;
+            font-size: 1rem;
+            padding: 0.75rem 1.25rem;
+        }
+
+        .badge.tag {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .currency-info {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 1rem;
+        }
+
+        /* Label */
+        .layout-label {
+            background: #f3f4f6;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #2563eb;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(to bottom, rgba(37, 99, 235, 0.1), rgba(37, 99, 235, 0.05));
+            border-radius: 8px;
+            margin-bottom: 3rem;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 3rem;
+        }
+
+        section h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            color: #111827;
+        }
+
+        section p {
+            margin-bottom: 1rem;
+            color: #4b5563;
+            line-height: 1.8;
+        }
+
+        /* Score Breakdown */
+        .score-bars {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .score-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .score-bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 500;
+        }
+
+        .score-bar-fill {
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .score-bar-fill.transparency { background-color: #dbeafe; }
+        .score-bar-fill.transparency .fill { width: 80%; background: #3b82f6; }
+        .score-bar-fill.value .fill { width: 90%; background: #10b981; }
+        .score-bar-fill.fairness .fill { width: 90%; background: #f59e0b; }
+        .score-bar-fill.control .fill { width: 90%; background: #8b5cf6; }
+
+        .fill {
+            height: 100%;
+            background: #2563eb;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        /* Section Divider Image */
+        .section-divider {
+            width: 100%;
+            height: 200px;
+            border-radius: 8px;
+            margin: 3rem 0;
+            overflow: hidden;
+        }
+
+        .section-divider img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 1rem 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-year {
+            font-weight: 700;
+            color: #2563eb;
+            min-width: 60px;
+            font-size: 1rem;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-content p {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Comparison Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f9fafb;
+            font-weight: 600;
+        }
+
+        /* Tips Box */
+        .tips-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+
+        .tips-box h3 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .tips-box ol {
+            margin-left: 1.5rem;
+        }
+
+        .tips-box li {
+            margin-bottom: 0.75rem;
+            color: #78350f;
+        }
+
+        /* Verdict Box */
+        .verdict-content {
+            margin-bottom: 2rem;
+            color: #4b5563;
+            line-height: 1.8;
+        }
+
+        .score-box {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .score-box .number {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .score-box .label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-section {
+                flex-direction: column;
+            }
+
+            .score-bars {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content h1 {
+                font-size: 1.75rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">LootBoxes.com</div>
+        <ul>
+            <li><a href="#">Games</a></li>
+            <li><a href="#">Analysis</a></li>
+            <li><a href="#">Guides</a></li>
+            <li><a href="#">Community</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Layout Label -->
+        <div class="layout-label">
+            📐 <strong>Variant 1: Hero Banner + Section Dividers</strong> - Full-width hero below header, 2 smaller images as dividers between sections
+        </div>
+
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="game-cover">FFXI</div>
+            <div class="header-content">
+                <h1>Final Fantasy XI</h1>
+                <div class="badges">
+                    <span class="badge score">8.8</span>
+                    <span class="badge tag">COSMETIC SHOP</span>
+                </div>
+                <div class="currency-info">
+                    <strong>Currency:</strong> Mog Station Points • <strong>Type:</strong> Premium Pass + Cosmetics
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Banner Image -->
+        <div class="hero-banner">
+            <img src="https://picsum.photos/seed/ffxi-battle/800/450" alt="Final Fantasy XI Battle Scene">
+        </div>
+
+        <!-- Overview Section -->
+        <section>
+            <h2>Overview</h2>
+            <p>Final Fantasy XI pioneered the MMORPG space in 2002 and maintains a loyal community two decades later. The game's monetization model is built around optional cosmetic purchases through the Mog Station—the official shop for character items, seasonal events, and limited-time emotes. Unlike many modern MMOs, FFXI doesn't employ aggressive battle pass mechanics or mandatory premium content walls.</p>
+            <p>The subscription model ($12.99/month) covers expansions and new content, while the cosmetic shop serves primarily as an avenue for optional vanity items. The game's approach respects player agency: players are never penalized for not spending beyond the subscription, and cosmetic items have no gameplay impact whatsoever. This philosophy has earned FFXI a reputation as one of the more player-friendly MMOs regarding monetization practices.</p>
+        </section>
+
+        <!-- Section Divider Image 1 -->
+        <div class="section-divider">
+            <img src="https://picsum.photos/seed/ffxi-mog/800/450" alt="Mog House Interior">
+        </div>
+
+        <!-- Pity System Section -->
+        <section>
+            <h2>Pity System</h2>
+            <p>Final Fantasy XI does not employ gacha mechanics or pity systems, as the Mog Station operates on a direct purchase model. Players browse the cosmetic catalog, see the exact item they're purchasing, and complete the transaction without randomization. This transparency is a significant advantage over games relying on loot boxes.</p>
+            <p>Limited-time event cosmetics may return in future years, but rotation is predictable and communicated well in advance by the development team. Players are never forced to make panic purchases due to artificial scarcity.</p>
+        </section>
+
+        <!-- Score Breakdown Section -->
+        <section>
+            <h2>Score Breakdown</h2>
+            <div class="score-bars">
+                <div class="score-bar">
+                    <div class="score-bar-label">
+                        <span>Transparency</span>
+                        <span>8/10</span>
+                    </div>
+                    <div class="score-bar-fill transparency">
+                        <div class="fill"></div>
+                    </div>
+                </div>
+                <div class="score-bar">
+                    <div class="score-bar-label">
+                        <span>Value</span>
+                        <span>9/10</span>
+                    </div>
+                    <div class="score-bar-fill value">
+                        <div class="fill"></div>
+                    </div>
+                </div>
+                <div class="score-bar">
+                    <div class="score-bar-label">
+                        <span>Fairness</span>
+                        <span>9/10</span>
+                    </div>
+                    <div class="score-bar-fill fairness">
+                        <div class="fill"></div>
+                    </div>
+                </div>
+                <div class="score-bar">
+                    <div class="score-bar-label">
+                        <span>Player Control</span>
+                        <span>9/10</span>
+                    </div>
+                    <div class="score-bar-fill control">
+                        <div class="fill"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Divider Image 2 -->
+        <div class="section-divider">
+            <img src="https://picsum.photos/seed/ffxi-vanadale/800/450" alt="Vanadale Landscape">
+        </div>
+
+        <!-- Historical Changes Section -->
+        <section>
+            <h2>Historical Changes</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">2002</div>
+                    <div class="timeline-content">
+                        <p><strong>Launch:</strong> FFXI debuts as the first major MMORPG on console, with no cosmetic shop. All items earned through gameplay.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2007</div>
+                    <div class="timeline-content">
+                        <p><strong>Mog Station Introduction:</strong> The cosmetic shop launches as an experiment with pet items and chocobo colors.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2011</div>
+                    <div class="timeline-content">
+                        <p><strong>Expansion:</strong> Mog Station expands to include seasonal items and mounts. Community reception remains positive.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2020</div>
+                    <div class="timeline-content">
+                        <p><strong>Endwalker Era:</strong> Modern cosmetics added including job-specific armor styles, still entirely cosmetic.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2024</div>
+                    <div class="timeline-content">
+                        <p><strong>Current:</strong> Mog Station remains unchanged in philosophy—direct purchases, no gacha, cosmetic only.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Table Section -->
+        <section>
+            <h2>How FFXI Compares</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>FFXI</th>
+                        <th>WoW</th>
+                        <th>FFXIV</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Gacha Mechanics</td>
+                        <td>None</td>
+                        <td>Limited (mount drop rates)</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>Cosmetic Direct Purchase</td>
+                        <td>Yes</td>
+                        <td>Yes</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>Battle Pass</td>
+                        <td>No</td>
+                        <td>Yes (WoW+)</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>Pay-to-Win Risk</td>
+                        <td>Very Low</td>
+                        <td>Low</td>
+                        <td>Very Low</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Community Sentiment Section -->
+        <section>
+            <h2>Community Sentiment</h2>
+            <p>The FFXI community is remarkably unified on monetization issues. Forums and Reddit discussions rarely feature complaints about Mog Station pricing or unfair practices. The consensus is that the game respects player wallets while still providing funding for continued development and server maintenance.</p>
+            <p>Occasional controversy arises around specific cosmetic prices ($15-25 for premium items), but the absence of loot box mechanics and the guarantee that cosmetics never impact gameplay keep these discussions brief and civil. Players appreciate that after 20+ years, FFXI hasn't introduced pay-to-win systems.</p>
+        </section>
+
+        <!-- Spending Tips Section -->
+        <section>
+            <h2>Smart Spending Guide</h2>
+            <div class="tips-box">
+                <h3>5 Tips to Maximize Your Cosmetic Investment</h3>
+                <ol>
+                    <li><strong>Wait for Sales:</strong> Mog Station items go on discount during seasonal events. Patience saves 20-30% on premium cosmetics.</li>
+                    <li><strong>Check Item Previews:</strong> Every cosmetic can be previewed on your character before purchase. Never buy blind.</li>
+                    <li><strong>Prioritize Race-Specific Items:</strong> Some cosmetics look dramatically better on certain races. Choose wisely based on your character.</li>
+                    <li><strong>Use Account-Wide Unlock:</strong> Many cosmetic items unlock for all characters on your account after first purchase, maximizing value.</li>
+                    <li><strong>Avoid Impulse Purchases:</strong> Limited items return seasonally. FOMO tactics are minimal, so take time to decide.</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Verdict Section -->
+        <section>
+            <h2>Our Verdict</h2>
+            <div class="verdict-content">
+                <p>Final Fantasy XI stands as a beacon of ethical monetization in the MMORPG genre. Two decades after launch, the game has resisted the temptation to introduce predatory mechanics, loot boxes, or gameplay-impacting paywalls. The Mog Station serves as a model for how optional cosmetic monetization should work: transparent, affordable, and entirely optional.</p>
+                <p>For players seeking an MMO experience free from aggressive monetization, FFXI delivers. The game respects your time and your wallet. Whether you're a new player or a returning veteran, you can engage fully with the world's mechanics, raids, and social systems without spending a single additional dollar beyond the subscription fee.</p>
+            </div>
+            <div class="score-box">
+                <div class="number">8.8</div>
+                <div class="label">Out of 10 - Excellent</div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
