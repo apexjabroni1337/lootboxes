@@ -400,7 +400,7 @@ export default function FloatCheckerPage() {
                         {COMPARE_MARKETS.map((mp) => (
                           <a
                             key={mp.dealId}
-                            href={`/go/cs2/${mp.dealId}?from=float-checker`}
+                            href={`/go/cs2/${mp.dealId}?from=float-checker&item=${encodeURIComponent(item.name)}`}
                             target="_blank"
                             rel="noopener noreferrer nofollow"
                             className="hidden sm:flex items-center gap-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 px-2 py-1.5 text-[9px] font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
@@ -436,7 +436,7 @@ export default function FloatCheckerPage() {
                       <p className="text-xs text-gray-500 dark:text-gray-400">on {lowestFloat.marketplace}</p>
                     </div>
                     <a
-                      href={`/go/cs2/${lowestFloat.dealId}?from=float-checker`}
+                      href={`/go/cs2/${lowestFloat.dealId}?from=float-checker&item=${encodeURIComponent(selectedSkin || "")}`}
                       target="_blank"
                       rel="noopener noreferrer nofollow"
                       className="flex items-center gap-1 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"

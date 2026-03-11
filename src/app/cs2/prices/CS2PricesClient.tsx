@@ -606,7 +606,7 @@ export default function CS2PricesClient({
                             return available.map((mp, i) => (
                               <a
                                 key={mp.dealId}
-                                href={`/go/cs2/${mp.dealId}?from=prices`}
+                                href={`/go/cs2/${mp.dealId}?from=prices&item=${encodeURIComponent(item.name)}`}
                                 target="_blank"
                                 rel="noopener noreferrer nofollow"
                                 className={`flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[10px] font-semibold transition-colors ${
@@ -765,7 +765,7 @@ export default function CS2PricesClient({
                           ].map((mp) => (
                             <a
                               key={mp.dealId}
-                              href={`/go/cs2/${mp.dealId}?from=prices`}
+                              href={`/go/cs2/${mp.dealId}?from=prices&item=${encodeURIComponent(skin.name)}`}
                               target="_blank"
                               rel="noopener noreferrer nofollow"
                               className="flex items-center gap-1 rounded-lg border border-gray-200 dark:border-gray-700 px-2.5 py-1.5 text-[10px] font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-900 transition-colors"
