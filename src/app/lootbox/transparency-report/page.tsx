@@ -164,11 +164,17 @@ export default async function TransparencyReportPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Hero */}
-      <section className="relative border-b border-gray-100 dark:border-gray-800 bg-gradient-to-br from-slate-900 via-indigo-900 to-violet-900 py-16 overflow-hidden">
-        <div className="absolute inset-0 opacity-10" style={{
-          backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)",
-          backgroundSize: "24px 24px",
-        }} />
+      <section className="relative border-b border-gray-100 dark:border-gray-800 bg-gradient-to-br from-slate-900 via-indigo-950 to-violet-950 py-16 sm:py-20 overflow-hidden">
+        {/* Decorative background elements */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 opacity-[0.07]" style={{
+            backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }} />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/15 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-violet-500/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4" />
+        </div>
+
         <div className="container-main relative z-10">
           <Link
             href="/lootbox"
@@ -177,27 +183,59 @@ export default async function TransparencyReportPage() {
             <ChevronLeft className="h-4 w-4" /> Loot Boxes
           </Link>
 
-          <div className="flex items-center gap-4 mb-5">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-500/20 backdrop-blur-sm border border-indigo-400/20">
-              <Eye className="h-7 w-7 text-indigo-400" />
+          <div className="flex items-center gap-4 mb-6">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/30 to-violet-500/30 backdrop-blur-sm border border-indigo-400/20 shadow-lg shadow-indigo-500/10">
+              <Eye className="h-7 w-7 text-indigo-300" />
             </div>
-            <div className="inline-flex rounded-full bg-indigo-500/20 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-indigo-300 border border-indigo-400/20">
+            <div className="inline-flex rounded-full bg-indigo-500/15 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-indigo-200 border border-indigo-400/15">
               <BarChart3 className="h-4 w-4 mr-1.5" /> {totalGames} Games Graded
             </div>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">
-            Transparency Report
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1]">
+            Transparency<br />
+            <span className="bg-gradient-to-r from-indigo-300 via-violet-300 to-purple-300 bg-clip-text text-transparent">Report</span>
           </h1>
-          <p className="mt-2 text-lg text-indigo-300 font-semibold">
+          <p className="mt-3 text-lg sm:text-xl text-indigo-200/80 font-semibold">
             Which games publish their drop rates?
           </p>
-          <p className="mt-4 max-w-2xl text-gray-300 leading-relaxed">
+          <p className="mt-4 max-w-2xl text-gray-400 leading-relaxed">
             We grade every analyzed game on how openly they disclose loot box
             odds, pricing structures, and pity system details. Full transparency
             earns an A; hiding everything earns an F. Players deserve to know
             the odds before they spend.
           </p>
+
+          {/* Inline quick stats */}
+          <div className="mt-8 flex flex-wrap gap-6">
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                <CheckCircle className="h-4 w-4 text-emerald-400" />
+              </div>
+              <div>
+                <p className="text-lg font-black text-white">{transparentPct}%</p>
+                <p className="text-[10px] text-indigo-300/60 uppercase tracking-wider font-semibold">Grade B+</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-lg bg-red-500/20 flex items-center justify-center">
+                <AlertTriangle className="h-4 w-4 text-red-400" />
+              </div>
+              <div>
+                <p className="text-lg font-black text-white">{opaquePct}%</p>
+                <p className="text-[10px] text-indigo-300/60 uppercase tracking-wider font-semibold">Grade D or F</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+                <BarChart3 className="h-4 w-4 text-indigo-400" />
+              </div>
+              <div>
+                <p className="text-lg font-black text-white">{avgScore}</p>
+                <p className="text-[10px] text-indigo-300/60 uppercase tracking-wider font-semibold">Avg / 10</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

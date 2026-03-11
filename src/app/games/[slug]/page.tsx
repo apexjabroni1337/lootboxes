@@ -560,7 +560,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
                         Read our full breakdown with drop rates, value calculations, and spending recommendations.
                       </p>
                     </div>
-                    <Link href={`/analytics/${game.slug}-analysis`} className="btn-primary flex items-center gap-1">
+                    <Link href={`/lootbox/${game.slug}`} className="btn-primary flex items-center gap-1">
                       Read Analysis <ArrowRight className="h-4 w-4" />
                     </Link>
                   </div>

@@ -286,61 +286,53 @@ export default async function AnalyticsPage({
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* ─── Hero Section ─── */}
-      <section className="relative overflow-hidden border-b border-gray-100 dark:border-gray-800 bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900 py-14 sm:py-20">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-white/10 blur-3xl" />
-          <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-brand-400/10 blur-3xl" />
+      <section className="relative overflow-hidden border-b border-gray-100 dark:border-gray-800 bg-gradient-to-br from-slate-900 via-brand-900 to-brand-950 py-16 sm:py-20">
+        {/* Background decorations */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 opacity-[0.05]" style={{
+            backgroundImage: "linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+          }} />
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-500/15 rounded-full blur-[150px] -translate-y-1/3 translate-x-1/4" />
+          <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-cyan-500/10 rounded-full blur-[120px] translate-y-1/2" />
         </div>
 
         <div className="container-main relative z-10">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
-              <BarChart3 className="h-6 w-6 text-white" />
+          <div className="flex items-center gap-3 mb-6">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500/30 to-cyan-500/20 backdrop-blur-sm border border-white/10 shadow-lg shadow-brand-500/10">
+              <BarChart3 className="h-7 w-7 text-brand-200" />
             </div>
-            <div className="inline-flex rounded-full bg-white/20 backdrop-blur-sm px-4 py-1 text-sm font-semibold text-white">
+            <div className="inline-flex rounded-full bg-white/10 backdrop-blur-sm px-4 py-1.5 text-sm font-bold text-brand-200 border border-white/10">
               Data-Driven Analysis
             </div>
           </div>
 
-          <h1 className="mt-4 text-4xl sm:text-5xl font-black text-white tracking-tight">
-            Analytics Hub
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1]">
+            Analytics<br />
+            <span className="bg-gradient-to-r from-brand-300 via-cyan-300 to-teal-300 bg-clip-text text-transparent">Hub</span>
           </h1>
 
-          <p className="mt-4 max-w-2xl text-lg text-blue-100 leading-relaxed">
+          <p className="mt-4 max-w-2xl text-lg text-blue-200/70 leading-relaxed">
             Interactive analytics on gaming monetization. Explore score distributions, compare monetization systems, and dive into our in-depth reviews — all powered by the proprietary LootBoxes Score.
           </p>
 
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl">
-            <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-white/10 backdrop-blur-md px-5 py-4 transition-all hover:bg-white/20 hover:scale-[1.02]">
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-400/20 mb-2">
-                  <Zap className="h-4.5 w-4.5 text-yellow-300" />
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl">
+            {[
+              { value: analyticsData.totalGamesAnalyzed, label: "Games Analyzed", Icon: Zap, gradient: "from-yellow-400/20 to-amber-400/10", iconColor: "text-yellow-300", iconBg: "bg-yellow-400/20" },
+              { value: analyticsData.systemBreakdown.length, label: "System Types", Icon: BarChart3, gradient: "from-cyan-400/20 to-blue-400/10", iconColor: "text-cyan-300", iconBg: "bg-cyan-400/20" },
+              { value: ARTICLES.length, label: "Deep Analyses", Icon: Sparkles, gradient: "from-purple-400/20 to-violet-400/10", iconColor: "text-purple-300", iconBg: "bg-purple-400/20" },
+            ].map((stat) => (
+              <div key={stat.label} className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5 backdrop-blur-md px-5 py-5 transition-all hover:bg-white/10 hover:border-white/20 hover:scale-[1.02]">
+                <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-100 transition-opacity`} />
+                <div className="relative">
+                  <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${stat.iconBg} mb-3`}>
+                    <stat.Icon className={`h-4 w-4 ${stat.iconColor}`} />
+                  </div>
+                  <p className="text-3xl font-black text-white tracking-tight">{stat.value}</p>
+                  <p className="text-[11px] font-semibold text-blue-300/50 uppercase tracking-wider mt-1">{stat.label}</p>
                 </div>
-                <p className="text-2xl font-black text-white tracking-tight">{analyticsData.totalGamesAnalyzed}</p>
-                <p className="text-xs font-medium text-blue-200 uppercase tracking-wider mt-0.5">Games Analyzed</p>
               </div>
-            </div>
-            <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-white/10 backdrop-blur-md px-5 py-4 transition-all hover:bg-white/20 hover:scale-[1.02]">
-              <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-400/20 mb-2">
-                  <BarChart3 className="h-4.5 w-4.5 text-cyan-300" />
-                </div>
-                <p className="text-2xl font-black text-white tracking-tight">{analyticsData.systemBreakdown.length}</p>
-                <p className="text-xs font-medium text-blue-200 uppercase tracking-wider mt-0.5">System Types</p>
-              </div>
-            </div>
-            <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-white/10 backdrop-blur-md px-5 py-4 transition-all hover:bg-white/20 hover:scale-[1.02]">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-400/20 mb-2">
-                  <Sparkles className="h-4.5 w-4.5 text-purple-300" />
-                </div>
-                <p className="text-2xl font-black text-white tracking-tight">{ARTICLES.length}</p>
-                <p className="text-xs font-medium text-blue-200 uppercase tracking-wider mt-0.5">Deep Analyses</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
