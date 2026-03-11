@@ -194,9 +194,12 @@ export default async function NewReleasesPage({
     }
   }
 
-  // Spotlight: top 3 newest releases
-  const spotlightGames = newReleases.slice(0, 3);
-  const remainingReleases = newReleases.slice(3);
+  // Only show games that currently have deals
+  const gamesWithDeals = newReleases.filter((g: any) => bestDeals.has(g.id));
+
+  // Spotlight: top 3 newest releases (with deals)
+  const spotlightGames = gamesWithDeals.slice(0, 3);
+  const remainingReleases = gamesWithDeals.slice(3);
 
   return (
     <div className="pb-12">
@@ -213,7 +216,7 @@ export default async function NewReleasesPage({
             New Releases &amp; Coming Soon
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-2 max-w-lg text-sm">
-            {newReleases.length} games released in the last 90 days, plus {comingSoon.length} upcoming titles. Prices tracked from day one.
+            {gamesWithDeals.length} new releases with active deals, plus {comingSoon.length} upcoming titles. Prices tracked from day one.
           </p>
         </div>
       </section>
