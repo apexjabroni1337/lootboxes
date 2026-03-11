@@ -471,7 +471,7 @@ export default async function LootboxGamePage({
                 {screenshots.length > 1 && (
                   <PolaroidFloat
                     src={screenshots[screenshots.length > 3 ? 3 : 1]}
-                    caption={`${game.title} — community & gameplay`}
+                    alt={`${game.title} gameplay`}
                     side="right"
                   />
                 )}
