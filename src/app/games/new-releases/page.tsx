@@ -9,9 +9,9 @@ import NewReleasesClient from "./NewReleasesClient";
 import SpotlightCard from "./SpotlightCard";
 
 export const metadata = {
-  title: "New Releases & Coming Soon — Latest Games | LootBoxes",
+  title: "Newest Deals & Coming Soon — Games on Sale | LootBoxes",
   description:
-    "Browse games released in the last 90 days and upcoming titles. Track prices from day one across Steam, Epic, GOG, and more.",
+    "Browse the top games with active deals and upcoming titles. Track prices across Steam, Epic, GOG, and more.",
   alternates: {
     canonical: "https://lootboxes.com/games/new-releases",
   },
@@ -131,11 +131,11 @@ export default async function NewReleasesPage({
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-50 dark:from-indigo-950/30 to-violet-50 border border-indigo-200 dark:border-indigo-700/30 rounded-full px-4 py-1.5 mb-4 shadow-sm">
             <Rocket className="w-3.5 h-3.5 text-indigo-500" />
             <span className="text-[11px] font-bold text-indigo-600 uppercase tracking-wider">
-              New Releases
+              Newest Deals
             </span>
           </div>
           <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
-            New Releases &amp; Coming Soon
+            Newest Deals &amp; Coming Soon
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-2 max-w-lg text-sm">
             {gamesWithDeals.length} games with active deals, plus {comingSoon.length} upcoming titles. Prices tracked across Steam, Epic, GOG, and more.

@@ -15,7 +15,7 @@ const FOOTER_SECTIONS = {
   "Game Deals": [
     { label: "Hot Deals", href: "/deals" },
     { label: "Browse Games", href: "/games" },
-    { label: "New Releases", href: "/games/new-releases" },
+    { label: "Newest Deals", href: "/games/new-releases" },
     { label: "Price Alerts", href: "/newsletter" },
   ],
   Company: [

@@ -53,7 +53,7 @@ function gameMatchesGenre(genres: string[] | null | undefined, genreId: string):
 }
 
 const TABS = [
-  { id: "releases", label: "New Releases", icon: Rocket },
+  { id: "releases", label: "Newest Deals", icon: Rocket },
   { id: "coming", label: "Coming Soon", icon: Clock },
 ] as const;
 

@@ -553,8 +553,8 @@ export default function Header() {
                           <Clock className="h-4.5 w-4.5" />
                         </div>
                         <div>
-                          <p className="text-sm font-semibold text-gray-900 dark:text-white">New Releases</p>
-                          <p className="text-[11px] text-gray-500 dark:text-gray-400">Latest game launches</p>
+                          <p className="text-sm font-semibold text-gray-900 dark:text-white">Newest Deals</p>
+                          <p className="text-[11px] text-gray-500 dark:text-gray-400">Top games on sale now</p>
                         </div>
                       </Link>
                       <Link
